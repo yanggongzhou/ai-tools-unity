@@ -1,0 +1,116 @@
+<template>
+<div class="uploadBox">
+  <el-upload
+    style='margin-bottom:10px'
+    ref="zipUpload"
+    :action="uploadUrl"
+    :data="{
+                user_id: $root.ai_user_id,
+                access_token:$root.ai_user_token,
+                target: 1,
+                type: 0
+              }"
+    :file-list="tempList"
+    :on-success="fileSuccess"
+    :on-change="fileChange"
+    :auto-upload="false">
+    <el-button type='warning' size="small" round>
+      上传<span v-if="videoVisible">视频</span>
+      <span v-if="!videoVisible">图片</span>
+    </el-button>
+  </el-upload>
+<!--  <video v-if="videoUrl" :src="videoUrl" class="avatar" controls></video>-->
+</div>
+</template>
+<script>
+  import {requestServices} from "../../api/api";
+
+  export default{
+    props:{
+      videoVisible:Boolean,
+      imgVisible:Boolean,
+    },
+    data(){
+      return{
+        uploadUrl:'',
+        tempList:[],
+      }
+    },
+    watch:{
+      videoVisible(val){
+        if(val){
+          this.tempList = [];
+        }
+      },
+      imgVisible(val){
+        if(val){
+          this.tempList = [];
+        }
+      }
+    },
+    created() {
+      this.uploadUrl = requestServices.uploadUrl
+    },
+    methods:{
+
+      fileChange(file){
+        console.log(file);
+        if(this.videoVisible){
+          const isMP4 = file.raw.type === 'video/mp4';
+          const isAVI = file.raw.type === 'video/avi';
+          const isMOV = file.raw.type === 'video/mov';
+          const isLt256M = file.raw.size / 1024 / 1024 < 256;
+          if (!isMP4&&!isAVI&&!isMOV) {
+            this.$message.error('上传视频只能是 mp4/avi/mov 格式!');
+            return false;
+          }
+          if (!isLt256M) {
+            this.$message.error('上传视频大小不能超过 256MB!');
+            return false;
+          }
+          this.$refs.zipUpload.submit();
+
+        }else{
+            const isGif = file.raw.type === 'image/gif';
+            const isPNG = file.raw.type === 'image/png';
+            const isJPG = file.raw.type === 'image/jpeg';
+            const isLt5M = file.raw.size / 1024 / 1024 < 5;
+            if (!isJPG&&!isPNG&&!isGif) {
+              this.$message.error('上传图片只能是 JPG/PNG/GIF 格式!');
+              this.tempList = [];
+              return false;
+            }
+            if (!isLt5M) {
+              this.$message.error('上传图片大小不能超过 5MB!');
+              this.tempList = [];
+              return false;
+            }
+            this.$refs.zipUpload.submit();
+
+        }
+
+      },
+      fileSuccess(res,file){
+        if(res.return_code===1000) {
+          if(this.videoVisible){
+            this.$emit('getDisplayVideo',{name: file.raw.name, url: res.result.upload_url})
+          }else{
+            this.$emit('getDisplayImg',{name: file.raw.name, url: res.result.upload_url})
+          }
+          this.tempList.push({name: file.raw.name, url: res.result.upload_url})
+          if(this.tempList.length>1){
+            this.tempList.shift()
+          }
+        }else {
+          this.$message.error('素材上传失败，请重新上传!');
+        }
+      },
+
+    }
+  }
+</script>
+<style lang="less" scoped>
+  .uploadBox{
+    height: 68px;
+  }
+</style>

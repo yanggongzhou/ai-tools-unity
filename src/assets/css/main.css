@@ -1,0 +1,228 @@
+html{
+  min-height: 100vh;
+  /*background: #f5f6fa;*/
+  /*background: #2c2d2f;*/
+  background: #F5F6FA;
+}
+body, p, h1,h3,h5,ul ,li{
+  margin: 0;
+  padding: 0
+}
+html,body,#app {
+  width: 100%;
+  height: 100%;
+}
+/* 设置默认字体 */
+body,
+button, input, select, textarea { /* for ie */
+  /*font: 12px/1 Tahoma, Helvetica, Arial, "宋体", sans-serif;*/
+  /*font: 12px/1 Tahoma, Helvetica, Arial, "\5b8b\4f53", sans-serif; !* 用 ascii 字符表示，使得在任何编码下都无问题 *!*/
+  font-family: Arial,sans-serif,"Microsoft Yahei","微软雅黑",Tahoma;
+}
+
+address, cite, dfn, em, var { font-style: normal; } /* 将斜体扶正 */
+code, kbd, pre, samp, tt { font-family: "Courier New", Courier, monospace; } /* 统一等宽字体 */
+small { font-size: 12px; } /* 小于 12px 的中文很难阅读，让 small 正常化 */
+
+/* 重置列表元素 */
+ul, ol { list-style: none; }
+
+/* 重置文本格式元素 */
+a { text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+abbr[title], acronym[title] { /* 注：1.ie6 不支持 abbr; 2.这里用了属性选择符，ie6 下无效果 */
+  border-bottom: 1px dotted;
+  cursor: help;
+}
+
+q:before, q:after { content: ''; }
+
+/* 重置表单元素 */
+legend { color: #000; } /* for ie6 */
+fieldset, img { border: none; } /* img 搭车：让链接里的 img 无边框 */
+/* 注：optgroup 无法扶正 */
+button, input, select, textarea {
+  font-size: 100%; /* 使得表单元素在 ie 下能继承字体大小 */
+}
+
+/* 重置表格元素 */
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/* 重置 hr */
+hr {
+  border: none;
+  height: 1px;
+}
+
+div,p,span,section,a,img {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select:none;
+}
+
+button {
+  border: none;
+  outline: none;
+  margin: 0;
+  padding: 0;
+}
+
+
+.left{
+  float:left;
+}
+.float_right{
+  float: right;
+}
+.float_left{
+  float:left;
+}
+
+.clearfix:after {
+  content: " ";
+  display: block;
+  line-height: 0;
+  height: 0;
+  visibility: hidden;
+  clear: both;
+}
+.clearfix{zoom:1}
+
+.h100{
+  height: 100%;
+}
+.w100{
+  width: 100%!important;
+}
+.w50{
+  width: 50%!important;
+}
+.p10{
+  padding: 10px;
+}
+.mb10{
+  margin-bottom: 10px;
+}
+.mr10{
+  margin-right: 10px;
+}
+.mt10{
+  margin-top: 10px;
+}
+.mtb10{
+  margin: 10px 0;
+}
+.center{
+  text-align: center;
+}
+.dib{
+  display: inline-block;
+}
+.table_row{
+  /*background-color: #1c2a44 !important;*/
+  color: #607D8B;
+}
+
+::-webkit-scrollbar {
+  display: none;
+  /*width: 14px;*/
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-thumb {
+  /*border-radius: 999px;*/
+  border: 1px solid #9E9E9E;
+}
+
+::-webkit-scrollbar-track {
+  /*box-shadow: 1px 1px 5px rgba(0, 0, 0, .2) inset;*/
+}
+
+::-webkit-scrollbar-thumb {
+  min-height: 20px;
+  background-clip: content-box;
+  box-shadow: 0 0 0 5px rgba(0, 0, 0, .2) inset;
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+
+.tagtag{
+  height: 14px;
+  font-size: 13px;
+  color: #fff;
+  border-radius: 2px;
+  padding: 1px 0;
+  margin: 0 2px;
+  text-align: center;
+  line-height: 14px;
+  /*border:2px solid #fff;*/
+  display: inline;
+  cursor: pointer;
+  user-select: none
+  /*-webkit-user-modify: read-only !important;*/
+}
+.jiange{
+  /*background: #607D8B;*/
+  color: #607D8B;
+  border: 1px solid #607D8B;
+}
+.action{
+  /*background: #673AB7;*/
+  color: #673AB7;
+  border: 1px solid #673AB7;
+}
+.tagImg{
+  /*background: #cf9236;*/
+  color: #cf9236;
+  border: 1px solid #cf9236;
+}
+.tagVideo{
+  /*background: #009688;*/
+  color: #009688;
+  border: 1px solid #009688;
+}
+
+input:-webkit-autofill , textarea:-webkit-autofill, select:-webkit-autofill {
+  background-color:transparent;
+  transition: background-color 50000s ease-in-out 0s;
+}
+input {
+  background-color:transparent;
+}
+/*我的脚本预览框样式*/
+.previewDialog{
+  /* background: #2c2d2f; */
+  background: url(https://large.magics-ad.com/mygz-file/image/dialog.png) no-repeat;
+  background-size: 100% 100%;
+}
+
+
+.backNormal{
+  background: none;
+  width: 60px; margin-right: 20px;
+  height: 30px;
+  cursor: pointer;
+  font-size: 16px;
+  color: #666666;
+  transition: all .5s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.backNormal ._icon{
+  margin-right: 5px;
+  font-size: 23px;
+}
+.backNormal:hover{
+  color: #5648FF;
+}
