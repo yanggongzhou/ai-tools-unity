@@ -146,7 +146,9 @@
   import { SSTTS } from '../../api/sstts'
   import { requestServices } from "../../api/api";
   import axios from 'axios'
+  import BBTTS from './bbtts'
   export default {
+    mixins: [ BBTTS ],
     components:{
       'my-upload':upload,
       saveloading
@@ -216,15 +218,9 @@
       let self = this;
       Bus.$on('ExportJsonPreview',res=>{
         self.exportJson().then((data)=>{
-          SSTTS.getLongTTS(data.noTagText)
-            .then(tts=>{
-              let _data = {
-                timeline:tts.timeline,
-                buffer: tts.buffer,
-                json:resultJSON.resultJsonObj
-              }
-            Bus.$emit('previewOnline',_data);//审核内容，当前预览，
-          })
+
+          getPreviewOnline(JSON.stringify([resultJSON.resultJsonObj]))
+          console.log('在线预览')
         })
       })
 
@@ -261,6 +257,7 @@
                 avatar_name = val.name
               }
             })
+
             SSTTS.getLongTTS(data.noTagText)
               .then(tts=>{
                 self.LOADING = 4;
@@ -298,7 +295,7 @@
                         self.LOADING = NaN;
                         self.$message.info('保存失败');
                         // self.$message.error(res.result.message);
-                        Bus.$emit('handleLoginDialog', true);
+                        // Bus.$emit('handleLoginDialog', true);
                       },1000)
                     }
                   })
@@ -331,7 +328,7 @@
                         self.LOADING = NaN;
                         self.$message.info('保存失败');
                         if(res.return_code == 1009) {
-                          Bus.$emit('handleLoginDialog', true);
+                          // Bus.$emit('handleLoginDialog', true);
                         }
                       },1000)
                     }
@@ -491,11 +488,11 @@
         let content = JSON.stringify(_obj);
         let blob = new Blob([content], { type: "text/plain;charset=utf-8" }); // 把数据转化成blob对象
         // //file在edge浏览器中不支持
-        // let file = new File([blob], "ai.json", { lastModified: Date.now() }); // blob转file
-        blob.lastModifiedDate = new Date();
-        blob.name = "ai.json";
+        let file = new File([blob], "ai.json", { lastModified: Date.now() }); // blob转file
+        // blob.lastModifiedDate = new Date();
+        // blob.name = "ai.json";
         let fd = new FormData();
-        fd.append("file", blob);
+        fd.append("file", file);
         fd.append("user_id", this.$root.ai_user_id);
         fd.append("access_token", this.$root.ai_user_token);
         fd.append("target", 1);

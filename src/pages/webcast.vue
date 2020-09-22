@@ -334,7 +334,7 @@ export default {
                     this.$root.ai_user_token = '';
                     Cookies.set('ai_user_id', '');
                     Cookies.set('ai_user_token', '')
-                    this.$router.push('/login')
+
                 }
             })
         },

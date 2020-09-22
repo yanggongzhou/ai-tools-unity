@@ -43,9 +43,6 @@
       if(this.$route.params.name){
         this.jsonName = this.$route.params.name
       }
-      Bus.$on('previewOnline',res=>{
-        getPreviewOnline(res);
-      });
     },
     methods:{
       //预览

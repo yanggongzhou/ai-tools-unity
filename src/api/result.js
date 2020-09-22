@@ -8,7 +8,7 @@ export const resultJSON = {
     "avatar":{
       "h5":"https://large.magics-ad.com/webgl/sdk/assets/assistant/lijiaqi.magics",
       "app":"",
-      "unity":"name",
+      "unity":"bubaichi",
       "def": {
         "x": 0.68544921875,
         "y": 0.8186619718309859,

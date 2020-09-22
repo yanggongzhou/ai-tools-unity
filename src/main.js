@@ -27,7 +27,7 @@ new Vue({
       ai_user_id: 726,
       // ai_user_id: '' || Cookies.get('ai_user_id'),
       ai_user_phone: '' || Cookies.get('ai_user_phone'),
-      ai_user_token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJtYWdpY3MtYWQuY29tIiwiYXVkIjoiIiwiaWF0IjoxNjAwNzU0ODQyLCJuYmYiOjE2MDA3NTQ4NDQsImV4cCI6MTYwMDc2MjA0MiwiZGF0YSI6eyJ1c2VyaWQiOjcyNiwidXNlcm5hbWUiOiIxODYxMjc2NjM3MCJ9fQ.t0YgFcBB7Ry4UiRvBSWovA2cQWehGmz-fmPQtYcr6io',
+      ai_user_token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJtYWdpY3MtYWQuY29tIiwiYXVkIjoiIiwiaWF0IjoxNjAwNzcwMzgyLCJuYmYiOjE2MDA3NzAzODQsImV4cCI6MTYwMDc3NzU4MiwiZGF0YSI6eyJ1c2VyaWQiOjcyNiwidXNlcm5hbWUiOiIxODYxMjc2NjM3MCJ9fQ.rXIE2zmMy2Dt2yiLkDcmyu7anpXL9Nr93D8bdUWcHJk",
       // ai_user_token: '' || Cookies.get('ai_user_token'),
       // isOpenBeforePlayTipsAgain: true && !Cookies.get('isOpenBeforePlayTipsAgain'),
       isPlayingScript: false, // 是否正在直播
