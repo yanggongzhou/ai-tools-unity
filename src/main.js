@@ -23,7 +23,7 @@ new Vue({
   router,
   data: () => {
     return {
-      role_id:21,//角色ID；21-虚拟直播；23-真人+虚拟主播
+      role_id:23,//角色ID；21-虚拟直播；23-真人+虚拟主播
       ai_user_id: 726,
       // ai_user_id: '' || Cookies.get('ai_user_id'),
       ai_user_phone: '' || Cookies.get('ai_user_phone'),

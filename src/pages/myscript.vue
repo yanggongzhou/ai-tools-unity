@@ -21,16 +21,6 @@
                         :value='role.value'
                     ></el-option>
                 </el-select>
-                <span class="filter_label">参考场景：</span>
-                <el-select class="filterOptions" @change='fetchAllScripts' v-model='referSceneValue'>
-                    <el-option
-                        v-for='(role,idx) in referScenes'
-                        :key='idx'
-                        :label='role.label'
-                        :value='role.value'
-                    ></el-option>
-                </el-select>
-
                 <div class='search'>
                     <el-input  class='search_ipt' v-model="searchScriptName" placeholder="剧本名称" clearable></el-input>
                     <button class='light-btn search_btn' type="primary" @click="fetchAllScripts">查询</button>
@@ -40,7 +30,7 @@
             <el-table
               size="mini"
               row-key="updated_at" :data='scriptData' style='width:100%' empty-text='暂无剧本' height='450' max-height="450">
-                <el-table-column align="center" label="更新时间">
+                <el-table-column align="center" label="更新时间" min-width="150">
                     <template slot-scope="scope">
                         <span>{{scope.row.updated_at | created_atFilter}}</span>
                     </template>
@@ -50,24 +40,19 @@
                         <span>{{scope.row.name}}</span>
                     </template>
                 </el-table-column>
-                <el-table-column align="center" label="剧本时长">
+                <el-table-column align="center" label="剧本段数">
                     <template slot-scope="scope">
-                        <span>{{handleScriptTime(scope.row.time)}}</span>
+                        <span>{{scope.row.paragraph_number}}</span>
                     </template>
                 </el-table-column>
-                <el-table-column align="center" label="关联主播角色">
+                <el-table-column align="center" label="关联IP形象">
                     <template slot-scope="scope">
                         <span>{{scope.row.avatar_name}}</span>
                     </template>
                 </el-table-column>
-                <el-table-column align="center" label="参考场景">
+                <el-table-column align="center" label="操作" min-width="130">
                     <template slot-scope="scope">
-                        <span>{{scope.row.scene_type | scene_typeFilter}}</span>
-                    </template>
-                </el-table-column>
-                <el-table-column align="center" label="操作" width="220">
-                    <template slot-scope="scope">
-                        <el-button @click='handlePreview(scope.row)' type="text" size="small">预览</el-button>
+                        <el-button @click='handleCheck(scope.row)' type="text" size="small">查看</el-button>
                         <el-button @click='handleEdit(scope.row)' type="text" size="small">编辑</el-button>
                         <!-- <el-button @click='handleCopy(scope.row)' type="text" size="small">复用</el-button> -->
                         <el-button @click='handleDelete(scope.row)' type="text" size="small" style='color:#FF7272;'>删除</el-button>
@@ -107,7 +92,7 @@
               :before-close="previewDialogClose"
               :visible.sync="isShowPreviewDialog">
                 <div class="previewbox">
-                  <previewCurrent ref="previewCurrent" :scriptRow="scriptRow"></previewCurrent>
+<!--                  <previewCurrent ref="previewCurrent" :scriptRow="scriptRow"></previewCurrent>-->
                 </div>
             </el-dialog>
         </div>
@@ -115,8 +100,7 @@
 </template>
 <script>
 import { requestServices } from '../api/api';
-import { handleScriptTime } from '../api/handleTime';
-import previewCurrent from "@/components/preview/preview-current";
+
 import axios from "axios";
 import Cookies from 'js-cookie';
 export default {
@@ -124,24 +108,6 @@ export default {
     created_atFilter(val){
       return new Date(val*1000).toLocaleString()
     },
-    scene_typeFilter(val){
-      let _name;
-        switch (val) {
-          case 0:
-            _name='默认类型';
-            break;
-          case 1:
-            _name='淘宝';
-            break;
-          case 2:
-            _name='抖音';
-            break;
-          case 3:
-            _name='快手';
-            break ;
-        }
-      return _name;
-    }
   },
     data() {
         return {
@@ -164,25 +130,7 @@ export default {
                 }
             ],
             anchorRoleValue: '',
-            referScenes: [
-                {
-                    value: '',
-                    label: '全部'
-                },
-                {
-                    value: 1,
-                    label: '淘宝'
-                },
-                {
-                    value: 2,
-                    label: '抖音'
-                },
-                {
-                    value: 3,
-                    label: '快手'
-                }
-            ],
-            referSceneValue: '',
+
             searchScriptName: '',
             scriptData: [],
             isShowDelDialog: false,
@@ -202,7 +150,6 @@ export default {
         this.fetchAllScripts();
     },
     methods: {
-        handleScriptTime: handleScriptTime,
         fetchAllScripts() {
             requestServices.getAllScripts({
                 role_id:this.$root.role_id,
@@ -210,7 +157,7 @@ export default {
                 access_token: this.$root.ai_user_token,
                 gs_name: this.searchScriptName, // 剧本名称
                 avatar_name: this.anchorRoleValue, // 精灵名称
-                scene_type: this.referSceneValue, // 场景类型；0-默认类型；1-淘宝；2-抖音；3-快手
+                scene_type: '', // 场景类型；0-默认类型；1-淘宝；2-抖音；3-快手
                 page_start: this.start_page,
                 page_count: this.page_count
             }).then(res => {
@@ -229,19 +176,12 @@ export default {
             })
 
         },
-        handlePreview(row) {
+        handleCheck(row) {
             this.isShowPreviewDialog = true;
             this.scriptRow = row;
-            this.$nextTick(()=>{
-              this.$refs.previewCurrent.getJson(row)
-            })
         },
         previewDialogClose(done){
-          this.$refs.previewCurrent.destoryEvent(res=>{
-            setTimeout(()=>{
-              done();
-            },500)
-          })
+          done();
         },
         handleEdit(_idx) {
           axios.get(_idx.script_url)
@@ -289,9 +229,6 @@ export default {
           // window.open(route.href, '_blank');
         }
     },
-    components: {
-        previewCurrent
-    }
 }
 </script>
 <style scoped lang='less'>

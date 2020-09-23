@@ -131,6 +131,7 @@
                     name:self.jsonName,
                     preview_url:'',
                     script_url:uploadRes.data.result.upload_url,
+                    paragraph_number:1,
                     avatar_id:resultJSON.avatarID,
                     avatar_name:avatar_name,
                     scene_type:'1',//0-默认类型；1-淘宝；2-抖音；3-快手
@@ -153,6 +154,7 @@
                     name:self.jsonName,
                     preview_url:'',
                     script_url:uploadRes.data.result.upload_url,
+                    paragraph_number:1,
                     avatar_id:resultJSON.avatarID,
                     avatar_name:avatar_name,
                     scene_type:'1',//0-默认类型；1-淘宝；2-抖音；3-快手
