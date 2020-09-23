@@ -52,32 +52,36 @@
       return{
         that:this,
         step:1,
-        avatarID:4,
+        avatarID:1,
         radioData:[],
       }
     },
 
     created() {
-      // requestServices.getAllAvatars({
-      //   user_id:this.$root.ai_user_id,
-      //   access_token:this.$root.ai_user_token,
-      //   isAll:1
-      // }).then(res=>{
-      //   console.log('全部avatar数据',res)
-      // })
       this.radioData = resultJSON.avatarData
       this.avatarID = resultJSON.avatarID
     },
     mounted() {
-      // let self = this;
-      // setTimeout(()=>{
-      //   self.$emit('initAvatar')
-      // },1000)
+      let _name = '';
+      this.radioData.forEach(item=>{
+        if(item.ind === this.avatarID){
+          _name = item.avatarName
+        }
+      })
+      UnityChangeAvatar(_name)
     },
     methods:{
       radioChange(val){
         this.avatarID = val;
+        let _name = '';
+        this.radioData.forEach(item=>{
+          if(item.ind === val){
+            _name = item.avatarName
+          }
+        })
         resultJSON.avatarID = val;
+        resultJSON.resultJsonObj.avatar.unity = _name;
+        UnityChangeAvatar(_name)
       },
       backTo(){
         this.$router.push({path:'/myscript'})

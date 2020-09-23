@@ -481,14 +481,14 @@ export default {
 .w-textarea {
   width: 100%;
   box-sizing: border-box;
-  border-radius: 4px;
+  /*border-radius: 4px;*/
   margin-bottom: 15px;
   overflow: hidden;
   position: relative;
 
   &_input {
     width: 100%;
-    height: 430px;
+    height: 300px;
     min-height: 100px;
     /*background: white;*/
     background: linear-gradient(#fefbf6, antiquewhite);
@@ -503,7 +503,7 @@ export default {
     -webkit-user-modify: read-write-plaintext-only !important;
     // 兼容safari
     user-select: text;
-    border-radius: 8px;
+    /*border-radius: 8px;*/
     &:focus {
       outline: none;
     }
@@ -511,21 +511,21 @@ export default {
 
   .w-textarea_tools {
     padding: 0 10px;
-    height: 70px;
-    line-height: 70px;
+    height: 50px;
+    line-height: 50px;
     /*background-color: #f5f7fa;*/
     background-color: #fff;
     color: #666;
     font-size: 0px;
     .w-textarea_tools__item {
       font-size: 12px;
-      margin-top: 18px;
+      margin-top: 10px;
       display: inline-block;
       line-height: 1;
       padding: 5px 8px;
       margin-right: 8px;
-      height: 34px;
-      width: 92px;
+      height: 30px;
+      width: 85px;
       border-radius: 32px;
       cursor: pointer;
       border: 1px solid #dcdfe6;

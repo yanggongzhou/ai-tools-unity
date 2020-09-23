@@ -1,6 +1,8 @@
 <template>
   <div class="container" ref="wise">
+    <leftControl class="container_left"></leftControl>
     <w-textarea v-model="testData"
+                class="container_textarea"
                 :testData="testData"
                 tag="wise" ref="testText"
                 maxlength="100000"
@@ -116,10 +118,9 @@
           <span class="actionTitle">插入动作</span>
           <el-button class="actionBtn" size="small" v-for="(val,ind) in actionShowList" :key="ind+'animation'">
             <div class="animation-name" @click="addAction(val)">{{val.label}}</div>
-            <div class="animation-show" @click.stop="previewAction(val)">
+            <div class="animation-show" @click="previewAction(val)">
               <el-icon class="el-icon-video-play"></el-icon>
             </div>
-
           </el-button>
         </div>
       </div>
@@ -139,29 +140,152 @@
 </template>
 
 <script>
+  import leftControl from './leftControl'
   import saveloading from "./saveloading";
   import upload from "./upload";
   import {resultJSON} from '../../api/result'
   import Bus from '../../api/bus'
-  import { SSTTS } from '../../api/sstts'
   import { requestServices } from "../../api/api";
   import axios from 'axios'
-  import BBTTS from './bbtts'
   export default {
-    mixins: [ BBTTS ],
     components:{
       'my-upload':upload,
-      saveloading
+      saveloading,
+      leftControl
     },
     props:{
-      actionShowList:Array,
-      avatarID:Number,
       TriggerDiv:Array
     },
     data() {
       return {
+        avatarID:3,
+        // actionShowList:[],
+        actionShowList:[
+          {
+            "label": "2原地站立，微动，呼吸感",
+            "value": "TS_0"
+          }, {
+            "label": "10跪地",
+            "value": "TS_10"
+          }, {
+            "label": "11单膝跪地献花",
+            "value": "TS_11"
+          }, {
+            "label": "13惊慌抖动",
+            "value": "TS_13"
+          }, {
+            "label": "14跳着想吃东西，手抬高",
+            "value": "TS_14"
+          }, {
+            "label": "16张嘴身体前倾被喂食",
+            "value": "TS_16"
+          }, {
+            "label": "18健身",
+            "value": "TS_18"
+          }, {
+            "label": "1A鼓掌",
+            "value": "TS_1a"
+          }, {
+            "label": "1B单腿左右鼓掌",
+            "value": "TS_1b"
+          }, {
+            "label": "1C举起手鼓掌",
+            "value": "TS_1c"
+          }, {
+            "label": "20耸肩摊手",
+            "value": "TS_20"
+          }, {
+            "label": "21挠挠头",
+            "value": "TS_21"
+          }, {
+            "label": "22马步，快速摇晃手",
+            "value": "TS_22"
+          }, {
+            "label": "23晕，站不稳，倒地",
+            "value": "TS_23"
+          }, {
+            "label": "24激动的搓着手",
+            "value": "TS_24"
+          }, {
+            "label": "25饿的摸肚子",
+            "value": "TS_25"
+          }, {
+            "label": "26撑的摸肚子",
+            "value": "TS_26"
+          }, {
+            "label": "27拱手作揖",
+            "value": "TS_27"
+          }, {
+            "label": "28捂嘴",
+            "value": "TS_28"
+          }, {
+            "label": "29鞠躬",
+            "value": "TS_29"
+          }, {
+            "label": "2骄傲背手",
+            "value": "TS_2"
+          }, {
+            "label": "30伸手摇手不不不",
+            "value": "TS_30"
+          }, {
+            "label": "31伸懒腰",
+            "value": "TS_31"
+          }, {
+            "label": "32飞吻",
+            "value": "TS_32"
+          }, {
+            "label": "33风骚动作",
+            "value": "TS_33"
+          }, {
+            "label": "34回眸一笑",
+            "value": "TS_34"
+          }, {
+            "label": "35用力踩扁",
+            "value": "TS_35"
+          }, {
+            "label": "36撒福利，手上拿红票子撒天上",
+            "value": "TS_36"
+          }, {
+            "label": "37飞起来",
+            "value": "TS_37"
+          }, {
+            "label": "38a桌面上游泳，正面",
+            "value": "TS_38a"
+          }, {
+            "label": "38b桌面上游泳，背面",
+            "value": "TS_38b"
+          }, {
+            "label": "3b伸手",
+            "value": "TS_3b"
+          }, {
+            "label": "3c正反抬手",
+            "value": "TS_3c"
+          }, {
+            "label": "4叉腰",
+            "value": "TS_4"
+          }, {
+            "label": "5a卖萌",
+            "value": "TS_5a"
+          }, {
+            "label": "5b卖萌",
+            "value": "TS_5b"
+          }, {
+            "label": "5c卖萌",
+            "value": "TS_5c"
+          }, {
+            "label": "6揉脸卖萌",
+            "value": "TS_6"
+          }, {
+            "label": "7自信励志握拳",
+            "value": "TS_7"
+          }, {
+            "label": "8自信POSE",
+            "value": "TS_8"
+          }, {
+            "label": "9抬手欢呼",
+            "value": "TS_9"
+          }],
         LOADING:NaN,
-
         testData:'',
         // testData: `<wise id="123"><div class="jiange tagtag">间隔3s</div></wise>`,
 
@@ -181,6 +305,7 @@
           {label:'至脚本播放结束',value:1},
           {label:'自定义时长',value:2},
         ],
+
         ruleForm:{
           region:'1',//展示区域
           dismissTimeType:2,//播放时间的方式
@@ -204,22 +329,18 @@
         videoVisible:false,
         imgVisible:false,
 
-        showTime:3,
-
         cutTxtArr:[],//每次裁剪后被替换的缓存数据
         cutArr:[],//裁剪数据的缓存区
         cutCount:50,//裁剪的基准长度,即文字暂定50字后第一个标点（，。！？.....等）的分层
 
-        calibrationNum:0,//校准下标
-        ZHSSarr:['ng','a','o','e','ii','iii','er','eer','ai','ei','ao','ou','an','en','ang','eng','ong','i','ia','iu','io','iao','ie','iou','ian','in','iang','ing','iong','u','ua','uo','uai','uei','uan','uen','uang','ueng','v','ve','van','vn'],
+
       };
     },
     mounted() {
       let self = this;
       Bus.$on('ExportJsonPreview',res=>{
         self.exportJson().then((data)=>{
-
-          getPreviewOnline(JSON.stringify([resultJSON.resultJsonObj]))
+          UnityPreview(JSON.stringify([resultJSON.resultJsonObj]))
           console.log('在线预览')
         })
       })
@@ -258,84 +379,74 @@
               }
             })
 
-            SSTTS.getLongTTS(data.noTagText)
-              .then(tts=>{
-                self.LOADING = 4;
-                //总剧本时长计入间隔时间
-                let _time =  (tts.timeline[tts.timeline.length-1].beg+tts.timeline[tts.timeline.length-1].dur);
-                resultJSON.resultJsonObj.param.forEach(param=>{
-                  _time += param.intervalTime;
+              if(self.$route.params.id && type!=='另存为'){
+                requestServices.editScript({
+                  user_id:self.$root.ai_user_id,
+                  access_token:self.$root.ai_user_token,
+                  name:jsonName,
+                  preview_url:'',
+                  script_url:uploadRes.data.result.upload_url,
+                  avatar_id:resultJSON.avatarID,
+                  avatar_name:avatar_name,
+                  scene_type:'1',//0-默认类型；1-淘宝；2-抖音；3-快手
+                  time:0,
+                  gs_id:self.$route.params.id,
+                  template_json:''//信息版位置信息数据
+                }).then(res=>{
+                  if(res.return_code===1000){
+                    self.$message.success('保存成功');
+                    self.LOADING = 5;
+                    // clearTimeout(LOADINGTimeOut)
+                    setTimeout(()=>{
+                      self.LOADING = NaN;
+                      // self.$router.push('/myscript')
+                    },1000)
+                  }else {
+                    self.LOADING = 51;
+                    setTimeout(()=>{
+                      self.LOADING = NaN;
+                      self.$message.info('保存失败');
+                      // self.$message.error(res.result.message);
+                      // Bus.$emit('handleLoginDialog', true);
+                    },1000)
+                  }
                 })
-                _time=_time/1000+'';
-                if(self.$route.params.id && type!=='另存为'){
-                  requestServices.editScript({
-                    user_id:self.$root.ai_user_id,
-                    access_token:self.$root.ai_user_token,
-                    name:jsonName,
-                    preview_url:'',
-                    script_url:uploadRes.data.result.upload_url,
-                    avatar_id:resultJSON.avatarID,
-                    avatar_name:avatar_name,
-                    scene_type:'1',//0-默认类型；1-淘宝；2-抖音；3-快手
-                    time:_time,
-                    gs_id:self.$route.params.id,
-                    template_json:JSON.stringify(resultJSON.infoModelData)
-                  }).then(res=>{
-                    if(res.return_code===1000){
-                      self.$message.success('保存成功');
-                      self.LOADING = 5;
-                      // clearTimeout(LOADINGTimeOut)
-                      setTimeout(()=>{
-                        self.LOADING = NaN;
-                        // self.$router.push('/myscript')
-                      },1000)
-                    }else {
-                      self.LOADING = 51;
-                      setTimeout(()=>{
-                        self.LOADING = NaN;
-                        self.$message.info('保存失败');
-                        // self.$message.error(res.result.message);
+              }
+              else{
+                requestServices.addScript({
+                  user_id:self.$root.ai_user_id,
+                  access_token:self.$root.ai_user_token,
+                  name:jsonName,
+                  preview_url:'',
+                  script_url:uploadRes.data.result.upload_url,
+                  avatar_id:resultJSON.avatarID,
+                  avatar_name:avatar_name,
+                  scene_type:'1',//0-默认类型；1-淘宝；2-抖音；3-快手
+                  time:0,
+                  template_json:''
+                }).then(res=>{
+                  if(res.return_code===1000){
+                    self.$route.params.id=res.result.gs_id
+                    console.log(self.$route.params)
+                    self.$message.success('保存成功');
+                    self.LOADING = 5;
+                    // clearTimeout(LOADINGTimeOut)
+                    setTimeout(()=>{
+                      self.LOADING = NaN;
+                      // self.$router.push('/myscript')
+                    },1000)
+                  }else{
+                    self.LOADING = 51;
+                    setTimeout(()=>{
+                      self.LOADING = NaN;
+                      self.$message.info('保存失败');
+                      if(res.return_code == 1009) {
                         // Bus.$emit('handleLoginDialog', true);
-                      },1000)
-                    }
-                  })
-                }else{
-                  requestServices.addScript({
-                    user_id:self.$root.ai_user_id,
-                    access_token:self.$root.ai_user_token,
-                    name:jsonName,
-                    preview_url:'',
-                    script_url:uploadRes.data.result.upload_url,
-                    avatar_id:resultJSON.avatarID,
-                    avatar_name:avatar_name,
-                    scene_type:'1',//0-默认类型；1-淘宝；2-抖音；3-快手
-                    time:_time,
-                    template_json:JSON.stringify(resultJSON.infoModelData)
-                  }).then(res=>{
-                    if(res.return_code===1000){
-                      self.$route.params.id=res.result.gs_id
-                      console.log(self.$route.params)
-                      self.$message.success('保存成功');
-                      self.LOADING = 5;
-                      // clearTimeout(LOADINGTimeOut)
-                      setTimeout(()=>{
-                        self.LOADING = NaN;
-                        // self.$router.push('/myscript')
-                      },1000)
-                    }else{
-                      self.LOADING = 51;
-                      setTimeout(()=>{
-                        self.LOADING = NaN;
-                        self.$message.info('保存失败');
-                        if(res.return_code == 1009) {
-                          // Bus.$emit('handleLoginDialog', true);
-                        }
-                      },1000)
-                    }
-                  })
-                }
-
-              })
+                      }
+                    },1000)
+                  }
+                })
+              }
           })
         })
       })
@@ -368,6 +479,8 @@
     },
 
     methods: {
+      //预览动作
+      previewAction(val){ UnityAvatarAction(val.value) },
       //删除标签更新testData
       delTagMain(txt){
         this.testData=this.testData.replace(txt,'')
@@ -623,10 +736,6 @@
             //✨✨✨✨第2.0步info信息插入
             //信息板
             _trigInfo.forEach((val,ind)=>{
-              // val.info.margins.top = (val.info.margins.top - val.info.height/2) / resultJSON.avatarBox.height;
-              // val.info.margins.left = (val.info.margins.left - val.info.width/2) / resultJSON.avatarBox.width;
-              // val.info.height /= resultJSON.avatarBox.height;
-              // val.info.width /= resultJSON.avatarBox.width;
               _domMessage.forEach(dom=>{
                 if(dom.datasetObj.url===val.info.child[0].url){
                   val.index = dom.index;
@@ -700,20 +809,6 @@
             resolve({message:'json数据渲染成功',noTagText:res.noTagText})
           })
         })
-      },
-      //取回时间戳，排序为韵母下标————————————————————————————————————————————————待完成
-      calibrationIndex(){
-        let self = this;
-        SSTTS.getLongTTS(resultJSON.resultJsonObj.param[this.calibrationNum].content)
-          .then(res=>{
-            let allTimeArr=[];
-            res.timeline.forEach((val,index)=>{
-              if(self.ZHSSarr.indexOf(val.phm)!==-1){
-                allTimeArr.push(val)
-              }
-            })
-            console.log(allTimeArr)
-          })
       },
 
       //处理基准长度单位前提下的第一个标点（，。）content
@@ -825,10 +920,6 @@
         let _text =  `<div class="action tagtag">`+val.label+`<i class="el-icon-close" onClick="delTag(\``+_id+`\`)"></i>&nbsp;</div>`
         this.$refs.testText.addTag(_text,_data)
       },
-      //预览动作
-      previewAction(val){
-        this.$emit('actionChange',val.value);
-      },
       getDisplayImg(Obj){
         this.imgForm.url = Obj.url;
         this.imgForm.name = Obj.name;
@@ -889,22 +980,31 @@
       },
 
     },
-    beforeDestroy() {
-
-    }
   };
 </script>
 
 
 
 <style lang="less" scoped>
+  .container{
+    font-size: 0;
+    .container_left{
+      float: left;
+    }
+    .container_textarea{
+      float: left;
+      width: calc(100% - 68px);
+    }
+  }
+
+
   .tagBox{
     background: #8FAEB3;
     position: relative;
   }
 .interval-tag{
   position: absolute;
-  top: -51px;
+  top: -44px;
   right: 245px;
 }
   .actionTitle{
