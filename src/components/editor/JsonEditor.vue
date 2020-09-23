@@ -1,6 +1,30 @@
 <template>
   <div class="container clearfix" ref="wise">
-    <leftControl class="container_left"></leftControl>
+    <div class="leftBox float_left">
+      <div class="leftBox2">
+        <div class="left_div"
+             v-for="(val,ind) in ScriptList"
+             :key="ind+'model'">
+          <div class="left_icon">
+            <i class="view el-icon-view"></i>
+            <i class="delete el-icon-delete"></i>
+          </div>
+
+          <el-radio
+            @change="scriptChange"
+            class="left_card"
+            v-model="scriptIndex" :label="ind" border>
+            <div class="left_card_item">
+              <div class="label">{{ind | indFilter}}</div>
+            </div>
+          </el-radio>
+        </div>
+      </div>
+      <div class="left_add" @click="addScript">
+        + 添加
+      </div>
+    </div>
+
     <w-textarea v-model="testData"
                 class="container_textarea"
                 :testData="testData"
@@ -138,23 +162,30 @@
 </template>
 
 <script>
-  import leftControl from './leftControl'
   import upload from "./upload";
   import {resultJSON} from '../../api/result'
-  import Bus from '../../api/bus'
-  import { requestServices } from "../../api/api";
-  import axios from 'axios'
   export default {
+    filters:{
+      indFilter(val){
+        if((val+1).toString().length===1){
+          return '0'+(val+1)
+        }else{
+          return val;
+        }
+      }
+    },
     components:{
       'my-upload':upload,
-
-      leftControl
     },
     props:{
       TriggerDiv:Array
     },
     data() {
       return {
+        ScriptList:[],
+        scriptIndex:0,
+        scriptIndexOld:0,
+
         avatarID:3,
         // actionShowList:[],
         actionShowList:[
@@ -283,14 +314,6 @@
             "value": "TS_9"
           }],
         testData:'',
-        // testData: `<wise id="123"><div class="jiange tagtag">间隔3s</div></wise>`,
-
-        // tools: [
-        //   // { type: 'action', text: '模型动作' },
-        //   { type: 'video', text: '添加视频' },
-        //   { type: 'img', text: '添加图片' },
-        //   { type: 'clean', text: '清空标签' },
-        // ],
         intervalValue:0.5,//间隔时间
         dismissTimeTypeData:[
           {label:'至视频播放结束',value:0},
@@ -339,6 +362,9 @@
         this.$nextTick(()=>{
           this.editImport(this.$route.params.data);
         })
+      }else{
+        this.ScriptList[0] = JSON.parse(JSON.stringify(resultJSON.resultJsonObj))
+        this.$forceUpdate()
       }
     },
     watch:{
@@ -369,6 +395,23 @@
     },
 
     methods: {
+      //切换段落
+      scriptChange(val){
+        let self = this;
+        this.exportJson().then(data=>{
+          self.ScriptList[self.scriptIndexOld].param = JSON.parse(JSON.stringify(data.param))
+          self.scriptIndexOld = val;
+          self.editImport(self.ScriptList[val]);
+          // self.$emit('')
+          刷新dom元素数据
+        })
+        // console.log(self.ScriptList)
+      },
+      //添加段落
+      addScript(){
+        this.ScriptList[this.ScriptList.length] = JSON.parse(JSON.stringify(resultJSON.resultJsonObj))
+        this.$forceUpdate()
+      },
       //预览动作
       previewAction(val){ UnityAvatarAction(val.value) },
       //删除标签更新testData
@@ -486,22 +529,7 @@
         // console.log('contentBDArrcontentBDArr',contentBDArr)
         this.testData=contentBDArr.join('');
       },
-      //转换成file文件
-      obj2FormData(_obj) {
-        let content = JSON.stringify(_obj);
-        let blob = new Blob([content], { type: "text/plain;charset=utf-8" }); // 把数据转化成blob对象
-        // //file在edge浏览器中不支持
-        let file = new File([blob], "ai.json", { lastModified: Date.now() }); // blob转file
-        // blob.lastModifiedDate = new Date();
-        // blob.name = "ai.json";
-        let fd = new FormData();
-        fd.append("file", file);
-        fd.append("user_id", this.$root.ai_user_id);
-        fd.append("access_token", this.$root.ai_user_token);
-        fd.append("target", 1);
-        fd.append("type", 0);
-        return fd;
-      },
+
       //视频时长方式转换
       dismissTimeTypeChange(val){
         switch (val) {
@@ -552,14 +580,14 @@
 
       exportJson(type){
         let self = this;
-        resultJSON.resultJsonObj.param = [];
+        let exoprtParams = [];
         this.cutArr = [];
         // console.log(this.testData)
         return new Promise(resolve => {
           self.$refs.testText.exportMessage().then(res=>{
             if(!res.noTagText.replace(/[\ |\~|\`|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\-|\_|\+|\=|\||\\|\[|\]|\{|\}|\;|\:|\"|\'|\,|\<|\.|\>|\/|\?|\r\n]/g,"").match(/[\u4e00-\u9fa5\0-9]/g)){
-              self.$message.error('脚本内容需含有数字或汉字等有效文本内容！')
-              return false
+              // self.$message.error('脚本内容需含有数字或汉字等有效文本内容！')
+              // return false
             }
             console.log('标签信息',res.messageArr)
             console.log('页面数据',self.TriggerDiv)
@@ -618,10 +646,10 @@
             let _cutArr = JSON.parse(JSON.stringify(this.cutArr))
             _cutArr.forEach(item=>{
               item.forEach(val=>{
-                resultJSON.resultJsonObj.param.push(val);
+                exoprtParams.push(val);
               })
             })
-            // console.log('✨✨✨✨第一步文本数据分组',resultJSON.resultJsonObj.param)
+            // console.log('✨✨✨✨第一步文本数据分组',exoprtParams)
             //✨✨✨✨第2.0步info信息插入
             //信息板
             _trigInfo.forEach((val,ind)=>{
@@ -640,13 +668,13 @@
             }
             _trigInfo = _trigInfo.sort(sortData)//排序
             let contentCount = 0;
-            resultJSON.resultJsonObj.param.forEach((val,ind)=>{
+            exoprtParams.forEach((val,ind)=>{
               val.trigger = []
               _trigInfo.forEach(trig=>{
                 let _trig = JSON.parse(JSON.stringify(trig))
                 _trig.index-=contentCount
                 // 判断假如是最后有个标签也塞入json
-                if(ind!==resultJSON.resultJsonObj.param.length-1){
+                if(ind!==exoprtParams.length-1){
                   if(val.content.length>_trig.index&&_trig.index>=0){
                     val.trigger.push(_trig)
                   }
@@ -658,14 +686,14 @@
               })
               contentCount += val.content.length;
             });
-            // console.log('✨✨✨✨第2.0步info信息插入', resultJSON.resultJsonObj.param)
+            // console.log('✨✨✨✨第2.0步info信息插入', exoprtParams)
             //✨✨✨✨第2.1步动作信息插入
             contentCount =0
-            resultJSON.resultJsonObj.param.forEach((val,ind)=>{
+            exoprtParams.forEach((val,ind)=>{
               _actionMessage.forEach(act=>{
                 let _act = JSON.parse(JSON.stringify(act))
                 _act.index-=contentCount;
-                if(ind!==resultJSON.resultJsonObj.param.length-1){
+                if(ind!==exoprtParams.length-1){
                   if(val.content.length>_act.index&&_act.index>=0){
                     val.trigger.push(_act)
                   }
@@ -678,11 +706,11 @@
               });
               contentCount += val.content.length;
             });
-            // console.log('✨✨✨✨第2.1步动作信息插入', resultJSON.resultJsonObj.param)
+            // console.log('✨✨✨✨第2.1步动作信息插入', exoprtParams)
 
             //✨✨✨✨第三步动作及info等的标签index韵母排序----------------------------------待完成，现在以汉字和数字占位排序
             // [\u4e00-\u9fa5\a-zA-Z0-9]
-            resultJSON.resultJsonObj.param.forEach(val=>{
+            exoprtParams.forEach(val=>{
               val.trigger.forEach(trig=>{
                 let _content = val.content.slice(0,trig.index)
                 let _index = 0;
@@ -693,9 +721,7 @@
                 trig.index = _index;
               })
             })
-
-            console.log(resultJSON.resultJsonObj)
-            resolve({message:'json数据渲染成功',noTagText:res.noTagText})
+            resolve({message:'json数据渲染成功',noTagText:res.noTagText,param:exoprtParams})
           })
         })
       },
@@ -962,4 +988,105 @@
   .queren{
     background: #7455FF;
   }
+</style>
+<style lang="less" scoped>
+  /deep/.el-radio{
+    color: #E87E4D !important;
+  }
+  /deep/.el-radio.is-bordered.is-checked{
+    background: #E87E4D !important;
+  }
+  /deep/.el-radio__input.is-checked+.el-radio__label{
+    color: #FFFFFF!important;
+  }
+  .leftBox2{
+    height: 100%;
+    overflow: scroll;
+  }
+  .leftBox{
+    width: 68px;
+    height: 266px;
+    text-align: right;
+    position: relative;
+    .left_div{
+      position: relative;
+      .left_icon{
+        position: absolute;
+        left: 18px;
+        z-index: 1;
+        font-size: 13px;
+        width: 18px;
+        color: #FFFFFF;
+        transition: all .3s;
+        .view{
+          cursor: pointer;
+          background: #999999;
+          padding: 2px;
+          transition: all .3s;
+          &:hover{
+            background: #4CAF50;
+          }
+        }
+        .delete{
+          cursor: pointer;
+          margin-top: 1px;
+          padding: 2px;
+          background: #999999;
+          transition: all .3s;
+          &:hover{
+            background: #f54007;
+          }
+        }
+      }
+      &:hover .left_icon{
+        left: 0px;
+      }
+    }
+    .left_card{
+      position: relative;
+      z-index: 10;
+      width: 50px;
+      height: 35px!important;
+      margin-top: 0px;
+      padding: 0!important;;
+      overflow: hidden;
+      margin-left: 0px !important;
+      margin-right: 0px !important;
+      border: none;
+      border-top: 1px solid #E87E4D;
+      border-radius: 0px;
+      background: #FFFFFF!important;
+      /deep/.el-radio__input{
+        display: none;
+      }
+      /deep/.el-radio__label{
+        padding-left: 0;
+      }
+
+      .left_card_item{
+        font-size: 0;
+        .label{
+          font-size: 13px;
+          font-weight: 600;
+          height: 34px;
+          line-height: 34px;
+          text-align: center;
+        }
+      }
+    }
+    .left_add{
+      font-size: 13px;
+      color: #E87E4D;
+      position: absolute;
+      bottom: -34px;
+      padding: 8px 15px;
+      transition: all .3s;
+      &:hover{
+        cursor: pointer;
+        color: rgba(232, 126, 77, 0.84);
+        background: rgba(140, 147, 157, 0.19);
+      }
+    }
+  }
+
 </style>

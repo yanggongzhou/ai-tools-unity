@@ -36,8 +36,15 @@ export default {
     },
     computed: {},
     watch: {},
-    mounted() {},
+    mounted() {
+      //请求用户信息
+      UnityUserInfo();
+      window.WebUserMessage=this.WebUserMessage;
+    },
     methods: {
+      WebUserMessage(id,token,phone){
+        this.$message.info(id,token,phone)
+      },
         gotoPage(_page) {
           this.$router.push(_page)
             // if(_page == '/steper' || _page == '/webcast') {

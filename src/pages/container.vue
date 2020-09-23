@@ -66,15 +66,9 @@
       if(this.$route.params.data){
         this.jsonName = this.$route.params.name
         let res  = this.$route.params.data
-        resultJSON.resultJsonObj=JSON.parse(JSON.stringify(res))
-        self.TriggerDiv = [];
-        res.param.forEach(val=>{
-          val.trigger.forEach(val=>{
-            if(val.type==="info"){
-              self.TriggerDiv.push(val)
-            }
-          })
-        })
+        // resultJSON.resultJsonObj=JSON.parse(JSON.stringify(res))
+        resultJSON.resultJsonObj.avatar.unity = res.avatar.unity;
+        this.editImportTriggerDiv(res)
       }
 
       Bus.$on('delTag',res=>{
@@ -86,6 +80,17 @@
       })
     },
     methods:{
+      editImportTriggerDiv(data){
+        let self = this;
+        self.TriggerDiv = [];
+        data.param.forEach(val=>{
+          val.trigger.forEach(val=>{
+            if(val.type==="info"){
+              self.TriggerDiv.push(val)
+            }
+          })
+        })
+      },
       //预览
       previewBtn(){
         this.$refs.JsonEditorRef.exportJson().then((data)=>{
@@ -104,6 +109,7 @@
         if(this.jsonName.replace(/[\r\n]/g, "").replace(/\s+/g, "")){
           this.jsonNameValidate = false;
           self.$refs.JsonEditorRef.exportJson().then(data=>{
+            resultJSON.resultJsonObj.param = JSON.parse(JSON.stringify(data.params));
             let content = JSON.stringify(resultJSON.resultJsonObj);
             let blob = new Blob([content], { type: "text/plain;charset=utf-8" }); // 把数据转化成blob对象
             // //file在edge浏览器中不支持

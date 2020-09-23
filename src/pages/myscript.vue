@@ -1,7 +1,7 @@
 <template>
     <div id="myscript">
         <div class="common_content">
-          <button class="backNormal" @click="$router.back()">
+          <button class="backNormal" @click="$router.push('/homePage')">
             <span class="_icon">< </span>
             <span>返回</span>
           </button>
