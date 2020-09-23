@@ -1,5 +1,5 @@
 <template>
-  <div class="container" ref="wise">
+  <div class="container clearfix" ref="wise">
     <leftControl class="container_left"></leftControl>
     <w-textarea v-model="testData"
                 class="container_textarea"
@@ -129,8 +129,6 @@
 
 <!--    <el-button @click="exportJson" type="success"> 生成JSON脚本</el-button>-->
 
-    <saveloading v-show="LOADING" :LOADING="LOADING"></saveloading>
-
     <div id="newDom" style="display: none"></div>
     <div id="oldDom" style="display: none"></div>
     <div style="display: none">
@@ -141,7 +139,6 @@
 
 <script>
   import leftControl from './leftControl'
-  import saveloading from "./saveloading";
   import upload from "./upload";
   import {resultJSON} from '../../api/result'
   import Bus from '../../api/bus'
@@ -150,7 +147,7 @@
   export default {
     components:{
       'my-upload':upload,
-      saveloading,
+
       leftControl
     },
     props:{
@@ -285,7 +282,6 @@
             "label": "9抬手欢呼",
             "value": "TS_9"
           }],
-        LOADING:NaN,
         testData:'',
         // testData: `<wise id="123"><div class="jiange tagtag">间隔3s</div></wise>`,
 
@@ -338,118 +334,12 @@
     },
     mounted() {
       let self = this;
-      Bus.$on('ExportJsonPreview',res=>{
-        self.exportJson().then((data)=>{
-          UnityPreview(JSON.stringify([resultJSON.resultJsonObj]))
-          console.log('在线预览')
+      //编辑时数据导入
+      if(this.$route.params.data){
+        this.$nextTick(()=>{
+          this.editImport(this.$route.params.data);
         })
-      })
-
-
-      //保存json
-      Bus.$on('saveBtn',(jsonName,type)=>{
-        // let LOADINGTimeOut = setTimeout(()=>{
-        //   self.LOADING = '';
-        //   self.$message.error('服务器异常,请稍后重试...')
-        // },30000)
-        self.LOADING = 1;
-        self.exportJson().then(data=>{
-          self.LOADING = 2;
-          // console.log('data',self.obj2FormData(resultJSON.resultJsonObj))
-
-          let content = JSON.stringify(resultJSON.resultJsonObj);
-          let blob = new Blob([content], { type: "text/plain;charset=utf-8" }); // 把数据转化成blob对象
-          // //file在edge浏览器中不支持
-          let file = new File([blob], "ai.json", { lastModified: Date.now() }); // blob转file
-          let fd = new FormData();
-          fd.append("file", file);
-          fd.append("user_id", self.$root.ai_user_id);
-          fd.append("access_token", self.$root.ai_user_token);
-          fd.append("target", 1);
-          fd.append("type", 0);
-
-          axios.post(requestServices.uploadUrl,fd,{responseType:'multipart/form-data'})
-            .then(uploadRes=>{
-              self.LOADING = 3;
-            console.log(uploadRes)
-            let avatar_name = ''
-            resultJSON.avatarData.forEach(val=>{
-              if(val.ind===resultJSON.avatarID){
-                avatar_name = val.name
-              }
-            })
-
-              if(self.$route.params.id && type!=='另存为'){
-                requestServices.editScript({
-                  user_id:self.$root.ai_user_id,
-                  access_token:self.$root.ai_user_token,
-                  name:jsonName,
-                  preview_url:'',
-                  script_url:uploadRes.data.result.upload_url,
-                  avatar_id:resultJSON.avatarID,
-                  avatar_name:avatar_name,
-                  scene_type:'1',//0-默认类型；1-淘宝；2-抖音；3-快手
-                  time:0,
-                  gs_id:self.$route.params.id,
-                  template_json:''//信息版位置信息数据
-                }).then(res=>{
-                  if(res.return_code===1000){
-                    self.$message.success('保存成功');
-                    self.LOADING = 5;
-                    // clearTimeout(LOADINGTimeOut)
-                    setTimeout(()=>{
-                      self.LOADING = NaN;
-                      // self.$router.push('/myscript')
-                    },1000)
-                  }else {
-                    self.LOADING = 51;
-                    setTimeout(()=>{
-                      self.LOADING = NaN;
-                      self.$message.info('保存失败');
-                      // self.$message.error(res.result.message);
-                      // Bus.$emit('handleLoginDialog', true);
-                    },1000)
-                  }
-                })
-              }
-              else{
-                requestServices.addScript({
-                  user_id:self.$root.ai_user_id,
-                  access_token:self.$root.ai_user_token,
-                  name:jsonName,
-                  preview_url:'',
-                  script_url:uploadRes.data.result.upload_url,
-                  avatar_id:resultJSON.avatarID,
-                  avatar_name:avatar_name,
-                  scene_type:'1',//0-默认类型；1-淘宝；2-抖音；3-快手
-                  time:0,
-                  template_json:''
-                }).then(res=>{
-                  if(res.return_code===1000){
-                    self.$route.params.id=res.result.gs_id
-                    console.log(self.$route.params)
-                    self.$message.success('保存成功');
-                    self.LOADING = 5;
-                    // clearTimeout(LOADINGTimeOut)
-                    setTimeout(()=>{
-                      self.LOADING = NaN;
-                      // self.$router.push('/myscript')
-                    },1000)
-                  }else{
-                    self.LOADING = 51;
-                    setTimeout(()=>{
-                      self.LOADING = NaN;
-                      self.$message.info('保存失败');
-                      if(res.return_code == 1009) {
-                        // Bus.$emit('handleLoginDialog', true);
-                      }
-                    },1000)
-                  }
-                })
-              }
-          })
-        })
-      })
+      }
     },
     watch:{
       //监听输入框文本，主要实现删除功能
@@ -669,7 +559,6 @@
           self.$refs.testText.exportMessage().then(res=>{
             if(!res.noTagText.replace(/[\ |\~|\`|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\-|\_|\+|\=|\||\\|\[|\]|\{|\}|\;|\:|\"|\'|\,|\<|\.|\>|\/|\?|\r\n]/g,"").match(/[\u4e00-\u9fa5\0-9]/g)){
               self.$message.error('脚本内容需含有数字或汉字等有效文本内容！')
-              self.LOADING = '';
               return false
             }
             console.log('标签信息',res.messageArr)

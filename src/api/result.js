@@ -8,10 +8,10 @@ export const resultJSON = {
     "avatar":{
       "h5":"",
       "app":"",
-      "unity":"bubaichi",
+      "unity":"",
       "def": {
-        "x": 0.68544921875,
-        "y": 0.8186619718309859,
+        "x": 0,
+        "y": 0,
         "scale": 1,
         "rotation": {
           "x": 0,
@@ -20,19 +20,8 @@ export const resultJSON = {
         }
       }
     },
-    "tts": {
-      "type": "shensheng",
-      "speed": "normal",
-      "voiceName": "zh-CN-male-shiye",
-      "pitch":"normal",
-    },
-    "param": [
-      // {
-      //   "content": "",
-      //   "intervalTime": 0,
-      //   "trigger": []
-      // }
-    ]
+    "tts": {},
+    "param": []
   },
   avatarBox:{width:320,height:568},
 
@@ -77,15 +66,15 @@ export const resultJSON = {
     "version": 1,
     "url": "zip下载地址",
     "name": "",
-    "background":"https://large.magics-ad.com/mygz-file/modelBG/bg1/%E5%BD%A9%E5%A6%86.png",
+    "background":"",
     "auto":false,
     "avatar":{
-      "h5":"https://large.magics-ad.com/webgl/sdk/assets/assistant/lijiaqi.magics",
+      "h5":"",
       "app":"",
-      "unity":"name",
+      "unity":"",
       "def": {
-        "x": 0.68544921875,
-        "y": 0.8186619718309859,
+        "x": 0,
+        "y": 0,
         "scale": 1,
         "rotation": {
           "x": 0,
@@ -94,18 +83,79 @@ export const resultJSON = {
         }
       }
     },
-    "tts": {
-      "type": "shensheng",
-      "speed": "normal",
-      "voiceName": "zh-CN-male-shiye",
-      "pitch":"normal",
-    },
-    "param": [
-      // {
-      //   "content": "",
-      //   "intervalTime": 0,
-      //   "trigger": []
-      // }
-    ]
+    "tts": {},
+    "param": []
   },
+
+  imageItem:{
+    "index": 0,
+    "type": "info",
+    "isAll": false,//是否持续到脚本结束，true为持续至脚本结束,优先级高于autoDismiss｜dismissTime
+    "info": {
+      "margins": {
+        "left": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0
+      },
+      "autoDismiss": false,
+      "dismissTime": 3000,
+      "url": "",
+      "width": 0,
+      "height": 0,
+      "child": [
+        {
+          "id":"",
+          "name": "",
+          "type": "",
+          "url": "",
+          "width": 0,
+          "height": 0,
+          "margins": {
+            "left": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0
+          }
+        },
+      ]
+    }
+  },
+  videoItem:{
+    "index": 0,
+    "type": "info",
+    "isAll": false,//是否持续到脚本结束，true为持续至脚本结束,优先级高于autoDismiss｜dismissTime
+    "info": {
+      "margins": {
+        "left": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0
+      },
+      "autoDismiss": false,
+      "dismissTime": 3000,
+      "url": "",
+      "width": 0,
+      "height": 0,
+      "child": [
+        {
+          "id":"",
+          "name": "",
+          "type": "",
+          "url": "",
+          "region":"",
+          "width": 0,
+          "height": 0,
+          "isSupportAudio":false,
+          "margins": {
+            "left": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0
+          }
+        },
+      ]
+    }
+  },
+
 }
