@@ -8,13 +8,12 @@
             <div class="scriptList">
                 <div class="playScriptTitle clearfix">
                     <span class="title">播放剧本列表</span>
-                    <button class='handleWebcastBtn' :class="{'disabled': isShowAllList}" @click='handleWebcast'>{{webcastBtnTxt}}</button>
                     <button class='addScript' :class='{"disabled": $root.isPlayingScript}' type='primary' :disabled="$root.isPlayingScript" @click='addScript'>添加剧本</button>
                 </div>
                 <!-- <div class="title">
                     <span :class="['empty', $root.isPlayingScript?'disabled':'']" @click='emptyList'>清空列表</span>
                 </div> -->
-                <el-table class='playScripts' row-key="sortId" :data='playScriptData' style='width:100%' empty-text='暂未添加剧本' height='520' max-height='520' >
+                <el-table size="mini" class='playScripts' row-key="sortId" :data='playScriptData' style='width:100%' empty-text='暂未添加剧本' height='388' max-height='388' >
                     <el-table-column align="center" label="排序" width='100'>
                         <template slot-scope="scope">
                             <i class="el-icon-video-camera-solid" v-if='isPlayingIdx==scope.$index+1'></i>
@@ -27,14 +26,14 @@
                             <span>{{scope.row.name}}</span>
                         </template>
                     </el-table-column>
-                    <el-table-column align="center" label="关联主播角色">
+                    <el-table-column align="center" label="关联IP形象">
                         <template slot-scope="scope">
                             <span>{{scope.row.avatar_name}}</span>
                         </template>
                     </el-table-column>
-                    <el-table-column align="center" label="剧本时长">
+                    <el-table-column align="center" label="剧本段数">
                         <template slot-scope="scope">
-                            <span>{{handleScriptTime(scope.row.time)}}</span>
+                            <span>{{scope.row.paragraph_number}}</span>
                         </template>
                     </el-table-column>
                     <el-table-column align="center" label="操作" :render-header="renderHeader" width='120' >
@@ -43,19 +42,13 @@
                         </template>
                     </el-table-column>
                 </el-table>
-                <div class="startWebcast">
-                    <div>
-                        <span @click='showTips'> <i class="el-icon-info"></i> 播放须知</span>
-                        <span v-if='playScriptData.length!=0'>总时长：{{handleScriptTime(totalScriptSeconds)}}</span>
-                    </div>
-                </div>
                 <!-- 剧本列表 -->
                 <transition name='slide'>
                     <div class="allScriptList" v-if='isShowAllList'>
                         <h3>剧本列表</h3>
 
                         <div class="filter">
-                            <span>关联主播角色：</span>
+                            <span>关联IP形象：</span>
                             <el-select class="filterOptions" @change='fetchAllScripts' v-model='anchorRoleValue'>
                                 <el-option
                                     v-for='(role,idx) in anchorRoles'
@@ -68,10 +61,10 @@
                             <el-input  class='search_ipt' v-model="searchScriptName" placeholder="剧本名称" clearable></el-input>
                         </div>
 
-                        <el-table border :data='scriptData' style='width:100%' empty-text='暂无剧本' max-height='320' v-if='scriptData.length!=0'>
+                        <el-table size="mini" border :data='scriptData' style='width:100%' empty-text='暂无剧本' max-height='300' v-if='scriptData.length!=0'>
                             <el-table-column label="选择" align="center" width='80'>
                                 <template slot-scope="scope">
-                                    <el-checkbox v-model="scope.row.isChecked" :disabled="scope.row.isDisabled" @change='handleCheckScript(scope.$index)'></el-checkbox>
+                                    <el-checkbox size="mini" v-model="scope.row.isChecked" :disabled="scope.row.isDisabled" @change='handleCheckScript(scope.$index)'></el-checkbox>
                                 </template>
                             </el-table-column>
                             <el-table-column label="剧本名称" align="center">
@@ -79,7 +72,7 @@
                                     <span>{{scope.row.name}}</span>
                                 </template>
                             </el-table-column>
-                            <el-table-column label="关联主播角色" align="center">
+                            <el-table-column label="关联IP形象" align="center">
                                 <template slot-scope="scope">
                                     <span>{{scope.row.avatar_name}}</span>
                                 </template>
@@ -96,11 +89,10 @@
                             </el-table-column>
                             <el-table-column label="操作" align="center" width='100'>
                                 <template slot-scope="scope">
-                                    <el-button class="previewBtn" @click='handlePreview(scope.row)' type="text" size="small">预览</el-button>
+                                    <el-button class="previewBtn" @click='handlePreview(scope.row)' type="text" size="mini">预览</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
-                        <p class='selectedDur' v-if='isAddedScript'>时长：{{handleScriptTime(selectedScriptSeconds)}}</p>
                         <div class="noScript" v-if='scriptData.length==0'>
                             暂无剧本，去 <span @click='gotopage'>创建剧本</span>
                         </div>
@@ -115,51 +107,28 @@
                         </div>
                     </div>
                 </transition>
-                <div class="beforeWebcastTips" v-if='isShowBeforePlayTips'>
-                    <div>直播前请确认是否已经设置好OBS或其他直播助手相关推流工具？</div>
-                    <p class="noNotify">
-                        <el-checkbox v-model='isOpenBeforePlayTipsAgain' @change='handleBeforePlayTips'>不再提示</el-checkbox>
-                    </p>
-                    <p class="btns">
-                        <button class="cancel" @click="cancelPlay" >取消</button>
-                        <button class="confirm" @click="confirmPlay" type='primary' >确认</button>
-                    </p>
-                </div>
             </div>
+          <div class="handleWebcastBtnBox">
+            <button class='handleWebcastBtn' :class="{'disabled': isShowAllList}" @click='handleWebcast'>{{webcastBtnTxt}}</button>
+            <el-dialog
+              custom-class="webcastDialog"
+              top="10vh"
+              width="700px"
+              :before-close="webcastPreClose"
+              :visible.sync="webcastPreDialog">
+              <div class="previewbox">
+                <webcastDialog :scriptRow="scriptRow" :scriptName="scriptName"></webcastDialog>
+              </div>
+            </el-dialog>
+          </div>
         </div>
-
-
-        <el-dialog class='playerTips' top="26vh" :visible.sync="isShowPlayerTips" width='40%' :show-close='false'>
-            <div>
-                <p class="title"><i class="el-icon-info"></i> 播放须知：</p>
-                <p>1、直播前准备：开始直播前，可预先在直播助手或OBS推流工具中调整好录屏窗口</p>
-                <p>2、开始直播后，会等待加载缓存角色形象，脚本数据，由于网络原因，电脑性能等因素，大概会出现几秒至几十秒的等待，请知悉。建议使用配置较高的电脑，及网速建议10M带宽以上，以尽可能保证直播效果更佳。</p>
-                <p>3、直播中请保持当前页面开启，关闭页面后，直播将会丢失。</p>
-                <p>4、如果因不可控因素关闭了直播，可重新开启；若需要接着之前位置播放，建议可在【节目直播】的剧本列表中，移除已播放过的剧本后，重新开播。</p>
-            </div>
-            <span slot="footer" class="dialog-footer">
-                <button @click="closeTips" type='primary' style='width:100px;'>知道了</button>
-            </span>
-        </el-dialog>
-
-        <el-dialog
-            custom-class="previewDialog"
-            top="10%"
-            width="400px"
-            :before-close="previewDialogClose"
-            :visible.sync="isShowPreviewDialog">
-            <div class="previewbox">
-              <previewCurrent ref="previewCurrent" :scriptRow="scriptRow"></previewCurrent>
-            </div>
-        </el-dialog>
     </div>
 </template>
 <script>
+  import webcastDialog from '../components/webcast-dialog'
 import Sortable from 'sortablejs';
-import Cookies from 'js-cookie';
 import { requestServices } from '../api/api';
-import { handleScriptTime } from '../api/handleTime';
-import previewCurrent from "@/components/preview/preview-current";
+import axios from "axios";
 export default {
     filters: {},
     data() {
@@ -167,7 +136,6 @@ export default {
             playScriptData: [],
             playScriptID: [],
             webcastBtnTxt: '开始直播',
-            isShowPlayerTips: false,
             isShowAllList: false,
             isChooseAllScript: true,
             checkAll: false,
@@ -193,16 +161,12 @@ export default {
             anchorRoleValue: '',
 
             scriptData: [],
-            isShowBeforePlayTips: false,
-            isOpenBeforePlayTipsAgain: false,
             isAddedScript: false,
-            selectedScriptSeconds: 0,
-            totalScriptSeconds: 0,
-            isShowPreviewDialog: false,
-            scriptRow:'', //单条预览的数据
 
             checkAllDisabled: false,
-            isPlayingIdx: 0
+            isPlayingIdx: 0,
+          webcastPreDialog:true,
+
         };
     },
     created() {
@@ -217,7 +181,9 @@ export default {
         this.fetchAllScripts();
     },
     methods: {
-        handleScriptTime: handleScriptTime,
+        webcastPreClose(done){
+          done();
+        },
         beforeunloadFn(e) {
             console.log('刷新或关闭')
             e = e || window.event;
@@ -260,6 +226,7 @@ export default {
         // 获取所有剧本列表
         fetchAllScripts() {
             requestServices.getAllScripts({
+                role_id:this.$root.role_id,
                 user_id: this.$root.ai_user_id,
                 access_token: this.$root.ai_user_token,
                 gs_name: this.searchScriptName, // 剧本名称
@@ -278,10 +245,9 @@ export default {
         sortPlayScript() {
             if(this.playScriptData.length==0 ) return;
             // 产生唯一值方便拖拽
-            this.totalScriptSeconds = 0;
+
             this.playScriptData.forEach((item, id) => {
                 item.sortId = this.guid();
-                this.totalScriptSeconds += Number(item.time);
             })
             const tbody = document.querySelector('.playScripts .el-table__body-wrapper tbody')
             const _this = this;
@@ -309,7 +275,6 @@ export default {
             this.handleShowAllList(true);
         },
         handleShowAllList(_flag) {
-            this.selectedScriptSeconds = 0;
             if(_flag) {
                 this.scriptData.forEach(item => {
                     item.isChecked = false;
@@ -322,7 +287,6 @@ export default {
                     if(id == item.id) {
                         item.isChecked = true;
                         item.isDisabled = true;
-                        this.selectedScriptSeconds += Number(item.time);
                         checkedCount++;
                     }
                 });
@@ -360,18 +324,9 @@ export default {
             this.playScriptData.splice(_idx, 1);
 
             this.delScriptInPrograms([_id]);
+        },
 
-            this.totalScriptSeconds = 0;
-            this.playScriptData.forEach((item, id) => {
-                this.totalScriptSeconds += Number(item.time);
-            })
-        },
-        showTips() {
-            this.isShowPlayerTips = true;
-        },
-        closeTips() {
-            this.isShowPlayerTips = false;
-        },
+
         handleWebcast() {
             if(this.playScriptData.length==0) {
                 this.$message.info('请添加播放剧本～');
@@ -382,9 +337,7 @@ export default {
                 this.webcastBtnTxt = '开始直播';
                 this.isPlayingIdx = 0;
                 // this.$refs.previewMultiple.destoryEvent();
-            }else if(this.$root.isOpenBeforePlayTipsAgain) { // 是否确认开始直播，直播前询问
-                this.isShowBeforePlayTips = true;
-            } else {
+            }else {
 
                 this.startWebcast();
             }
@@ -410,16 +363,14 @@ export default {
         changeAnchorRole() {},
         changeReferScene() {},
         gotopage() {
-            this.$router.push('/step1')
+            this.$router.push('/steper')
         },
         handleCheckScript(_idx) {
             this.scriptData = JSON.parse(JSON.stringify(this.scriptData))
             let checkCount = 0;
-            this.selectedScriptSeconds = 0;
             this.scriptData.forEach(item => {
                 if(item.isChecked) {
                     checkCount++;
-                    this.selectedScriptSeconds += Number(item.time);
                 }
             });
             this.checkAll = checkCount === this.scriptData.length;
@@ -427,14 +378,17 @@ export default {
             this.isAddedScript = checkCount>0;
         },
         handlePreview(row) {
-            this.isShowPreviewDialog = true;
-            this.scriptRow = row;
-            this.$nextTick(()=>{
-              this.$refs.previewCurrent.getJson(row)
-            })
+            axios.get(row.script_url)
+              .then(res=>{
+                if(res.status===200){
+                  this.scriptRow = res.data
+                  UnityPreview(res.data[0].avatar.unity,JSON.stringify(res.data))
+                }else{
+                  this.$message.warning('剧本数据获取异常，请重试')
+                }
+              })
         },
         handleCheckAll(val) {
-            this.selectedScriptSeconds = 0;
             let checkCount = 0;
             this.scriptData.forEach(item => {
                 if(!item.isDisabled) {
@@ -442,7 +396,6 @@ export default {
                 }
                 if(item.isChecked) {
                     checkCount++;
-                    this.selectedScriptSeconds += Number(item.time);
                 }
             })
             this.scriptData = JSON.parse(JSON.stringify(this.scriptData))
@@ -496,20 +449,7 @@ export default {
             }
             return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
         },
-        handleBeforePlayTips() {
-            // console.log(this.isOpenBeforePlayTipsAgain)
-        },
-        cancelPlay() {
-            this.isShowBeforePlayTips = false;
-        },
-        confirmPlay() {
-            this.isShowBeforePlayTips = false;
-            if(this.isOpenBeforePlayTipsAgain) {
-                this.$root.isOpenBeforePlayTipsAgain = false;
-                Cookies.set('isOpenBeforePlayTipsAgain', false);
-            }
-            this.startWebcast();
-        },
+
 
         renderHeader(h, {column}) {
             return  h(
@@ -530,21 +470,19 @@ export default {
                ],
             );
         },
-        previewDialogClose(done){
-          this.$refs.previewCurrent.destoryEvent(res=>{
-            setTimeout(()=>{
-              done();
-            },500)
-          })
-        },
-
     },
-    components: {
-        previewCurrent,
+    components:{
+      webcastDialog
     }
 }
 </script>
 <style scoped lang='less'>
+  /deep/.el-dialog__header {
+    padding: 0px!important;
+  }
+  /deep/.el-dialog__body{
+    padding: 0px!important;
+  }
     #webcast {
         width: 100%;
         height: 100%;
@@ -558,7 +496,20 @@ export default {
     .disabled {
         background: #C6C6C6!important;
     }
-
+    .handleWebcastBtnBox{
+      text-align: center;
+      margin-top: 30px;
+    }
+    .handleWebcastBtn {
+      width: 96px;
+      height: 32px;
+      margin: 0 auto;
+      background: linear-gradient(166deg, #BA71FF 0%, #5648FF 100%);
+      border-radius: 16px;
+      color: #fff;
+      font-size: 14px;
+      cursor: pointer;
+    }
     .scriptList {
         position: relative;
         .playScriptTitle {
@@ -583,18 +534,7 @@ export default {
                     background: #B3B3B4;
                 }
             }
-            .handleWebcastBtn {
-                float: right;
-                width: 96px;
-                height: 32px;
-                margin: 0 auto;
-                background: linear-gradient(166deg, #BA71FF 0%, #5648FF 100%);
-                border-radius: 16px;
-                color: #fff;
-                font-size: 14px;
-                cursor: pointer;
-                margin-left: 20px;
-            }
+
         }
         .title {
             font-size: 18px;
@@ -610,37 +550,15 @@ export default {
                 color: #C0C4CC;
             }
         }
-        .startWebcast {
-            width: 100%;
-            height: 90px;
-            div {
-                margin: 18px 0 24px;
-                display: flex;
-                justify-content: space-between;
-            }
-            span {
-                font-size: 14px;
-                color: #999999;
-                &:nth-child(1) {
-                    cursor: pointer;
-                }
-                &:nth-child(2) {
-                    color: #7455FF;
-                }
-                i {
-                    font-size: 18px;
-                }
-            }
-        }
         .allScriptList {
             position: absolute;
             top: 40px;
-            left: 0;
-            width: 770px;
-            height: 550px;
+            left: calc(50% - 300px);
+            width: 600px;
+            height: 450px;
             background: #fff;
             box-shadow: 0px 2px 28px 0px rgba(0, 0, 0, 0.19);
-            border-radius: 4px;
+            border-radius: 8px;
             padding: 30px;
             box-sizing: border-box;
             z-index: 80;
@@ -695,7 +613,7 @@ export default {
                 }
             }
             .chooseBox {
-                width: 710px;
+                width: 540px;
                 height: 30px;
                 position: absolute;
                 bottom: 30px;
@@ -724,45 +642,6 @@ export default {
                 }
             }
         }
-        .beforeWebcastTips {
-            position: absolute;
-            top: 40%;
-            left: 50%;
-            transform: translate(-50%, -40%);
-            width: 392px;
-            height: 220px;
-            background: rgba(0,0,0,0.75);
-            border-radius: 4px;
-            padding: 48px 30px 18px;
-            box-sizing: border-box;
-            font-size: 16px;
-            color: #fff;
-            line-height: 22px;
-            .noNotify {
-                height: 20px;
-                margin: 28px 0 30px;
-            }
-            .btns {
-                text-align: right;
-            }
-            button {
-                width: 82px;
-                height: 30px;
-                border-radius: 17px;
-                cursor: pointer;
-                &.cancel {
-                    opacity: 0.7;
-                    color: #B3B3B4;
-                    border: 1px solid #979797;
-                    margin-right: 16px;
-                    background: rgba(0,0,0,0);
-                }
-                &.confirm {
-                    background: #7455FF;
-                    color: #fff;
-                }
-            }
-        }
     }
     .slide-enter, .slide-leave-to {
         opacity: 0;
@@ -773,36 +652,9 @@ export default {
         -webkit-transition: all 0.5s ease-in-out;
         transition: all 0.5s ease-in-out;
     }
-    .playerTips button {
-        width: 102px;
-        height: 30px;
-        background: #7455FF;
-        border-radius: 17px;
-        font-size: 14px;
-        color: #fff;
-        cursor: pointer;
-    }
 </style>
 <style>
-    .playerTips  .el-dialog__body {
-        padding-top: 0;
-        font-size: 12px;
-    }
-    .playerTips p {
-        margin-bottom: 8px;
-    }
-    .playerTips .title {
-        margin-bottom: 10px;
-        font-size:14px;
-    }
-    .playerTips .el-icon-info {
-        font-size: 22px;
-        color: #7455FF;
-    }
-    .playerTips .el-dialog__footer {
-        display: flex;
-        justify-content: space-around;
-    }
+
 
     .search .el-input--small .el-input__inner {
         border-radius: 32px;
@@ -878,27 +730,13 @@ export default {
     }
     .allScriptList .el-checkbox__input.is-checked .el-checkbox__inner,
     .allScriptList .el-checkbox__input.is-indeterminate .el-checkbox__inner,
-    .noNotify .el-checkbox__input.is-checked .el-checkbox__inner,
-    .noNotify .el-checkbox__input.is-indeterminate .el-checkbox__inner {
-        background: #7455FF;
-        border-color: #7455FF;
-    }
     .allScriptList .el-checkbox__input.is-focus .el-checkbox__inner,
-    .noNotify .el-checkbox__input.is-focus .el-checkbox__inner,
     .allScriptList .el-checkbox__inner:hover,
-    .noNotify .el-checkbox__inner:hover {
-        border-color: #7455FF;
-    }
     .allScriptList .previewBtn.el-button,
     .allScriptList .el-checkbox__input.is-checked+.el-checkbox__label {
         color: #7455FF;
     }
-    .noNotify .el-checkbox__input.is-checked+.el-checkbox__label {
-        color: #fff;
-    }
-    .noNotify .el-checkbox {
-        color: #fff;
-    }
+
     .el-checkbox__input.is-disabled.is-checked .el-checkbox__inner{
         background: #B3B3B4!important;
         border-color: #B3B3B4!important;
