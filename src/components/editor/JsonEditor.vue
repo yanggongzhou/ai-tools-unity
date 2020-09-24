@@ -359,6 +359,7 @@
       let self = this;
       //编辑时数据导入
       if(this.$route.params.data){
+
         this.$nextTick(()=>{
           this.editImport(this.$route.params.data);
         })
@@ -401,9 +402,8 @@
         this.exportJson().then(data=>{
           self.ScriptList[self.scriptIndexOld].param = JSON.parse(JSON.stringify(data.param))
           self.scriptIndexOld = val;
+          self.$emit('editImportTriggerDiv',data)
           self.editImport(self.ScriptList[val]);
-          // self.$emit('')
-          刷新dom元素数据
         })
         // console.log(self.ScriptList)
       },
@@ -413,7 +413,7 @@
         this.$forceUpdate()
       },
       //预览动作
-      previewAction(val){ UnityAvatarAction(val.value) },
+      previewAction(val){ UnityAvatarAction(resultJSON.resultJsonObj.avatar.unity,val.value) },
       //删除标签更新testData
       delTagMain(txt){
         this.testData=this.testData.replace(txt,'')

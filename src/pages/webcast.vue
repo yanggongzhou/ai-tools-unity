@@ -332,8 +332,8 @@ export default {
                 }else if(res.return_code==1009) { // token过期
                     this.$root.ai_user_id = '';
                     this.$root.ai_user_token = '';
-                    Cookies.set('ai_user_id', '');
-                    Cookies.set('ai_user_token', '')
+                    this.$Session.set('ai_user_id', '');
+                    this.$Session.set('ai_user_token', '')
 
                 }
             })

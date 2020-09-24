@@ -102,7 +102,6 @@
 import { requestServices } from '../api/api';
 
 import axios from "axios";
-import Cookies from 'js-cookie';
 export default {
   filters:{
     created_atFilter(val){
@@ -168,8 +167,8 @@ export default {
                 }else if(res.return_code==1009) { // token过期
                     this.$root.ai_user_id = '';
                     this.$root.ai_user_token = '';
-                    Cookies.set('ai_user_id', '');
-                    Cookies.set('ai_user_token', '');
+                    this.$Session.set('ai_user_id', '');
+                    this.$Session.set('ai_user_token', '');
                 }else {
                     this.$message.error('获取剧本列表失败')
                 }

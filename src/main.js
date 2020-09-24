@@ -9,6 +9,9 @@ import '@/assets/css/main.css'
 Vue.use(ElementUI,{size:'small'})
 import TagTextarea from './packages/index'
 Vue.use(TagTextarea)
+import { Session } from "./api/auth";
+Vue.prototype.$Session = Session;
+
 import Cookies from 'js-cookie';
 
 import promptMessage from '@/components/tooltips/index.js'
@@ -25,10 +28,10 @@ new Vue({
     return {
       role_id:23,//角色ID；21-虚拟直播；23-真人+虚拟主播
       ai_user_id: 726,
-      // ai_user_id: '' || Cookies.get('ai_user_id'),
-      ai_user_phone: '' || Cookies.get('ai_user_phone'),
-      ai_user_token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJtYWdpY3MtYWQuY29tIiwiYXVkIjoiIiwiaWF0IjoxNjAwODU3MDQ3LCJuYmYiOjE2MDA4NTcwNDksImV4cCI6MTYwMDg2NDI0NywiZGF0YSI6eyJ1c2VyaWQiOjcyNiwidXNlcm5hbWUiOiIxODYxMjc2NjM3MCJ9fQ.j4QPy09mR2G1HMrPV93yv7tOX3qunREhVMDQrmTbe1M",
-      // ai_user_token: '' || Cookies.get('ai_user_token'),
+      // ai_user_id: '' || Session.get('ai_user_id'),
+      ai_user_phone: '' || Session.get('ai_user_phone'),
+      ai_user_token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJtYWdpY3MtYWQuY29tIiwiYXVkIjoiIiwiaWF0IjoxNjAwOTI5NjgxLCJuYmYiOjE2MDA5Mjk2ODMsImV4cCI6MTYwMDkzNjg4MSwiZGF0YSI6eyJ1c2VyaWQiOjcyNiwidXNlcm5hbWUiOiIxODYxMjc2NjM3MCJ9fQ.ul7dnzOp7FlcPOdb-9Tt3ytClmUgVwqv-wXDFl-Ug1I",
+      // ai_user_token: '' || Session.get('ai_user_token'),
       // isOpenBeforePlayTipsAgain: true && !Cookies.get('isOpenBeforePlayTipsAgain'),
       isPlayingScript: false, // 是否正在直播
     }

@@ -68,6 +68,7 @@
           _name = item.avatarName
         }
       })
+      resultJSON.resultJsonObj.avatar.unity = _name;
       UnityChangeAvatar(_name)
     },
     methods:{

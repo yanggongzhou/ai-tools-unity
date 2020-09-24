@@ -7,13 +7,13 @@ function UnityUserInfo() {
 
 
 //在线预览--单个预览
-function UnityPreview(res){
-  // console.log(res)
+function UnityPreview(avatarName,json){
+  // console.log(avatarName,json)
 }
 
 //触发模型动作
-function UnityAvatarAction(val){
-  console.log('动作',val)
+function UnityAvatarAction(avatarName,actionName){
+  console.log('动作',avatarName,actionName)
 }
 
 //选择角色

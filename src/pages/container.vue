@@ -94,7 +94,7 @@
       //预览
       previewBtn(){
         this.$refs.JsonEditorRef.exportJson().then((data)=>{
-          UnityPreview(JSON.stringify([resultJSON.resultJsonObj]))
+          UnityPreview(resultJSON.resultJsonObj.avatar.unity,JSON.stringify([data.param]))
         })
       },
       //剧本名称校验
@@ -108,9 +108,11 @@
         let self = this;
         if(this.jsonName.replace(/[\r\n]/g, "").replace(/\s+/g, "")){
           this.jsonNameValidate = false;
-          self.$refs.JsonEditorRef.exportJson().then(data=>{
-            resultJSON.resultJsonObj.param = JSON.parse(JSON.stringify(data.params));
-            let content = JSON.stringify(resultJSON.resultJsonObj);
+          let _JsonEditorRef = self.$refs.JsonEditorRef;
+          _JsonEditorRef.exportJson().then(data=>{
+            _JsonEditorRef.ScriptList[_JsonEditorRef.scriptIndex].param = JSON.parse(JSON.stringify(data.param))
+            // console.log('输出数据',_JsonEditorRef.ScriptList)
+            let content = JSON.stringify(_JsonEditorRef.ScriptList);
             let blob = new Blob([content], { type: "text/plain;charset=utf-8" }); // 把数据转化成blob对象
             // //file在edge浏览器中不支持
             let file = new File([blob], "ai.json", { lastModified: Date.now() }); // blob转file
@@ -137,7 +139,7 @@
                     name:self.jsonName,
                     preview_url:'',
                     script_url:uploadRes.data.result.upload_url,
-                    paragraph_number:1,
+                    paragraph_number:_JsonEditorRef.ScriptList.length,
                     avatar_id:resultJSON.avatarID,
                     avatar_name:avatar_name,
                     scene_type:'1',//0-默认类型；1-淘宝；2-抖音；3-快手
@@ -160,7 +162,7 @@
                     name:self.jsonName,
                     preview_url:'',
                     script_url:uploadRes.data.result.upload_url,
-                    paragraph_number:1,
+                    paragraph_number:_JsonEditorRef.ScriptList.length,
                     avatar_id:resultJSON.avatarID,
                     avatar_name:avatar_name,
                     scene_type:'1',//0-默认类型；1-淘宝；2-抖音；3-快手

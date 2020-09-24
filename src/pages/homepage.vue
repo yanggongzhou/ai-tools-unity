@@ -31,19 +31,41 @@ export default {
                     btnTxt: '我的剧本',
                     targetPage: '/myscript'
                 }
-            ]
+            ],
+          getUserInfoCount:0,//请求用户数据次数
         };
     },
     computed: {},
     watch: {},
-    mounted() {
+    created() {},
+  mounted() {
       //请求用户信息
-      UnityUserInfo();
+      this.getUserInfo();
       window.WebUserMessage=this.WebUserMessage;
     },
     methods: {
+      //请求用户信息
+      getUserInfo(){
+        this.getUserInfoCount+=1;
+        let self = this;
+        UnityUserInfo();
+        if(this.getUserInfoCount>=  3){
+          this.$message.error('请求用户信息失败,请重启窗口！')
+        }else{
+          setTimeout(()=>{
+            if(this.$Session.get('ai_user_id')&&this.$Session.get('ai_user_token')&&this.$Session.get('ai_user_phone')){
+              this.$message.success('用户信息已注入！')
+            }else{
+              self.getUserInfo();
+            }
+          },3000)
+        }
+      },
       WebUserMessage(id,token,phone){
         this.$message.info(id,token,phone)
+        this.$Session.set('ai_user_id', id);
+        this.$Session.set('ai_user_token', token)
+        this.$Session.set('ai_user_phone', phone)
       },
         gotoPage(_page) {
           this.$router.push(_page)
