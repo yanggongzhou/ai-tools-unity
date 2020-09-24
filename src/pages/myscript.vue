@@ -86,13 +86,13 @@
                 </span>
             </el-dialog>
             <el-dialog
-              custom-class="previewDialog"
+              custom-class="myscriptDialog"
               top="10%"
-              width="400px"
+              width="600px"
               :before-close="previewDialogClose"
               :visible.sync="isShowPreviewDialog">
                 <div class="previewbox">
-<!--                  <previewCurrent ref="previewCurrent" :scriptRow="scriptRow"></previewCurrent>-->
+                  <myscriptDialog :scriptRow="scriptRow" :scriptName="scriptName"></myscriptDialog>
                 </div>
             </el-dialog>
         </div>
@@ -100,9 +100,12 @@
 </template>
 <script>
 import { requestServices } from '../api/api';
-
+import myscriptDialog from '../components/myscript-dialog'
 import axios from "axios";
 export default {
+  components:{
+    myscriptDialog
+  },
   filters:{
     created_atFilter(val){
       return new Date(val*1000).toLocaleString()
@@ -140,7 +143,8 @@ export default {
             total_count: 4,//页面总数
             page_count: 10,//页面page size
 
-            scriptRow:''//单条预览的数据
+            scriptRow:'',//单条预览的数据
+            scriptName:'',//剧本名称
         };
     },
     computed: {},
@@ -177,7 +181,11 @@ export default {
         },
         handleCheck(row) {
             this.isShowPreviewDialog = true;
-            this.scriptRow = row;
+            this.scriptName = row.name
+            axios.get(row.script_url)
+              .then(res=>{
+                this.scriptRow = res.data
+              })
         },
         previewDialogClose(done){
           done();

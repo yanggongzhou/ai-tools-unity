@@ -94,7 +94,9 @@
       //预览
       previewBtn(){
         this.$refs.JsonEditorRef.exportJson().then((data)=>{
-          UnityPreview(resultJSON.resultJsonObj.avatar.unity,JSON.stringify([data.param]))
+          let _jsonArr = JSON.parse(JSON.stringify(resultJSON.resultJsonObj))
+          _jsonArr.param = data.param
+          UnityPreview(resultJSON.resultJsonObj.avatar.unity,JSON.stringify([_jsonArr]))
         })
       },
       //剧本名称校验

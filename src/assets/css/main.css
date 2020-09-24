@@ -200,10 +200,11 @@ input {
   background-color:transparent;
 }
 /*我的脚本预览框样式*/
-.previewDialog{
-  /* background: #2c2d2f; */
-  background: url(https://large.magics-ad.com/mygz-file/image/dialog.png) no-repeat;
-  background-size: 100% 100%;
+.myscriptDialog{
+  border-radius: 8px
+}
+.myscriptDialog .el-dialog__header{
+  padding: 0 !important;
 }
 
 

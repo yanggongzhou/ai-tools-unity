@@ -8,7 +8,7 @@ function UnityUserInfo() {
 
 //在线预览--单个预览
 function UnityPreview(avatarName,json){
-  // console.log(avatarName,json)
+  console.log(avatarName,json)
 }
 
 //触发模型动作
