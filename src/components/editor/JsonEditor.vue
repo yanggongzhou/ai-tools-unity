@@ -6,8 +6,17 @@
              v-for="(val,ind) in ScriptList"
              :key="ind+'model'">
           <div class="left_icon">
-            <i class="view el-icon-view"></i>
-            <i class="delete el-icon-delete"></i>
+            <i class="view el-icon-view" @click="previewBtn(val)"></i>
+            <el-popconfirm
+              confirmButtonText='是的'
+              cancelButtonText='取消'
+              icon="el-icon-info"
+              iconColor="red"
+              title="这一段内容确定删除吗？"
+              @onConfirm="delBtn(ind)">
+              <i v-show="ScriptList.length!==1" slot="reference" class="delete el-icon-delete"></i>
+            </el-popconfirm>
+
           </div>
 
           <el-radio
@@ -15,6 +24,7 @@
             class="left_card"
             v-model="scriptIndex" :label="ind" border>
             <div class="left_card_item">
+              <i class="left_card_icon el-icon-warning" :style="val | styleFilter"></i>
               <div class="label">{{ind | indFilter}}</div>
             </div>
           </el-radio>
@@ -171,6 +181,22 @@
           return '0'+(val+1)
         }else{
           return val;
+        }
+      },
+      styleFilter(val){
+
+        let _content='';
+        val.param.forEach(value=>{
+          _content += value.content
+        })
+        if(val.param.length===0 || !_content.replace(/[\ |\~|\`|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\-|\_|\+|\=|\||\\|\[|\]|\{|\}|\;|\:|\"|\'|\,|\<|\.|\>|\/|\?|\r\n]/g,"").match(/[\u4e00-\u9fa5\0-9]/g)){
+          return {
+            'display': 'inline-block',
+          }
+        }else{
+          return {
+            'display' : "none"
+          }
         }
       }
     },
@@ -397,6 +423,14 @@
     },
 
     methods: {
+      //预览
+      previewBtn(val){
+        UnityPreview(val.avatar.unity,JSON.stringify([val]))
+      },
+      //删除
+      delBtn(ind){
+        this.ScriptList.splice(ind,1);
+      },
       //切换段落
       scriptChange(val){
         let self = this;
@@ -1066,6 +1100,12 @@
 
       .left_card_item{
         font-size: 0;
+        .left_card_icon{
+          font-size: 13px;
+          position: absolute;
+          right: 2px;
+          top: 2px;
+        }
         .label{
           font-size: 13px;
           font-weight: 600;

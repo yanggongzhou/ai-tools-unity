@@ -113,6 +113,22 @@
           _JsonEditorRef.exportJson().then(data=>{
             _JsonEditorRef.ScriptList[_JsonEditorRef.scriptIndex].param = JSON.parse(JSON.stringify(data.param))
             // console.log('输出数据',_JsonEditorRef.ScriptList)
+            //✨✨✨✨总体校验有效文本
+            let valitade = true;
+            _JsonEditorRef.ScriptList.forEach((scriptItem,scriptItemIndex)=>{
+              let _content='';
+              scriptItem.param.forEach(value=>{
+                _content += value.content
+              })
+              if(scriptItem.param.length===0 || !_content.replace(/[\ |\~|\`|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\-|\_|\+|\=|\||\\|\[|\]|\{|\}|\;|\:|\"|\'|\,|\<|\.|\>|\/|\?|\r\n]/g,"").match(/[\u4e00-\u9fa5\0-9]/g)){
+                valitade = false;
+              }
+            })
+              if(!valitade){
+                this.$message.error('请确认各段落是否含有有效文本！')
+                return
+              }
+
             let content = JSON.stringify(_JsonEditorRef.ScriptList);
             let blob = new Blob([content], { type: "text/plain;charset=utf-8" }); // 把数据转化成blob对象
             // //file在edge浏览器中不支持
@@ -226,7 +242,7 @@
       //返回上一页
       backspace(){
         //创建脚本返回
-        if(!this.$route.params.data){
+        if(!this.$route.params.id){
           this.$router.push('/steper')
         }else{
           this.$router.push('/myscript')
