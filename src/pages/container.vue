@@ -65,10 +65,9 @@
       //编辑的数据
       if(this.$route.params.data){
         this.jsonName = this.$route.params.name
-        let res  = this.$route.params.data
-        // resultJSON.resultJsonObj=JSON.parse(JSON.stringify(res))
-        resultJSON.resultJsonObj.avatar.unity = res.avatar.unity;
-        this.editImportTriggerDiv(res)
+        let resArr  = this.$route.params.data
+        resultJSON.resultJsonObj.avatar.unity = resArr[0].avatar.unity;
+        this.editImportTriggerDiv(resArr[0])
       }
 
       Bus.$on('delTag',res=>{

@@ -184,7 +184,11 @@ export default {
             this.scriptName = row.name
             axios.get(row.script_url)
               .then(res=>{
-                this.scriptRow = res.data
+                if(res.status===200){
+                  this.scriptRow = res.data
+                }else{
+                 this.$message.warning('剧本数据获取异常，请重试')
+                }
               })
         },
         previewDialogClose(done){
@@ -193,7 +197,11 @@ export default {
         handleEdit(_idx) {
           axios.get(_idx.script_url)
             .then(result=>{
-              this.$router.push({name:'tools',params:{data:result.data,id:_idx.id,name:_idx.name,template_json:_idx.template_json}})
+              if(result.status===200){
+                this.$router.push({name:'tools',params:{data:result.data,id:_idx.id,name:_idx.name}})
+              }else{
+                this.$message.warning('剧本数据获取异常，请重试')
+              }
             })
         },
         handleCopy(_idx) {

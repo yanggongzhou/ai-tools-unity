@@ -359,10 +359,11 @@
       let self = this;
       //编辑时数据导入
       if(this.$route.params.data){
-
+        this.ScriptList = JSON.parse(JSON.stringify(this.$route.params.data))
         this.$nextTick(()=>{
-          this.editImport(this.$route.params.data);
+          this.editImport(this.ScriptList[0]);
         })
+        this.$forceUpdate()
       }else{
         this.ScriptList[0] = JSON.parse(JSON.stringify(resultJSON.resultJsonObj))
         this.$forceUpdate()
