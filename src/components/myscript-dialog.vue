@@ -35,6 +35,14 @@
     methods:{
       //预览
       previewBtn(val){
+        // let _content = '';
+        // val.param.forEach(value=>{
+        //   _content += value.content;
+        // })
+        // if(val.param.length===0 || !_content.replace(/[\ |\~|\`|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\-|\_|\+|\=|\||\\|\[|\]|\{|\}|\;|\:|\"|\'|\,|\<|\.|\>|\/|\?|\r\n]/g,"").match(/[\u4e00-\u9fa5\0-9]/g)){
+        //   this.$message.error('请确认当前段落含有有效文字！')
+        //   return false
+        // }
         UnityPreview(val.avatar.unity,JSON.stringify([val]))
       },
     }

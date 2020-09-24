@@ -92,10 +92,25 @@
       },
       //预览
       previewBtn(){
-        this.$refs.JsonEditorRef.exportJson().then((data)=>{
-          let _jsonArr = JSON.parse(JSON.stringify(resultJSON.resultJsonObj))
-          _jsonArr.param = data.param
-          UnityPreview(resultJSON.resultJsonObj.avatar.unity,JSON.stringify([_jsonArr]))
+        let _JsonEditorRef = this.$refs.JsonEditorRef;
+        _JsonEditorRef.exportJson().then((data)=>{
+          _JsonEditorRef.ScriptList[_JsonEditorRef.scriptIndex].param = JSON.parse(JSON.stringify(data.param))
+          //✨✨✨✨总体校验有效文本
+          let valitade = true;
+          _JsonEditorRef.ScriptList.forEach((scriptItem,scriptItemIndex)=>{
+            let _content='';
+            scriptItem.param.forEach(value=>{
+              _content += value.content
+            })
+            if(scriptItem.param.length===0 || !_content.replace(/[\ |\~|\`|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\-|\_|\+|\=|\||\\|\[|\]|\{|\}|\;|\:|\"|\'|\,|\<|\.|\>|\/|\?|\r\n]/g,"").match(/[\u4e00-\u9fa5\0-9]/g)){
+              valitade = false;
+            }
+          })
+          if(!valitade){
+            this.$message.error('请确认各段落是否含有有效文本！')
+            return
+          }
+          UnityPreview(resultJSON.resultJsonObj.avatar.unity,JSON.stringify(_JsonEditorRef.ScriptList))
         })
       },
       //剧本名称校验

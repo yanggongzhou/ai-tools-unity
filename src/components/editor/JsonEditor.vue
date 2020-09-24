@@ -425,7 +425,31 @@
     methods: {
       //预览
       previewBtn(val){
-        UnityPreview(val.avatar.unity,JSON.stringify([val]))
+        let _content='';
+        if(this.scriptIndex!==val){
+          val.param.forEach(value=>{
+            _content += value.content;
+          })
+          if(val.param.length===0 || !_content.replace(/[\ |\~|\`|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\-|\_|\+|\=|\||\\|\[|\]|\{|\}|\;|\:|\"|\'|\,|\<|\.|\>|\/|\?|\r\n]/g,"").match(/[\u4e00-\u9fa5\0-9]/g)){
+            this.$message.error('请确认当前段落含有有效文字！')
+            return false
+          }
+          UnityPreview(val.avatar.unity,JSON.stringify([val]))
+        }else{
+          this.exportJson().then((data)=>{
+            let _jsonArr = JSON.parse(JSON.stringify(resultJSON.resultJsonObj))
+            _jsonArr.param = data.param
+
+            _jsonArr.param.forEach(value=>{
+              _content += value.content;
+            })
+            if(_jsonArr.param.length===0 || !_content.replace(/[\ |\~|\`|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\-|\_|\+|\=|\||\\|\[|\]|\{|\}|\;|\:|\"|\'|\,|\<|\.|\>|\/|\?|\r\n]/g,"").match(/[\u4e00-\u9fa5\0-9]/g)){
+              this.$message.error('请确认当前段落含有有效文字！')
+              return false
+            }
+            UnityPreview(val.avatar.unity,JSON.stringify([_jsonArr]))
+          })
+        }
       },
       //删除
       delBtn(ind){

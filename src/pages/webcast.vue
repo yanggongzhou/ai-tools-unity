@@ -1,11 +1,10 @@
 <template>
     <div id="webcast">
         <div class="common_content">
-            <div class="player">
-                <div class="playerCanvas">
-                    <previewMultiple ref="previewMultiple" :playScriptData="playScriptData" @playOver="playOver" @changePlayingIdx="changePlayingIdx"></previewMultiple>
-                </div>
-            </div>
+          <button class="backNormal" @click="$router.back()">
+            <span class="_icon">< </span>
+            <span>返回</span>
+          </button>
             <div class="scriptList">
                 <div class="playScriptTitle clearfix">
                     <span class="title">播放剧本列表</span>
@@ -65,15 +64,6 @@
                                     :value='role.value'
                                 ></el-option>
                             </el-select>
-                            <span>参考场景：</span>
-                            <el-select class="filterOptions" @change='fetchAllScripts' v-model='referSceneValue'>
-                                <el-option
-                                    v-for='(role,idx) in referScenes'
-                                    :key='idx'
-                                    :label='role.label'
-                                    :value='role.value'
-                                ></el-option>
-                            </el-select>
                             <el-button class='search_btn' @click="fetchAllScripts">查询</el-button>
                             <el-input  class='search_ipt' v-model="searchScriptName" placeholder="剧本名称" clearable></el-input>
                         </div>
@@ -94,14 +84,14 @@
                                     <span>{{scope.row.avatar_name}}</span>
                                 </template>
                             </el-table-column>
-                            <el-table-column label="剧本时长" align="center">
+<!--                            <el-table-column label="剧本时长" align="center">-->
+<!--                                <template slot-scope="scope">-->
+<!--                                    <span>{{handleScriptTime(scope.row.time)}}</span>-->
+<!--                                </template>-->
+<!--                            </el-table-column>-->
+                            <el-table-column label="剧本段数" align="center">
                                 <template slot-scope="scope">
-                                    <span>{{handleScriptTime(scope.row.time)}}</span>
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="参考场景" align="center">
-                                <template slot-scope="scope">
-                                    <span>{{scope.row.scene_type | scene_typeFilter}}</span>
+                                    <span>{{scope.row.paragraph_number}}</span>
                                 </template>
                             </el-table-column>
                             <el-table-column label="操作" align="center" width='100'>
@@ -170,28 +160,8 @@ import Cookies from 'js-cookie';
 import { requestServices } from '../api/api';
 import { handleScriptTime } from '../api/handleTime';
 import previewCurrent from "@/components/preview/preview-current";
-import previewMultiple from '../components/preview/preview-multiple'
 export default {
-    filters: {
-        scene_typeFilter(val){
-            let _name;
-                switch (val) {
-                case 0:
-                    _name='默认类型';
-                    break;
-                case 1:
-                    _name='淘宝';
-                    break;
-                case 2:
-                    _name='抖音';
-                    break;
-                case 3:
-                    _name='快手';
-                    break ;
-                }
-            return _name;
-        }
-    },
+    filters: {},
     data() {
         return {
             playScriptData: [],
@@ -221,67 +191,8 @@ export default {
                 }
             ],
             anchorRoleValue: '',
-            referScenes: [
-                {
-                    value: '',
-                    label: '全部'
-                },
-                {
-                    value: 1,
-                    label: '淘宝'
-                },
-                {
-                    value: 2,
-                    label: '抖音'
-                },
-                {
-                    value: 3,
-                    label: '快手'
-                }
-            ],
-            referSceneValue: '',
-            scriptData: [
-                // {
-                //     id: 1,
-                //     createTime: '1',
-                //     name: '演示剧本',
-                //     time: '450',
-                //     ip: '潇洒姐1',
-                //     script_url:'https://large.magics-ad.com/mygz-file/ai-tools/xiaosajie.json',
-                //     referScene: '淘宝',
-                //     isChecked: false
-                // },
-                // {
-                //     id: 2,
-                //     createTime: '2',
-                //     name: '演示剧本',
-                //     time: '340',
-                //     ip: '不白吃',
-                //     script_url:'https://large.magics-ad.com/mygz-file/ai-tools/bubaichi.json',
-                //     referScene: '淘宝',
-                //     isChecked: false
-                // },
-                // {
-                //     id: 3,
-                //     createTime: '3',
-                //     name: '演示剧本',
-                //     time: '540',
-                //     ip: '教授',
-                //     script_url:'https://large.magics-ad.com/mygz-file/ai-tools/jiaoshou.json',
-                //     referScene: '淘宝',
-                //     isChecked: false
-                // },
-                // {
-                //     id: 4,
-                //     createTime: '4',
-                //     name: '演示剧本',
-                //     time: '220',
-                //     ip: '潇洒姐2',
-                //     script_url:'https://large.magics-ad.com/mygz-file/ai-tools/xiaosajie%202.json',
-                //     referScene: '淘宝',
-                //     isChecked: false
-                // },
-            ],
+
+            scriptData: [],
             isShowBeforePlayTips: false,
             isOpenBeforePlayTipsAgain: false,
             isAddedScript: false,
@@ -321,6 +232,7 @@ export default {
         // 获取播放剧本列表
         fetchAllPrograms() {
             requestServices.getAllPrograms({
+                role_id:this.$root.role_id,
                 user_id: this.$root.ai_user_id,
                 access_token: this.$root.ai_user_token,
             }).then(res => {
@@ -352,7 +264,7 @@ export default {
                 access_token: this.$root.ai_user_token,
                 gs_name: this.searchScriptName, // 剧本名称
                 avatar_name: this.anchorRoleValue, // 精灵名称
-                scene_type: this.referSceneValue // 场景类型；0-默认类型；1-淘宝；2-抖音；3-快手
+                scene_type: '' // 场景类型；0-默认类型；1-淘宝；2-抖音；3-快手
             }).then(res => {
                 console.log('getAllScripts: ', res)
                 if(res.return_code == 1000) {
@@ -469,7 +381,7 @@ export default {
                 this.$root.isPlayingScript = false;
                 this.webcastBtnTxt = '开始直播';
                 this.isPlayingIdx = 0;
-                this.$refs.previewMultiple.destoryEvent();
+                // this.$refs.previewMultiple.destoryEvent();
             }else if(this.$root.isOpenBeforePlayTipsAgain) { // 是否确认开始直播，直播前询问
                 this.isShowBeforePlayTips = true;
             } else {
@@ -481,7 +393,7 @@ export default {
         startWebcast() {
             // ❗️要播放的剧本列表
             console.log(this.playScriptData)
-            this.$refs.previewMultiple.getJson(this.playScriptData);
+            // this.$refs.previewMultiple.getJson(this.playScriptData);
             this.webcastBtnTxt = '停止直播';
             this.$root.isPlayingScript = true;
         },
@@ -490,6 +402,7 @@ export default {
           this.$root.isPlayingScript = false;
           this.webcastBtnTxt = '开始直播';
         },
+        //播放第几个
         changePlayingIdx(_idx) {
             this.isPlayingIdx = _idx;
         },
@@ -628,46 +541,28 @@ export default {
     },
     components: {
         previewCurrent,
-        previewMultiple
     }
 }
 </script>
 <style scoped lang='less'>
     #webcast {
         width: 100%;
-        min-width: 1200px;
         height: 100%;
         color: #fff;
         background: #F5F6FA;
         .common_content {
-            padding: 100px 0 40px;
+          padding: 30px 20px;
+          position: relative;
         }
     }
     .disabled {
         background: #C6C6C6!important;
     }
-    .player {
-        float: left;
-        width: 400px;
-        height: 90%;
-        border-right: 1px solid #D8D8D8;
-        position: relative;
-        /*z-index: 999;*/
-        .playerCanvas {
-            width: 320px;
-            height: 568px;
-            border: 1px solid #ccc;
-            background: url(https://large.magics-ad.com/ai-3D/static/img/playerBg.png) center no-repeat;
-            background-size: 320px 568px;
-        }
-    }
 
     .scriptList {
-        float: right;
-        min-width: 770px;
-        height: 90%;
         position: relative;
         .playScriptTitle {
+            margin-top: 30px;
             margin-bottom: 10px;
             .title {
                 float: left;
