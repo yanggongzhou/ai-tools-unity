@@ -6,7 +6,7 @@
              v-for="(val,ind) in ScriptList"
              :key="ind+'model'">
           <div class="left_icon">
-            <i class="view el-icon-view" @click="previewBtn(val)"></i>
+            <i class="view el-icon-view" @click="previewBtn(val,ind)"></i>
             <el-popconfirm
               confirmButtonText='是的'
               cancelButtonText='取消'
@@ -386,14 +386,21 @@
       //编辑时数据导入
       if(this.$route.params.data){
         this.ScriptList = JSON.parse(JSON.stringify(this.$route.params.data))
+        let resArr  = this.$route.params.data
+        resultJSON.resultJsonObj.avatar.unity = resArr[0].avatar.unity;
         this.$nextTick(()=>{
           this.editImport(this.ScriptList[0]);
         })
         this.$forceUpdate()
       }else{
+        // this.actionShowList = this.$route.params.actionShowList;
+
         this.ScriptList[0] = JSON.parse(JSON.stringify(resultJSON.resultJsonObj))
         this.$forceUpdate()
       }
+      //要动作
+      UnityAvatarMotionInfo(resultJSON.resultJsonObj.avatar.unity);
+      window.WebActionInfo= this.WebActionInfo
     },
     watch:{
       //监听输入框文本，主要实现删除功能
@@ -423,10 +430,23 @@
     },
 
     methods: {
+      //动作回调返回列表
+      WebActionInfo(val){
+        this.actionShowList = [];
+        let labelData = val.split('-')[0].split(',')
+        let valueData = val.split('-')[1].split(',')
+        labelData.forEach((item,ind)=>{
+          this.actionShowList.push({
+            label:item,
+            value:valueData[ind]
+          })
+        })
+        console.log('动作列表接收',this.actionShowList)
+      },
       //预览
-      previewBtn(val){
+      previewBtn(val,ind){
         let _content='';
-        if(this.scriptIndex!==val){
+        if(this.scriptIndex!==ind){
           val.param.forEach(value=>{
             _content += value.content;
           })
@@ -448,20 +468,37 @@
               return false
             }
             UnityPreview(val.avatar.unity,JSON.stringify([_jsonArr]))
+
+            console.log( this.cutTxtArr,this.cutArr)
           })
         }
       },
       //删除
       delBtn(ind){
+        if(this.scriptIndex===ind&&ind){
+          this.scriptIndex-=1
+          // this.scriptChange(this.scriptIndex)
+          this.scriptIndexOld = this.scriptIndex;
+          this.$emit('editImportTriggerDiv',this.ScriptList[this.scriptIndex].param)
+          this.editImport(this.ScriptList[this.scriptIndex]);
+        }else if(this.scriptIndex===ind&&ind===0){
+          this.scriptIndex+=1
+          this.scriptIndexOld = this.scriptIndex;
+          this.$emit('editImportTriggerDiv',this.ScriptList[this.scriptIndex].param)
+          this.editImport(this.ScriptList[this.scriptIndex]);
+        }else if(this.scriptIndex>ind){
+          this.scriptIndex-=1
+        }
         this.ScriptList.splice(ind,1);
       },
+
       //切换段落
       scriptChange(val){
         let self = this;
         this.exportJson().then(data=>{
           self.ScriptList[self.scriptIndexOld].param = JSON.parse(JSON.stringify(data.param))
           self.scriptIndexOld = val;
-          self.$emit('editImportTriggerDiv',data)
+          self.$emit('editImportTriggerDiv',self.ScriptList[val].param)
           self.editImport(self.ScriptList[val]);
         })
         // console.log(self.ScriptList)
@@ -808,9 +845,10 @@
         if(_indexArr.length){
           _index = _indexArr[0]+1;
         }else{
-          _index =content.length;
+          // _index =content.length;
         }
         _index += this.cutCount
+        // console.log('_index',_index)
         return _index
       },
       //裁剪json的content

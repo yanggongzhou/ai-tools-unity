@@ -8,15 +8,12 @@
             <div class="scriptList">
                 <div class="playScriptTitle clearfix">
                     <span class="title">播放剧本列表</span>
-                    <button class='addScript' :class='{"disabled": $root.isPlayingScript}' type='primary' :disabled="$root.isPlayingScript" @click='addScript'>添加剧本</button>
+                    <button class='addScript' type='primary' @click='addScript'>添加剧本</button>
                 </div>
-                <!-- <div class="title">
-                    <span :class="['empty', $root.isPlayingScript?'disabled':'']" @click='emptyList'>清空列表</span>
-                </div> -->
                 <el-table size="mini" class='playScripts' row-key="sortId" :data='playScriptData' style='width:100%' empty-text='暂未添加剧本' height='388' max-height='388' >
                     <el-table-column align="center" label="排序" width='100'>
                         <template slot-scope="scope">
-                            <i class="el-icon-video-camera-solid" v-if='isPlayingIdx==scope.$index+1'></i>
+<!--                            <i class="el-icon-video-camera-solid" v-if='isPlayingIdx==scope.$index+1'></i>-->
                             <span>{{scope.$index+1}}</span>
                             <span style='display:none;'>{{scope.row.sortId}}</span>
                         </template>
@@ -38,7 +35,7 @@
                     </el-table-column>
                     <el-table-column align="center" label="操作" :render-header="renderHeader" width='120' >
                         <template slot-scope="scope">
-                            <el-button @click='handleDelete(scope.$index, scope.row.id)' :disabled="$root.isPlayingScript" type="text" size="small">移除</el-button>
+                            <el-button @click='handleDelete(scope.$index, scope.row.id)' type="text" size="small">移除</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -164,16 +161,9 @@ export default {
             isAddedScript: false,
 
             checkAllDisabled: false,
-            isPlayingIdx: 0,
-          webcastPreDialog:true,
+          webcastPreDialog:false,
 
         };
-    },
-    created() {
-        window.addEventListener('beforeunload', e => this.beforeunloadFn(e))
-    },
-    destroyed() {
-        window.removeEventListener('beforeunload', e => this.beforeunloadFn(e))
     },
     mounted() {
         // this.sortPlayScript();
@@ -184,17 +174,7 @@ export default {
         webcastPreClose(done){
           done();
         },
-        beforeunloadFn(e) {
-            console.log('刷新或关闭')
-            e = e || window.event;
-            if(!this.$root.isPlayingScript) return
-            // 兼容IE8和Firefox 4之前的版本
-            if(e) {
-                 e.returnValue = '关闭提示'
-            }
-            // Chrome, Safari, Firefox 4+, Opera 12+ , IE 9+
-            return '关闭提示'
-        },
+
         // 获取播放剧本列表
         fetchAllPrograms() {
             requestServices.getAllPrograms({
@@ -313,12 +293,8 @@ export default {
 
         },
         emptyList() {
-            if(!this.$root.isPlayingScript) {
-                this.playScriptData = [];
-                this.delScriptInPrograms(this.playScriptID)
-            }else {
-                this.$message.info('正在直播，请稍后操作～')
-            }
+          this.playScriptData = [];
+          this.delScriptInPrograms(this.playScriptID)
         },
         handleDelete(_idx, _id) {
             this.playScriptData.splice(_idx, 1);
@@ -332,33 +308,17 @@ export default {
                 this.$message.info('请添加播放剧本～');
                 return;
             }
-            if(this.$root.isPlayingScript){ // 直播状态：正在直播
-                this.$root.isPlayingScript = false;
-                this.webcastBtnTxt = '开始直播';
-                this.isPlayingIdx = 0;
-                // this.$refs.previewMultiple.destoryEvent();
-            }else {
-
-                this.startWebcast();
-            }
-
+          this.startWebcast();
         },
         startWebcast() {
             // ❗️要播放的剧本列表
-            console.log(this.playScriptData)
-            this.$refs.webcastDialogRef.getPlayData(this.playScriptData);
-            this.webcastBtnTxt = '停止直播';
-            this.$root.isPlayingScript = true;
+            // console.log(this.playScriptData)
+            this.webcastPreDialog = true;
+            this.$nextTick(()=>{
+              this.$refs.webcastDialogRef.getPlayData(this.playScriptData);
+            })
         },
-        //播放结束
-        playOver(){
-          this.$root.isPlayingScript = false;
-          this.webcastBtnTxt = '开始直播';
-        },
-        //播放第几个
-        changePlayingIdx(_idx) {
-            this.isPlayingIdx = _idx;
-        },
+
         handleClickSearch() {},
         changeAnchorRole() {},
         changeReferScene() {},
@@ -596,14 +556,14 @@ export default {
                 margin-top: 8px;
             }
             .noScript {
-                width: 710px;
-                height: 340px;
+                width: 540px;
+                height: 260px;
                 background: url(https://large.magics-ad.com/ai-3D/static/img/nodata.png) no-repeat center;
-                background-size: 294px 190px;
+                background-size: 200px 140px;
                 background-position: center 70px;
                 text-align: center;
-                line-height: 540px;
-                font-size: 14px;
+                line-height: 460px;
+                font-size: 13px;
                 color: #9B9B9B;
                 span {
                     font-size: 16px;
@@ -690,7 +650,7 @@ export default {
         background-position: center 106px;
     }
     .playScripts .el-table__empty-block span {
-        margin-top: 116px;
+        margin-top: 240px;
         font-size: 14px;
         color: #999;
     }

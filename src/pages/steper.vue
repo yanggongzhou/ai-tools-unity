@@ -54,6 +54,7 @@
         step:1,
         avatarID:1,
         radioData:[],
+        actionShowList:[],
       }
     },
 
@@ -72,6 +73,19 @@
       UnityChangeAvatar(_name)
     },
     methods:{
+      //动作回调返回列表
+      WebActionInfo(val){
+        this.actionShowList = [];
+        let labelData = val.split('-')[0].split(',')
+        let valueData = val.split('-')[1].split(',')
+        labelData.forEach((item,ind)=>{
+          this.actionShowList.push({
+            label:item,
+            value:valueData[ind]
+          })
+        })
+        console.log('动作列表',this.actionShowList)
+      },
       radioChange(val){
         this.avatarID = val;
         let _name = '';
@@ -88,7 +102,7 @@
         this.$router.push({path:'/myscript'})
       },
       nextBtn(){
-        this.$router.push({path:'/tools'})
+        this.$router.push({name:'tools'})
       },
     },
 
