@@ -9,7 +9,7 @@
           class="left_card"
           v-model="allScriptIndex" :label="ind" border>
           <div class="left_card_item">
-            <i class="left_card_icon el-icon-video-camera-solid" ></i>
+            <i class="left_card_icon el-icon-video-camera-solid" v-show="allScriptPlayIndex===ind"></i>
             <div class="label">
               <p>{{ind | indFilter(that)}}</p>
             </div>
@@ -59,8 +59,8 @@
         </el-row>
       </div>
       <div class="float_right btnBox">
-        <button class='handleWebcastBtn' @click='autoPlayBtn'>自动播放</button>
-        <button class='handleWebcastBtn' @click='handleWebcast'>停止播放</button>
+        <button class='handleWebcastBtn' v-show="isAutoPlayBtn" @click='autoPlayBtn'>自动播放</button>
+        <button class='handleWebcastBtn' v-show="!isAutoPlayBtn" @click='stopPlayBtn'>停止播放</button>
         <button class='handleWebcastBtn' style="margin-left: 30px" :class="{'disabled': true}" @click='handleWebcast'>播放下一段</button>
       </div>
     </div>
@@ -118,10 +118,17 @@
         playData:[],//列表数据
 
         allScriptPlayIndex:'',//当前播放的脚本下标
+
+        previewData:[],
+        previewReady:true,
+        isAutoPlayBtn:true,//按钮显示
       }
     },
     mounted() {
+      this.previewReady = true;
       window.WebPreviewEnd=this.WebPreviewEnd;
+      window.WebPreviewReady = this.WebPreviewReady;
+      window.WebSelectAvatarState=this.WebSelectAvatarState;
     },
     methods:{
       //剧本切换
@@ -131,19 +138,55 @@
       },
       //自动播放
       autoPlayBtn(){
-        this.allScriptPlayIndex = this.allScriptIndex;
-        let _data = this.allScriptList[this.allScriptPlayIndex].scriptList;
-        UnityPreview(_data[0].avatar.unity,JSON.stringify(_data))
-        this.$message.info('播放剧本'+(this.allScriptPlayIndex+1)+'--'+this.allScriptList[this.allScriptPlayIndex].name)
+          this.isAutoPlayBtn = false;
+        if(this.previewReady){
+          this.allScriptPlayIndex = this.allScriptIndex;
+          this.previewData = this.allScriptList[this.allScriptPlayIndex].scriptList;
+          UnityChangeAvatar(this.previewData[0].avatar.unity)
+          this.previewReady = false;
+        }else{
+          this.$message.warning('资源加载中，请稍后...')
+        }
       },
+      //停止播放
+      stopPlayBtn(){
+        this.allScriptPlayIndex = '';
+        this.isAutoPlayBtn = true;
+        UnityPreviewCancel();
+      },
+      WebSelectAvatarState(state){
+        if(state==='True'){
+          UnityPreview(this.previewData[0].avatar.unity,JSON.stringify(this.previewData))
+        }else if(state==='False'){
+          this.previewReady = true;
+          this.isAutoPlayBtn = true;
+          this.$message.error('切换角色失败，请重试')
+        }
+      },
+      WebPreviewReady(state){
+        if(state==='True'){
+          UnityPreviewStart(this.previewData[0].avatar.unity);
+          this.$message.info('播放剧本'+(this.allScriptPlayIndex+1)+'--'+this.allScriptList[this.allScriptPlayIndex].name)
+        }else if(state==='False'){
+          this.isAutoPlayBtn = true;
+          this.$message.error('加载资源失败，请重试')
+        }
+        this.previewReady = true;
+      },
+
       //播放结束回调
       WebPreviewEnd(){
         if(this.allScriptPlayIndex+1<this.allScriptList.length){
+          // this.allScriptIndex+=1;
           this.allScriptPlayIndex+=1;
-          this.$message.info('播放剧本'+(this.allScriptPlayIndex+1)+'--'+this.allScriptList[this.allScriptPlayIndex].name)
-          let _data = this.allScriptList[this.allScriptPlayIndex].scriptList;
-          UnityPreview(_data[0].avatar.unity,JSON.stringify(_data))
+        }else{
+          // this.allScriptIndex=0;
+          this.allScriptPlayIndex = 0;
         }
+        this.$message.info('播放剧本'+(this.allScriptPlayIndex+1)+'--'+this.allScriptList[this.allScriptPlayIndex].name)
+        this.previewData = this.allScriptList[this.allScriptPlayIndex].scriptList;
+        UnityPreview(this.previewData[0].avatar.unity,JSON.stringify(this.previewData))
+        this.previewReady = false;
       },
 
       handleWebcast(){

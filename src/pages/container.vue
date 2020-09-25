@@ -55,6 +55,7 @@
         jsonContent:'',
 
         TriggerDiv:[],
+        previewReady:true,
       }
     },
     created() {
@@ -92,6 +93,11 @@
       },
       //预览
       previewBtn(){
+        if(!this.previewReady){
+          this.$message.warning('资源加载中，请稍后...')
+          return false;
+        }
+        let self = this;
         let _JsonEditorRef = this.$refs.JsonEditorRef;
         _JsonEditorRef.exportJson().then((data)=>{
           _JsonEditorRef.ScriptList[_JsonEditorRef.scriptIndex].param = JSON.parse(JSON.stringify(data.param))
@@ -111,8 +117,27 @@
             return
           }
           UnityPreview(resultJSON.resultJsonObj.avatar.unity,JSON.stringify(_JsonEditorRef.ScriptList))
+          self.previewReady = false;
         })
       },
+
+      WebSelectAvatarState(state){
+        if(state==='True'){
+        }else if(state==='False'){
+          this.$message.error('切换角色失败，请重试')
+        }
+      },
+      WebPreviewReady(state){
+        if(state==='True'){
+          UnityPreviewStart(resultJSON.resultJsonObj.avatar.unity);
+        }else if(state==='False'){
+          this.$message.error('加载资源失败，请重试')
+        }
+        this.previewReady = true;
+      },
+
+
+
       //剧本名称校验
       jsonNameFocus(value){
         if(value.replace(/[\r\n]/g, "").replace(/\s+/g, "")&&this.jsonNameValidate){

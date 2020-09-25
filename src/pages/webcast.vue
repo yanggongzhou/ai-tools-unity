@@ -138,31 +138,38 @@ export default {
             checkAll: false,
             searchScriptName: '',
             anchorRoles: [
-                {
-                    value: '',
-                    label: '全部'
-                },
-                {
-                    value: '小迈',
-                    label: '小迈'
-                },
-                {
-                    value: '小吉',
-                    label: '小吉'
-                },
-                {
-                    value: '宝爷',
-                    label: '宝爷'
-                }
-            ],
+            {
+              value: '',
+              label: '全部'
+            },
+            {
+              value: '小迈',
+              label: '小迈'
+            },
+            {
+              value: '小吉',
+              label: '小吉'
+            },
+            {
+              value: '宝爷',
+              label: '宝爷'
+            },
+            {
+              value:'不白吃',
+              label: '不白吃'
+            },
+            {
+              value:'潇洒姐',
+              label: '潇洒姐'
+            }
+          ],
             anchorRoleValue: '',
 
             scriptData: [],
             isAddedScript: false,
 
             checkAllDisabled: false,
-          webcastPreDialog:false,
-
+            webcastPreDialog:false,
         };
     },
     mounted() {

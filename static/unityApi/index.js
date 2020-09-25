@@ -15,6 +15,10 @@ function UnityPreviewStart(avatarName){
   console.log(avatarName)
 }
 
+//在线预览--&停止播放
+function UnityPreviewCancel(avatarName){
+  console.log(avatarName)
+}
 
 
 

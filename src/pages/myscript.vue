@@ -129,7 +129,15 @@ export default {
                 {
                     value: '宝爷',
                     label: '宝爷'
-                }
+                },
+                {
+                  value:'不白吃',
+                  label: '不白吃'
+                },
+              {
+                value:'潇洒姐',
+                label: '潇洒姐'
+              }
             ],
             anchorRoleValue: '',
 

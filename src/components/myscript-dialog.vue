@@ -32,19 +32,44 @@
         return _txt;
       }
     },
+    data(){
+      return{
+        previewData:'',
+        previewReady:true,
+      }
+    },
+    mounted() {
+      this.previewReady = true;
+      window.WebPreviewReady = this.WebPreviewReady;
+      window.WebSelectAvatarState=this.WebSelectAvatarState;
+    },
     methods:{
       //预览
       previewBtn(val){
-        // let _content = '';
-        // val.param.forEach(value=>{
-        //   _content += value.content;
-        // })
-        // if(val.param.length===0 || !_content.replace(/[\ |\~|\`|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\-|\_|\+|\=|\||\\|\[|\]|\{|\}|\;|\:|\"|\'|\,|\<|\.|\>|\/|\?|\r\n]/g,"").match(/[\u4e00-\u9fa5\0-9]/g)){
-        //   this.$message.error('请确认当前段落含有有效文字！')
-        //   return false
-        // }
-        UnityPreview(val.avatar.unity,JSON.stringify([val]))
+        if(this.previewReady){
+          this.previewData = val;
+          UnityChangeAvatar(val.avatar.unity);
+          this.previewReady = false;
+        }else{
+          this.$message.warning('资源加载中，请稍后...')
+        }
       },
+      WebSelectAvatarState(state){
+        if(state==='True'){
+          UnityPreview(this.previewData.avatar.unity,JSON.stringify([this.previewData]))
+        }else if(state==='False'){
+          this.$message.error('切换角色失败，请重试')
+          this.previewReady = true;
+        }
+      },
+      WebPreviewReady(state){
+        if(state==='True'){
+          UnityPreviewStart(this.previewData.avatar.unity);
+        }else if(state==='False'){
+          this.$message.error('加载资源失败，请重试')
+        }
+        this.previewReady = true;
+      }
     }
   }
 </script>

@@ -23,10 +23,8 @@
       </el-popconfirm>
 
       <button class="w-textarea_tools__item item2 float_right"
-              onclick="openTagDialog('黄图')"
               @click="openTagDialog('img')">插入图片</button>
       <button class="w-textarea_tools__item item3 float_right"
-              onclick="openTagDialog('黄片')"
               @click="openTagDialog('video')">插入视频</button>
 
 

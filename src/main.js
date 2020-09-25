@@ -30,7 +30,7 @@ new Vue({
       ai_user_id: 726,
       // ai_user_id: '' || Session.get('ai_user_id'),
       ai_user_phone: '' || Session.get('ai_user_phone'),
-      ai_user_token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJtYWdpY3MtYWQuY29tIiwiYXVkIjoiIiwiaWF0IjoxNjAxMDE0OTc3LCJuYmYiOjE2MDEwMTQ5NzksImV4cCI6MTYwMTAyMjE3NywiZGF0YSI6eyJ1c2VyaWQiOjcyNiwidXNlcm5hbWUiOiIxODYxMjc2NjM3MCJ9fQ.sxYsoE2EMm5kWStBc7gaJ2nS3eKEO0niAblx8956ELo",
+      ai_user_token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJtYWdpY3MtYWQuY29tIiwiYXVkIjoiIiwiaWF0IjoxNjAxMDM2ODE0LCJuYmYiOjE2MDEwMzY4MTYsImV4cCI6MTYwMTA0NDAxNCwiZGF0YSI6eyJ1c2VyaWQiOjcyNiwidXNlcm5hbWUiOiIxODYxMjc2NjM3MCJ9fQ.WhPC5l4Igpmt9bj6Getxg0s3jCeiDhXnnnZU1mOnqg0",
       // ai_user_token: '' || Session.get('ai_user_token'),
     }
   },

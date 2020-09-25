@@ -148,7 +148,12 @@
 <!--              <el-button type="primary" @click="confrimBtn('imgForm')">确 定</el-button>-->
             </span>
         </el-dialog>
-        <div class="p10">
+        <div class="p10"
+             style="min-height: 66px"
+             v-loading="actionLoading"
+             element-loading-text="模型动作加载中"
+             element-loading-spinner="el-icon-loading"
+             element-loading-background="rgba(0, 0, 0, 0.8)">
           <span class="actionTitle">插入动作</span>
           <el-button class="actionBtn" size="small" v-for="(val,ind) in actionShowList" :key="ind+'animation'">
             <div class="animation-name" @click="addAction(val)">{{val.label}}</div>
@@ -339,6 +344,7 @@
             "label": "9抬手欢呼",
             "value": "TS_9"
           }],
+        actionLoading:true,
         testData:'',
         intervalValue:0.5,//间隔时间
         dismissTimeTypeData:[
@@ -378,7 +384,7 @@
         cutArr:[],//裁剪数据的缓存区
         cutCount:50,//裁剪的基准长度,即文字暂定50字后第一个标点（，。！？.....等）的分层
 
-
+        previewReady:true,
       };
     },
     mounted() {
@@ -401,6 +407,7 @@
       //要动作
       UnityAvatarMotionInfo(resultJSON.resultJsonObj.avatar.unity);
       window.WebActionInfo= this.WebActionInfo
+      UnityChangeAvatar(resultJSON.resultJsonObj.avatar.unity);
     },
     watch:{
       //监听输入框文本，主要实现删除功能
@@ -445,6 +452,10 @@
       },
       //预览
       previewBtn(val,ind){
+        if(!this.previewReady){
+          this.$message.warning('资源加载中，请稍后...')
+          return false;
+        }
         let _content='';
         if(this.scriptIndex!==ind){
           val.param.forEach(value=>{
@@ -472,7 +483,25 @@
             console.log( this.cutTxtArr,this.cutArr)
           })
         }
+        this.previewReady = false;
       },
+
+      WebSelectAvatarState(state){
+        if(state==='True'){
+        }else if(state==='False'){
+          this.$message.error('切换角色失败，请重试')
+          // this.previewReady = false;
+        }
+      },
+      WebPreviewReady(state){
+        if(state==='True'){
+          UnityPreviewStart(resultJSON.resultJsonObj.avatar.unity);
+        }else if(state==='False'){
+          this.$message.error('加载资源失败，请重试')
+        }
+        this.previewReady = true;
+      },
+
       //删除
       delBtn(ind){
         if(this.scriptIndex===ind&&ind){
@@ -1001,6 +1030,10 @@
 
 
 <style lang="less" scoped>
+  /deep/.el-icon-loading{
+    font-size: 30px !important;
+  }
+
   .container{
     font-size: 0;
     .container_left{
@@ -1095,6 +1128,7 @@
   }
   /deep/.el-radio.is-bordered.is-checked{
     background: #E87E4D !important;
+    border-color: #E87E4D !important;
   }
   /deep/.el-radio__input.is-checked+.el-radio__label{
     color: #FFFFFF!important;
