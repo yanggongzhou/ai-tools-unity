@@ -30,7 +30,7 @@ new Vue({
       ai_user_id: 726,
       // ai_user_id: '' || Session.get('ai_user_id'),
       ai_user_phone: '' || Session.get('ai_user_phone'),
-      ai_user_token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJtYWdpY3MtYWQuY29tIiwiYXVkIjoiIiwiaWF0IjoxNjAwOTQ0MjgyLCJuYmYiOjE2MDA5NDQyODQsImV4cCI6MTYwMDk1MTQ4MiwiZGF0YSI6eyJ1c2VyaWQiOjcyNiwidXNlcm5hbWUiOiIxODYxMjc2NjM3MCJ9fQ.yRSy2mswFQfCerUyTY4WgYppfUTygwypr31-WpjWsk4",
+      ai_user_token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJtYWdpY3MtYWQuY29tIiwiYXVkIjoiIiwiaWF0IjoxNjAxMDAwMDAyLCJuYmYiOjE2MDEwMDAwMDQsImV4cCI6MTYwMTAwNzIwMiwiZGF0YSI6eyJ1c2VyaWQiOjcyNiwidXNlcm5hbWUiOiIxODYxMjc2NjM3MCJ9fQ.pXD5l5aWXkdQPSi4lETcet42pItWHKxAShPnX1KKlH4",
       // ai_user_token: '' || Session.get('ai_user_token'),
       isPlayingScript: false, // 是否正在直播
     }

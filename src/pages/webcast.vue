@@ -117,7 +117,7 @@
               :before-close="webcastPreClose"
               :visible.sync="webcastPreDialog">
               <div class="previewbox">
-                <webcastDialog :scriptRow="scriptRow" :scriptName="scriptName"></webcastDialog>
+                <webcastDialog ref="webcastDialogRef"></webcastDialog>
               </div>
             </el-dialog>
           </div>
@@ -346,7 +346,7 @@ export default {
         startWebcast() {
             // ❗️要播放的剧本列表
             console.log(this.playScriptData)
-            // this.$refs.previewMultiple.getJson(this.playScriptData);
+            this.$refs.webcastDialogRef.getPlayData(this.playScriptData);
             this.webcastBtnTxt = '停止直播';
             this.$root.isPlayingScript = true;
         },
@@ -381,7 +381,6 @@ export default {
             axios.get(row.script_url)
               .then(res=>{
                 if(res.status===200){
-                  this.scriptRow = res.data
                   UnityPreview(res.data[0].avatar.unity,JSON.stringify(res.data))
                 }else{
                   this.$message.warning('剧本数据获取异常，请重试')

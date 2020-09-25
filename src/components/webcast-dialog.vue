@@ -53,6 +53,7 @@
   </div>
 </template>
 <script>
+  import axios from 'axios'
   export default {
     filters:{
       indFilter(val){
@@ -85,7 +86,8 @@
         scriptIndex:0,
         contentList:[{content:'1'},{content:'2'}],
         isShowAllList:false,
-        webcastBtnTxt:'自动播放'
+
+        playData:[],
       }
     },
     methods:{
@@ -95,6 +97,17 @@
       handleWebcast(){
 
       },
+      getPlayData(data){
+        this.playData = JSON.parse(JSON.stringify(data))
+        axios.all([
+          data.forEach(val=>{
+            axios.get(val.script_url).then(res=>{})
+          })
+        ]).then(res=>{
+          console.log(res)
+        })
+
+      }
     }
 
   }

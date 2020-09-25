@@ -504,6 +504,9 @@
             if(txtInd!==0&&!txtInd){//处理最后一个标签显示问题
               txtInd = param.content.length
             }
+            if(!val.index){
+              txtInd = 0
+            }
             if(val.type==="info"){
               if(val.info.child[0].type==="image"){
                 positionTag.push({
