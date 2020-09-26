@@ -40,7 +40,11 @@ export default {
     created() {},
   mounted() {
       //请求用户信息
-      this.getUserInfo();
+      if(this.$Session.get('ai_user_id')&&this.$Session.get('ai_user_token')&&this.$Session.get('ai_user_phone')){
+
+      }else{
+        this.getUserInfo();
+      }
       window.WebUserMessage=this.WebUserMessage;
     },
     methods: {
@@ -69,15 +73,6 @@ export default {
       },
         gotoPage(_page) {
           this.$router.push(_page)
-            // if(_page == '/steper' || _page == '/webcast') {
-            //     let route = this.$router.resolve({
-            //         name: _page.replace(/\//, '')
-            //     })
-            //     window.open(route.href, '_blank');
-            // }else {
-            //     this.$router.push(_page)
-            // }
-
         }
     }
 }

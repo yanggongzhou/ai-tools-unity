@@ -61,14 +61,38 @@
       <div class="float_right btnBox">
         <button class='handleWebcastBtn' v-show="isAutoPlayBtn" @click='autoPlayBtn'>自动播放</button>
         <button class='handleWebcastBtn' v-show="!isAutoPlayBtn" @click='stopPlayBtn'>停止播放</button>
-        <button class='handleWebcastBtn' style="margin-left: 30px" :class="{'disabled': true}" @click='handleWebcast'>播放下一段</button>
+        <button class='handleWebcastBtn' style="margin-left: 30px" :class="{'disabled': true}" @click='nextPlayBtn'>播放下一段</button>
       </div>
     </div>
     <el-dialog
-      width="30%"
-      title="内层 Dialog"
+      width="700px"
       :visible.sync="innerVisible"
+      top="10vh"
       append-to-body>
+      <div class="contentBox contentBox2">
+        <div style="height: 339px;overflow: scroll">
+          <div class="content-item" v-for="(val,ind) in temporaryScriptList" :key="ind+'content'">
+            <div class="header clearfix">
+              <div class="title float_left">{{val.time}}</div>
+
+              <div class="float_right play_icon" @click="previewBtn(val)">
+                <i class="el-icon-video-play"></i>
+              </div>
+            </div>
+            <p class="content">
+              {{val.text}}
+            </p>
+          </div>
+        </div>
+        <el-input style="margin-top: 10px" type="textarea"
+                  placeholder="这里可以输入文字，添加后记录在上方内容"
+                  v-model="temporaryScriptTxt"
+                  :autosize="{ minRows: 5, maxRows:5 }"
+                  ></el-input>
+        <div class="playBtn">
+          <button class='handleWebcastBtn' @click='temporaryScriptPlay'>播放</button>
+        </div>
+      </div>
     </el-dialog>
   </div>
 </template>
@@ -122,6 +146,31 @@
         previewData:[],
         previewReady:true,
         isAutoPlayBtn:true,//按钮显示
+
+        temporaryScriptList:[
+          {
+            time:'2020-02-12 14:34:23',
+            text:'荣耀（HONOR），是面向年轻人群的科技潮牌，主打潮流设计和极致性能。 [1] 荣耀不断推出不同系列产品，致力于打造手机+IoT产品生态圈。 荣耀的使命，是创造一个属于年轻人的智慧新世界。荣耀将持续为全球年轻人提供潮酷的全场景智能化体验，打造年轻人向往的先锋文化和潮流生活方式。',
+            state:'已播',
+          },
+          {
+            time:'2020-02-12 14:34:23',
+            text:'荣耀（HONOR），是面向年轻人群的科技潮牌，主打潮流设计和极致性能。 [1] 荣耀不断推出不同系列产品，致力于打造手机+IoT产品生态圈。 荣耀的使命，是创造一个属于年轻人的智慧新世界。荣耀将持续为全球年轻人提供潮酷的全场景智能化体验，打造年轻人向往的先锋文化和潮流生活方式。',
+            state:'正播',
+          },
+          {
+            time:'2020-02-12 14:34:23',
+            text:'荣耀（HONOR），是面向年轻人群的科技潮牌，主打潮流设计和极致性能。 [1] 荣耀不断推出不同系列产品，致力于打造手机+IoT产品生态圈。 荣耀的使命，是创造一个属于年轻人的智慧新世界。荣耀将持续为全球年轻人提供潮酷的全场景智能化体验，打造年轻人向往的先锋文化和潮流生活方式。',
+            state:'排队',
+          },
+          {
+            time:'2020-02-12 14:34:23',
+            text:'荣耀（HONOR），是面向年轻人群的科技潮牌，主打潮流设计和极致性能。 [1] 荣耀不断推出不同系列产品，致力于打造手机+IoT产品生态圈。 荣耀的使命，是创造一个属于年轻人的智慧新世界。荣耀将持续为全球年轻人提供潮酷的全场景智能化体验，打造年轻人向往的先锋文化和潮流生活方式。',
+            state:'未播',
+          }
+          ],//临时话术
+        temporaryScriptTxt:'',
+
       }
     },
     mounted() {
@@ -188,8 +237,8 @@
         UnityPreview(this.previewData[0].avatar.unity,JSON.stringify(this.previewData))
         this.previewReady = false;
       },
-
-      handleWebcast(){
+      //播放下一个
+      nextPlayBtn(){
 
       },
       getPlayData(data){
@@ -221,12 +270,25 @@
       previewBtn(val){
         UnityPreview(val.avatar.unity,JSON.stringify([val]))
       },
+      //临时话术播放按钮
+      temporaryScriptPlay(){
+        this.temporaryScriptList.push({
+          time:new Date().toLocaleString(),
+          text:this.temporaryScriptTxt,
+          state:'排队'
+        })
+      },
     }
 
   }
 </script>
 <style scoped lang="less">
-
+  /deep/.el-dialog__header {
+    padding: 0px!important;
+  }
+  /deep/.el-dialog__body{
+    padding: 0px!important;
+  }
   /deep/.el-radio{
     color: #7C53FF !important;
     border-bottom: 1px solid #fff !important;
@@ -343,10 +405,28 @@
       -webkit-box-orient: vertical;
       -webkit-line-clamp: 3;
       overflow: hidden;
+      user-select: text;
     }
   }
 }
-
+.contentBox2{
+  padding: 40px 0 0 0;
+  margin: 0 auto;
+  width: 648px;
+  height: 520px;
+  .content-item{
+    margin-top: 0px;
+    margin-bottom: 24px;
+    border: 1px solid #CDC7FE;
+    padding: 8px 10px 4px;
+    background: #F2F6FF;
+    border-radius: 4px;
+  }
+  .playBtn{
+    text-align: center;
+    margin: 16px;
+  }
+}
 .footBox{
   border-top: 1px solid #DDD6FF;
   padding: 19px;

@@ -448,6 +448,7 @@
             value:valueData[ind]
           })
         })
+        this.actionLoading = false;
         console.log('动作列表接收',this.actionShowList)
       },
       //预览
@@ -620,7 +621,10 @@
             if(contentBDArr[val.index]===undefined){
               contentBDArr[val.index] = _imageDom
             }else{
-              contentBDArr[val.index]=_imageDom+contentBDArr[val.index]
+              // contentBDArr[val.index]=_imageDom+contentBDArr[val.index]
+              let _txt = contentBDArr[val.index].split('')
+              _txt.splice(_txt.length-1,1,_imageDom+_txt[_txt.length-1]);
+              contentBDArr[val.index] = _txt.join('');
             }
           }else if(val.type==="video"){
             let _data = JSON.stringify({type:'video',name:val.name,time:val.time,url:val.url,id:val.id,isAll:val.isAll}).replace(/"/g,"&quot;")
@@ -632,7 +636,10 @@
             if(contentBDArr[val.index]===undefined){
               contentBDArr[val.index] = _videoDom
             }else{
-              contentBDArr[val.index]=_videoDom+contentBDArr[val.index]
+              // contentBDArr[val.index]=_videoDom+contentBDArr[val.index]
+              let _txt = contentBDArr[val.index].split('')
+              _txt.splice(_txt.length-1,1,_videoDom+_txt[_txt.length-1]);
+              contentBDArr[val.index] = _txt.join('');
             }
           }else if(val.type==="action"){
             let _data = JSON.stringify({id:val.id, type:'action', actionName:val.actionName}).replace(/"/g,"&quot;")
@@ -642,7 +649,10 @@
             if(contentBDArr[val.index]===undefined){
               contentBDArr[val.index] = _actionDom
             }else{
-              contentBDArr[val.index]=_actionDom+contentBDArr[val.index]
+              let _txt = contentBDArr[val.index].split('')
+              _txt.splice(_txt.length-1,1,_actionDom+_txt[_txt.length-1]);
+              contentBDArr[val.index] = _txt.join('');
+              // contentBDArr[val.index]=_actionDom+contentBDArr[val.index]
             }
           }else if(val.type==="interval"){
             let _data = JSON.stringify({type:'interval', time:val.time}).replace(/"/g,"&quot;")
@@ -650,7 +660,10 @@
             if(contentBDArr[val.index]===undefined){
               contentBDArr[val.index] = _intervalDom
             }else{
-              contentBDArr[val.index]=_intervalDom+contentBDArr[val.index]
+              let _txt = contentBDArr[val.index].split('')
+              _txt.splice(_txt.length-1,1,_intervalDom+_txt[_txt.length-1]);
+              contentBDArr[val.index] = _txt.join('');
+              // contentBDArr[val.index]=_intervalDom+contentBDArr[val.index]
             }
           }
         })

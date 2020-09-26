@@ -137,6 +137,10 @@ export default {
               {
                 value:'潇洒姐',
                 label: '潇洒姐'
+              },
+              {
+                value:'乐比',
+                label: '乐比'
               }
             ],
             anchorRoleValue: '',
