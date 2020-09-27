@@ -203,7 +203,7 @@ export default {
                     this.$root.ai_user_token = '';
                     this.$Session.set('ai_user_id', '');
                     this.$Session.set('ai_user_token', '')
-
+                    this.$router.push({name:"homepage"})
                 }
             })
         },
@@ -331,9 +331,6 @@ export default {
             })
         },
 
-        handleClickSearch() {},
-        changeAnchorRole() {},
-        changeReferScene() {},
         gotopage() {
             this.$router.push('/steper')
         },
@@ -353,7 +350,8 @@ export default {
             axios.get(row.script_url)
               .then(res=>{
                 if(res.status===200){
-                  UnityPreview(res.data[0].avatar.unity,JSON.stringify(res.data))
+                  this.$message.warning('剧本数据获取异常，请重试')
+                  // UnityPreview(res.data[0].avatar.unity,JSON.stringify(res.data))
                 }else{
                   this.$message.warning('剧本数据获取异常，请重试')
                 }

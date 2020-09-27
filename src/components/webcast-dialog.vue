@@ -195,6 +195,7 @@
       window.WebSelectAvatarState=this.WebSelectAvatarState;
     },
     methods:{
+
       //剧本切换
       scriptChange(val){
         this.contentList = this.allScriptList[val].scriptList

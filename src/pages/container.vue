@@ -30,6 +30,7 @@
       @displayVideoUrl="displayVideoUrl"
       @deleteTrigger="deleteTrigger"
       @cleanTriggerDiv="cleanTriggerDiv"
+      @editImportTriggerDiv="editImportTriggerDiv"
     ></JsonEditor>
   </div>
 </template>
@@ -233,8 +234,6 @@
                     if(res.return_code===1000){
                       self.$route.params.id=res.result.gs_id
                       self.$message.success('保存成功');
-                    }else {
-                      self.$message.info(res.result.message);
                     }
                   })
                 }

@@ -1,12 +1,22 @@
 import axios from 'axios'
 import qs from 'qs'//转换formdata类型数据
+import { Message } from "element-ui";
+import { Session } from "./auth";
 
 const prevHandler = ({data}) => {
-  // if (data.return_code!==1000) {
-  //   Message.error("系统异常！")
-  // }
+  // if (data.return_code===1009) {
+  if (data.return_code!==1000) {
+    Message.error(data.result.message)
+    UnityUserInfo()
+  }else
   return data
 };
+// window.WebUserMessage = function WebUserMessage(id,token,phone){
+//   console.log(id,token,phone)
+//   Session.set('ai_user_id', id);
+//   Session.set('ai_user_token', token)
+//   Session.set('ai_user_phone', phone)
+// }
 const prevErrHandler = ({response}) => {
   switch (response.status) {
     case 404:

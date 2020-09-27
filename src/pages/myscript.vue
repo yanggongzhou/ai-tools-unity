@@ -102,6 +102,7 @@
 import { requestServices } from '../api/api';
 import myscriptDialog from '../components/myscript-dialog'
 import axios from "axios";
+import homepage from "./homepage";
 export default {
   components:{
     myscriptDialog
@@ -185,6 +186,7 @@ export default {
                     this.$root.ai_user_token = '';
                     this.$Session.set('ai_user_id', '');
                     this.$Session.set('ai_user_token', '');
+                    this.$router.push({name:"homepage"})
                 }else {
                     this.$message.error('获取剧本列表失败')
                 }

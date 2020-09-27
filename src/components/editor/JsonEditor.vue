@@ -385,6 +385,9 @@
         cutCount:50,//裁剪的基准长度,即文字暂定50字后第一个标点（，。！？.....等）的分层
 
         previewReady:true,
+
+        scriptChangeState:false,
+        scriptChangeTimeout:'',
       };
     },
     mounted() {
@@ -413,6 +416,7 @@
     watch:{
       //监听输入框文本，主要实现删除功能
       testData(newValue,oldValue){
+        if(this.scriptChangeState) return false;
         // console.log(this.testData)
         if(newValue.length < oldValue.length&&(oldValue.length-newValue.length)>200){
           let newDom = document.getElementById('newDom');
@@ -512,12 +516,12 @@
           this.scriptIndex-=1
           // this.scriptChange(this.scriptIndex)
           this.scriptIndexOld = this.scriptIndex;
-          this.$emit('editImportTriggerDiv',this.ScriptList[this.scriptIndex].param)
+          this.$emit('editImportTriggerDiv',this.ScriptList[this.scriptIndex])
           this.editImport(this.ScriptList[this.scriptIndex]);
         }else if(this.scriptIndex===ind&&ind===0){
           this.scriptIndex+=1
           this.scriptIndexOld = this.scriptIndex;
-          this.$emit('editImportTriggerDiv',this.ScriptList[this.scriptIndex].param)
+          this.$emit('editImportTriggerDiv',this.ScriptList[this.scriptIndex])
           this.editImport(this.ScriptList[this.scriptIndex]);
         }else if(this.scriptIndex>ind){
           this.scriptIndex-=1
@@ -528,17 +532,30 @@
       //切换段落
       scriptChange(val){
         let self = this;
+        this.scriptChangeState=true;
+        clearTimeout(self.scriptChangeTimeout);
         this.exportJson().then(data=>{
           self.ScriptList[self.scriptIndexOld].param = JSON.parse(JSON.stringify(data.param))
           self.scriptIndexOld = val;
-          self.$emit('editImportTriggerDiv',self.ScriptList[val].param)
+          self.$emit('editImportTriggerDiv',self.ScriptList[val])
           self.editImport(self.ScriptList[val]);
+          self.scriptChangeTimeout=setTimeout(()=>{
+            self.scriptChangeState = false;
+          },500)
         })
         // console.log(self.ScriptList)
       },
       //添加段落
       addScript(){
+        let self = this;
         this.ScriptList[this.ScriptList.length] = JSON.parse(JSON.stringify(resultJSON.resultJsonObj))
+        this.exportJson().then(data=>{
+          self.ScriptList[self.scriptIndex].param = JSON.parse(JSON.stringify(data.param))
+          self.scriptIndex = this.ScriptList.length-1;
+          self.scriptIndexOld = self.scriptIndex;
+          self.$emit('editImportTriggerDiv',self.ScriptList[self.scriptIndex])
+          self.editImport(self.ScriptList[self.scriptIndex]);
+        })
         this.$forceUpdate()
       },
       //预览动作
