@@ -66,7 +66,7 @@ export default {
         }
       },
       WebUserMessage(id,token,phone){
-        this.$message.info(id,token,phone)
+        console.log(id,token,phone)
         this.$Session.set('ai_user_id', id);
         this.$Session.set('ai_user_token', token)
         this.$Session.set('ai_user_phone', phone)

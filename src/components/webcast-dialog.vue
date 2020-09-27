@@ -11,7 +11,7 @@
           <div class="left_card_item">
             <i class="left_card_icon el-icon-video-camera-solid" v-show="allScriptPlayIndex===ind"></i>
             <div class="label">
-              <p>{{ind | indFilter(that)}}</p>
+              <p>{{ind | indFilter}}</p>
             </div>
           </div>
         </el-radio>
@@ -59,8 +59,8 @@
         </el-row>
       </div>
       <div class="float_right btnBox">
-        <button class='handleWebcastBtn' v-show="isAutoPlayBtn" @click='autoPlayBtn'>自动播放</button>
-        <button class='handleWebcastBtn' v-show="!isAutoPlayBtn" @click='stopPlayBtn'>停止播放</button>
+        <button class='handleWebcastBtn' v-show="!isAutoPlayBtn" @click='autoPlayBtn'>自动播放</button>
+        <button class='handleWebcastBtn' v-show="isAutoPlayBtn" @click='stopPlayBtn'>停止播放</button>
         <button class='handleWebcastBtn' style="margin-left: 30px" :class="{'disabled': true}" @click='nextPlayBtn'>播放下一段</button>
       </div>
     </div>
@@ -70,6 +70,7 @@
       top="10vh"
       append-to-body>
       <div class="contentBox contentBox2">
+        <button class='close_btn' @click='innerVisible=false'>收起</button>
         <div style="height: 339px;overflow: scroll">
           <div class="content-item" v-for="(val,ind) in temporaryScriptList" :key="ind+'content'">
             <div class="header clearfix">
@@ -98,9 +99,14 @@
 </template>
 <script>
   import axios from 'axios'
+  import {resultJSON} from "../api/result";
+  let that;
   export default {
+    beforeCreate() {
+      that = this;
+    },
     filters:{
-      indFilter(val,that){
+      indFilter(val){
         if((val+1).toString().length===1){
           return '0'+(val+1)+'. '+that.allScriptList[val].name
         }else{
@@ -133,7 +139,6 @@
     data(){
       return{
         innerVisible:false,
-        that:this,
         allScriptList:[],//全部脚本数据
         allScriptIndex:0,
         contentList:[],
@@ -144,32 +149,42 @@
         allScriptPlayIndex:'',//当前播放的脚本下标
 
         previewData:[],
-        previewReady:true,
-        isAutoPlayBtn:true,//按钮显示
+        previewReady:true,//是否资源准备完毕了
+        isAutoPlayBtn:false,//是否在自动播放
+        isPlaying:false,//是否在播放中
+
 
         temporaryScriptList:[
-          {
-            time:'2020-02-12 14:34:23',
-            text:'荣耀（HONOR），是面向年轻人群的科技潮牌，主打潮流设计和极致性能。 [1] 荣耀不断推出不同系列产品，致力于打造手机+IoT产品生态圈。 荣耀的使命，是创造一个属于年轻人的智慧新世界。荣耀将持续为全球年轻人提供潮酷的全场景智能化体验，打造年轻人向往的先锋文化和潮流生活方式。',
-            state:'已播',
-          },
-          {
-            time:'2020-02-12 14:34:23',
-            text:'荣耀（HONOR），是面向年轻人群的科技潮牌，主打潮流设计和极致性能。 [1] 荣耀不断推出不同系列产品，致力于打造手机+IoT产品生态圈。 荣耀的使命，是创造一个属于年轻人的智慧新世界。荣耀将持续为全球年轻人提供潮酷的全场景智能化体验，打造年轻人向往的先锋文化和潮流生活方式。',
-            state:'正播',
-          },
-          {
-            time:'2020-02-12 14:34:23',
-            text:'荣耀（HONOR），是面向年轻人群的科技潮牌，主打潮流设计和极致性能。 [1] 荣耀不断推出不同系列产品，致力于打造手机+IoT产品生态圈。 荣耀的使命，是创造一个属于年轻人的智慧新世界。荣耀将持续为全球年轻人提供潮酷的全场景智能化体验，打造年轻人向往的先锋文化和潮流生活方式。',
-            state:'排队',
-          },
-          {
-            time:'2020-02-12 14:34:23',
-            text:'荣耀（HONOR），是面向年轻人群的科技潮牌，主打潮流设计和极致性能。 [1] 荣耀不断推出不同系列产品，致力于打造手机+IoT产品生态圈。 荣耀的使命，是创造一个属于年轻人的智慧新世界。荣耀将持续为全球年轻人提供潮酷的全场景智能化体验，打造年轻人向往的先锋文化和潮流生活方式。',
-            state:'未播',
-          }
+          // {
+          //   time:'2020-02-12 14:34:23',
+          //   text:'荣耀（HONOR），是面向年轻人群的科技潮牌，主打潮流设计和极致性能。 [1] 荣耀不断推出不同系列产品，致力于打造手机+IoT产品生态圈。 荣耀的使命，是创造一个属于年轻人的智慧新世界。荣耀将持续为全球年轻人提供潮酷的全场景智能化体验，打造年轻人向往的先锋文化和潮流生活方式。',
+          //   state:'已播',
+          // },
+          // {
+          //   time:'2020-02-12 14:34:23',
+          //   text:'荣耀（HONOR），是面向年轻人群的科技潮牌，主打潮流设计和极致性能。 [1] 荣耀不断推出不同系列产品，致力于打造手机+IoT产品生态圈。 荣耀的使命，是创造一个属于年轻人的智慧新世界。荣耀将持续为全球年轻人提供潮酷的全场景智能化体验，打造年轻人向往的先锋文化和潮流生活方式。',
+          //   state:'正播',
+          // },
+          // {
+          //   time:'2020-02-12 14:34:23',
+          //   text:'荣耀（HONOR），是面向年轻人群的科技潮牌，主打潮流设计和极致性能。 [1] 荣耀不断推出不同系列产品，致力于打造手机+IoT产品生态圈。 荣耀的使命，是创造一个属于年轻人的智慧新世界。荣耀将持续为全球年轻人提供潮酷的全场景智能化体验，打造年轻人向往的先锋文化和潮流生活方式。',
+          //   state:'排队',
+          // },
+          // {
+          //   time:'2020-02-12 14:34:23',
+          //   text:'荣耀（HONOR），是面向年轻人群的科技潮牌，主打潮流设计和极致性能。 [1] 荣耀不断推出不同系列产品，致力于打造手机+IoT产品生态圈。 荣耀的使命，是创造一个属于年轻人的智慧新世界。荣耀将持续为全球年轻人提供潮酷的全场景智能化体验，打造年轻人向往的先锋文化和潮流生活方式。',
+          //   state:'未播',
+          // }
           ],//临时话术
         temporaryScriptTxt:'',
+
+        queueList:[
+          // {
+          //   name:'',
+          //   json:'',
+          // }
+        ],//排队数据，最多3个
+        queueContentItem:[],//段落排队数据，最多1个
 
       }
     },
@@ -187,12 +202,13 @@
       },
       //自动播放
       autoPlayBtn(){
-          this.isAutoPlayBtn = false;
+          this.isAutoPlayBtn = true;
         if(this.previewReady){
           this.allScriptPlayIndex = this.allScriptIndex;
           this.previewData = this.allScriptList[this.allScriptPlayIndex].scriptList;
           UnityChangeAvatar(this.previewData[0].avatar.unity)
           this.previewReady = false;
+          this.isPlaying = true;
         }else{
           this.$message.warning('资源加载中，请稍后...')
         }
@@ -200,15 +216,19 @@
       //停止播放
       stopPlayBtn(){
         this.allScriptPlayIndex = '';
-        this.isAutoPlayBtn = true;
-        UnityPreviewCancel();
+        this.isAutoPlayBtn = false;
+        UnityPreviewCancel();//结束自动播放接口
+        this.isPlaying = false;
+        this.queueList = [];
+        this.queueContentItem = [];
       },
       WebSelectAvatarState(state){
         if(state==='True'){
           UnityPreview(this.previewData[0].avatar.unity,JSON.stringify(this.previewData))
         }else if(state==='False'){
           this.previewReady = true;
-          this.isAutoPlayBtn = true;
+          this.isAutoPlayBtn = false;
+          this.isPlaying = false;
           this.$message.error('切换角色失败，请重试')
         }
       },
@@ -217,7 +237,8 @@
           UnityPreviewStart(this.previewData[0].avatar.unity);
           this.$message.info('播放剧本'+(this.allScriptPlayIndex+1)+'--'+this.allScriptList[this.allScriptPlayIndex].name)
         }else if(state==='False'){
-          this.isAutoPlayBtn = true;
+          this.isAutoPlayBtn = false;
+          this.isPlaying = false;
           this.$message.error('加载资源失败，请重试')
         }
         this.previewReady = true;
@@ -225,22 +246,37 @@
 
       //播放结束回调
       WebPreviewEnd(){
-        if(this.allScriptPlayIndex+1<this.allScriptList.length){
-          // this.allScriptIndex+=1;
-          this.allScriptPlayIndex+=1;
+        if(this.isAutoPlayBtn){
+          if(this.allScriptPlayIndex+1<this.allScriptList.length){
+            // this.allScriptIndex+=1;
+            this.allScriptPlayIndex+=1;
+          }else{
+            // this.allScriptIndex=0;
+            this.allScriptPlayIndex = 0;
+          }
+          this.$message.info('播放剧本'+(this.allScriptPlayIndex+1)+'--'+this.allScriptList[this.allScriptPlayIndex].name)
+          this.previewData = this.allScriptList[this.allScriptPlayIndex].scriptList;
+          UnityPreview(this.previewData[0].avatar.unity,JSON.stringify(this.previewData))
+          this.previewReady = false;
+          this.isPlaying = true;
         }else{
-          // this.allScriptIndex=0;
-          this.allScriptPlayIndex = 0;
+          if(this.queueList.length){
+            let _Obj  = this.queueList.shift();
+            UnityPreview(_Obj.name,JSON.stringify(_Obj.item))
+          }else{
+            if(this.queueContentItem.length){
+
+            }else{
+              this.isPlaying = false;
+            }
+          }
         }
-        this.$message.info('播放剧本'+(this.allScriptPlayIndex+1)+'--'+this.allScriptList[this.allScriptPlayIndex].name)
-        this.previewData = this.allScriptList[this.allScriptPlayIndex].scriptList;
-        UnityPreview(this.previewData[0].avatar.unity,JSON.stringify(this.previewData))
-        this.previewReady = false;
       },
       //播放下一个
       nextPlayBtn(){
 
       },
+      //获取直播列表json数据
       getPlayData(data){
         let self = this;
         self.allScriptList = [];
@@ -259,8 +295,8 @@
                 scriptList:resItem.data
               })
             })
-            this.allScriptIndex = 0;
-            this.contentList = this.allScriptList[0].scriptList
+            self.allScriptIndex = 0;
+            self.contentList = self.allScriptList[0].scriptList
             // console.log('self.allScriptList',self.allScriptList)
             self.$forceUpdate();
           })
@@ -268,7 +304,21 @@
       },
       //预览
       previewBtn(val){
-        UnityPreview(val.avatar.unity,JSON.stringify([val]))
+        if(!this.isPlaying){
+          UnityPreview(val.avatar.unity,JSON.stringify([val]))
+          this.isPlaying = true;
+        }else{
+
+
+          if(this.queueList.length<3){
+            this.queueList.push({
+              name:val.avatar.unity,
+              item:JSON.stringify([val])
+            })
+          }else{
+            this.$message.info('最多支持3个播放排队!')
+          }
+        }
       },
       //临时话术播放按钮
       temporaryScriptPlay(){
@@ -277,12 +327,46 @@
           text:this.temporaryScriptTxt,
           state:'排队'
         })
+        let _arr =  this.temporaryScriptList[this.temporaryScriptList.length-1].text.split('')
+        let _res = []
+        for (let i = 0; i< Math.ceil(_arr.length/100);i++){
+          _res.push(_arr.splice(0,100).join(''));
+        }
+        let _json = JSON.parse(JSON.stringify(resultJSON.resultJsonObj))
+        _json.avatar.unity = 'none'
+        _res.forEach(resItem=>{
+          _json.param.push({
+            intervalTime:0,
+            trigger:[],
+            content:resItem
+          })
+        })
+        if(!this.isPlaying){
+          UnityPreview('none',JSON.stringify([_json]))
+        }else{
+          if(this.queueList.length<3){
+            this.queueList.push({
+              name:'none',
+              item:JSON.stringify([_json])
+            })
+          }else{
+            this.$message.info('最多支持3个播放排队!')
+          }
+        }
       },
+      getGuid() {
+        // 生成随机ID
+        return `r${new Date().getTime()}d${Math.ceil(Math.random() * 1000)}`;
+      },
+
     }
 
   }
 </script>
 <style scoped lang="less">
+  /deep/.el-dialog__headerbtn{
+    display: none;
+  }
   /deep/.el-dialog__header {
     padding: 0px!important;
   }
@@ -478,6 +562,20 @@
     color: #fff;
     font-size: 14px;
     cursor: pointer;
+  }
+  .close_btn{
+    width: 56px;
+    height: 20px;
+    margin: 0 auto;
+    background: #FFF;
+    border-radius: 16px;
+    border: 1px solid #8286FF;
+    color: #8286FF;
+    font-size: 12px;
+    cursor: pointer;
+    position: absolute;
+    right: 16px;
+    top: 16px;
   }
   .disabled {
     background: #C6C6C6!important;

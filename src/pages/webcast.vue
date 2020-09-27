@@ -248,6 +248,7 @@ export default {
                     console.log(oldIndex, newIndex);
 
                     requestServices.sortPrograms({
+                        role_id:_this.$root.role_id,
                         user_id: _this.$root.ai_user_id,
                         access_token: _this.$root.ai_user_token,
                         start_location: _this.playScriptData[oldIndex].sort,

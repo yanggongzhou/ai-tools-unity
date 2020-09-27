@@ -28,10 +28,10 @@ new Vue({
     return {
       role_id:23,//角色ID；21-虚拟直播；23-真人+虚拟主播
       ai_user_id: 726,
-      // ai_user_id: '' || Session.get('ai_user_id'),
-      ai_user_phone: '' || Session.get('ai_user_phone'),
-      ai_user_token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJtYWdpY3MtYWQuY29tIiwiYXVkIjoiIiwiaWF0IjoxNjAxMTA1ODg2LCJuYmYiOjE2MDExMDU4ODgsImV4cCI6MTYwMTExMzA4NiwiZGF0YSI6eyJ1c2VyaWQiOjcyNiwidXNlcm5hbWUiOiIxODYxMjc2NjM3MCJ9fQ.qmcVh-3UTDhUT82-HGd75l08ZpA_ydNwoFYNKVWWWHE",
-      // ai_user_token: '' || Session.get('ai_user_token'),
+      // ai_user_id:  Session.get('ai_user_id') || '',
+      ai_user_phone: Session.get('ai_user_phone') || '',
+      ai_user_token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJtYWdpY3MtYWQuY29tIiwiYXVkIjoiIiwiaWF0IjoxNjAxMTg4MTUwLCJuYmYiOjE2MDExODgxNTIsImV4cCI6MTYwMTE5NTM1MCwiZGF0YSI6eyJ1c2VyaWQiOjcyNiwidXNlcm5hbWUiOiIxODYxMjc2NjM3MCJ9fQ.z17wIDTCvnLlePx6fG0AkoPNwcFazxo7VhTTjBdTCmY",
+      // ai_user_token: Session.get('ai_user_token') || '',
     }
   },
   components: { App },

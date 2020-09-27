@@ -405,9 +405,10 @@
         this.$forceUpdate()
       }
       //要动作
-      UnityAvatarMotionInfo(resultJSON.resultJsonObj.avatar.unity);
-      window.WebActionInfo= this.WebActionInfo
       UnityChangeAvatar(resultJSON.resultJsonObj.avatar.unity);
+
+      window.WebActionInfo= this.WebActionInfo
+      window.WebSelectAvatarState = this.WebSelectAvatarState
     },
     watch:{
       //监听输入框文本，主要实现删除功能
@@ -437,6 +438,7 @@
     },
 
     methods: {
+
       //动作回调返回列表
       WebActionInfo(val){
         this.actionShowList = [];
@@ -489,6 +491,7 @@
 
       WebSelectAvatarState(state){
         if(state==='True'){
+          UnityAvatarMotionInfo(resultJSON.resultJsonObj.avatar.unity);
         }else if(state==='False'){
           this.$message.error('切换角色失败，请重试')
           // this.previewReady = false;

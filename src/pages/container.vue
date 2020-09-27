@@ -78,6 +78,9 @@
           }
         })
       })
+
+      window.WebPreviewReady = this.WebPreviewReady;
+      window.WebSelectAvatarState=this.WebSelectAvatarState;
     },
     methods:{
       editImportTriggerDiv(data){
@@ -123,6 +126,7 @@
 
       WebSelectAvatarState(state){
         if(state==='True'){
+          UnityAvatarMotionInfo(resultJSON.resultJsonObj.avatar.unity);
         }else if(state==='False'){
           this.$message.error('切换角色失败，请重试')
         }
