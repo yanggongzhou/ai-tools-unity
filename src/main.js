@@ -24,16 +24,16 @@ Vue.config.productionTip = false
 new Vue({
   el: '#app',
   router,
-  data: () => {
-    return {
-      role_id:23,//角色ID；21-虚拟直播；23-真人+虚拟主播
-      ai_user_id: 726,
-      // ai_user_id:  Session.get('ai_user_id') || '',
-      ai_user_phone: Session.get('ai_user_phone') || '',
-      ai_user_token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJtYWdpY3MtYWQuY29tIiwiYXVkIjoiIiwiaWF0IjoxNjAxMTg4MTUwLCJuYmYiOjE2MDExODgxNTIsImV4cCI6MTYwMTE5NTM1MCwiZGF0YSI6eyJ1c2VyaWQiOjcyNiwidXNlcm5hbWUiOiIxODYxMjc2NjM3MCJ9fQ.z17wIDTCvnLlePx6fG0AkoPNwcFazxo7VhTTjBdTCmY",
-      // ai_user_token: Session.get('ai_user_token') || '',
-    }
-  },
+  // data: () => {
+  //   return {
+  //     role_id:23,//角色ID；21-虚拟直播；23-真人+虚拟主播
+  //     // ai_user_id: 424,
+  //     ai_user_id: '' || Session.get('ai_user_id'),
+  //     ai_user_phone: '' || Session.get('ai_user_phone'),
+  //     // ai_user_token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJtYWdpY3MtYWQuY29tIiwiYXVkIjoiIiwiaWF0IjoxNjAxMjA3MTgwLCJuYmYiOjE2MDEyMDcxODIsImV4cCI6MTYwMTIxNDM4MCwiZGF0YSI6eyJ1c2VyaWQiOjQyNCwidXNlcm5hbWUiOiIifX0.Ev5WAEc4ptS9cyuj8aCms_Emk3WYLPOVWolrI8jIOHQ",
+  //     ai_user_token: '' || Session.get('ai_user_token'),
+  //   }
+  // },
   components: { App },
   template: '<App/>'
 })

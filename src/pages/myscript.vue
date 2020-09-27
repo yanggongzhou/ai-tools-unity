@@ -168,9 +168,9 @@ export default {
     methods: {
         fetchAllScripts() {
             requestServices.getAllScripts({
-                role_id:this.$root.role_id,
-                user_id: this.$root.ai_user_id,
-                access_token: this.$root.ai_user_token,
+                role_id:23,
+                user_id: this.$Session.get('ai_user_id'),
+                access_token: this.$Session.get('ai_user_token'),
                 gs_name: this.searchScriptName, // 剧本名称
                 avatar_name: this.anchorRoleValue, // 精灵名称
                 scene_type: '', // 场景类型；0-默认类型；1-淘宝；2-抖音；3-快手
@@ -182,11 +182,9 @@ export default {
                     this.scriptData = res.result.guide_shopping;
                     this.total_count = res.result.page_count;
                 }else if(res.return_code==1009) { // token过期
-                    this.$root.ai_user_id = '';
-                    this.$root.ai_user_token = '';
                     this.$Session.set('ai_user_id', '');
                     this.$Session.set('ai_user_token', '');
-                    this.$router.push({name:"homepage"})
+                    // this.$router.push({name:"homepage"})
                 }else {
                     this.$message.error('获取剧本列表失败')
                 }
@@ -232,8 +230,8 @@ export default {
             this.isShowDelDialog = false;
             // this.scriptData.splice(this.delScriptId, 1)
             requestServices.delScript({
-                user_id:this.$root.ai_user_id,
-                access_token:this.$root.ai_user_token,
+                user_id:this.$Session.get('ai_user_id'),
+                access_token:this.$Session.get('ai_user_token'),
                 gs_id:this.delScriptId.id
             }).then(res=>{
                 if(res.return_code===1000){

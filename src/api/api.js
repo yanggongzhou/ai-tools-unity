@@ -8,7 +8,7 @@ const prevHandler = ({data}) => {
   if (data.return_code!==1000) {
     Message.error(data.result.message)
     UnityUserInfo()
-  }else
+  }
   return data
 };
 // window.WebUserMessage = function WebUserMessage(id,token,phone){
@@ -77,9 +77,9 @@ export const chatInterface={
 };
 
 let _apiUrl = 'https://adtest.magics-ad.com';
-if(window.location.host=='ai24live.magic-store.cn' || window.location.host=='pro.magics-ad.com') {
-  _apiUrl = 'https://adserver.magics-ad.com';
-}
+// if(window.location.host=='ai24live.magic-store.cn' || window.location.host=='pro.magics-ad.com') {
+//   _apiUrl = 'https://adserver.magics-ad.com';
+// }
 const apiInstance = createAxios(_apiUrl);
 export const requestServices = {
   uploadUrl:  _apiUrl+"/common_server/client/upload",

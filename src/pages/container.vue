@@ -41,6 +41,7 @@
   import Bus from "../api/bus";
   import axios from "axios";
   import {requestServices} from "../api/api";
+  import {Session} from "../api/auth";
   export default {
     components:{
       JsonEditor,
@@ -180,11 +181,10 @@
             let file = new File([blob], "ai.json", { lastModified: Date.now() }); // blob转file
             let fd = new FormData();
             fd.append("file", file);
-            fd.append("user_id", self.$root.ai_user_id);
-            fd.append("access_token", self.$root.ai_user_token);
+            fd.append("user_id", self.$Session.get('ai_user_id'));
+            fd.append("access_token", self.$Session.get('ai_user_token'));
             fd.append("target", 1);
             fd.append("type", 0);
-
             axios.post(requestServices.uploadUrl,fd,{responseType:'multipart/form-data'})
               .then(uploadRes=>{
                 let avatar_name = ''
@@ -195,9 +195,9 @@
                 })
                 if(self.$route.params.id && type!=='另存为'){
                   requestServices.editScript({
-                    role_id:self.$root.role_id,
-                    user_id:self.$root.ai_user_id,
-                    access_token:self.$root.ai_user_token,
+                    role_id:23,
+                    user_id:self.$Session.get('ai_user_id'),
+                    access_token:self.$Session.get('ai_user_token'),
                     name:self.jsonName,
                     preview_url:'',
                     script_url:uploadRes.data.result.upload_url,
@@ -211,16 +211,14 @@
                   }).then(res=>{
                     if(res.return_code===1000){
                       self.$message.success('保存成功');
-                    }else{
-                      self.$message.info(res.result.message);
                     }
                   })
                 }
                 else{
                   requestServices.addScript({
-                    role_id:self.$root.role_id,
-                    user_id:self.$root.ai_user_id,
-                    access_token:self.$root.ai_user_token,
+                    role_id:23,
+                    user_id:self.$Session.get('ai_user_id'),
+                    access_token:self.$Session.get('ai_user_token'),
                     name:self.jsonName,
                     preview_url:'',
                     script_url:uploadRes.data.result.upload_url,

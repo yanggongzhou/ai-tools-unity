@@ -45,10 +45,12 @@
       <div class="float_left leftIcon">
         <el-row :gutter="10">
           <el-col :span="12">
-            <div class="icon1">
-              <div class="kuaijie"></div>
-              <span>快捷键</span>
-            </div>
+            <el-tooltip class="item" effect="dark" content="播放下一段：【Ctrl】+【空格" placement="bottom">
+              <div class="icon1">
+                <div class="kuaijie"></div>
+                <span>快捷键</span>
+              </div>
+            </el-tooltip>
           </el-col>
           <el-col :span="12">
             <div class="icon2" @click="innerVisible=!innerVisible">
@@ -550,12 +552,12 @@
     font-size: 12px;
     color: #A0A0A0;
     .icon1{
-      cursor: pointer;
-      transition: all .3s;
-      &:hover{
-        background: #cecece4d;
-        border-radius: 8px;
-      }
+      /*cursor: pointer;*/
+      /*transition: all .3s;*/
+      /*&:hover{*/
+      /*  background: #cecece4d;*/
+      /*  border-radius: 8px;*/
+      /*}*/
       .kuaijie{
         width: 30px;
         height: 30px;

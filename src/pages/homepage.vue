@@ -12,6 +12,8 @@
 </template>
 <script>
 
+import {Session} from "../api/auth";
+
 export default {
     data() {
         return {
@@ -67,9 +69,14 @@ export default {
       },
       WebUserMessage(id,token,phone){
         console.log(id,token,phone)
+
         this.$Session.set('ai_user_id', id);
         this.$Session.set('ai_user_token', token)
         this.$Session.set('ai_user_phone', phone)
+        this.$notify({
+          title: this.$Session.get('ai_user_id') +'用户'+ Session.get('ai_user_phone'),
+          message: Session.get('ai_user_token')
+        });
       },
         gotoPage(_page) {
           this.$router.push(_page)

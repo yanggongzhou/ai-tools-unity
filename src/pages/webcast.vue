@@ -189,9 +189,9 @@ export default {
         // 获取播放剧本列表
         fetchAllPrograms() {
             requestServices.getAllPrograms({
-                role_id:this.$root.role_id,
-                user_id: this.$root.ai_user_id,
-                access_token: this.$root.ai_user_token,
+                role_id:23,
+                user_id: this.$Session.get('ai_user_id'),
+                access_token: this.$Session.get('ai_user_token'),
             }).then(res => {
                 console.log('res: ', res)
                 if(res.return_code == 1000) {
@@ -199,11 +199,9 @@ export default {
                     this.fetchPlayScriptIDs();
                     this.sortPlayScript();
                 }else if(res.return_code==1009) { // token过期
-                    this.$root.ai_user_id = '';
-                    this.$root.ai_user_token = '';
                     this.$Session.set('ai_user_id', '');
                     this.$Session.set('ai_user_token', '')
-                    this.$router.push({name:"homepage"})
+                    // this.$router.push({name:"homepage"})
                 }
             })
         },
@@ -217,9 +215,9 @@ export default {
         // 获取所有剧本列表
         fetchAllScripts() {
             requestServices.getAllScripts({
-                role_id:this.$root.role_id,
-                user_id: this.$root.ai_user_id,
-                access_token: this.$root.ai_user_token,
+                role_id:23,
+                user_id: this.$Session.get('ai_user_id'),
+                access_token: this.$Session.get('ai_user_token'),
                 gs_name: this.searchScriptName, // 剧本名称
                 avatar_name: this.anchorRoleValue, // 精灵名称
                 scene_type: '' // 场景类型；0-默认类型；1-淘宝；2-抖音；3-快手
@@ -248,9 +246,9 @@ export default {
                     console.log(oldIndex, newIndex);
 
                     requestServices.sortPrograms({
-                        role_id:_this.$root.role_id,
-                        user_id: _this.$root.ai_user_id,
-                        access_token: _this.$root.ai_user_token,
+                        role_id:23,
+                        user_id: _this.$Session.get('ai_user_id'),
+                        access_token: _this.$Session.get('ai_user_token'),
                         start_location: _this.playScriptData[oldIndex].sort,
                         end_location: _this.playScriptData[newIndex].sort
                     }).then(res=>{
@@ -389,8 +387,8 @@ export default {
         },
         addScriptToPrograms() {
             let data = {
-                user_id: this.$root.ai_user_id,
-                access_token: this.$root.ai_user_token,
+                user_id: this.$Session.get('ai_user_id'),
+                access_token: this.$Session.get('ai_user_token'),
                 gs_id: this.playScriptID,
                 // program_id: '' // 节目ID
             }
@@ -401,8 +399,8 @@ export default {
         },
         delScriptInPrograms(_ids) {
             let data = {
-                user_id: this.$root.ai_user_id,
-                access_token: this.$root.ai_user_token,
+                user_id: this.$Session.get('ai_user_id'),
+                access_token: this.$Session.get('ai_user_token'),
                 gs_id: _ids, // []
                 // program_id: '' // 节目ID
             }

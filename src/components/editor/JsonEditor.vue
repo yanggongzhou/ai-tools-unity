@@ -113,6 +113,9 @@
               <el-select v-model="imgForm.region" placeholder="请选择展示区域">
                 <el-option label="展示位一" value="1"></el-option>
                 <el-option label="展示位二" value="2"></el-option>
+                <el-option label="展示位三" value="3"></el-option>
+                <el-option label="展示位四" value="4"></el-option>
+                <el-option label="展示位五" value="5"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="上传文件">
@@ -218,132 +221,7 @@
         scriptIndexOld:0,
 
         avatarID:3,
-        // actionShowList:[],
-        actionShowList:[
-          {
-            "label": "2原地站立，微动，呼吸感",
-            "value": "TS_0"
-          }, {
-            "label": "10跪地",
-            "value": "TS_10"
-          }, {
-            "label": "11单膝跪地献花",
-            "value": "TS_11"
-          }, {
-            "label": "13惊慌抖动",
-            "value": "TS_13"
-          }, {
-            "label": "14跳着想吃东西，手抬高",
-            "value": "TS_14"
-          }, {
-            "label": "16张嘴身体前倾被喂食",
-            "value": "TS_16"
-          }, {
-            "label": "18健身",
-            "value": "TS_18"
-          }, {
-            "label": "1A鼓掌",
-            "value": "TS_1a"
-          }, {
-            "label": "1B单腿左右鼓掌",
-            "value": "TS_1b"
-          }, {
-            "label": "1C举起手鼓掌",
-            "value": "TS_1c"
-          }, {
-            "label": "20耸肩摊手",
-            "value": "TS_20"
-          }, {
-            "label": "21挠挠头",
-            "value": "TS_21"
-          }, {
-            "label": "22马步，快速摇晃手",
-            "value": "TS_22"
-          }, {
-            "label": "23晕，站不稳，倒地",
-            "value": "TS_23"
-          }, {
-            "label": "24激动的搓着手",
-            "value": "TS_24"
-          }, {
-            "label": "25饿的摸肚子",
-            "value": "TS_25"
-          }, {
-            "label": "26撑的摸肚子",
-            "value": "TS_26"
-          }, {
-            "label": "27拱手作揖",
-            "value": "TS_27"
-          }, {
-            "label": "28捂嘴",
-            "value": "TS_28"
-          }, {
-            "label": "29鞠躬",
-            "value": "TS_29"
-          }, {
-            "label": "2骄傲背手",
-            "value": "TS_2"
-          }, {
-            "label": "30伸手摇手不不不",
-            "value": "TS_30"
-          }, {
-            "label": "31伸懒腰",
-            "value": "TS_31"
-          }, {
-            "label": "32飞吻",
-            "value": "TS_32"
-          }, {
-            "label": "33风骚动作",
-            "value": "TS_33"
-          }, {
-            "label": "34回眸一笑",
-            "value": "TS_34"
-          }, {
-            "label": "35用力踩扁",
-            "value": "TS_35"
-          }, {
-            "label": "36撒福利，手上拿红票子撒天上",
-            "value": "TS_36"
-          }, {
-            "label": "37飞起来",
-            "value": "TS_37"
-          }, {
-            "label": "38a桌面上游泳，正面",
-            "value": "TS_38a"
-          }, {
-            "label": "38b桌面上游泳，背面",
-            "value": "TS_38b"
-          }, {
-            "label": "3b伸手",
-            "value": "TS_3b"
-          }, {
-            "label": "3c正反抬手",
-            "value": "TS_3c"
-          }, {
-            "label": "4叉腰",
-            "value": "TS_4"
-          }, {
-            "label": "5a卖萌",
-            "value": "TS_5a"
-          }, {
-            "label": "5b卖萌",
-            "value": "TS_5b"
-          }, {
-            "label": "5c卖萌",
-            "value": "TS_5c"
-          }, {
-            "label": "6揉脸卖萌",
-            "value": "TS_6"
-          }, {
-            "label": "7自信励志握拳",
-            "value": "TS_7"
-          }, {
-            "label": "8自信POSE",
-            "value": "TS_8"
-          }, {
-            "label": "9抬手欢呼",
-            "value": "TS_9"
-          }],
+        actionShowList:[],
         actionLoading:true,
         testData:'',
         intervalValue:0.5,//间隔时间
@@ -459,6 +337,7 @@
       },
       //预览
       previewBtn(val,ind){
+        UnityPreviewCancel(val.avatar.unity)
         if(!this.previewReady){
           this.$message.warning('资源加载中，请稍后...')
           return false;

@@ -5,8 +5,8 @@
     ref="zipUpload"
     :action="uploadUrl"
     :data="{
-                user_id: $root.ai_user_id,
-                access_token:$root.ai_user_token,
+                user_id: $Session.get('ai_user_id'),
+                access_token:$Session.get('ai_user_token'),
                 target: 1,
                 type: 0
               }"
