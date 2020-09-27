@@ -205,6 +205,7 @@
       },
       //自动播放
       autoPlayBtn(){
+        UnityPreviewCancel();
           this.isAutoPlayBtn = true;
         if(this.previewReady){
           this.allScriptPlayIndex = this.allScriptIndex;
@@ -308,9 +309,19 @@
       },
       //预览
       previewBtn(val){
+        UnityPreviewCancel();
         if(!this.isPlaying){
-          UnityPreview(val.avatar.unity,JSON.stringify([val]))
-          this.isPlaying = true;
+          if(this.previewReady){
+            UnityChangeAvatar(val.avatar.unity)
+            this.previewData = [val];
+            // UnityPreview(val.avatar.unity,JSON.stringify([val]))
+            this.isPlaying = true;
+            this.previewReady = false;
+          }else{
+            this.$message.warning('资源加载中，请稍后...')
+          }
+
+
         }else{
           if(this.queueContentItem.length===0){
             this.$message.info('剧本段落已排队，稍后播放!')
@@ -325,6 +336,7 @@
       },
       //临时话术预览
       previewTxtBtn(val,ind){
+        UnityPreviewCancel();
         let _arr =  this.temporaryScriptList[ind].text.split('')
         let _res = []
         for (let i = 0; i< Math.ceil(_arr.length/100);i++){
@@ -340,8 +352,17 @@
           })
         })
         if(!this.isPlaying){
-          UnityPreviewTxt('none',JSON.stringify([_json]))
-          this.isPlaying = true;
+          if(this.previewReady){
+            UnityChangeAvatar(val.avatar.unity)
+            this.previewData = [_json];
+            // UnityPreview(val.avatar.unity,JSON.stringify([val]))
+            this.isPlaying = true;
+            this.previewReady = false;
+          }else{
+            this.$message.warning('资源加载中，请稍后...')
+          }
+          // UnityPreviewTxt('none',JSON.stringify([_json]))
+          // this.isPlaying = true;
         }else{
           if(this.queueList.length<3){
             this.queueList.push({

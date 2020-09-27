@@ -70,7 +70,11 @@
         }
         this.previewReady = true;
       }
-    }
+    },
+    beforeDestroy() {
+      //跳转页面后强制结束播放状态
+      UnityPreviewCancel();
+    },
   }
 </script>
 <style lang="less" scoped>

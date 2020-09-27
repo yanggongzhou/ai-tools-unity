@@ -5,8 +5,8 @@
     ref="zipUpload"
     :action="uploadUrl"
     :data="{
-                user_id: $Session.get('ai_user_id'),
-                access_token:$Session.get('ai_user_token'),
+                user_id: user_id,
+                access_token:access_token,
                 target: 1,
                 type: 0
               }"
@@ -34,6 +34,9 @@
       return{
         uploadUrl:'',
         tempList:[],
+
+        user_id:"",
+        access_token:"",
       }
     },
     watch:{
@@ -50,6 +53,10 @@
     },
     created() {
       this.uploadUrl = requestServices.uploadUrl
+    },
+    mounted() {
+      this.access_token=this.$Session.get('ai_user_token')
+      this.user_id = this.$Session.get('ai_user_id')
     },
     methods:{
 

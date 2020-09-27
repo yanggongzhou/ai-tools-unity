@@ -98,6 +98,7 @@
       },
       //预览
       previewBtn(){
+        UnityPreviewCancel();
         if(!this.previewReady){
           this.$message.warning('资源加载中，请稍后...')
           return false;
@@ -289,6 +290,10 @@
           this.$router.push('/myscript')
         }
       },
+    },
+    beforeDestroy() {
+      //跳转页面后强制结束播放状态
+      UnityPreviewCancel();
     },
   }
 </script>

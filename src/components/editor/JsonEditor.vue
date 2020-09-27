@@ -337,7 +337,7 @@
       },
       //预览
       previewBtn(val,ind){
-        UnityPreviewCancel(val.avatar.unity)
+        UnityPreviewCancel()
         if(!this.previewReady){
           this.$message.warning('资源加载中，请稍后...')
           return false;
