@@ -36,3 +36,8 @@ function UnityChangeAvatar(val) {
 function UnityAvatarMotionInfo(val) {
   console.log('请求角色动作',val)
 }
+
+//播放临时话术
+function UnityPreviewTxt(avatarName,json) {
+  console.log(avatarName,json)
+}

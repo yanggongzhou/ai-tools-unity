@@ -76,7 +76,7 @@
             <div class="header clearfix">
               <div class="title float_left">{{val.time}}</div>
 
-              <div class="float_right play_icon" @click="previewBtn(val)">
+              <div class="float_right play_icon" @click="previewTxtBtn(val,ind)">
                 <i class="el-icon-video-play"></i>
               </div>
             </div>
@@ -262,10 +262,11 @@
         }else{
           if(this.queueList.length){
             let _Obj  = this.queueList.shift();
-            UnityPreview(_Obj.name,JSON.stringify(_Obj.item))
+            UnityPreviewTxt(_Obj.name,_Obj.item)
           }else{
             if(this.queueContentItem.length){
-
+              let _Obj  = this.queueContentItem.shift();
+              UnityPreview(_Obj.name,_Obj.item)
             }else{
               this.isPlaying = false;
             }
@@ -308,15 +309,44 @@
           UnityPreview(val.avatar.unity,JSON.stringify([val]))
           this.isPlaying = true;
         }else{
-
-
-          if(this.queueList.length<3){
-            this.queueList.push({
+          if(this.queueContentItem.length===0){
+            this.$message.info('剧本段落已排队，稍后播放!')
+            this.queueContentItem.push({
               name:val.avatar.unity,
               item:JSON.stringify([val])
             })
           }else{
-            this.$message.info('最多支持3个播放排队!')
+            this.$message.warning('最多支持1个剧本段落排队，请稍后!')
+          }
+        }
+      },
+      //临时话术预览
+      previewTxtBtn(val,ind){
+        let _arr =  this.temporaryScriptList[ind].text.split('')
+        let _res = []
+        for (let i = 0; i< Math.ceil(_arr.length/100);i++){
+          _res.push(_arr.splice(0,100).join(''));
+        }
+        let _json = JSON.parse(JSON.stringify(resultJSON.resultJsonObj))
+        _json.avatar.unity = 'none'
+        _res.forEach(resItem=>{
+          _json.param.push({
+            intervalTime:0,
+            trigger:[],
+            content:resItem
+          })
+        })
+        if(!this.isPlaying){
+          UnityPreviewTxt('none',JSON.stringify([_json]))
+          this.isPlaying = true;
+        }else{
+          if(this.queueList.length<3){
+            this.queueList.push({
+              name:'none',
+              item:JSON.stringify([_json])
+            })
+          }else{
+            this.$message.info('最多支持3个播放排队,请稍后!')
           }
         }
       },
@@ -342,7 +372,7 @@
           })
         })
         if(!this.isPlaying){
-          UnityPreview('none',JSON.stringify([_json]))
+          UnityPreviewTxt('none',JSON.stringify([_json]))
         }else{
           if(this.queueList.length<3){
             this.queueList.push({
@@ -350,7 +380,7 @@
               item:JSON.stringify([_json])
             })
           }else{
-            this.$message.info('最多支持3个播放排队!')
+            this.$message.info('最多支持3个播放排队，请稍后！')
           }
         }
       },
