@@ -269,22 +269,6 @@
       };
     },
     mounted() {
-      let self = this;
-      //编辑时数据导入
-      if(this.$route.params.data){
-        this.ScriptList = JSON.parse(JSON.stringify(this.$route.params.data))
-        let resArr  = this.$route.params.data
-        resultJSON.resultJsonObj.avatar.unity = resArr[0].avatar.unity;
-        this.$nextTick(()=>{
-          this.editImport(this.ScriptList[0]);
-        })
-        this.$forceUpdate()
-      }else{
-        // this.actionShowList = this.$route.params.actionShowList;
-
-        this.ScriptList[0] = JSON.parse(JSON.stringify(resultJSON.resultJsonObj))
-        this.$forceUpdate()
-      }
       //要动作
       UnityChangeAvatar(resultJSON.resultJsonObj.avatar.unity);
 
@@ -320,7 +304,6 @@
     },
 
     methods: {
-
       //动作回调返回列表
       WebActionInfo(val){
         this.actionShowList = [];
@@ -334,6 +317,23 @@
         })
         this.actionLoading = false;
         console.log('动作列表接收',this.actionShowList)
+
+        let self = this;
+        //编辑时数据导入
+        if(this.$route.params.data){
+          this.ScriptList = JSON.parse(JSON.stringify(this.$route.params.data))
+          let resArr  = this.$route.params.data
+          resultJSON.resultJsonObj.avatar.unity = resArr[0].avatar.unity;
+          this.$nextTick(()=>{
+            this.editImport(this.ScriptList[0]);
+          })
+          this.$forceUpdate()
+        }else{
+          // this.actionShowList = this.$route.params.actionShowList;
+
+          this.ScriptList[0] = JSON.parse(JSON.stringify(resultJSON.resultJsonObj))
+          this.$forceUpdate()
+        }
       },
       //预览
       previewBtn(val,ind){
