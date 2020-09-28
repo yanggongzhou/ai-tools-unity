@@ -213,13 +213,16 @@
 
       }
     },
+    created() {
+      window.WebPreviewEnd=this.WebPreviewEnd;
+      window.WebPreviewReady = this.WebPreviewReady;
+      window.WebSelectAvatarState=this.WebSelectAvatarState;
+    },
     mounted() {
       // this.nextPlayVal = this.allScriptList[0].scriptList[0]
       this.contentIndex = 0;
       this.previewReady = true;
-      window.WebPreviewEnd=this.WebPreviewEnd;
-      window.WebPreviewReady = this.WebPreviewReady;
-      window.WebSelectAvatarState=this.WebSelectAvatarState;
+
     },
     methods:{
 

@@ -42,34 +42,35 @@ export default {
     },
     computed: {},
     watch: {},
-    created() {},
-  mounted() {
-      let self = this;
-      //请求用户信息
-      if(this.$Session.get('ai_user_id')&&this.$Session.get('ai_user_token')&&this.$Session.get('ai_user_phone')){
-
-      }else{
-        if(this.userInfoTimeOut){  clearTimeout(this.userInfoTimeOut) }
-        this.notifyOption = this.$notify.info({
-          title:  '提示',
-          message:"用户信息注入中...",
-          duration: 0
-        });
-        this.isUserInfo = true;
-        this.getUserInfo();
-        this.userInfoTimeOut = setTimeout(()=>{
-          if(self.$Session.get('ai_user_id')&&self.$Session.get('ai_user_token')&&self.$Session.get('ai_user_phone')){
-            self.$message.error('请求用户信息失败,请重启窗口！')
-
-          }else {
-            self.isUserInfo = false;
-            self.$message.success('用户信息已注入！')
-          }
-        },100000)
-      }
-
+    created() {
       window.WebUserMessage=this.WebUserMessage;
     },
+    mounted() {
+        let self = this;
+        //请求用户信息
+        if(this.$Session.get('ai_user_id')&&this.$Session.get('ai_user_token')&&this.$Session.get('ai_user_phone')){
+
+        }else{
+          if(this.userInfoTimeOut){  clearTimeout(this.userInfoTimeOut) }
+          this.notifyOption = this.$notify.info({
+            title:  '提示',
+            message:"用户信息注入中...",
+            duration: 0
+          });
+          this.isUserInfo = true;
+          this.getUserInfo();
+          this.userInfoTimeOut = setTimeout(()=>{
+            if(self.$Session.get('ai_user_id')&&self.$Session.get('ai_user_token')&&self.$Session.get('ai_user_phone')){
+              self.$message.error('请求用户信息失败,请重启窗口！')
+
+            }else {
+              self.isUserInfo = false;
+              self.$message.success('用户信息已注入！')
+            }
+          },100000)
+        }
+
+      },
     methods: {
       //请求用户信息
       getUserInfo(){
@@ -78,7 +79,7 @@ export default {
         UnityUserInfo();
         if(this.getUserInfoCount < 3){
           setTimeout(()=>{
-            if(this.$Session.get('ai_user_id')&&this.$Session.get('ai_user_token')&&this.$Session.get('ai_user_phone')){
+            if(self.$Session.get('ai_user_id')&&self.$Session.get('ai_user_token')&&self.$Session.get('ai_user_phone')){
               // this.$message.success('用户信息已注入！')
             }else{
               self.getUserInfo();
@@ -88,14 +89,15 @@ export default {
         // self.$message.error('请求用户信息失败,请重启窗口！')
       },
       WebUserMessage(id,token,phone){
-        console.log(id,token,phone)
-        this.$Session.set('ai_user_id', id);
-        this.$Session.set('ai_user_token', token)
-        this.$Session.set('ai_user_phone', phone)
         // this.$notify({
         //   title: this.$Session.get('ai_user_id') +'用户'+ Session.get('ai_user_phone'),
         //   message: Session.get('ai_user_token')
         // });
+        console.log(id,token,phone)
+        this.$Session.set('ai_user_id', id);
+        this.$Session.set('ai_user_token', token)
+        this.$Session.set('ai_user_phone', phone)
+
         this.notifyOption.close();
         this.$message.success('用户信息已注入！')
         this.isUserInfo = false;

@@ -268,12 +268,13 @@
         scriptChangeTimeout:'',
       };
     },
+    created() {
+      window.WebActionInfo= this.WebActionInfo
+      window.WebSelectAvatarState = this.WebSelectAvatarState
+    },
     mounted() {
       //要动作
       UnityChangeAvatar(resultJSON.resultJsonObj.avatar.unity);
-
-      window.WebActionInfo= this.WebActionInfo
-      window.WebSelectAvatarState = this.WebSelectAvatarState
     },
     watch:{
       //监听输入框文本，主要实现删除功能

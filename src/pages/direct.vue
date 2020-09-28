@@ -74,13 +74,14 @@
           <button class='handleWebcastBtn' v-show="!isAutoPlayBtn" @click='autoPlayBtn'>自动播放</button>
           <button class='handleWebcastBtn' v-show="isAutoPlayBtn" @click='stopPlayBtn'>停止播放</button>
           <el-tooltip class="item" effect="dark" content="播放下一段：【Ctrl】+【空格】" placement="bottom">
-            <button class='handleWebcastBtn' style="margin-left: 30px" :class="{'disabled': false}" @click='nextPlayBtn'>播放下一段</button>
+            <button class='handleWebcastBtn' style="margin-left: 30px" :disabled="isAutoPlayBtn" :class="{'disabled': isAutoPlayBtn}" @click='nextPlayBtn'>播放下一段</button>
           </el-tooltip>
 
         </div>
       </div>
       <el-dialog
         width="700px"
+        :close-on-click-modal="false"
         :visible.sync="innerVisible"
         top="10vh"
         append-to-body>
@@ -153,19 +154,6 @@
             'display' : "none"
           }
         }
-        //   let _content='';
-        //   val.param.forEach(value=>{
-        //     _content += value.content
-        //   })
-        //   if(val.param.length===0 || !_content.replace(/[\ |\~|\`|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\-|\_|\+|\=|\||\\|\[|\]|\{|\}|\;|\:|\"|\'|\,|\<|\.|\>|\/|\?|\r\n]/g,"").match(/[\u4e00-\u9fa5\0-9]/g)){
-        //     return {
-        //       'display': 'inline-block',
-        //     }
-        //   }else{
-        //     return {
-        //       'display' : "none"
-        //     }
-        //   }
       }
     },
     data(){
@@ -190,40 +178,19 @@
         isPlaying:false,//是否在播放中
 
 
-        temporaryScriptList:[
-          // {
-          //   time:'2020-02-12 14:34:23',
-          //   text:'荣耀（HONOR），是面向年轻人群的科技潮牌，主打潮流设计和极致性能。 [1] 荣耀不断推出不同系列产品，致力于打造手机+IoT产品生态圈。 荣耀的使命，是创造一个属于年轻人的智慧新世界。荣耀将持续为全球年轻人提供潮酷的全场景智能化体验，打造年轻人向往的先锋文化和潮流生活方式。',
-          //   state:'已播',
-          // },
-          // {
-          //   time:'2020-02-12 14:34:23',
-          //   text:'荣耀（HONOR），是面向年轻人群的科技潮牌，主打潮流设计和极致性能。 [1] 荣耀不断推出不同系列产品，致力于打造手机+IoT产品生态圈。 荣耀的使命，是创造一个属于年轻人的智慧新世界。荣耀将持续为全球年轻人提供潮酷的全场景智能化体验，打造年轻人向往的先锋文化和潮流生活方式。',
-          //   state:'正播',
-          // },
-          // {
-          //   time:'2020-02-12 14:34:23',
-          //   text:'荣耀（HONOR），是面向年轻人群的科技潮牌，主打潮流设计和极致性能。 [1] 荣耀不断推出不同系列产品，致力于打造手机+IoT产品生态圈。 荣耀的使命，是创造一个属于年轻人的智慧新世界。荣耀将持续为全球年轻人提供潮酷的全场景智能化体验，打造年轻人向往的先锋文化和潮流生活方式。',
-          //   state:'排队',
-          // },
-          // {
-          //   time:'2020-02-12 14:34:23',
-          //   text:'荣耀（HONOR），是面向年轻人群的科技潮牌，主打潮流设计和极致性能。 [1] 荣耀不断推出不同系列产品，致力于打造手机+IoT产品生态圈。 荣耀的使命，是创造一个属于年轻人的智慧新世界。荣耀将持续为全球年轻人提供潮酷的全场景智能化体验，打造年轻人向往的先锋文化和潮流生活方式。',
-          //   state:'未播',
-          // }
-        ],//临时话术
+        temporaryScriptList:[],//临时话术
         temporaryScriptTxt:'',
 
-        queueList:[
-          // {
-          //   name:'',
-          //   json:'',
-          // }
-        ],//排队数据，最多3个
+        queueList:[],//排队数据，最多3个
         queueContentItem:[],//段落排队数据，最多1个
 
 
       }
+    },
+    created() {
+      window.WebPreviewEnd=this.WebPreviewEnd;
+      window.WebPreviewReady = this.WebPreviewReady;
+      window.WebSelectAvatarState=this.WebSelectAvatarState;
     },
     mounted() {
       let self = this;
@@ -238,9 +205,6 @@
       // this.nextPlayVal = this.allScriptList[0].scriptList[0]
       this.contentIndex = 0;
       this.previewReady = true;
-      window.WebPreviewEnd=this.WebPreviewEnd;
-      window.WebPreviewReady = this.WebPreviewReady;
-      window.WebSelectAvatarState=this.WebSelectAvatarState;
       if(this.$route.params.playData){
         this.getPlayData(this.$route.params.playData)
       }else{
@@ -306,10 +270,10 @@
       WebPreviewEnd(){
         if(this.isAutoPlayBtn){
           if(this.allScriptPlayIndex+1<this.allScriptList.length){
-            // this.allScriptIndex+=1;
             this.allScriptPlayIndex+=1;
+            this.allScriptIndex = this.allScriptPlayIndex;
           }else{
-            // this.allScriptIndex=0;
+            this.allScriptIndex=0;
             this.allScriptPlayIndex = 0;
           }
           this.$message.info('播放剧本'+(this.allScriptPlayIndex+1)+'--'+this.allScriptList[this.allScriptPlayIndex].name)
@@ -371,6 +335,7 @@
       },
       //判断播放下一个的数据
       getNextPlayVal(ind,allScriptIndex){
+        this.allScriptIndex = this.nextAllScriptIndex;
         if(ind<this.contentList.length-1){
           this.contentIndex = ind+1;
           this.nextPlayVal = this.contentList[ind+1]
@@ -378,9 +343,11 @@
           this.contentIndex = 0;
           if(allScriptIndex<this.allScriptList.length-1){
             this.nextAllScriptIndex = allScriptIndex+1;
+            // this.allScriptIndex = this.nextAllScriptIndex
             this.nextPlayVal = this.allScriptList[this.nextAllScriptIndex].scriptList[0]
           }else{
             this.nextAllScriptIndex = 0;
+            this.allScriptIndex = 0 ;
             this.nextPlayVal = this.allScriptList[0].scriptList[0]
           }
         }
@@ -457,12 +424,12 @@
       },
       //临时话术播放按钮
       temporaryScriptPlay(){
-        this.temporaryScriptList.push({
+        this.temporaryScriptList.unshift({
           time:new Date().toLocaleString(),
           text:this.temporaryScriptTxt,
           state:'排队'
         })
-        let _arr =  this.temporaryScriptList[this.temporaryScriptList.length-1].text.split('')
+        let _arr =  this.temporaryScriptList[0].text.split('')
         let _res = []
         for (let i = 0; i< Math.ceil(_arr.length/100);i++){
           _res.push(_arr.splice(0,100).join(''));

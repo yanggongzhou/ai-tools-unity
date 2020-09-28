@@ -67,6 +67,8 @@
     },
     created() {
       this.jsonNameValidate = false;
+      window.WebPreviewReady = this.WebPreviewReady;
+      window.WebSelectAvatarState=this.WebSelectAvatarState;
     },
     mounted() {
       let self = this;
@@ -86,8 +88,6 @@
         })
       })
 
-      window.WebPreviewReady = this.WebPreviewReady;
-      window.WebSelectAvatarState=this.WebSelectAvatarState;
     },
     methods:{
       editImportTriggerDiv(data){

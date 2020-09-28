@@ -38,10 +38,12 @@
         previewReady:true,
       }
     },
-    mounted() {
-      this.previewReady = true;
+    created() {
       window.WebPreviewReady = this.WebPreviewReady;
       window.WebSelectAvatarState=this.WebSelectAvatarState;
+    },
+    mounted() {
+      this.previewReady = true;
     },
     methods:{
       //预览
