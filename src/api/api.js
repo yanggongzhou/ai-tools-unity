@@ -8,7 +8,9 @@ const prevHandler = ({data}) => {
   // sessionStorage.setItem()
   if (data.return_code!==1000) {
     Message.error(data.result.message)
-    UnityUserInfo()
+    if (data.return_code===1009) {
+      UnityUserInfo()
+    }
   }
   return data
 };

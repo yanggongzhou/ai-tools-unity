@@ -35,14 +35,14 @@
               <div class="float_right play_icon" @click="previewBtn(val,ind,allScriptIndex)">
                 <i class="el-icon-video-play"></i>
               </div>
-              <div class="float_right keyboard">
-                <div class="keyboard_txt">
-                  快捷键设置
-                </div>
-                <!--              <div class="keyboard_shortcut">-->
-                <!--                Crtl + -->
-                <!--              </div>-->
-              </div>
+<!--              <div class="float_right keyboard">-->
+<!--                <div class="keyboard_txt">-->
+<!--                  快捷键设置-->
+<!--                </div>-->
+<!--                &lt;!&ndash;              <div class="keyboard_shortcut">&ndash;&gt;-->
+<!--                &lt;!&ndash;                Crtl + &ndash;&gt;-->
+<!--                &lt;!&ndash;              </div>&ndash;&gt;-->
+<!--              </div>-->
             </div>
             <p class="content">
               {{val | contentFilter}}
@@ -434,9 +434,9 @@
         })
         if(!this.isPlaying){
           if(this.previewReady){
-            UnityChangeAvatar(val.avatar.unity)
+            // UnityChangeAvatar(val.avatar.unity)
             this.previewData = [_json];
-            // UnityPreview(val.avatar.unity,JSON.stringify([val]))
+            UnityPreview('none',JSON.stringify([_json]))
             this.isPlaying = true;
             this.previewReady = false;
           }else{
@@ -498,6 +498,7 @@
     },
     beforeDestroy() {
       UnityPreviewCancel();
+      document.onkeydown = "";
     },
 
   }
@@ -535,6 +536,7 @@
     width: 750px;
     background: #FFF;
     margin: 0 auto;
+    border-radius: 3px;
   }
 
   .selectBox{
@@ -598,7 +600,8 @@
   .contentBox{
     width: 555px;
     height: 421px;
-    margin: 28px 0 0 11px;
+    margin: 28px 0 0 20px;
+    overflow: scroll;
     .content-item{
       padding: 10px 10px 6px;
       height: 77px;
@@ -724,6 +727,10 @@
     color: #fff;
     font-size: 12px;
     cursor: pointer;
+    transition: all .3s;
+    &:hover{
+      opacity: 0.9;
+    }
   }
   .close_btn{
     width: 56px;

@@ -9,7 +9,10 @@
                   <span>返回</span>
                 </button>
               </div>
-              <button class='addScript' type='primary' @click='addScript'>添加剧本</button>
+              <div style="text-align: right">
+                <button class='addScript' type='primary' @click='addScript'>添加剧本</button>
+              </div>
+
                 <el-table size="mini" class='playScripts' row-key="sortId" :data='playScriptData' style='width:100%' empty-text='暂未添加剧本' height='388' max-height='388' >
                     <el-table-column align="center" label="排序" width='100'>
                         <template slot-scope="scope">
@@ -469,14 +472,22 @@ export default {
       margin-top: 30px;
     }
     .handleWebcastBtn {
-      width: 96px;
-      height: 32px;
+      width: 114px;
+      height: 40px;
+      line-height: 38px;
+      border-radius: 30px;
+      /*width: 96px;*/
+      /*height: 32px;*/
       margin: 0 auto;
       background: linear-gradient(166deg, #BA71FF 0%, #5648FF 100%);
-      border-radius: 16px;
+      /*border-radius: 16px;*/
       color: #fff;
       font-size: 14px;
       cursor: pointer;
+      transition: all .3s;
+      &:hover{
+        opacity: 0.9;
+      }
     }
     .scriptList {
         position: relative;
@@ -503,6 +514,10 @@ export default {
         cursor: pointer;
         &.disabled {
           background: #B3B3B4;
+        }
+        transition: all .3s;
+        &:hover{
+          opacity: 0.9;
         }
       }
         .title {
