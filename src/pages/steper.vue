@@ -1,9 +1,14 @@
 <template>
   <div class="common_content">
-    <button class="backNormal" @click="$router.push('/myscript')">
-      <span class="_icon">< </span>
-      <span>返回</span>
-    </button>
+
+    <div class="titleBox">
+      <span class="titleSpan">选择主播角色</span>
+      <button class="backNormal backNormal2" @click="$router.push('/myscript')">
+        <span class="_icon">< </span>
+        <span>返回</span>
+      </button>
+    </div>
+
     <div class="stepBox">
       <div class="step-item" :class="{'step-item1':$route.path==='/steper'}">
         <span class="count">1</span>
@@ -35,7 +40,7 @@
 
         <div class="clearfix">
           <button class="next_btn next_btn2 float_right" @click="nextBtn">进入剧本编辑</button>
-          <button class="next_btn next_btn1 float_right" @click="backTo">上一步</button>
+<!--          <button class="next_btn next_btn1 float_right" @click="backTo">上一步</button>-->
         </div>
 
       </div>
@@ -98,9 +103,9 @@
         resultJSON.resultJsonObj.avatar.unity = _name;
         UnityChangeAvatar(_name)
       },
-      backTo(){
-        this.$router.push({path:'/myscript'})
-      },
+      // backTo(){
+      //   this.$router.push({path:'/myscript'})
+      // },
       nextBtn(){
         this.$router.push({name:'tools'})
       },
@@ -114,8 +119,8 @@
     position: relative;
   }
   .stepBox{
-    height: 100px;
-    line-height: 100px;
+    height: 70px;
+    line-height: 70px;
     .step-item{
       display: inline-block;
       font-size: 0;
@@ -152,7 +157,7 @@
     }
     .back{
       float: right;
-      margin-top: 35px;
+      margin-top: 20px;
       width: 111px;
       height: 30px;
       background: transparent;

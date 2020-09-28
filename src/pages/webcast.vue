@@ -1,15 +1,15 @@
 <template>
     <div id="webcast">
         <div class="common_content">
-          <button class="backNormal" @click="$router.back()">
-            <span class="_icon">< </span>
-            <span>返回</span>
-          </button>
             <div class="scriptList">
-                <div class="playScriptTitle clearfix">
-                    <span class="title">播放剧本列表</span>
-                    <button class='addScript' type='primary' @click='addScript'>添加剧本</button>
-                </div>
+              <div class="titleBox">
+                <span class="titleSpan">剧本列表</span>
+                <button class="backNormal backNormal2" @click="$router.back()">
+                  <span class="_icon">< </span>
+                  <span>返回</span>
+                </button>
+              </div>
+              <button class='addScript' type='primary' @click='addScript'>添加剧本</button>
                 <el-table size="mini" class='playScripts' row-key="sortId" :data='playScriptData' style='width:100%' empty-text='暂未添加剧本' height='388' max-height='388' >
                     <el-table-column align="center" label="排序" width='100'>
                         <template slot-scope="scope">
@@ -58,7 +58,7 @@
                             <el-input  class='search_ipt' v-model="searchScriptName" placeholder="剧本名称" clearable></el-input>
                         </div>
 
-                        <el-table size="mini" border :data='scriptData' style='width:100%' empty-text='暂无剧本' max-height='300' v-if='scriptData.length!=0'>
+                        <el-table size="mini" border :data='scriptData' style='width:100%' empty-text='暂无剧本' max-height='250' v-if='scriptData.length!=0'>
                             <el-table-column label="选择" align="center" width='80'>
                                 <template slot-scope="scope">
                                     <el-checkbox size="mini" v-model="scope.row.isChecked" :disabled="scope.row.isDisabled" @change='handleCheckScript(scope.$index)'></el-checkbox>
@@ -106,7 +106,7 @@
                 </transition>
             </div>
           <div class="handleWebcastBtnBox">
-            <button class='handleWebcastBtn' :class="{'disabled': isShowAllList}" @click='handleWebcast'>{{webcastBtnTxt}}</button>
+            <button class='handleWebcastBtn' v-if="playScriptData.length" :class="{'disabled': isShowAllList}" @click='handleWebcast'>{{webcastBtnTxt}}</button>
             <el-dialog
               custom-class="webcastDialog"
               top="10vh"
@@ -199,8 +199,8 @@ export default {
                     this.fetchPlayScriptIDs();
                     this.sortPlayScript();
                 }else if(res.return_code==1009) { // token过期
-                    this.$Session.set('ai_user_id', '');
-                    this.$Session.set('ai_user_token', '')
+                    // this.$Session.set('ai_user_id', '');
+                    // this.$Session.set('ai_user_token', '')
                     // this.$router.push({name:"homepage"})
                 }
             })
@@ -323,10 +323,11 @@ export default {
         startWebcast() {
             // ❗️要播放的剧本列表
             // console.log(this.playScriptData)
-            this.webcastPreDialog = true;
-            this.$nextTick(()=>{
-              this.$refs.webcastDialogRef.getPlayData(this.playScriptData);
-            })
+            // this.webcastPreDialog = true;
+            // this.$nextTick(()=>{
+            //   this.$refs.webcastDialogRef.getPlayData(this.playScriptData);
+            // })
+          this.$router.push({name:'direct',params:{playData:this.playScriptData}})
         },
 
         gotopage() {
@@ -479,30 +480,31 @@ export default {
     }
     .scriptList {
         position: relative;
-        .playScriptTitle {
-            margin-top: 30px;
-            margin-bottom: 10px;
-            .title {
-                float: left;
-                font-size: 16px;
-                color: #333;
-            }
-            .addScript {
-                float: right;
-                width: 96px;
-                height: 32px;
-                background: linear-gradient(332deg, #FF71B5 0%, #FFBA48 100%);
-                border-radius: 16px;
-                color: #fff;
-                font-size: 14px;
-                line-height: 32px;
-                cursor: pointer;
-                &.disabled {
-                    background: #B3B3B4;
-                }
-            }
+        /*.playScriptTitle {*/
+        /*    margin-top: 30px;*/
+        /*    margin-bottom: 10px;*/
+        /*    .title {*/
+        /*        float: left;*/
+        /*        font-size: 16px;*/
+        /*        color: #333;*/
+        /*    }*/
+        /*  */
 
+        /*}*/
+      .addScript {
+        margin-bottom: 10px;
+        width: 96px;
+        height: 32px;
+        background: linear-gradient(332deg, #FF71B5 0%, #FFBA48 100%);
+        border-radius: 16px;
+        color: #fff;
+        font-size: 14px;
+        line-height: 32px;
+        cursor: pointer;
+        &.disabled {
+          background: #B3B3B4;
         }
+      }
         .title {
             font-size: 18px;
             margin-bottom: 20px;
@@ -670,7 +672,7 @@ export default {
         border-radius: 16px;
     }
     .filter .search_ipt .el-input__inner  {
-        background: #F8F6FF;
+        background: #FFF;
         color: #999;
         text-align: center;
         padding: 0;

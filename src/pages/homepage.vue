@@ -56,7 +56,14 @@ export default {
         let self = this;
         UnityUserInfo();
         if(this.getUserInfoCount>=  3){
-          this.$message.error('请求用户信息失败,请重启窗口！')
+          // self.$message.error('请求用户信息失败,请重启窗口！')
+          setTimeout(()=>{
+            if(self.$Session.get('ai_user_id')&&self.$Session.get('ai_user_token')&&self.$Session.get('ai_user_phone')){
+              self.$message.error('请求用户信息失败,请重启窗口！')
+            }else {
+              self.$message.success('用户信息已注入！')
+            }
+          },100000)
         }else{
           setTimeout(()=>{
             if(this.$Session.get('ai_user_id')&&this.$Session.get('ai_user_token')&&this.$Session.get('ai_user_phone')){

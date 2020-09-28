@@ -32,6 +32,11 @@ export default new Router({
       path: '/myscript',
       name: 'myscript',
       component: ()=>import ('@/pages/myscript'),
+    },
+    {
+      path: '/direct',
+      name: 'direct',
+      component: ()=>import ('@/pages/direct'),
     }
   ]
 })

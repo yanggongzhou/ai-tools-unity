@@ -43,12 +43,12 @@
                 @delTagMain="delTagMain"
                 @add="handleAdd">
       <div class="tagBox">
-        <div  class="interval-tag clearfix">
-          <div class="float_right">
-            <el-input-number v-model="intervalValue" controls-position="right" :step="0.5" :min="0.5" :max="10000"></el-input-number>
-            <el-button @click="addTag('间隔',intervalValue)" round>添加间隔时间</el-button>
-          </div>
-        </div>
+<!--        <div  class="interval-tag clearfix">-->
+<!--          <div class="float_right">-->
+<!--            <el-input-number v-model="intervalValue" controls-position="right" :step="0.5" :min="0.5" :max="10000"></el-input-number>-->
+<!--            <el-button @click="addTag('间隔',intervalValue)" round>添加间隔时间</el-button>-->
+<!--          </div>-->
+<!--        </div>-->
 
         <el-dialog
           style="border-radius: 10px;"

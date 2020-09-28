@@ -230,3 +230,38 @@ input {
 .backNormal:hover{
   color: #5648FF;
 }
+
+
+/*详情页的标题头*/
+.titleBox{
+  text-align: left;
+  font-size: 14px;
+  position: relative;
+  padding: 6px 0;
+  border-bottom: 1px solid #a167ff;
+  /*margin: 30px 0;*/
+  margin: 0 0 30px 0;
+}
+.titleBox:before{
+  content:'';
+  position: absolute;
+  left: 12px;
+  top:6px;
+  width: 4px;
+  height: 60%;
+  background-color: #fff;
+  border-radius: 2px;
+}
+.titleSpan{
+  background: linear-gradient(166deg, #BA71FF 0%, #5648FF 100%);
+  border-radius: 2px 38px 38px 2px;
+  color: #fff;
+  padding: 8px 26px;
+}
+.backNormal2{
+  position: absolute;
+  z-index: 999;
+  right: 0px;
+  top: -10px;
+  margin: 0;
+}

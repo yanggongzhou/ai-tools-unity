@@ -1,18 +1,19 @@
 <template>
     <div id="myscript">
         <div class="common_content">
-          <button class="backNormal" @click="$router.push('/homePage')">
-            <span class="_icon">< </span>
-            <span>返回</span>
-          </button>
             <div class="list_title clearfix">
-              <span>剧本列表</span>
-              <button class="light-btn create-btn float_right ml10" @click="gotoPage('steper')">创建剧本</button>
-              <button class="light-btn float_right" @click="gotoPage('webcast')">去直播</button>
+              <div class="titleBox">
+                <span class="titleSpan">剧本列表</span>
+                <button class="backNormal backNormal2" @click="$router.push('/homePage')">
+                  <span class="_icon">< </span>
+                  <span>返回</span>
+                </button>
+              </div>
             </div>
-            <el-divider></el-divider>
+
+<!--            <el-divider></el-divider>-->
             <div class="filter">
-                <span class="filter_label">关联主播角色：</span>
+<!--                <span class="filter_label">关联主播角色：</span>-->
                 <el-select class="filterOptions" @change='fetchAllScripts' v-model='anchorRoleValue'>
                     <el-option
                         v-for='(role,idx) in anchorRoles'
@@ -25,6 +26,10 @@
                     <el-input  class='search_ipt' v-model="searchScriptName" placeholder="剧本名称" clearable></el-input>
                     <button class='light-btn search_btn' type="primary" @click="fetchAllScripts">查询</button>
                 </div>
+              <div class="float_right">
+                <button class="light-btn create-btn ml10" @click="gotoPage('steper')">创建剧本</button>
+                <button class="light-btn play-btn" @click="gotoPage('webcast')">去直播</button>
+              </div>
             </div>
 
             <el-table
@@ -182,8 +187,8 @@ export default {
                     this.scriptData = res.result.guide_shopping;
                     this.total_count = res.result.page_count;
                 }else if(res.return_code==1009) { // token过期
-                    this.$Session.set('ai_user_id', '');
-                    this.$Session.set('ai_user_token', '');
+                    // this.$Session.set('ai_user_id', '');
+                    // this.$Session.set('ai_user_token', '');
                     // this.$router.push({name:"homepage"})
                 }else {
                     this.$message.error('获取剧本列表失败')
@@ -280,12 +285,14 @@ export default {
         }
     }
     .list_title{
+      text-align: right;
       font-size: 16px;
       color:#333333;
       font-weight: 400;
-      margin-top: 30px;
+      /*margin-top: 30px;*/
     }
     .filter {
+      /*min-width: 780px;*/
         margin: 20px 0;
         .filter_label{
           color: #666666;
@@ -294,7 +301,6 @@ export default {
         }
         .filterOptions {
             width: 120px;
-            margin-right: 20px;
             /deep/.el-input__inner{
               border-radius: 32px;
               border: none;
@@ -303,10 +309,11 @@ export default {
             }
         }
         .search {
-            float: right;
+            /*float: right;*/
+          display: inline-block;
         }
         .search_ipt {
-            width: 260px;
+            width: 170px;
             margin: 0 10px;
           /deep/.el-input__inner{
             border: none;
@@ -406,6 +413,14 @@ export default {
     background: linear-gradient(90deg,  #FFBA48,#FF71B5,#f441a5,#FFBA48 );
     background-size: 400%;
     margin-left: 30px;
+    /*position: absolute;*/
+    /*right: 0px;*/
+    /*top: -15px;*/
+  }
+  .play-btn{
+    /*position: absolute;*/
+    /*right: 150px;*/
+    /*top: -15px;*/
   }
   .search_btn{
     background: linear-gradient(90deg,  #7455FF,#5648FF,#BA71FF ,#7455FF );

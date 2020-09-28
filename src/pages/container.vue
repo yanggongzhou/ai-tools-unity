@@ -1,10 +1,15 @@
 <template>
   <div class='common_content'>
     <div class="headerBox">
-      <button class="backNormal" @click="backspace">
-        <span class="_icon">< </span>
-        <span>返回</span>
-      </button>
+      <div class="titleBox">
+        <span class="titleSpan">剧本编辑</span>
+        <button class="backNormal backNormal2" @click="backspace">
+          <span class="_icon">< </span>
+          <span>返回</span>
+        </button>
+      </div>
+
+
       <div class="content clearfix">
         <div class="json_name float_left">
           <span class="label">剧本名称:</span>
@@ -306,7 +311,7 @@
   .headerBox{
 
     .content{
-      padding: 25px 0px 15px;
+      padding: 0 0 15px;
       .json_name{
         display: inline-block;
         width: 230px;

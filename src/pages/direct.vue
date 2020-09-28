@@ -1,104 +1,116 @@
 <template>
-  <div class="dialogBox">
-    <div class="clearfix">
-      <div class="selectBox float_left">
-        <el-radio
-          v-for="(val,ind) in allScriptList"
-          :key="ind+'model'"
-          @change="scriptChange"
-          class="left_card"
-          v-model="allScriptIndex" :label="ind" border>
-          <div class="left_card_item">
-            <i class="left_card_icon el-icon-video-camera-solid" v-show="allScriptPlayIndex===ind"></i>
-            <div class="label">
-              <p>{{ind | indFilter}}</p>
-            </div>
-          </div>
-        </el-radio>
-      </div>
-<!--      单个剧本内容-->
-      <div class="contentBox float_left">
-        <div class="content-item" v-for="(val,ind) in contentList" :key="ind+'content'">
-          <div class="header clearfix">
-            <div class="title float_left">第{{ind+1}}段</div>
-            <div class="pdtip float_left"
-                 :style="ind | styleFilter"
-                 >排队播放中...</div>
-            <div class="float_right play_icon" @click="previewBtn(val,ind,allScriptIndex)">
-              <i class="el-icon-video-play"></i>
-            </div>
-            <div class="float_right keyboard">
-              <div class="keyboard_txt">
-                快捷键设置
+  <div class="common_content">
+    <div class="titleBox">
+      <span class="titleSpan">直播剧本</span>
+      <button class="backNormal backNormal2" @click="$router.back()">
+        <span class="_icon">< </span>
+        <span>返回</span>
+      </button>
+    </div>
+    <div class="dialogBox">
+      <div class="clearfix">
+        <div class="selectBox float_left">
+          <el-radio
+            v-for="(val,ind) in allScriptList"
+            :key="ind+'model'"
+            @change="scriptChange"
+            class="left_card"
+            v-model="allScriptIndex" :label="ind" border>
+            <div class="left_card_item">
+              <i class="left_card_icon el-icon-video-camera-solid" v-show="allScriptPlayIndex===ind"></i>
+              <div class="label">
+                <p>{{ind | indFilter}}</p>
               </div>
-<!--              <div class="keyboard_shortcut">-->
-<!--                Crtl + -->
-<!--              </div>-->
             </div>
-          </div>
-          <p class="content">
-            {{val | contentFilter}}
-          </p>
+          </el-radio>
         </div>
-      </div>
-    </div>
-
-    <div class="footBox clearfix">
-      <div class="float_left leftIcon">
-        <el-row :gutter="10">
-          <el-col :span="12">
-            <el-tooltip class="item" effect="dark" content="播放下一段：【Ctrl】+【空格" placement="bottom">
-              <div class="icon1">
-                <div class="kuaijie"></div>
-                <span>快捷键</span>
-              </div>
-            </el-tooltip>
-          </el-col>
-          <el-col :span="12">
-            <div class="icon2" @click="innerVisible=!innerVisible">
-              <div class="huashu"></div>
-              <span>临时话术</span>
-            </div>
-          </el-col>
-        </el-row>
-      </div>
-      <div class="float_right btnBox">
-        <button class='handleWebcastBtn' v-show="!isAutoPlayBtn" @click='autoPlayBtn'>自动播放</button>
-        <button class='handleWebcastBtn' v-show="isAutoPlayBtn" @click='stopPlayBtn'>停止播放</button>
-        <button class='handleWebcastBtn' style="margin-left: 30px" :class="{'disabled': false}" @click='nextPlayBtn'>播放下一段</button>
-      </div>
-    </div>
-    <el-dialog
-      width="700px"
-      :visible.sync="innerVisible"
-      top="10vh"
-      append-to-body>
-      <div class="contentBox contentBox2">
-        <button class='close_btn' @click='innerVisible=false'>收起</button>
-        <div style="height: 339px;overflow: scroll">
-          <div class="content-item" v-for="(val,ind) in temporaryScriptList" :key="ind+'content'">
+        <!--      单个剧本内容-->
+        <div class="contentBox float_left">
+          <div class="content-item" v-for="(val,ind) in contentList" :key="ind+'content'">
             <div class="header clearfix">
-              <div class="title float_left">{{val.time}}</div>
-
-              <div class="float_right play_icon" @click="previewTxtBtn(val,ind)">
+              <div class="title float_left">第{{ind+1}}段</div>
+              <div class="pdtip float_left"
+                   :style="ind | styleFilter"
+              >排队播放中...</div>
+              <div class="float_right play_icon" @click="previewBtn(val,ind,allScriptIndex)">
                 <i class="el-icon-video-play"></i>
+              </div>
+              <div class="float_right keyboard">
+                <div class="keyboard_txt">
+                  快捷键设置
+                </div>
+                <!--              <div class="keyboard_shortcut">-->
+                <!--                Crtl + -->
+                <!--              </div>-->
               </div>
             </div>
             <p class="content">
-              {{val.text}}
+              {{val | contentFilter}}
             </p>
           </div>
         </div>
-        <el-input style="margin-top: 10px" type="textarea"
-                  placeholder="这里可以输入文字，添加后记录在上方内容"
-                  v-model="temporaryScriptTxt"
-                  :autosize="{ minRows: 5, maxRows:5 }"
-                  ></el-input>
-        <div class="playBtn">
-          <button class='handleWebcastBtn' @click='temporaryScriptPlay'>播放</button>
+      </div>
+
+      <div class="footBox clearfix">
+        <div class="float_left leftIcon">
+          <el-row :gutter="10">
+<!--            <el-col :span="12">-->
+<!--              <el-tooltip class="item" effect="dark" content="播放下一段：【Ctrl】+【空格】" placement="bottom">-->
+<!--                <div class="icon1">-->
+<!--                  <div class="kuaijie"></div>-->
+<!--                  <span>快捷键</span>-->
+<!--                </div>-->
+<!--              </el-tooltip>-->
+<!--            </el-col>-->
+            <el-col :span="12">
+              <div class="icon2" @click="innerVisible=!innerVisible">
+                <div class="huashu"></div>
+                <span>临时话术</span>
+              </div>
+            </el-col>
+          </el-row>
+        </div>
+        <div class="float_right btnBox">
+          <button class='handleWebcastBtn' v-show="!isAutoPlayBtn" @click='autoPlayBtn'>自动播放</button>
+          <button class='handleWebcastBtn' v-show="isAutoPlayBtn" @click='stopPlayBtn'>停止播放</button>
+          <el-tooltip class="item" effect="dark" content="播放下一段：【Ctrl】+【空格】" placement="bottom">
+            <button class='handleWebcastBtn' style="margin-left: 30px" :class="{'disabled': false}" @click='nextPlayBtn'>播放下一段</button>
+          </el-tooltip>
+
         </div>
       </div>
-    </el-dialog>
+      <el-dialog
+        width="700px"
+        :visible.sync="innerVisible"
+        top="10vh"
+        append-to-body>
+        <div class="contentBox contentBox2">
+          <button class='close_btn' @click='innerVisible=false'>收起</button>
+          <div style="height: 339px;overflow: scroll">
+            <div class="content-item" v-for="(val,ind) in temporaryScriptList" :key="ind+'content'">
+              <div class="header clearfix">
+                <div class="title float_left">{{val.time}}</div>
+
+                <div class="float_right play_icon" @click="previewTxtBtn(val,ind)">
+                  <i class="el-icon-video-play"></i>
+                </div>
+              </div>
+              <p class="content">
+                {{val.text}}
+              </p>
+            </div>
+          </div>
+          <el-input style="margin-top: 10px" type="textarea"
+                    placeholder="这里可以输入文字，添加后记录在上方内容"
+                    v-model="temporaryScriptTxt"
+                    :autosize="{ minRows: 5, maxRows:5 }"
+          ></el-input>
+          <div class="playBtn">
+            <button class='handleWebcastBtn' @click='temporaryScriptPlay'>播放</button>
+          </div>
+        </div>
+      </el-dialog>
+    </div>
   </div>
 </template>
 <script>
@@ -114,7 +126,7 @@
         // if((val+1).toString().length===1){
         //   return '0'+(val+1)+'. '+that.allScriptList[val].name
         // }else{
-          return (val+1)+'. '+that.allScriptList[val].name;
+        return (val+1)+'. '+that.allScriptList[val].name;
         // }
       },
       contentFilter(val){
@@ -128,32 +140,32 @@
         if(that.queueContentItem.length){
 
           if(ind===that.queueContentItem[0].contentIndex&&that.allScriptIndex===that.queueContentItem[0].allScriptIndex){
-                return {
-                  'display': 'inline-block',
-                }
+            return {
+              'display': 'inline-block',
+            }
           }else{
-                return {
-                  'display' : "none"
-                }
-              }
+            return {
+              'display' : "none"
+            }
+          }
         }else{
           return {
             'display' : "none"
           }
         }
-      //   let _content='';
-      //   val.param.forEach(value=>{
-      //     _content += value.content
-      //   })
-      //   if(val.param.length===0 || !_content.replace(/[\ |\~|\`|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\-|\_|\+|\=|\||\\|\[|\]|\{|\}|\;|\:|\"|\'|\,|\<|\.|\>|\/|\?|\r\n]/g,"").match(/[\u4e00-\u9fa5\0-9]/g)){
-      //     return {
-      //       'display': 'inline-block',
-      //     }
-      //   }else{
-      //     return {
-      //       'display' : "none"
-      //     }
-      //   }
+        //   let _content='';
+        //   val.param.forEach(value=>{
+        //     _content += value.content
+        //   })
+        //   if(val.param.length===0 || !_content.replace(/[\ |\~|\`|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\-|\_|\+|\=|\||\\|\[|\]|\{|\}|\;|\:|\"|\'|\,|\<|\.|\>|\/|\?|\r\n]/g,"").match(/[\u4e00-\u9fa5\0-9]/g)){
+        //     return {
+        //       'display': 'inline-block',
+        //     }
+        //   }else{
+        //     return {
+        //       'display' : "none"
+        //     }
+        //   }
       }
     },
     data(){
@@ -199,7 +211,7 @@
           //   text:'荣耀（HONOR），是面向年轻人群的科技潮牌，主打潮流设计和极致性能。 [1] 荣耀不断推出不同系列产品，致力于打造手机+IoT产品生态圈。 荣耀的使命，是创造一个属于年轻人的智慧新世界。荣耀将持续为全球年轻人提供潮酷的全场景智能化体验，打造年轻人向往的先锋文化和潮流生活方式。',
           //   state:'未播',
           // }
-          ],//临时话术
+        ],//临时话术
         temporaryScriptTxt:'',
 
         queueList:[
@@ -214,12 +226,27 @@
       }
     },
     mounted() {
+      let self = this;
+      document.onkeydown = (event) => {
+        console.log(event)
+        //ctrl+space
+         if (event.ctrlKey && event.keyCode == 17){
+           self.nextPlayBtn()
+          }
+      }
+
       // this.nextPlayVal = this.allScriptList[0].scriptList[0]
       this.contentIndex = 0;
       this.previewReady = true;
       window.WebPreviewEnd=this.WebPreviewEnd;
       window.WebPreviewReady = this.WebPreviewReady;
       window.WebSelectAvatarState=this.WebSelectAvatarState;
+      if(this.$route.params.playData){
+        this.getPlayData(this.$route.params.playData)
+      }else{
+        this.$message.error('未获取数据，请返回重试！')
+      }
+
     },
     methods:{
 
@@ -231,7 +258,7 @@
       //自动播放
       autoPlayBtn(){
         // UnityPreviewCancel();
-          this.isAutoPlayBtn = true;
+        this.isAutoPlayBtn = true;
         if(this.previewReady){
           this.allScriptPlayIndex = this.allScriptIndex;
           this.previewData = this.allScriptList[this.allScriptPlayIndex].scriptList;
@@ -245,6 +272,7 @@
       },
       //停止播放
       stopPlayBtn(){
+        this.previewReady = true;
         this.allScriptPlayIndex = '';
         this.isAutoPlayBtn = false;
         UnityPreviewCancel();//结束自动播放接口
@@ -349,7 +377,7 @@
         }else{
           this.contentIndex = 0;
           if(allScriptIndex<this.allScriptList.length-1){
-           this.nextAllScriptIndex = allScriptIndex+1;
+            this.nextAllScriptIndex = allScriptIndex+1;
             this.nextPlayVal = this.allScriptList[this.nextAllScriptIndex].scriptList[0]
           }else{
             this.nextAllScriptIndex = 0;
@@ -489,187 +517,203 @@
     border-bottom: 1px solid #fff !important;
   }
   /deep/.el-radio.is-bordered.is-checked{
-    background: #7C53FF !important;
-    border-color: #7C53FF!important;
+    /*border-color: #7C53FF !important;*/
+    border-color: #FFF !important;
+    border: 4px solid #FFF !important;
+    background: linear-gradient(166deg, #BA71FF 0%, #5648FF 100%)!important;
+    border-radius: 8px;
   }
   /deep/.el-radio__input.is-checked+.el-radio__label{
     color: #FFFFFF!important;
   }
-.dialogBox{
-  height: 536px;
-
-}
-
-.selectBox{
-  height: 450px;
-  width: 123px;
-  background: #FBFAFF;
-  font-size: 0;
-}
-.left_card{
-  background: #DDD6FF!important;
-  position: relative;
-  z-index: 10;
-  width: 100%;
-  height: 42px!important;
-  margin-top: 0px;
-  padding: 0!important;;
-  overflow: hidden;
-  margin-left: 0px !important;
-  margin-right: 0px !important;
-  /*border: none;*/
-  /*border-top: 1px solid #E87E4D;*/
-  border-radius: 0px;
-  display: inline-block;
-  /deep/.el-radio__input{
-    display: none;
+  .common_content{
+    padding: 30px 20px;
+    position: relative;
   }
-  /deep/.el-radio__label{
-    padding-left: 0;
+  .dialogBox{
+    height: 536px;
+    width: 750px;
+    background: #FFF;
+    margin: 0 auto;
   }
 
-  .left_card_item{
+  .selectBox{
+    height: 450px;
+    width: 150px;
+    background: #FBFAFF;
     font-size: 0;
-    .left_card_icon{
-      font-size: 14px;
-      position: absolute;
-      right: 3px;
-      top: 12px;
-    }
-    .label{
-      font-size: 13px;
-      font-weight: 500;
-      height: 40px;
-      line-height: 40px;
-      text-align: left;
-      padding: 0 10px;
-      p{
-        overflow: hidden;
-        text-overflow:ellipsis;
-        white-space: nowrap;
-        width: 95px;
-      }
-    }
+    overflow-y: scroll;
   }
-}
-
-.contentBox{
-  width: 555px;
-  height: 421px;
-  margin: 28px 0 0 11px;
-  .content-item{
-    padding: 10px 10px 6px;
-    height: 77px;
-    margin-top: 12px;
-    background: #FFFBF2;
-    border-radius: 4px;
-    border: 1px solid #FEE0C7;
-    .header{
-      font-size: 12px;
-      font-weight: 500;
-      color: #333333;
-      .pdtip{
-        font-size: 12px;
-        font-weight: 400;
-        color: #FF6060;
-        margin-left: 8px;
-      }
-      .play_icon{
-        font-size: 18px;
-        margin-left: 30px;
-        color: #8286FF;
-        cursor: pointer;
-        transition: all .3s;
-        &:hover{
-          color: #673ab7;
-        }
-      }
-      .keyboard{
-        font-size: 12px;
-        color: #8286FF;
-        font-weight: 400;
-        cursor: pointer;
-        transition: all .3s;
-        &:hover{
-          color: #673ab7;
-        }
-        .keyboard_shortcut{
-
-        }
-      }
-    }
-    .content{
-      text-align: left;
-      text-indent: 20px;
-      font-size: 12px;
-      display: -webkit-box;
-      -webkit-box-orient: vertical;
-      -webkit-line-clamp: 3;
-      overflow: hidden;
-      user-select: text;
-    }
-  }
-}
-.contentBox2{
-  padding: 40px 0 0 0;
-  margin: 0 auto;
-  width: 648px;
-  height: 520px;
-  .content-item{
+  .left_card{
+    background: #DDD6FF!important;
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    height: 60px!important;
     margin-top: 0px;
-    margin-bottom: 24px;
-    border: 1px solid #CDC7FE;
-    padding: 8px 10px 4px;
-    background: #F2F6FF;
-    border-radius: 4px;
-  }
-  .playBtn{
-    text-align: center;
-    margin: 16px;
-  }
-}
-.footBox{
-  border-top: 1px solid #DDD6FF;
-  padding: 19px;
-  .leftIcon{
-    width: 130px;
-    font-size: 12px;
-    color: #A0A0A0;
-    .icon1{
-      /*cursor: pointer;*/
-      /*transition: all .3s;*/
-      /*&:hover{*/
-      /*  background: #cecece4d;*/
-      /*  border-radius: 8px;*/
-      /*}*/
-      .kuaijie{
-        width: 30px;
-        height: 30px;
-        background: url(../assets/kuaijiejian.png) no-repeat;
-        background-size: 100% 100%;
-        margin: 0  auto;
-      }
+    padding: 0!important;;
+    /*overflow: hidden;*/
+    margin-left: 0px !important;
+    margin-right: 0px !important;
+    /*border: none;*/
+    /*border-top: 1px solid #E87E4D;*/
+    border-radius: 0px;
+    display: inline-block;
+    /deep/.el-radio__input{
+      display: none;
     }
-    .icon2{
-      cursor: pointer;
-      transition: all .3s;
-      &:hover{
-        background: #cecece4d;
-        border-radius: 8px;
+    /deep/.el-radio__label{
+      padding-left: 0;
+    }
+
+    .left_card_item{
+      font-size: 0;
+      .left_card_icon{
+        font-size: 20px;
+        position: absolute;
+        right: 2px;
+        top: 15px;
       }
-      .huashu{
-        width: 30px;
-        height: 30px;
-        background: url(../assets/bianji.png) no-repeat;
-        background-size: 100% 100%;
-        margin: 0  auto;
+      .label{
+        /*font-size: 13px;*/
+        /*font-weight: 500;*/
+        /*height: 40px;*/
+        /*line-height: 40px;*/
+        text-align: left;
+        font-size: 14px;
+        font-weight: 600;
+        height: 52px;
+        line-height: 52px;
+        padding: 0 10px;
+        p{
+          overflow: hidden;
+          text-overflow:ellipsis;
+          white-space: nowrap;
+          width: 111px;
+        }
       }
     }
   }
-  .btnBox{
-    margin-top: 10px;
+
+  .contentBox{
+    width: 555px;
+    height: 421px;
+    margin: 28px 0 0 11px;
+    .content-item{
+      padding: 10px 10px 6px;
+      height: 77px;
+      margin-top: 12px;
+      background: #FFFBF2;
+      border-radius: 4px;
+      border: 1px solid #FEE0C7;
+      .header{
+        font-size: 12px;
+        font-weight: 500;
+        color: #333333;
+        .pdtip{
+          font-size: 12px;
+          font-weight: 400;
+          color: #FF6060;
+          margin-left: 8px;
+        }
+        .play_icon{
+          font-size: 18px;
+          margin-left: 30px;
+          color: #8286FF;
+          cursor: pointer;
+          transition: all .3s;
+          &:hover{
+            color: #673ab7;
+          }
+        }
+        .keyboard{
+          font-size: 12px;
+          color: #8286FF;
+          font-weight: 400;
+          cursor: pointer;
+          transition: all .3s;
+          &:hover{
+            color: #673ab7;
+          }
+          .keyboard_shortcut{
+
+          }
+        }
+      }
+      .content{
+        text-align: left;
+        text-indent: 20px;
+        font-size: 12px;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
+        overflow: hidden;
+        user-select: text;
+      }
+    }
   }
-}
+  .contentBox2{
+    padding: 40px 0 0 0;
+    margin: 0 auto;
+    width: 648px;
+    height: 520px;
+    .content-item{
+      margin-top: 0px;
+      margin-bottom: 24px;
+      border: 1px solid #CDC7FE;
+      padding: 8px 10px 4px;
+      background: #F2F6FF;
+      border-radius: 4px;
+    }
+    .playBtn{
+      text-align: center;
+      margin: 16px;
+    }
+  }
+  .footBox{
+    border-top: 1px solid #DDD6FF;
+    padding: 19px;
+    .leftIcon{
+      width: 130px;
+      font-size: 12px;
+      color: #A0A0A0;
+      .icon1{
+        /*cursor: pointer;*/
+        /*transition: all .3s;*/
+        /*&:hover{*/
+        /*  background: #cecece4d;*/
+        /*  border-radius: 8px;*/
+        /*}*/
+        text-align: center;
+        .kuaijie{
+          width: 30px;
+          height: 30px;
+          background: url(../assets/kuaijiejian.png) no-repeat;
+          background-size: 100% 100%;
+          margin: 0  auto;
+        }
+      }
+      .icon2{
+        cursor: pointer;
+        transition: all .3s;
+        text-align: center;
+        &:hover{
+          background: #cecece4d;
+          border-radius: 8px;
+        }
+        .huashu{
+          width: 30px;
+          height: 30px;
+          background: url(../assets/bianji.png) no-repeat;
+          background-size: 100% 100%;
+          margin: 0  auto;
+        }
+      }
+    }
+    .btnBox{
+      margin-top: 10px;
+    }
+  }
   .handleWebcastBtn {
     width: 96px;
     height: 32px;
