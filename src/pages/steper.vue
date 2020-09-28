@@ -115,7 +115,7 @@
 </script>
 <style lang="less" scoped>
   .common_content {
-    padding: 30px 20px;
+    padding: 45px 20px;
     position: relative;
   }
   .stepBox{

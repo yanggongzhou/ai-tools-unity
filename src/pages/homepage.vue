@@ -1,5 +1,5 @@
 <template>
-    <div id='homepage'>
+    <div v-loading="isUserInfo" id='homepage'>
         <div class="cards common_content">
             <div class="card" v-for='(card, idx) in cards' :key='idx'>
                 <div class="poster" :class="'poster'+idx" @click='gotoPage(card.targetPage)'>
@@ -37,6 +37,7 @@ export default {
           getUserInfoCount:0,//请求用户数据次数
           notifyOption:'',
           userInfoTimeOut:'',
+          isUserInfo:false,
         };
     },
     computed: {},
@@ -49,16 +50,19 @@ export default {
 
       }else{
         if(this.userInfoTimeOut){  clearTimeout(this.userInfoTimeOut) }
-        UnityUserInfo();
         this.notifyOption = this.$notify.info({
           title:  '提示',
           message:"用户信息注入中...",
           duration: 0
         });
+        this.isUserInfo = true;
+        this.getUserInfo();
         this.userInfoTimeOut = setTimeout(()=>{
           if(self.$Session.get('ai_user_id')&&self.$Session.get('ai_user_token')&&self.$Session.get('ai_user_phone')){
             self.$message.error('请求用户信息失败,请重启窗口！')
+
           }else {
+            self.isUserInfo = false;
             self.$message.success('用户信息已注入！')
           }
         },100000)
@@ -67,30 +71,22 @@ export default {
       window.WebUserMessage=this.WebUserMessage;
     },
     methods: {
-      // //请求用户信息
-      // getUserInfo(){
-      //   this.getUserInfoCount+=1;
-      //   let self = this;
-      //   UnityUserInfo();
-      //   if(this.getUserInfoCount>=  3){
-      //     // self.$message.error('请求用户信息失败,请重启窗口！')
-      //     setTimeout(()=>{
-      //       if(self.$Session.get('ai_user_id')&&self.$Session.get('ai_user_token')&&self.$Session.get('ai_user_phone')){
-      //         self.$message.error('请求用户信息失败,请重启窗口！')
-      //       }else {
-      //         self.$message.success('用户信息已注入！')
-      //       }
-      //     },100000)
-      //   }else{
-      //     setTimeout(()=>{
-      //       if(this.$Session.get('ai_user_id')&&this.$Session.get('ai_user_token')&&this.$Session.get('ai_user_phone')){
-      //         this.$message.success('用户信息已注入！')
-      //       }else{
-      //         self.getUserInfo();
-      //       }
-      //     },3000)
-      //   }
-      // },
+      //请求用户信息
+      getUserInfo(){
+        this.getUserInfoCount+=1;
+        let self = this;
+        UnityUserInfo();
+        if(this.getUserInfoCount < 3){
+          setTimeout(()=>{
+            if(this.$Session.get('ai_user_id')&&this.$Session.get('ai_user_token')&&this.$Session.get('ai_user_phone')){
+              // this.$message.success('用户信息已注入！')
+            }else{
+              self.getUserInfo();
+            }
+          },3000)
+        }
+        // self.$message.error('请求用户信息失败,请重启窗口！')
+      },
       WebUserMessage(id,token,phone){
         console.log(id,token,phone)
         this.$Session.set('ai_user_id', id);
@@ -102,6 +98,7 @@ export default {
         // });
         this.notifyOption.close();
         this.$message.success('用户信息已注入！')
+        this.isUserInfo = false;
         clearTimeout(this.userInfoTimeOut)
       },
         gotoPage(_page) {
@@ -120,6 +117,7 @@ export default {
         background: #F5F6FA;
     }
     .cards {
+      margin-top: 20px;
         display: flex;
         justify-content: space-around;
         align-items: center;
