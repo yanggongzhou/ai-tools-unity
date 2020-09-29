@@ -516,7 +516,9 @@ export default {
       /*width: 96px;*/
       /*height: 32px;*/
       margin: 0 auto;
-      background: linear-gradient(166deg, #BA71FF 0%, #5648FF 100%);
+      /*background: linear-gradient(166deg, #BA71FF 0%, #5648FF 100%);*/
+      background: linear-gradient(90deg,  #BA71FF,#5648FF,#f441a5,#BA71FF ,#BA71FF );
+      background-size: 400%;
       /*border-radius: 16px;*/
       color: #fff;
       font-size: 14px;
@@ -524,6 +526,7 @@ export default {
       transition: all .3s;
       &:hover{
         opacity: 0.9;
+        animation: sun 8s;
       }
     }
     .scriptList {

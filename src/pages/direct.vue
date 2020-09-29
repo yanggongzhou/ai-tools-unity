@@ -40,6 +40,11 @@
               <div class="float_right play_icon" @click="previewBtn(val,ind,allScriptIndex,false)">
                 <i class="el-icon-video-play"></i>
               </div>
+<!--              <div class="float_right keyboard" @click="updateState(ind)">-->
+<!--&lt;!&ndash;                this.allScriptList[val].shortcut_json&ndash;&gt;-->
+<!--                <div v-if="allScriptList[allScriptIndex].shortcut_json[ind].status===1">禁用</div>-->
+<!--                <div v-if="allScriptList[allScriptIndex].shortcut_json[ind].status===0">恢复</div>-->
+<!--              </div>-->
 <!--              <div class="float_right keyboard">-->
 <!--                <div class="keyboard_txt">-->
 <!--                  快捷键设置-->
@@ -122,6 +127,7 @@
 <script>
   import axios from 'axios'
   import {resultJSON} from "../api/result";
+  import {requestServices} from "../api/api";
   let that;
   export default {
     beforeCreate() {
@@ -267,9 +273,31 @@
           this.innerVisible= true;
         }
       },
+      //更改禁用状态
+      updateState(ind){
+       if(this.allScriptList[this.allScriptIndex].shortcut_json[ind].status===1){
+         this.allScriptList[this.allScriptIndex].shortcut_json[ind].status=0
+       }else{
+         this.allScriptList[this.allScriptIndex].shortcut_json[ind].status=1
+       }
+        requestServices.editShortcutJson({
+          user_id:this.$Session.get('ai_user_id'),
+          access_token:this.$Session.get('ai_user_token'),
+          role_id:23,
+          gs_id:this.allScriptList[this.allScriptIndex].gs_id,
+          shortcut_json:JSON.stringify(this.allScriptList[this.allScriptIndex].shortcut_json)
+        }).then(res=>{
+          console.log(res)
+        })
+      },
       //剧本切换
       scriptChange(val){
         this.contentList = this.allScriptList[val].scriptList
+        this.otherMsg = {
+          name:this.allScriptList[val].name,
+          shortcut_json:this.allScriptList[val].shortcut_json,
+          gs_id:this.allScriptList[val].id
+        }
         this.$forceUpdate();
       },
       //自动播放
@@ -398,7 +426,6 @@
               })
             })
             self.allScriptIndex = 0;
-
             self.contentList = self.allScriptList[0].scriptList
             // console.log('self.allScriptList',self.allScriptList)
             self.nextPlayVal = self.allScriptList[0].scriptList[0]
@@ -513,7 +540,7 @@
           this.$message.warning('最多支持3个播放排队，请稍后')
           return false
         }
-        if(!this.temporaryScriptTxt.replace(/[\ |\~|\`|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\-|\_|\+|\=|\||\\|\[|\]|\{|\}|\;|\:|\"|\'|\,|\<|\.|\>|\/|\?|\r\n]/g)){
+        if(!this.temporaryScriptTxt.replace(/[\ |\~|\`|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\-|\_|\+|\=|\||\\|\[|\]|\{|\}|\;|\:|\"|\'|\,|\<|\.|\>|\/|\?|\r\n]/g).match(/[\u4e00-\u9fa5\0-9]/g)){
           this.$message.warning('请输入有效字符')
           return false
         }
@@ -578,12 +605,12 @@
   }
   /deep/.el-radio{
     color: #7C53FF !important;
-    border-bottom: 1px solid #fff !important;
+    /*border-bottom: 1px solid #fff !important;*/
   }
   /deep/.el-radio.is-bordered.is-checked{
     /*border-color: #7C53FF !important;*/
     border-color: #FFF !important;
-    border: 4px solid #FFF !important;
+    border: 3px solid #FFF !important;
     background: linear-gradient(166deg, #BA71FF 0%, #5648FF 100%)!important;
     border-radius: 8px;
   }
@@ -606,6 +633,9 @@
     height: 450px;
     width: 150px;
     background: #FBFAFF;
+    border: 0.5px solid #ddd6ff;
+    border-bottom: none;
+    border-radius: 3px 0 0 0;
     font-size: 0;
     overflow-y: scroll;
   }
@@ -622,10 +652,10 @@
     margin-right: 0px !important;
     /*border: none;*/
     /*border-top: 1px solid #E87E4D;*/
-
+    margin-bottom: 1px;
     /*border-radius: 0px;*/
     display: inline-block;
-    border: 4px solid #FFF;
+    border: 3px solid #FFF;
     border-radius: 8px;
 
     /deep/.el-radio__input{

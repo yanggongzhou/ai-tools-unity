@@ -113,5 +113,8 @@ export const requestServices = {
   delScript: (param) => apiInstance.post(`/guide_shopping/client/delete_guide_shopping`, param),
 
   //获取精灵数据
-  getAllAvatars:(params)=>apiInstance.get(`/guide_shopping/client/get_avatars`,{params:params},)
+  getAllAvatars:(params)=>apiInstance.get(`/guide_shopping/client/get_avatars`,{params:params},),
+
+  //编辑快捷键
+  editShortcutJson:(params)=>apiInstance.post(`/guide_shopping/client/edit_shortcut_json`,params)
 }

@@ -382,13 +382,13 @@ export default {
     border: 1px solid #fff;
     outline: none;
     text-decoration: none;
-    font-size: 16px;
     background: linear-gradient(90deg,  #BA71FF,#5648FF,#f441a5,#BA71FF ,#BA71FF );
     /*background: linear-gradient(90deg, #03a9f4, #f441a5, #ffeb3b, #03a9f4);*/
     background-size: 400%;
-    width: 114px;
-    height: 40px;
-    line-height: 38px;
+    width: 100px;
+    height: 38px;
+    line-height: 37px;
+    font-size: 14px;
     color: #fff;
     text-align: center;
     border-radius: 50px;
@@ -398,9 +398,9 @@ export default {
     }
   }
   .light-btn:hover::before,
-  .light-btn:hover {
-    animation: sun 8s infinite;
-  }
+  /*.light-btn:hover {*/
+  /*  animation: sun 8s infinite;*/
+  /*}*/
 
   .light-btn::before {
     content: '';
@@ -412,7 +412,7 @@ export default {
   .create-btn{
     background: linear-gradient(90deg,  #FFBA48,#FF71B5,#f441a5,#FFBA48 );
     background-size: 400%;
-    margin-left: 30px;
+    margin-right: 20px;
     /*position: absolute;*/
     /*right: 0px;*/
     /*top: -15px;*/

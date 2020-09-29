@@ -253,15 +253,25 @@ input {
   border-radius: 2px;
 }
 .titleSpan{
-  background: linear-gradient(166deg, #BA71FF 0%, #5648FF 100%);
+  /*background: linear-gradient(166deg, #BA71FF 0%, #5648FF 100%);*/
   border-radius: 2px 38px 38px 2px;
   color: #fff;
   padding: 8px 26px;
+  background: linear-gradient(90deg, #BA71FF, #5648FF, #f441a5, #BA71FF, #BA71FF);
+  /* background: linear-gradient(90deg, #03a9f4, #f441a5, #ffeb3b, #03a9f4); */
+  background-size: 400%;
 }
+
 .backNormal2{
   position: absolute;
   z-index: 999;
   right: 0px;
   top: 2px;
   margin: 0;
+}
+
+@keyframes sun {
+  100%{
+    background-position: -400% 0;
+  }
 }

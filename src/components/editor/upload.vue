@@ -64,15 +64,16 @@
         console.log(file);
         if(this.videoVisible){
           const isMP4 = file.raw.type === 'video/mp4';
-          const isAVI = file.raw.type === 'video/avi';
-          const isMOV = file.raw.type === 'video/mov';
-          const isLt256M = file.raw.size / 1024 / 1024 < 256;
-          if (!isMP4&&!isAVI&&!isMOV) {
-            this.$message.error('上传视频只能是 mp4/avi/mov 格式!');
+          // const isAVI = file.raw.type === 'video/avi';
+          // const isMOV = file.raw.type === 'video/quicktime';
+          const isLt200M = file.raw.size / 1024 / 1024 < 200;
+          // !isMP4&&!isAVI&&!isMOV
+          if (!isMP4) {
+            this.$message.error('上传视频只支持 mp4 格式!');
             return false;
           }
-          if (!isLt256M) {
-            this.$message.error('上传视频大小不能超过 256MB!');
+          if (!isLt200M) {
+            this.$message.error('上传视频大小不能超过 200MB!');
             return false;
           }
           this.$refs.zipUpload.submit();
