@@ -30,12 +30,13 @@
             <div class="header clearfix">
               <div class="title float_left">第{{ind+1}}段</div>
               <div class="pdtip float_left"
-                   :style="ind | styleFilter"
-              >排队播放中...</div>
-              <div class="pdtip float_left"
                    style="color: #4CAF50"
                    :style="ind | styleFilter2"
               >正在播放中...</div>
+              <div class="pdtip float_left"
+                   :style="ind | styleFilter"
+              >排队播放中...</div>
+
               <div class="float_right play_icon" @click="previewBtn(val,ind,allScriptIndex,false)">
                 <i class="el-icon-video-play"></i>
               </div>

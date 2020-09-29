@@ -129,6 +129,7 @@
 import Sortable from 'sortablejs';
 import { requestServices } from '../api/api';
 import axios from "axios";
+  import {resultJSON} from "../api/result";
 export default {
     filters: {},
     data() {
@@ -177,7 +178,17 @@ export default {
 
             checkAllDisabled: false,
             webcastPreDialog:false,
+
+          previewReady:true,
+          previewData:{
+              name:'',
+            script:''
+          }
         };
+    },
+    created() {
+      window.WebPreviewReady = this.WebPreviewReady;
+      window.WebSelectAvatarState=this.WebSelectAvatarState;
     },
     mounted() {
         // this.sortPlayScript();
@@ -185,6 +196,24 @@ export default {
         this.fetchAllScripts();
     },
     methods: {
+        WebSelectAvatarState(state){
+          if(state==='True'){
+            UnityPreview(this.previewData.name,this.previewData.script)
+          }else if(state==='False'){
+            this.$message.error('切换角色失败，请重试')
+            // this.previewReady = false;
+          }
+        },
+        WebPreviewReady(state){
+          if(state==='True'){
+            UnityPreviewStart(this.previewData.name);
+          }else if(state==='False'){
+            this.$message.error('加载资源失败，请重试')
+          }
+          this.previewReady = true;
+        },
+
+
         webcastPreClose(done){
           done();
         },
@@ -354,6 +383,10 @@ export default {
                 if(res.status===200){
                   this.$message.warning('剧本数据获取异常，请重试')
                   // UnityPreview(res.data[0].avatar.unity,JSON.stringify(res.data))
+                  this.previewData.name = res.data[0].avatar.unity;
+                  this.previewData.script = JSON.stringify(res.data)
+                  UnityPreviewCancel();
+                  UnityChangeAvatar(res.data[0].avatar.unity);
                 }else{
                   this.$message.warning('剧本数据获取异常，请重试')
                 }
