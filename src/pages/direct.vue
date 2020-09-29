@@ -26,13 +26,17 @@
         </div>
         <!--      单个剧本内容-->
         <div class="contentBox float_left">
-          <div class="content-item" v-for="(val,ind) in contentList" :key="ind+'content'">
+          <div class="content-item" v-for="(val,ind) in contentList" :key="ind+'content'"   :style="ind | styleFilter3">
             <div class="header clearfix">
               <div class="title float_left">第{{ind+1}}段</div>
               <div class="pdtip float_left"
                    :style="ind | styleFilter"
               >排队播放中...</div>
-              <div class="float_right play_icon" @click="previewBtn(val,ind,allScriptIndex)">
+              <div class="pdtip float_left"
+                   style="color: #4CAF50"
+                   :style="ind | styleFilter2"
+              >正在播放中...</div>
+              <div class="float_right play_icon" @click="previewBtn(val,ind,allScriptIndex,false)">
                 <i class="el-icon-video-play"></i>
               </div>
 <!--              <div class="float_right keyboard">-->
@@ -73,7 +77,7 @@
         <div class="float_right btnBox">
           <button class='handleWebcastBtn' v-show="!isAutoPlayBtn" @click='autoPlayBtn'>自动播放</button>
           <button class='handleWebcastBtn' v-show="isAutoPlayBtn" @click='stopPlayBtn'>停止播放</button>
-          <el-tooltip class="item" effect="dark" content="播放下一段：【Ctrl】+【空格】" placement="bottom">
+          <el-tooltip class="item" effect="dark" content="播放下一段：【Ctrl】+【n】" placement="bottom">
             <button class='handleWebcastBtn' style="margin-left: 30px" :disabled="isAutoPlayBtn" :class="{'disabled': isAutoPlayBtn}" @click='nextPlayBtn'>播放下一段</button>
           </el-tooltip>
 
@@ -154,7 +158,48 @@
             'display' : "none"
           }
         }
-      }
+      },
+      styleFilter2(ind){
+        // this.nowContentIndex = '';
+        // this.nowAllScriptIndex = '';
+        if(that.nowContentIndex!==""&&that.nowAllScriptIndex !== ''){
+          if(ind===that.nowContentIndex&&that.nowAllScriptIndex===that.allScriptIndex){
+            return {
+              'display': 'inline-block',
+            }
+          }else{
+            return {
+              'display' : "none"
+            }
+          }
+        }else{
+          return {
+            'display' : "none"
+          }
+        }
+      },
+      styleFilter3(ind){
+        // this.nowContentIndex = '';
+        // this.nowAllScriptIndex = '';
+        if(that.nowContentIndex!==""&&that.nowAllScriptIndex !== ''){
+          if(ind===that.nowContentIndex&&that.nowAllScriptIndex===that.allScriptIndex){
+            return {
+              'border': '1px solid #4CAF50',
+              'background': '#d6ffd7'
+            }
+          }else{
+            return {
+              'background': '#FFFBF2',
+              'border': '1px solid #FEE0C7'
+            }
+          }
+        }else{
+          return {
+            'background': '#FFFBF2',
+            'border': '1px solid #FEE0C7'
+          }
+        }
+      },
     },
     data(){
       return{
@@ -165,6 +210,9 @@
         contentIndex:0,//下个脚本的下标
         nextPlayVal:'',//下个脚本的内容
         nextAllScriptIndex:0,///下个脚本的剧本下标
+
+        nowContentIndex:'',//正在播放的脚本下标
+        nowAllScriptIndex:'',//正在播放的剧本下标
 
         isShowAllList:false,
 
@@ -197,7 +245,7 @@
       document.onkeydown = (event) => {
         console.log(event)
         //ctrl+space
-         if (event.ctrlKey && event.keyCode == 17){
+         if (event.ctrlKey && event.keyCode == 78){
            self.nextPlayBtn()
           }
       }
@@ -276,6 +324,8 @@
             this.allScriptIndex=0;
             this.allScriptPlayIndex = 0;
           }
+          this.scriptChange(this.allScriptIndex)
+
           this.$message.info('播放剧本'+(this.allScriptPlayIndex+1)+'--'+this.allScriptList[this.allScriptPlayIndex].name)
           this.previewData = this.allScriptList[this.allScriptPlayIndex].scriptList;
           UnityPreview(this.previewData[0].avatar.unity,JSON.stringify(this.previewData))
@@ -292,19 +342,30 @@
             if(this.queueContentItem.length){
               let _Obj  = this.queueContentItem.shift();
               UnityPreview(_Obj.name,_Obj.item)
+              //当前播放脚本内容的定位信息
+              this.nowContentIndex = _Obj.contentIndex;
+              this.nowAllScriptIndex = _Obj.allScriptIndex;
+
               this.previewData = JSON.parse(_Obj.item)
               this.previewReady = false;
             }else{
               this.previewReady = true;
               this.isPlaying = false;
+
+              this.nowContentIndex = '';
+              this.nowAllScriptIndex = '';
             }
           }
         }
       },
       //播放下一个
       nextPlayBtn(){
+        if(this.isAutoPlayBtn){
+          return false;
+        }
         console.log(this.nextPlayVal,this.contentIndex,this.nextAllScriptIndex)
-        this.previewBtn(this.nextPlayVal,this.contentIndex,this.nextAllScriptIndex)
+        // if()
+        this.previewBtn(this.nextPlayVal,this.contentIndex,this.nextAllScriptIndex,true)
       },
       //获取直播列表json数据
       getPlayData(data){
@@ -334,9 +395,14 @@
         )
       },
       //判断播放下一个的数据
-      getNextPlayVal(ind,allScriptIndex){
-        this.allScriptIndex = this.nextAllScriptIndex;
-        if(ind<this.contentList.length-1){
+      getNextPlayVal(ind,allScriptIndex,bool){
+        if(bool){
+          this.allScriptIndex = this.nextAllScriptIndex;
+          this.scriptChange(this.allScriptIndex)
+        }
+        let _contentList = this.allScriptList[this.nextAllScriptIndex].scriptList
+
+        if(ind<_contentList.length-1){
           this.contentIndex = ind+1;
           this.nextPlayVal = this.contentList[ind+1]
         }else{
@@ -347,13 +413,17 @@
             this.nextPlayVal = this.allScriptList[this.nextAllScriptIndex].scriptList[0]
           }else{
             this.nextAllScriptIndex = 0;
-            this.allScriptIndex = 0 ;
+            if(bool){
+              this.allScriptIndex = 0 ;
+              this.scriptChange(this.allScriptIndex)
+            }
+
             this.nextPlayVal = this.allScriptList[0].scriptList[0]
           }
         }
       },
       //预览
-      previewBtn(val,ind,allScriptIndex){
+      previewBtn(val,ind,allScriptIndex,bool){
         // UnityPreviewCancel();
         if(!this.isPlaying){
           if(this.previewReady){
@@ -362,11 +432,14 @@
             // UnityPreview(val.avatar.unity,JSON.stringify([val]))
             this.isPlaying = true;
             this.previewReady = false;
+            //当前播放脚本内容的定位信息
+            this.nowContentIndex = ind;
+            this.nowAllScriptIndex = allScriptIndex;
           }else{
             this.$message.warning('资源加载中，请稍后...')
           }
           //判断播放下一个的数据
-          this.getNextPlayVal(ind,allScriptIndex);
+          this.getNextPlayVal(ind,allScriptIndex,bool);
         }else{
           if(this.queueContentItem.length===0){
             this.$message.info('剧本段落已排队，稍后播放!')
@@ -376,7 +449,7 @@
               name:val.avatar.unity,
               item:JSON.stringify([val])
             })
-            this.getNextPlayVal(ind,allScriptIndex);
+            this.getNextPlayVal(ind,allScriptIndex,bool);
           }else{
             this.$message.warning('最多支持1个剧本段落排队，请稍后!')
           }
@@ -403,7 +476,7 @@
           if(this.previewReady){
             // UnityChangeAvatar(val.avatar.unity)
             this.previewData = [_json];
-            UnityPreview('none',JSON.stringify([_json]))
+            UnityPreviewTxt('none',JSON.stringify([_json]))
             this.isPlaying = true;
             this.previewReady = false;
           }else{
@@ -424,6 +497,14 @@
       },
       //临时话术播放按钮
       temporaryScriptPlay(){
+        if(this.queueList.length>=3){
+          this.$message.warning('最多支持3个播放排队，请稍后')
+          return false
+        }
+        if(!this.temporaryScriptTxt.replace(/[\ |\~|\`|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\-|\_|\+|\=|\||\\|\[|\]|\{|\}|\;|\:|\"|\'|\,|\<|\.|\>|\/|\?|\r\n]/g)){
+          this.$message.warning('请输入有效字符')
+          return false
+        }
         this.temporaryScriptList.unshift({
           time:new Date().toLocaleString(),
           text:this.temporaryScriptTxt,
@@ -526,8 +607,12 @@
     margin-right: 0px !important;
     /*border: none;*/
     /*border-top: 1px solid #E87E4D;*/
-    border-radius: 0px;
+
+    /*border-radius: 0px;*/
     display: inline-block;
+    border: 4px solid #FFF;
+    border-radius: 8px;
+
     /deep/.el-radio__input{
       display: none;
     }
@@ -628,12 +713,23 @@
     width: 648px;
     height: 520px;
     .content-item{
+      height: 60px;
       margin-top: 0px;
-      margin-bottom: 24px;
+      margin-bottom: 12px;
       border: 1px solid #CDC7FE;
       padding: 8px 10px 4px;
       background: #F2F6FF;
       border-radius: 4px;
+      .content{
+        text-align: left;
+        text-indent: 20px;
+        font-size: 12px;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        overflow: hidden;
+        user-select: text;
+      }
     }
     .playBtn{
       text-align: center;

@@ -182,6 +182,7 @@
 <script>
   import upload from "./upload";
   import {resultJSON} from '../../api/result'
+  import textJSON from '../../api/text.json'
   export default {
     filters:{
       indFilter(val){

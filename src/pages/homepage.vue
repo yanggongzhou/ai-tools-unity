@@ -98,10 +98,10 @@ export default {
         this.$Session.set('ai_user_token', token)
         this.$Session.set('ai_user_phone', phone)
 
-        this.notifyOption.close();
-        this.$message.success('用户信息已注入！')
         this.isUserInfo = false;
         clearTimeout(this.userInfoTimeOut)
+        this.$message.success('用户信息已注入！')
+        this.notifyOption.close();
       },
         gotoPage(_page) {
           this.$router.push(_page)
