@@ -59,13 +59,14 @@
         step:1,
         avatarID:1,
         radioData:[],
-        actionShowList:[],
       }
     },
 
     created() {
       this.radioData = resultJSON.avatarData
       this.avatarID = resultJSON.avatarID
+      // window.WebSelectAvatarState=this.WebSelectAvatarState;
+      window.WebSelectAvatarState='';
     },
     mounted() {
       let _name = '';
@@ -78,19 +79,13 @@
       UnityChangeAvatar(_name)
     },
     methods:{
-      //动作回调返回列表
-      WebActionInfo(val){
-        this.actionShowList = [];
-        let labelData = val.split('-')[0].split(',')
-        let valueData = val.split('-')[1].split(',')
-        labelData.forEach((item,ind)=>{
-          this.actionShowList.push({
-            label:item,
-            value:valueData[ind]
-          })
-        })
-        console.log('动作列表',this.actionShowList)
-      },
+      // WebSelectAvatarState(state){
+      //   if(state==='True'){
+      //     //do nothing
+      //   }else if(state==='False'){
+      //     this.$message.error('切换角色失败，请重试')
+      //   }
+      // },
       radioChange(val){
         this.avatarID = val;
         let _name = '';

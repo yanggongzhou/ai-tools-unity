@@ -68,7 +68,7 @@
 <!--              </el-tooltip>-->
 <!--            </el-col>-->
             <el-col :span="12">
-              <div class="icon2" @click="innerVisible=!innerVisible">
+              <div class="icon2" @click="innerVisibleOpen" :class="{'disabled-icon2': isAutoPlayBtn}">
                 <div class="huashu"></div>
                 <span>临时话术</span>
               </div>
@@ -76,7 +76,7 @@
           </el-row>
         </div>
         <div class="float_right btnBox">
-          <button class='handleWebcastBtn' v-show="!isAutoPlayBtn" @click='autoPlayBtn'>自动播放</button>
+          <button class='handleWebcastBtn' :class="{'disabled': queueList.length!==0||queueContentItem.length!==0||isPlaying}"  v-show="!isAutoPlayBtn" @click='autoPlayBtn'>自动播放</button>
           <button class='handleWebcastBtn' v-show="isAutoPlayBtn" @click='stopPlayBtn'>停止播放</button>
           <el-tooltip class="item" effect="dark" content="播放下一段：【Ctrl】+【n】" placement="bottom">
             <button class='handleWebcastBtn' style="margin-left: 30px" :disabled="isAutoPlayBtn" :class="{'disabled': isAutoPlayBtn}" @click='nextPlayBtn'>播放下一段</button>
@@ -92,7 +92,7 @@
         append-to-body>
         <div class="contentBox contentBox2">
           <button class='close_btn' @click='innerVisible=false'>收起</button>
-          <div style="height: 339px;overflow: scroll">
+          <div style="height: 346px;overflow: scroll;margin-top: 10px">
             <div class="content-item" v-for="(val,ind) in temporaryScriptList" :key="ind+'content'">
               <div class="header clearfix">
                 <div class="title float_left">{{val.time}}</div>
@@ -109,7 +109,7 @@
           <el-input style="margin-top: 10px" type="textarea"
                     placeholder="这里可以输入文字，添加后记录在上方内容"
                     v-model="temporaryScriptTxt"
-                    :autosize="{ minRows: 5, maxRows:5 }"
+                    :autosize="{ minRows: 4, maxRows:4 }"
           ></el-input>
           <div class="playBtn">
             <button class='handleWebcastBtn' @click='temporaryScriptPlay'>播放</button>
@@ -262,7 +262,11 @@
 
     },
     methods:{
-
+      innerVisibleOpen(){
+        if(!this.isAutoPlayBtn){
+          this.innerVisible= true;
+        }
+      },
       //剧本切换
       scriptChange(val){
         this.contentList = this.allScriptList[val].scriptList
@@ -270,6 +274,9 @@
       },
       //自动播放
       autoPlayBtn(){
+        if(this.queueList.length!==0||this.queueContentItem.length!==0||this.isPlaying){
+          return false;
+        }
         // UnityPreviewCancel();
         this.isAutoPlayBtn = true;
         if(this.previewReady){
@@ -371,23 +378,27 @@
       //获取直播列表json数据
       getPlayData(data){
         let self = this;
-        self.allScriptList = [];
+        this.allScriptList = [];
         this.playData = JSON.parse(JSON.stringify(data))
         // console.log('playData',this.playData)
         let _arr = [];
         data.forEach(val=>{
-          _arr.push(axios.get(val.script_url))
+          _arr.push(axios.get(val.script_url));
         })
+
         axios.all(_arr).then(
           axios.spread((...resList) => {
             // console.log('接口全部加载完成',resList) ;
             resList.forEach((resItem,resItemInd)=>{
               self.allScriptList.push({
                 name:self.playData[resItemInd].name,
-                scriptList:resItem.data
+                scriptList:resItem.data,
+                shortcut_json:data[resItemInd].shortcut_json,
+                gs_id:data[resItemInd].id
               })
             })
             self.allScriptIndex = 0;
+
             self.contentList = self.allScriptList[0].scriptList
             // console.log('self.allScriptList',self.allScriptList)
             self.nextPlayVal = self.allScriptList[0].scriptList[0]
@@ -506,12 +517,12 @@
           this.$message.warning('请输入有效字符')
           return false
         }
-        this.temporaryScriptList.unshift({
+        this.temporaryScriptList.push({
           time:new Date().toLocaleString(),
           text:this.temporaryScriptTxt,
           state:'排队'
         })
-        let _arr =  this.temporaryScriptList[0].text.split('')
+        let _arr =  this.temporaryScriptList[this.temporaryScriptList.length-1].text.split('')
         let _res = []
         for (let i = 0; i< Math.ceil(_arr.length/100);i++){
           _res.push(_arr.splice(0,100).join(''));
@@ -528,9 +539,12 @@
         if(!this.isPlaying){
           UnityPreviewTxt('none',JSON.stringify([_json]))
           this.previewData = JSON.parse(JSON.stringify([_json]))
+          this.isPlaying = true;
+          this.previewReady = false;
         }else{
           if(this.queueList.length<3){
             this.queueList.push({
+              id:this.getGuid(),
               name:'none',
               item:JSON.stringify([_json])
             })
@@ -797,8 +811,8 @@
     }
   }
   .close_btn{
-    width: 56px;
-    height: 20px;
+    width: 60px;
+    height: 24px;
     margin: 0 auto;
     background: #FFF;
     border-radius: 16px;
@@ -813,5 +827,9 @@
   .disabled {
     background: #C6C6C6!important;
     cursor: no-drop;
+  }
+  .disabled-icon2{
+    background: transparent!important;
+    cursor: no-drop !important;
   }
 </style>

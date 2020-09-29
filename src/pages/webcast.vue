@@ -225,7 +225,7 @@ export default {
                 user_id: this.$Session.get('ai_user_id'),
                 access_token: this.$Session.get('ai_user_token'),
             }).then(res => {
-                console.log('res: ', res)
+                // console.log('res: ', res)
                 if(res.return_code == 1000) {
                     this.playScriptData = res.result.programs;
                     this.fetchPlayScriptIDs();
@@ -254,7 +254,7 @@ export default {
                 avatar_name: this.anchorRoleValue, // 精灵名称
                 scene_type: '' // 场景类型；0-默认类型；1-淘宝；2-抖音；3-快手
             }).then(res => {
-                console.log('getAllScripts: ', res)
+                // console.log('getAllScripts: ', res)
                 if(res.return_code == 1000) {
                     this.scriptData = res.result.guide_shopping;
                     this.checkAll = false;
@@ -474,6 +474,10 @@ export default {
                ],
             );
         },
+    },
+    beforeDestroy() {
+      //跳转页面后强制结束播放状态
+      UnityPreviewCancel();
     },
     components:{
       webcastDialog

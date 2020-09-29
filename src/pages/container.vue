@@ -68,7 +68,6 @@
     created() {
       this.jsonNameValidate = false;
       window.WebPreviewReady = this.WebPreviewReady;
-      window.WebSelectAvatarState=this.WebSelectAvatarState;
     },
     mounted() {
       let self = this;
@@ -132,13 +131,6 @@
         })
       },
 
-      WebSelectAvatarState(state){
-        if(state==='True'){
-          UnityAvatarMotionInfo(resultJSON.resultJsonObj.avatar.unity);
-        }else if(state==='False'){
-          this.$message.error('切换角色失败，请重试')
-        }
-      },
       WebPreviewReady(state){
         if(state==='True'){
           UnityPreviewStart(resultJSON.resultJsonObj.avatar.unity);
