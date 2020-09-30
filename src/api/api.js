@@ -116,5 +116,10 @@ export const requestServices = {
   getAllAvatars:(params)=>apiInstance.get(`/guide_shopping/client/get_avatars`,{params:params},),
 
   //编辑快捷键
-  editShortcutJson:(params)=>apiInstance.post(`/guide_shopping/client/edit_shortcut_json`,params)
+  editShortcutJson:(params)=>apiInstance.post(`/guide_shopping/client/edit_shortcut_json`,params),
+
+  //临时话术
+  getTempList :(params) => apiInstance.post(`/guide_shopping/client/get_gs_words`, params),
+  addTemp:(params)=>apiInstance.post(`/guide_shopping/client/add_gs_word`,params),
+
 }

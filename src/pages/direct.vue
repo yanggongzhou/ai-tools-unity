@@ -100,14 +100,22 @@
           <div style="height: 346px;overflow: scroll;margin-top: 10px">
             <div class="content-item" v-for="(val,ind) in temporaryScriptList" :key="ind+'content'">
               <div class="header clearfix">
-                <div class="title float_left">{{val.time}}</div>
-
+                <div class="title float_left">{{val.created_at}}</div>
+                <div class="pdtip float_left"
+                     style="color: #4CAF50"
+                     v-show="nowTempId===val.id"
+                >正在播放中...</div>
+                <div class="pdtip float_left"
+                     :style="val.id | styleFilter4"
+                >排队播放中...</div>
                 <div class="float_right play_icon" @click="previewTxtBtn(val,ind)">
                   <i class="el-icon-video-play"></i>
                 </div>
               </div>
+
+
               <p class="content">
-                {{val.text}}
+                {{val.content}}
               </p>
             </div>
           </div>
@@ -207,6 +215,23 @@
           }
         }
       },
+      styleFilter4(id){
+        let _show=false;
+        that.queueList.forEach(val=>{
+          if(val.id===id){
+            _show = true
+          }
+        })
+        if(_show){
+          return {
+            'display': 'inline-block',
+          }
+        }else{
+          return {
+            'display' : "none"
+          }
+        }
+      }
     },
     data(){
       return{
@@ -235,6 +260,7 @@
 
         temporaryScriptList:[],//临时话术
         temporaryScriptTxt:'',
+        nowTempId:'',
 
         queueList:[],//排队数据，最多3个
         queueContentItem:[],//段落排队数据，最多1个
@@ -265,7 +291,7 @@
       }else{
         this.$message.error('未获取数据，请返回重试！')
       }
-
+      this.getTempData().then(res=>{});
     },
     methods:{
       innerVisibleOpen(){
@@ -372,6 +398,7 @@
           if(this.queueList.length){
             let _Obj  = this.queueList.shift();
             UnityPreviewTxt(_Obj.name,_Obj.item)
+            this.nowTempId = _Obj.id;
             this.previewData = JSON.parse(_Obj.item)
             this.previewReady = false;
           }else{
@@ -390,6 +417,7 @@
 
               this.nowContentIndex = '';
               this.nowAllScriptIndex = '';
+              this.nowTempId = '';
             }
           }
         }
@@ -497,7 +525,7 @@
       //临时话术预览
       previewTxtBtn(val,ind){
         // UnityPreviewCancel();
-        let _arr =  this.temporaryScriptList[ind].text.split('')
+        let _arr =  this.temporaryScriptList[ind].content.split('')
         let _res = []
         for (let i = 0; i< Math.ceil(_arr.length/100);i++){
           _res.push(_arr.splice(0,100).join(''));
@@ -516,6 +544,7 @@
             // UnityChangeAvatar(val.avatar.unity)
             this.previewData = [_json];
             UnityPreviewTxt('none',JSON.stringify([_json]))
+            this.nowTempId = val.id;
             this.isPlaying = true;
             this.previewReady = false;
           }else{
@@ -527,12 +556,49 @@
           if(this.queueList.length<3){
             this.queueList.push({
               name:'none',
-              item:JSON.stringify([_json])
+              item:JSON.stringify([_json]),
+              id:val.id,
             })
           }else{
             this.$message.info('最多支持3个播放排队,请稍后!')
           }
         }
+      },
+      getTempData(){
+        let self = this;
+        return new Promise(resolve =>{
+          requestServices.getTempList({
+            user_id:self.$Session.get('ai_user_id'),
+            role_id:23,
+            access_token: self.$Session.get('ai_user_token'),
+            type:3
+          }).then(res=>{
+            // console.log(res.result.words)
+            if(res.return_code===1000){
+              self.temporaryScriptList=res.result.words.slice(-4)
+              self.$forceUpdate();
+              resolve(self.temporaryScriptList)
+            }
+          })
+        })
+      },
+      addTempData(text){
+        return new Promise(resolve =>{
+          requestServices.addTemp({
+            user_id:this.$Session.get('ai_user_id'),
+            role_id:23,
+            access_token: this.$Session.get('ai_user_token'),
+            type:3,
+            content:text
+          }).then(res=>{
+            if(res.return_code===1000){
+              this.getTempData().then(res=>{
+                resolve('11111111111')
+              })
+            }
+          })
+        })
+
       },
       //临时话术播放按钮
       temporaryScriptPlay(){
@@ -544,41 +610,41 @@
           this.$message.warning('请输入有效字符')
           return false
         }
-        this.temporaryScriptList.push({
-          time:new Date().toLocaleString(),
-          text:this.temporaryScriptTxt,
-          state:'排队'
-        })
-        let _arr =  this.temporaryScriptList[this.temporaryScriptList.length-1].text.split('')
-        let _res = []
-        for (let i = 0; i< Math.ceil(_arr.length/100);i++){
-          _res.push(_arr.splice(0,100).join(''));
-        }
-        let _json = JSON.parse(JSON.stringify(resultJSON.resultJsonObj))
-        _json.avatar.unity = 'none'
-        _res.forEach(resItem=>{
-          _json.param.push({
-            intervalTime:0,
-            trigger:[],
-            content:resItem
-          })
-        })
-        if(!this.isPlaying){
-          UnityPreviewTxt('none',JSON.stringify([_json]))
-          this.previewData = JSON.parse(JSON.stringify([_json]))
-          this.isPlaying = true;
-          this.previewReady = false;
-        }else{
-          if(this.queueList.length<3){
-            this.queueList.push({
-              id:this.getGuid(),
-              name:'none',
-              item:JSON.stringify([_json])
-            })
-          }else{
-            this.$message.info('最多支持3个播放排队，请稍后！')
+        this.addTempData(this.temporaryScriptTxt).then(res=>{
+          let _arr =  this.temporaryScriptList[this.temporaryScriptList.length-1].content.split('')
+          let _res = []
+          for (let i = 0; i< Math.ceil(_arr.length/100);i++){
+            _res.push(_arr.splice(0,100).join(''));
           }
-        }
+          let _json = JSON.parse(JSON.stringify(resultJSON.resultJsonObj))
+          _json.avatar.unity = 'none'
+          _res.forEach(resItem=>{
+            _json.param.push({
+              intervalTime:0,
+              trigger:[],
+              content:resItem
+            })
+          })
+          if(!this.isPlaying){
+            UnityPreviewTxt('none',JSON.stringify([_json]))
+            this.nowTempId = this.temporaryScriptList[this.temporaryScriptList.length-1].id
+            this.previewData = JSON.parse(JSON.stringify([_json]))
+            this.isPlaying = true;
+            this.previewReady = false;
+          }else{
+            if(this.queueList.length<3){
+              this.queueList.push({
+                id:this.temporaryScriptList[this.temporaryScriptList.length-1].id,
+                name:'none',
+                item:JSON.stringify([_json])
+              })
+            }else{
+              this.$message.info('最多支持3个播放排队，请稍后！')
+            }
+          }
+        })
+
+
       },
       getGuid() {
         // 生成随机ID
@@ -765,6 +831,9 @@
       padding: 8px 10px 4px;
       background: #F2F6FF;
       border-radius: 4px;
+      .header{
+        line-height: 1;
+      }
       .content{
         text-align: left;
         text-indent: 20px;

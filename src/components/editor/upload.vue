@@ -15,10 +15,12 @@
     :on-change="fileChange"
     :auto-upload="false">
     <el-button type='warning' size="small" round>
-      上传<span v-if="videoVisible">视频</span>
-      <span v-if="!videoVisible">图片</span>
+      <span v-if="videoVisible">上传视频</span>
+      <span v-if="!videoVisible">上传图片</span>
     </el-button>
   </el-upload>
+    <span v-if="videoVisible" class="upload_tip">*支持MP4格式，最大不超过200M</span>
+    <span v-if="!videoVisible" class="upload_tip">*支持jpg、png、gif格式，最大不超过5M</span>
 <!--  <video v-if="videoUrl" :src="videoUrl" class="avatar" controls></video>-->
 </div>
 </template>
@@ -120,5 +122,13 @@
 <style lang="less" scoped>
   .uploadBox{
     height: 68px;
+    position: relative;
+  }
+  .upload_tip{
+    position: absolute;
+    top: 0px;
+    left: 96px;
+    font-size: 12px;
+    color: #9E9E9E;
   }
 </style>

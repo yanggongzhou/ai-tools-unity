@@ -274,7 +274,12 @@
       window.WebSelectAvatarState = this.WebSelectAvatarState
     },
     mounted() {
-      //要动作
+      //编辑的数据
+      if(this.$route.params.data){
+        let resArr  = this.$route.params.data
+        resultJSON.resultJsonObj.avatar.unity = resArr[0].avatar.unity;
+        //要动作
+      }
       UnityChangeAvatar(resultJSON.resultJsonObj.avatar.unity);
     },
     watch:{
