@@ -182,8 +182,8 @@ button {
 }
 .action{
   /*background: #673AB7;*/
-  color: #79de64;
-  border: 1px solid #79de64;
+  color: #658f96;
+  border: 1px solid #658f96;
 }
 .tagImg{
   /*background: #cf9236;*/
@@ -195,7 +195,12 @@ button {
   color: #6687FD;
   border: 1px solid #6687FD;
 }
-
+/*按钮提示*/
+.tip_title{
+  margin-bottom: 5px;
+  font-size: 13px;
+  font-weight: 600;
+}
 input:-webkit-autofill , textarea:-webkit-autofill, select:-webkit-autofill {
   background-color:transparent;
   transition: background-color 50000s ease-in-out 0s;

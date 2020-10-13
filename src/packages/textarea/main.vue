@@ -26,8 +26,15 @@
               @click="openTagDialog('img')">插入图片</button>
       <button class="w-textarea_tools__item item3 float_right"
               @click="openTagDialog('video')">插入视频</button>
-      <button class="w-textarea_tools__item item4 float_right"
-              @click="openTagDialog('interaction')">插入互动</button>
+      <el-tooltip  :open-delay="1000" placement="bottom" effect="dark">
+        <div slot="content">
+          <p class="center tip_title">互动标签</p>
+          <p class="center">注意文本中不要离得太近哦!</p>
+        </div>
+        <button class="w-textarea_tools__item item4 float_right"
+                @click="openTagDialog('interaction')">插入互动</button>
+      </el-tooltip>
+
 
 <!--      <button class="w-textarea_tools__item float_right"-->
 <!--        v-for="item in tools"-->

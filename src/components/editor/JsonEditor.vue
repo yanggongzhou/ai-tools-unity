@@ -157,7 +157,14 @@
              element-loading-text="模型动作加载中"
              element-loading-spinner="el-icon-loading"
              element-loading-background="rgba(0, 0, 0, 0.8)">
-          <span class="actionTitle">插入动作</span>
+          <el-tooltip  :open-delay="1000" placement="bottom" effect="dark">
+            <div slot="content">
+              <p class="center tip_title">动作标签</p>
+              <p class="center">注意文本中紧邻的 <br/> 动作标签只会执行最后一个哦!</p>
+            </div>
+            <span class="actionTitle">插入动作</span>
+          </el-tooltip>
+
           <el-button class="actionBtn" size="small" v-for="(val,ind) in actionShowList" :key="ind+'animation'">
             <div class="animation-name" @click="addAction(val)">{{val.label}}</div>
             <div class="animation-show" @click="previewAction(val)">
@@ -465,14 +472,16 @@
               id:self.getGuid()
             })
           }
-          if(param.interaction.isSupport){
-            positionTag.push({
-              isSupport:param.interaction.isSupport,
-              maximum:param.interaction.maximum,
-              type:"interaction",
-              index:contentBD.length,
-              id:self.getGuid()
-            })
+          if(param.interaction){
+            if(param.interaction.isSupport){
+              positionTag.push({
+                isSupport:param.interaction.isSupport,
+                maximum:param.interaction.maximum,
+                type:"interaction",
+                index:contentBD.length,
+                id:self.getGuid()
+              })
+            }
           }
           contentBD += param.content
           if(ind){
@@ -1052,11 +1061,11 @@
     background: #8FAEB3;
     position: relative;
   }
-.interval-tag{
-  position: absolute;
-  top: -44px;
-  right: 245px;
-}
+  .interval-tag{
+    position: absolute;
+    top: -44px;
+    right: 355px;
+  }
   .actionTitle{
     display: inline-block;
     background: #fff;
@@ -1071,7 +1080,7 @@
     font-weight: 600;
     width: 100px;
     letter-spacing: 1px;
-    cursor: no-drop;
+    cursor: help;
   }
   .actionBtn{
     font-weight: 400;
