@@ -176,20 +176,24 @@ button {
   color: #607D8B;
   border: 1px solid #607D8B;
 }
-.action{
-  /*background: #673AB7;*/
+.hudong{
   color: #673AB7;
   border: 1px solid #673AB7;
 }
+.action{
+  /*background: #673AB7;*/
+  color: #79de64;
+  border: 1px solid #79de64;
+}
 .tagImg{
   /*background: #cf9236;*/
-  color: #cf9236;
-  border: 1px solid #cf9236;
+  color: #30CBD7;
+  border: 1px solid #30CBD7;
 }
 .tagVideo{
   /*background: #009688;*/
-  color: #009688;
-  border: 1px solid #009688;
+  color: #6687FD;
+  border: 1px solid #6687FD;
 }
 
 input:-webkit-autofill , textarea:-webkit-autofill, select:-webkit-autofill {

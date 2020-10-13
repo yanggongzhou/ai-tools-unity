@@ -193,7 +193,6 @@
         }
       },
       styleFilter(val){
-
         let _content='';
         val.param.forEach(value=>{
           _content += value.content
@@ -457,11 +456,20 @@
         let positionTag = [];//相对带所有符号文本的标签位置和数据
         let txtIndCount=0;//计数器
         res.param.forEach((param,ind)=>{
-          //🌟🌟🌟🌟🌟第一步，统计总文本和推入间隔标签
+          //🌟🌟🌟🌟🌟第一步，统计总文本；推入间隔标签；推入互动标签
           if(param.intervalTime){
             positionTag.push({
               time:param.intervalTime,
               type:"interval",
+              index:contentBD.length,
+              id:self.getGuid()
+            })
+          }
+          if(param.interaction.isSupport){
+            positionTag.push({
+              isSupport:param.interaction.isSupport,
+              maximum:param.interaction.maximum,
+              type:"interaction",
               index:contentBD.length,
               id:self.getGuid()
             })
@@ -560,8 +568,19 @@
               // contentBDArr[val.index]=_actionDom+contentBDArr[val.index]
             }
           }else if(val.type==="interval"){
-            let _data = JSON.stringify({type:'interval', time:val.time}).replace(/"/g,"&quot;")
+            let _data = JSON.stringify({id:self.getGuid(),type:'interval', time:val.time}).replace(/"/g,"&quot;")
             let _intervalDom = `<wise id="`+val.id+`" data-obj="`+_data+`"><div class="jiange tagtag">间隔(`+val.time/1000+`s)<i class="el-icon-close" onclick="delTag(\``+val.id+`\`)"></i>&nbsp;</div></wise>`
+            if(contentBDArr[val.index]===undefined){
+              contentBDArr[val.index] = _intervalDom
+            }else{
+              let _txt = contentBDArr[val.index].split('')
+              _txt.splice(_txt.length-1,1,_intervalDom+_txt[_txt.length-1]);
+              contentBDArr[val.index] = _txt.join('');
+              // contentBDArr[val.index]=_intervalDom+contentBDArr[val.index]
+            }
+          }else if(val.type==="interaction"){
+            let _data = JSON.stringify({id:self.getGuid(),type:'interaction', maximum:val.maximum,isSupport:val.isSupport}).replace(/"/g,"&quot;")
+            let _intervalDom = `<wise id="`+val.id+`" data-obj="`+_data+`"><div class="hudong tagtag">互动(`+val.maximum+`)<i class="el-icon-close" onclick="delTag(\``+val.id+`\`)"></i>&nbsp;</div></wise>`
             if(contentBDArr[val.index]===undefined){
               contentBDArr[val.index] = _intervalDom
             }else{
@@ -656,7 +675,7 @@
                     "dismissTime": 0
                   }
                 })
-              }else if(msg.datasetObj.type==='interval'){
+              }else if(msg.datasetObj.type==='interval'||msg.datasetObj.type==='interaction'){
                 _intervalMessage.push(msg)
               }
             })
@@ -664,14 +683,28 @@
             let intervalArr= [{
               content:'',
               intervalTime: 0,
+              interaction:{
+               isSupport: false,
+               maximum:10
+              }
             }];//intervalArr间隔标签分段的文本数组
             _intervalMessage.forEach((val,ind)=>{
               intervalArr.push({
                 content:'',
                 intervalTime: 0,
+                interaction:{
+                  isSupport: false,
+                  maximum:10
+                }
               })
               intervalArr[ind].content = res.noTagText.slice(0,val.index);
-              intervalArr[ind+1].intervalTime = val.datasetObj.time
+              // intervalArr[ind+1].intervalTime = val.datasetObj.time
+              if(val.datasetObj.type==='interval'){
+                intervalArr[ind+1].intervalTime = val.datasetObj.time
+              }else if(val.datasetObj.type==='interaction'){
+                intervalArr[ind+1].interaction.isSupport = val.datasetObj.isSupport
+                intervalArr[ind+1].interaction.maximum = val.datasetObj.maximum
+              }
             })
             intervalArr[intervalArr.length-1].content = res.noTagText
             // console.log('文本数据分组',intervalArr)
@@ -688,7 +721,7 @@
               this.cutIntervalArr(arr)
             })
             // console.log('文本数据分组1',intervalArr1)
-            // console.log('裁剪数据区',this.cutArr)
+            console.log('裁剪数据区',this.cutArr)
             let _cutArr = JSON.parse(JSON.stringify(this.cutArr))
             _cutArr.forEach(item=>{
               item.forEach(val=>{
@@ -767,6 +800,32 @@
                 trig.index = _index;
               })
             })
+
+            //content数据整合——去除无效content；合并无效字符
+            let _params = JSON.parse(JSON.stringify(exoprtParams));
+            let _params2= [];
+            let _intervalTime=0;
+            let _isSuport = false;
+            let invalidContent = '';//无效字符
+            _params.forEach((val,ind)=>{
+              if(!val.content.replace(/[\ |\~|\`|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\-|\_|\+|\=|\||\\|\[|\]|\{|\}|\;|\:|\"|\'|\,|\<|\.|\>|\/|\?|\r\n]/g,"").match(/[\u4e00-\u9fa5\0-9]/g)){
+                _intervalTime += val.intervalTime
+                if(!_isSuport){_isSuport = val.interaction.isSupport}
+                invalidContent += val.content
+              }else {
+                val.content = invalidContent + val.content
+                val.intervalTime += _intervalTime
+                if(val.interaction.isSupport || _isSuport){//相连的两个互动标签期间无有效字符会只保留一个
+                  val.interaction.isSupport = true;
+                }
+                _params2.push(val)
+                _intervalTime = 0;
+                _isSuport = false;
+                invalidContent = '';
+              }
+            })
+            exoprtParams = JSON.parse(JSON.stringify(_params2));
+            // console.log('输出param2',exoprtParams)
             resolve({message:'json数据渲染成功',noTagText:res.noTagText,param:exoprtParams})
           })
         })
@@ -804,7 +863,11 @@
         // console.log('_index_index_index_index',_index)
         this.cutTxtArr.push({
           content:content.splice(0,_index).join(''),
-          intervalTime:0
+          intervalTime:0,
+          interaction:{
+            isSupport: false,
+            maximum:10
+          }
         })
         if(content.length>this.cutCount){
           this.cutTxt(content);
@@ -812,7 +875,11 @@
           if(content.length){
             this.cutTxtArr.push({
               content:content.join(''),
-              intervalTime:0
+              intervalTime:0,
+              interaction:{
+                isSupport: false,
+                maximum:10
+              }
             })
           }
         }
@@ -822,6 +889,8 @@
         this.cutTxtArr = []
         this.cutTxt(arr[0].content.split(''))
         this.cutTxtArr[0].intervalTime = arr[0].intervalTime;
+        this.cutTxtArr[0].interaction.isSupport = arr[0].interaction.isSupport;
+        this.cutTxtArr[0].interaction.maximum = arr[0].interaction.maximum;
         this.cutTxtArr.unshift(0, 1);
         Array.prototype.splice.apply(arr, this.cutTxtArr);
         this.cutArr.push(arr);
@@ -849,6 +918,9 @@
             this.videoVisible = false;
             this.imgVisible = true;
             break;
+          case 'interaction':
+            this.addInteraction();
+            break;
           case 'clean':
             this.$refs.testText.exportMessage().then(res=>{
               this.testData = res.noTagText
@@ -856,7 +928,19 @@
             })
         }
       },
-
+      //添加互动标签
+      addInteraction(){
+        let self = this;
+        let _id=this.getGuid()
+        let _data = {
+          type:'interaction',
+          isSupport:true,
+          maximum:10,
+          id:_id
+        }
+        let _text =  `<div class="hudong tagtag">互动(`+_data.maximum+`)<i class="el-icon-close" onClick="delTag(\``+_id+`\`)"></i>&nbsp;</div>`
+        this.$refs.testText.addTag(_text,_data)
+      },
       addTag (type,interval) {
         let self = this;
         let _id=this.getGuid()

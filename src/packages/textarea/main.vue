@@ -26,7 +26,8 @@
               @click="openTagDialog('img')">插入图片</button>
       <button class="w-textarea_tools__item item3 float_right"
               @click="openTagDialog('video')">插入视频</button>
-
+      <button class="w-textarea_tools__item item4 float_right"
+              @click="openTagDialog('interaction')">插入互动</button>
 
 <!--      <button class="w-textarea_tools__item float_right"-->
 <!--        v-for="item in tools"-->
@@ -109,7 +110,7 @@ export default {
     }
   },
   mounted() {
-    window.openTagWindow = this.openTagDialog
+    // window.openTagWindow = this.openTagDialog
     let self = this;
     //删除标签
     window.delTag = function(id){
@@ -546,6 +547,10 @@ export default {
     }
     .item3{
       background-color: #6687FD;
+      margin-left: 12px;
+    }
+    .item4{
+      background: #673AB7;
     }
     &__text {
       display: inline-block;
