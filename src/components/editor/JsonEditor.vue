@@ -834,7 +834,7 @@
               }
             })
             exoprtParams = JSON.parse(JSON.stringify(_params2));
-            // console.log('输出param2',exoprtParams)
+            console.log('输出param2',exoprtParams)
             resolve({message:'json数据渲染成功',noTagText:res.noTagText,param:exoprtParams})
           })
         })

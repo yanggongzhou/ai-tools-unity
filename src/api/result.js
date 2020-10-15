@@ -4,7 +4,6 @@ export const resultJSON = {
     "url": "zip下载地址",
     "name": "",
     "background":"",
-    "auto":false,
     "avatar":{
       "h5":"",
       "app":"",

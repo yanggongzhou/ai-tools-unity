@@ -48,8 +48,10 @@
     methods:{
       //预览
       previewBtn(val){
+        UnityPreviewCancel();
         if(this.previewReady){
           this.previewData = val;
+          console.log('预览脚本',this.previewData)
           UnityChangeAvatar(val.avatar.unity);
           this.previewReady = false;
         }else{
