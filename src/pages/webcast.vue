@@ -110,26 +110,15 @@
             </div>
           <div class="handleWebcastBtnBox">
             <button class='handleWebcastBtn' v-if="playScriptData.length" :class="{'disabled': isShowAllList}" @click='handleWebcast'>{{webcastBtnTxt}}</button>
-            <el-dialog
-              custom-class="webcastDialog"
-              top="10vh"
-              width="700px"
-              :before-close="webcastPreClose"
-              :visible.sync="webcastPreDialog">
-              <div class="previewbox">
-                <webcastDialog ref="webcastDialogRef"></webcastDialog>
-              </div>
-            </el-dialog>
+
           </div>
         </div>
     </div>
 </template>
 <script>
-  import webcastDialog from '../components/webcast-dialog'
 import Sortable from 'sortablejs';
 import { requestServices } from '../api/api';
 import axios from "axios";
-  import {resultJSON} from "../api/result";
 export default {
     filters: {},
     data() {
@@ -177,7 +166,6 @@ export default {
             isAddedScript: false,
 
             checkAllDisabled: false,
-            webcastPreDialog:false,
 
           previewReady:true,
           previewData:{
@@ -211,11 +199,6 @@ export default {
             this.$message.error('加载资源失败，请重试')
           }
           this.previewReady = true;
-        },
-
-
-        webcastPreClose(done){
-          done();
         },
 
         // 获取播放剧本列表
@@ -479,9 +462,6 @@ export default {
       //跳转页面后强制结束播放状态
       UnityPreviewCancel();
     },
-    components:{
-      webcastDialog
-    }
 }
 </script>
 <style scoped lang='less'>

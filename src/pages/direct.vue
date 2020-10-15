@@ -136,6 +136,7 @@
   import axios from 'axios'
   import {resultJSON} from "../api/result";
   import {requestServices} from "../api/api";
+  import interaction from '../components/interaction/interaction-1';
   let that;
   export default {
     beforeCreate() {

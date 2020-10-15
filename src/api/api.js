@@ -122,4 +122,6 @@ export const requestServices = {
   getTempList :(params) => apiInstance.post(`/guide_shopping/client/get_gs_words`, params),
   addTemp:(params)=>apiInstance.post(`/guide_shopping/client/add_gs_word`,params),
 
+  // 获取话术列表
+  getWords: (params)=>apiInstance.post(`/guide_shopping/client/get_words`,params),
 }
