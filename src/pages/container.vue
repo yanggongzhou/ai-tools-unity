@@ -126,7 +126,7 @@
             this.$message.error('请确认各段落是否含有有效文本！')
             return
           }
-          UnityPreview(resultJSON.resultJsonObj.avatar.unity,JSON.stringify(_JsonEditorRef.ScriptList))
+          UnityPreview(resultJSON.resultJsonObj.avatar.unity,JSON.stringify(_JsonEditorRef.ScriptList),"True","False")
           self.previewReady = false;
         })
       },

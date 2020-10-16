@@ -333,7 +333,7 @@
             this.$message.error('请确认当前段落含有有效文字！')
             return false
           }
-          UnityPreview(val.avatar.unity,JSON.stringify([val]))
+          UnityPreview(val.avatar.unity,JSON.stringify([val]),"True","False")
         }else{
           this.exportJson().then((data)=>{
             let _jsonArr = JSON.parse(JSON.stringify(resultJSON.resultJsonObj))
@@ -346,7 +346,7 @@
               this.$message.error('请确认当前段落含有有效文字！')
               return false
             }
-            UnityPreview(val.avatar.unity,JSON.stringify([_jsonArr]))
+            UnityPreview(val.avatar.unity,JSON.stringify([_jsonArr]),"True","False")
 
             console.log( this.cutTxtArr,this.cutArr)
           })

@@ -1,16 +1,35 @@
 <template>
   <div class="common_content">
-    <div class="titleBox">
+
+    <div class="titleBox" style="margin-bottom: 10px">
       <span class="titleSpan">直播剧本</span>
       <button class="backNormal backNormal2" @click="$router.back()">
         <span class="_icon">< </span>
         <span>返回</span>
       </button>
     </div>
+
+    <div class="interaction_Tip">
+      <el-popover
+        placement="left-start"
+        width="400"
+        trigger="hover">
+        <div class="interaction_pop">
+          <p>互动模式</p>
+          <p>1、开启后，虚拟主播可以与消费者互动，在互动时间时回答用户提问、欢迎用户进入直播间</p>
+          <p>2、目前虚拟主播互动时间仅在每个剧本结束后进入互动模式时间，当互动模式结束后，进入下个剧本直播。</p>
+          <p>3、开启互动模式必须结合用户弹幕问题监测软件共同使用，且提前设定好问题和答案，否则互动模式无效。（ <span class='#835BFF'>弹幕问题监控软件及问答配置需联系商务处理</span> ）</p>
+        </div>
+        <span slot="reference" style="cursor: help;position: relative;top: 4px">互动模式</span>
+      </el-popover>
+      <el-switch v-model="isOpenInteractiveMode" active-color='#835BFF' style='margin-left:8px;margin-top:6px;' :disabled="isAutoPlayBtn"></el-switch>
+    </div>
+
     <div class="dialogBox">
       <div class="clearfix">
         <div class="selectBox float_left">
           <el-radio
+            :disabled="isAutoPlayBtn"
             v-for="(val,ind) in allScriptList"
             :key="ind+'model'"
             @change="scriptChange"
@@ -24,6 +43,7 @@
             </div>
           </el-radio>
         </div>
+
         <!--      单个剧本内容-->
         <div class="contentBox float_left">
           <div class="content-item" v-for="(val,ind) in contentList" :key="ind+'content'"   :style="ind | styleFilter3">
@@ -160,7 +180,6 @@
       },
       styleFilter(ind){
         if(that.queueContentItem.length){
-
           if(ind===that.queueContentItem[0].contentIndex&&that.allScriptIndex===that.queueContentItem[0].allScriptIndex){
             return {
               'display': 'inline-block',
@@ -267,11 +286,11 @@
         queueList:[],//排队数据，最多3个
         queueContentItem:[],//段落排队数据，最多1个
 
-        isInnerJsonInteraction: false,
+        isInnerJsonInteraction: false,//是否为脚本内互动
         isUnity: true, // 是否为Unity
 
-        interactionModel:false,//是否互动
-        webInteractionModel:false,//是否web互动
+        // interactionModel:false,//是否互动
+        // webInteractionModel:false,//是否web互动
         isFirstScript:false,//是否是第一个脚本，来处理是否需要开场语
 
         isOpenInteractiveMode:true //- 是否打开了互动模式
@@ -375,7 +394,7 @@
             }
           })
         })
-        UnityPreview(_unity,JSON.stringify([_json]),"False")
+        UnityPreview(_unity,JSON.stringify([_json]),"False","False")
       },
       //播放互动标签-脚本内互动
       WebInteractionStart(){
@@ -433,7 +452,9 @@
           if(this.isFirstScript){
             this.playWelcomeWords();
           }else{
-            UnityPreview(this.previewData[0].avatar.unity,JSON.stringify(this.previewData))
+            let _state = "True";
+            this.isAutoPlayBtn?_state="False":_state="True"
+            UnityPreview(this.previewData[0].avatar.unity,JSON.stringify(this.previewData),_state,"True")
           }
         }else if(state==='False'){
           this.previewReady = true;
@@ -460,8 +481,6 @@
         if(this.allScriptPlayIndex+1<this.allScriptList.length){
           this.allScriptPlayIndex+=1;
           this.allScriptIndex = this.allScriptPlayIndex;
-
-          //---------------------剧本内互动待处理
         }else{
           this.allScriptIndex=0;
           this.allScriptPlayIndex = 0;
@@ -470,7 +489,10 @@
 
         this.$message.info('播放剧本'+(this.allScriptPlayIndex+1)+'--'+this.allScriptList[this.allScriptPlayIndex].name)
         this.previewData = this.allScriptList[this.allScriptPlayIndex].scriptList;
-        UnityPreview(this.previewData[0].avatar.unity,JSON.stringify(this.previewData))
+
+        let _state = "True"
+        this.isOpenInteractiveMode?_state = "False":_state="True"
+        UnityPreview(this.previewData[0].avatar.unity,JSON.stringify(this.previewData),_state,"True")
         // tolist
         this.previewReady = true;
         this.isPlaying = true;
@@ -479,7 +501,9 @@
       //对应于UnityInteractionEnd，结束状态返回继续播放
       WebInteractionEnd(){
         if(this.isFirstScript){
-          UnityPreview(this.previewData[0].avatar.unity,JSON.stringify(this.previewData))
+          let _state = "False"
+          this.isOpenInteractiveMode?_state = "False":_state="True"
+          UnityPreview(this.previewData[0].avatar.unity,JSON.stringify(this.previewData),_state,"True")
           this.isFirstScript=false;
         }else{
           UnityPreviewContinue(this.previewData[0].avatar.unity);
@@ -495,7 +519,18 @@
               // 互动模式处理
               this.handleInacLogic(); // 已经开启脚本内互动模式，正常处理互动流程
             } else {
-              this.AutoPlayEvent();
+              //---------------------剧本之间的互动
+              if((this.isOpenInteractiveMode || this.isEnterInteraction) && !this.interactionModeIsEnd) {
+                // 打开互动模式，互动模式处理
+                this.handleInacLogic(); // 如果未开启脚本外互动则开启，如果已开启则进行互动流程
+              }else if(!this.isOpenInteractiveMode && this.isOpenSceneEnd && !this.isPlayingEndWords) {
+                // 关闭互动模式，场景话术的衔接语为开启状态
+                this.playSceneEndWords();
+              }else {
+                // 播放下一个脚本
+                this.interactionModeIsEnd = false;
+                this.AutoPlayEvent();
+              }
               // UnityInteractionEnd(this.previewData[0].avatar.unity);
             }
           // }
@@ -513,7 +548,7 @@
           }else{
             if(this.queueContentItem.length){
               let _Obj  = this.queueContentItem.shift();
-              UnityPreview(_Obj.name,_Obj.item)
+              UnityPreview(_Obj.name,_Obj.item,'True','True')
               //当前播放脚本内容的定位信息
               this.nowContentIndex = _Obj.contentIndex;
               this.nowAllScriptIndex = _Obj.allScriptIndex;
@@ -601,6 +636,8 @@
       },
       //预览
       previewBtn(val,ind,allScriptIndex,bool){
+        if(this.isAutoPlayBtn){return false}
+
         // UnityPreviewCancel();
         if(!this.isPlaying){
           if(this.previewReady){
@@ -1044,5 +1081,17 @@
   .disabled-icon2{
     background: transparent!important;
     cursor: no-drop !important;
+  }
+
+  .interaction_Tip{
+    text-align: right;
+    font-size: 13px;
+    color: #616367;
+    height: 30px;
+    width: 750px;
+    margin: 10px auto;
+  }
+  .interaction_pop{
+    font-size: 12px;
   }
 </style>

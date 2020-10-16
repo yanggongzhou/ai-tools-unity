@@ -1,113 +1,126 @@
 <template>
     <div id="webcast">
         <div class="common_content">
-            <div class="scriptList">
-              <div class="titleBox">
-                <span class="titleSpan">剧本列表</span>
-                <button class="backNormal backNormal2" @click="$router.back()">
-                  <span class="_icon">< </span>
-                  <span>返回</span>
-                </button>
-              </div>
-              <div style="text-align: right">
+
+          <div class="scriptList">
+            <div class="titleBox">
+              <span class="titleSpan">剧本列表</span>
+              <button class="backNormal backNormal2" @click="$router.back()">
+                <span class="_icon">< </span>
+                <span>返回</span>
+              </button>
+            </div>
+            <div class="tabs">
+              <span class="tab" :class="{'selected': currentSetting==1}" @click='checkSetting(1)'>剧本设置</span>
+              <span class="tab" :class="{'selected': currentSetting==2}" @click='checkSetting(2)'>场景话术</span>
+            </div>
+            <div v-if='currentSetting==1'>
+              <div style="text-align: right" class="clearfix">
                 <button class='addScript' type='primary' @click='addScript'>添加剧本</button>
               </div>
 
-                <el-table size="mini" class='playScripts' row-key="sortId" :data='playScriptData' style='width:100%' empty-text='暂未添加剧本' height='388' max-height='388' >
-                    <el-table-column align="center" label="排序" width='100'>
-                        <template slot-scope="scope">
-<!--                            <i class="el-icon-video-camera-solid" v-if='isPlayingIdx==scope.$index+1'></i>-->
-                            <span>{{scope.$index+1}}</span>
-                            <span style='display:none;'>{{scope.row.sortId}}</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column align="center" label="剧本名称">
-                        <template slot-scope="scope">
-                            <span>{{scope.row.name}}</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column align="center" label="关联IP形象">
-                        <template slot-scope="scope">
-                            <span>{{scope.row.avatar_name}}</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column align="center" label="剧本段数">
-                        <template slot-scope="scope">
-                            <span>{{scope.row.paragraph_number}}</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column align="center" label="操作" :render-header="renderHeader" width='120' >
-                        <template slot-scope="scope">
-                            <el-button @click='handleDelete(scope.$index, scope.row.id)' type="text" size="small">移除</el-button>
-                        </template>
-                    </el-table-column>
-                </el-table>
-                <!-- 剧本列表 -->
-                <transition name='slide'>
-                    <div class="allScriptList" v-if='isShowAllList'>
-                        <h3>剧本列表</h3>
+              <el-table size="mini" class='playScripts' row-key="sortId" :data='playScriptData' style='width:100%' empty-text='暂未添加剧本' height='388' max-height='388' >
+                <el-table-column align="center" label="排序" width='100'>
+                  <template slot-scope="scope">
+                    <!--                            <i class="el-icon-video-camera-solid" v-if='isPlayingIdx==scope.$index+1'></i>-->
+                    <span>{{scope.$index+1}}</span>
+                    <span style='display:none;'>{{scope.row.sortId}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column align="center" label="剧本名称">
+                  <template slot-scope="scope">
+                    <span>{{scope.row.name}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column align="center" label="关联IP形象">
+                  <template slot-scope="scope">
+                    <span>{{scope.row.avatar_name}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column align="center" label="剧本段数">
+                  <template slot-scope="scope">
+                    <span>{{scope.row.paragraph_number}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column align="center" label="操作" :render-header="renderHeader" width='120' >
+                  <template slot-scope="scope">
+                    <el-button @click='handleDelete(scope.$index, scope.row.id)' type="text" size="small">移除</el-button>
+                  </template>
+                </el-table-column>
+              </el-table>
+              <!-- 剧本列表 -->
+              <transition name='slide'>
+                <div class="allScriptList" v-if='isShowAllList'>
+                  <h3>剧本列表</h3>
 
-                        <div class="filter">
-                            <span>关联IP形象：</span>
-                            <el-select class="filterOptions" @change='fetchAllScripts' v-model='anchorRoleValue'>
-                                <el-option
-                                    v-for='(role,idx) in anchorRoles'
-                                    :key='idx'
-                                    :label='role.label'
-                                    :value='role.value'
-                                ></el-option>
-                            </el-select>
-                            <el-button class='search_btn' @click="fetchAllScripts">查询</el-button>
-                            <el-input  class='search_ipt' v-model="searchScriptName" placeholder="剧本名称" clearable></el-input>
-                        </div>
+                  <div class="filter">
+                    <span>关联IP形象：</span>
+                    <el-select class="filterOptions" @change='fetchAllScripts' v-model='anchorRoleValue'>
+                      <el-option
+                        v-for='(role,idx) in anchorRoles'
+                        :key='idx'
+                        :label='role.label'
+                        :value='role.value'
+                      ></el-option>
+                    </el-select>
+                    <el-button class='search_btn' @click="fetchAllScripts">查询</el-button>
+                    <el-input  class='search_ipt' v-model="searchScriptName" placeholder="剧本名称" clearable></el-input>
+                  </div>
 
-                        <el-table size="mini" border :data='scriptData' style='width:100%' empty-text='暂无剧本' max-height='250' v-if='scriptData.length!=0'>
-                            <el-table-column label="选择" align="center" width='80'>
-                                <template slot-scope="scope">
-                                    <el-checkbox size="mini" v-model="scope.row.isChecked" :disabled="scope.row.isDisabled" @change='handleCheckScript(scope.$index)'></el-checkbox>
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="剧本名称" align="center">
-                                <template slot-scope="scope">
-                                    <span>{{scope.row.name}}</span>
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="关联IP形象" align="center">
-                                <template slot-scope="scope">
-                                    <span>{{scope.row.avatar_name}}</span>
-                                </template>
-                            </el-table-column>
-<!--                            <el-table-column label="剧本时长" align="center">-->
-<!--                                <template slot-scope="scope">-->
-<!--                                    <span>{{handleScriptTime(scope.row.time)}}</span>-->
-<!--                                </template>-->
-<!--                            </el-table-column>-->
-                            <el-table-column label="剧本段数" align="center">
-                                <template slot-scope="scope">
-                                    <span>{{scope.row.paragraph_number}}</span>
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="操作" align="center" width='100'>
-                                <template slot-scope="scope">
-                                    <el-button class="previewBtn" @click='handlePreview(scope.row)' type="text" size="mini">预览</el-button>
-                                </template>
-                            </el-table-column>
-                        </el-table>
-                        <div class="noScript" v-if='scriptData.length==0'>
-                            暂无剧本，去 <span @click='gotopage'>创建剧本</span>
-                        </div>
+                  <el-table size="mini" border :data='scriptData' style='width:100%' empty-text='暂无剧本' max-height='250' v-if='scriptData.length!=0'>
+                    <el-table-column label="选择" align="center" width='80'>
+                      <template slot-scope="scope">
+                        <el-checkbox size="mini" v-model="scope.row.isChecked" :disabled="scope.row.isDisabled" @change='handleCheckScript(scope.$index)'></el-checkbox>
+                      </template>
+                    </el-table-column>
+                    <el-table-column label="剧本名称" align="center">
+                      <template slot-scope="scope">
+                        <span>{{scope.row.name}}</span>
+                      </template>
+                    </el-table-column>
+                    <el-table-column label="关联IP形象" align="center">
+                      <template slot-scope="scope">
+                        <span>{{scope.row.avatar_name}}</span>
+                      </template>
+                    </el-table-column>
+                    <!--                            <el-table-column label="剧本时长" align="center">-->
+                    <!--                                <template slot-scope="scope">-->
+                    <!--                                    <span>{{handleScriptTime(scope.row.time)}}</span>-->
+                    <!--                                </template>-->
+                    <!--                            </el-table-column>-->
+                    <el-table-column label="剧本段数" align="center">
+                      <template slot-scope="scope">
+                        <span>{{scope.row.paragraph_number}}</span>
+                      </template>
+                    </el-table-column>
+                    <el-table-column label="操作" align="center" width='100'>
+                      <template slot-scope="scope">
+                        <el-button class="previewBtn" @click='handlePreview(scope.row)' type="text" size="mini">预览</el-button>
+                      </template>
+                    </el-table-column>
+                  </el-table>
+                  <div class="noScript" v-if='scriptData.length==0'>
+                    暂无剧本，去 <span @click='gotopage'>创建剧本</span>
+                  </div>
 
-                        <div class="chooseBox">
-                            <!-- :indeterminate='isChooseAllScript'  -->
-                            <el-checkbox v-model='checkAll' :disabled="checkAllDisabled" @change='handleCheckAll' v-if='scriptData.length!=0'>全选</el-checkbox>
-                            <span>
-                                <button class='cancelChoose' @click="cancelChoose">取消</button>
-                                <button class='confirmChoose' :class="{'disabled': !isAddedScript}" v-if='scriptData.length!=0' type="primary" @click="confirmChoose">确定</button>
-                            </span>
-                        </div>
-                    </div>
-                </transition>
+                  <div class="chooseBox">
+                    <!-- :indeterminate='isChooseAllScript'  -->
+                    <el-checkbox v-model='checkAll' :disabled="checkAllDisabled" @change='handleCheckAll' v-if='scriptData.length!=0'>全选</el-checkbox>
+                    <span>
+                              <button class='cancelChoose' @click="cancelChoose">取消</button>
+                              <button class='confirmChoose' :class="{'disabled': !isAddedScript}" v-if='scriptData.length!=0' type="primary" @click="confirmChoose">确定</button>
+                          </span>
+                  </div>
+                </div>
+              </transition>
             </div>
+
+            <div v-if='currentSetting==2' class="sceneWords">
+              <sceneWords></sceneWords>
+            </div>
+
+
+          </div>
           <div class="handleWebcastBtnBox">
             <button class='handleWebcastBtn' v-if="playScriptData.length" :class="{'disabled': isShowAllList}" @click='handleWebcast'>{{webcastBtnTxt}}</button>
 
@@ -119,10 +132,16 @@
 import Sortable from 'sortablejs';
 import { requestServices } from '../api/api';
 import axios from "axios";
+import sceneWords from '../components/sceneWords/sceneWords';
 export default {
+    components:{
+      sceneWords
+    },
     filters: {},
     data() {
         return {
+            currentSetting: 1, // 1-剧本设置 2-场景话术
+
             playScriptData: [],
             playScriptID: [],
             webcastBtnTxt: '开始直播',
@@ -184,9 +203,13 @@ export default {
         this.fetchAllScripts();
     },
     methods: {
+        checkSetting(_id) {
+          this.currentSetting = _id;
+        },
+
         WebSelectAvatarState(state){
           if(state==='True'){
-            UnityPreview(this.previewData.name,this.previewData.script)
+            UnityPreview(this.previewData.name,this.previewData.script,"True","True")
           }else if(state==='False'){
             this.$message.error('切换角色失败，请重试')
             // this.previewReady = false;
@@ -465,6 +488,30 @@ export default {
 }
 </script>
 <style scoped lang='less'>
+  .tabs {
+    width: 204px;
+    margin-bottom: 10px;
+    padding: 4px;
+    box-sizing: border-box;
+    background:#E3E0F2;
+    color: #835BFF;
+    font-size: 14px;
+    border-radius: 4px;
+    .tab {
+      display: inline-block;
+      padding: 6px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      &.selected {
+        background: #fff;
+      }
+    }
+  }
+  .sceneWords {
+    /*width: 770px;*/
+    /*height: 710px;*/
+  }
+
   /deep/.el-dialog__header {
     padding: 0px!important;
   }

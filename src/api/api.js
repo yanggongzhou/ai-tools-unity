@@ -126,4 +126,10 @@ export const requestServices = {
   getWords: (params)=>apiInstance.post(`/guide_shopping/client/get_words`,params),
   // 获取弹幕消息
   getChat: (params) => apiInstance.post(`autosay/client//DKAutoSay_GetTask2`, params),
+
+  // 新增话术
+  addWords: (params)=>apiInstance.post(`/guide_shopping/client/add_gs_word`,params),
+
+  // 编辑/删除话术/修改话术状态
+  editWrods: (params)=>apiInstance.post(`/guide_shopping/client/edit_gs_word`,params),
 }

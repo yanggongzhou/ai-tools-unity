@@ -60,7 +60,7 @@
       },
       WebSelectAvatarState(state){
         if(state==='True'){
-          UnityPreview(this.previewData.avatar.unity,JSON.stringify([this.previewData]))
+          UnityPreview(this.previewData.avatar.unity,JSON.stringify([this.previewData]),"True","False")
         }else if(state==='False'){
           this.$message.error('切换角色失败，请重试')
           this.previewReady = true;

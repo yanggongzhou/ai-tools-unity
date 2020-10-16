@@ -1,0 +1,307 @@
+<template>
+    <div class="container">
+        <span class="tips">{{tips[type]}}</span>
+        <div>
+            <button class="addBtn" @click='handleAddBtn'>+新增</button>
+            <span class="addTips">最多创建10条，开启多个话术时，随机播放一个</span>
+            <div class="listWrap">
+                <div v-for='(item, idx) in list' :key='idx' class="list">
+                    <el-switch class="switch" v-model="item.switch==0" active-color="#835BFF" inactive-color="#ccc" @change='handleSwitch(item)'></el-switch>
+                    <span class="words">{{item.content}}</span>
+                    <span class="edit" @click='handleEdit(item)'>编辑</span>
+                    <span class="center"></span>
+                    <span class="delete" @click='handleDel(item)'>删除</span>
+                </div>
+            </div>
+            <div v-if='isOpenAddDialog' class="addDialog">
+                <el-input
+                    type="textarea"
+                    placeholder="输入话术文字"
+                    v-model="iptWordsTxt"
+                    maxlength="40"
+                    show-word-limit
+                    @input='hanleIptTxt'
+                    ref='iptWords'
+                ></el-input>
+                <p class="dialogTips">最多可输入40个字</p>
+                <span class="dialog-footer">
+                    <button class="cancel" @click="cancelAdd" >取消</button>
+                    <button class="confirm" @click="confirmAdd" type='primary' >确认添加</button>
+                </span>
+            </div>
+
+            <div v-if='isShowDelDialog' class="delDialog">
+                <i class="el-icon-close" @click='cancelDel'></i>
+                <i class="el-icon-warning-outline" style='font-size:42px;color:#7455FF;margin-bottom:18px;font-weight:600;'></i>
+                <div>是否删除话术？</div>
+                <span slot="footer" class="dialog-footer">
+                    <el-button class="cancel" @click="cancelDel">取 消</el-button>
+                    <el-button class="confirm" type="primary" @click="confirmDel">确 定</el-button>
+                </span>
+            </div>
+        </div>
+        <!-- <span v-for="(item,idx) in list" :key='idx'>{{item.content}}</span> -->
+    </div>
+</template>
+<script>
+export default {
+    props: {
+        type: {
+            type: String,
+            default: ''
+        },
+        list: {
+            type: Array,
+            default: []
+        },
+        addWords: {
+            type: Function,
+            default: () => {}
+        }
+    },
+    data() {
+        return {
+            tips: {
+                welcome: '设置直播开播的开场语话术',
+                endwords: '设置不同剧本间切换时的衔接话术'
+            },
+            state: '',
+            wordsId: '',
+            iptWordsTxt: '',
+            isOpenAddDialog: false,
+            isShowDelDialog: false
+        }
+    },
+    methods: {
+        hanleIptTxt() {
+            this.iptWordsTxt = this.iptWordsTxt.replace(/[^\u4E00-\u9FA5\da-zA-Z]/g,'')
+        },
+        handleAddBtn() {
+            this.isOpenAddDialog = true;
+            this.$nextTick(()=>{
+                this.$refs.iptWords.focus()
+            })
+            this.state = 'add';
+        },
+        handleEdit(_item) {
+            this.isOpenAddDialog = true;
+            this.iptWordsTxt = _item.content;
+            this.wordsId = _item.id;
+            this.state = 'edit';
+            this.$nextTick(()=>{
+                this.$refs.iptWords.focus()
+            })
+        },
+        cancelAdd() {
+            this.isOpenAddDialog = false;
+            this.iptWordsTxt = '';
+            this.state = '';
+        },
+        async confirmAdd() {
+            this.isOpenAddDialog = false;
+            switch(this.state) {
+                case 'add':
+                    await this.$emit('addWords', this.type, this.iptWordsTxt);
+                    break;
+                case 'edit':
+                    await this.$emit('editWords', this.type, {content: this.iptWordsTxt, gsw_id: this.wordsId}, '编辑')
+                    break;
+            }
+            this.iptWordsTxt = '';
+            this.wordsId = '';
+        },
+        handleDel(_item) {
+            this.isShowDelDialog = true;
+            this.wordsId = _item.id;
+        },
+        cancelDel() {
+            this.isShowDelDialog = false;
+            this.wordsId = '';
+        },
+        async confirmDel() {
+            this.isShowDelDialog = false;
+            await this.$emit('editWords', this.type, {gsw_id: this.wordsId, status: 1}, '删除');
+            this.wordsId = '';
+        },
+        handleSwitch(_item) {
+            let _switch = _item.switch==0?1:0;
+            this.$emit('editWords', this.type, {gsw_id: _item.id, switch: _switch}, '状态切换');
+        }
+    }
+}
+</script>
+<style>
+    .el-dialog__header {
+        padding: 0!important;
+        /* display: none; */
+    }
+    .el-textarea__inner {
+        height: 100px;
+    }
+</style>
+<style scoped lang='less'>
+    span {
+        display: inline-block;
+    }
+    .container {
+        position: relative;
+        width: 100%;
+        height: 100%;
+    }
+    .tips {
+        padding: 0 12px;
+        height: 20px;
+        background: #F1F1F1;
+        border-radius: 10px;
+        color: #666;
+        font-size: 10px;
+        line-height: 20px;
+        margin-bottom: 12px;
+    }
+    .addBtn {
+        width: 64px;
+        height: 24px;
+        border-radius: 12px;
+        border: 1px solid #835BFF;
+        color: #835BFF;
+        font-size: 12px;
+        background: #fff;
+        cursor: pointer;
+    }
+    .addTips {
+        color: #999999;
+        font-size: 12px;
+        margin-left: 12px;
+    }
+    .listWrap {
+        height: 264px;
+        margin: 18px auto;
+        overflow-y: scroll;
+    }
+    .list {
+        position: relative;
+        min-height: 58px;
+        background: #F9F7FF;
+        border-radius: 6px;
+        border: 1px solid #835BFF;
+        margin-bottom: 12px;
+        box-sizing: border-box;
+        padding: 0 30px 0 16px;
+    }
+    .switch {
+        position: absolute;
+        top: 50%;
+        transform: translate(0, -50%);
+        margin-right: 14px;
+    }
+    .words {
+        position: absolute;
+        left: 70px;
+        top: 50%;
+        transform: translate(0, -50%);
+        width: 520px;
+        color: #333;
+        font-size: 16px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+    }
+    .edit {
+        position: absolute;
+        right: 80px;
+        top: 50%;
+        transform: translate(0, -50%);
+        color: #835BFF;
+        font-size: 14px;
+        cursor: pointer;
+    }
+    .center {
+        position: absolute;
+        right: 70px;
+        top: 50%;
+        transform: translate(0, -50%);
+        background: #D4C6FF;
+        width: 1px;
+        height: 10px;
+    }
+    .delete {
+        position: absolute;
+        right: 30px;
+        top: 50%;
+        transform: translate(0, -50%);
+        color: #FB5656;
+        font-size: 14px;
+        cursor: pointer;
+    }
+    .addDialog {
+        position: absolute;
+        top: 20%;
+        left: 50%;
+        transform: translate(-50%, 0);
+        width: 480px;
+        height: 220px;
+        background: #fff;
+        box-shadow: 0px 8px 36px 21px rgba(124, 124, 124, 0.06), 0px 0px 2px 0px rgba(0, 0, 0, 0.28), 0px 2px 28px 0px rgba(0, 0, 0, 0.19);
+        border-radius: 4px;
+        padding: 12px;
+        box-sizing: border-box;
+        .dialog-footer {
+            margin-top: 30px;
+            float: right;
+        }
+    }
+    .dialogTips {
+        color: #999999;
+        font-size: 12px;
+        margin-top: 8px;
+    }
+    .cancel {
+        color: #979797;
+        width: 92px;
+        height: 34px;
+        border-radius: 17px;
+        opacity: 0.7;
+        border: 1px solid #979797;
+        background: #fff;
+        cursor: pointer;
+    }
+    .confirm {
+        color: #FFFFFF;
+        width: 94px;
+        height: 34px;
+        background: #7455FF;
+        border-radius: 17px;
+        margin-left: 12px;
+        cursor: pointer;
+    }
+    .delDialog {
+        width: 392px;
+        height: 220px;
+        position: absolute;
+        top: 20%;
+        left: 50%;
+        transform: translate(-50%, 0);
+        background: #fff;
+        box-shadow: 0px 8px 36px 21px rgba(124, 124, 124, 0.06), 0px 0px 2px 0px rgba(0, 0, 0, 0.28), 0px 2px 28px 0px rgba(0, 0, 0, 0.19);
+        border-radius: 4px;
+        text-align: center;
+        i {
+            margin: 36px auto 16px;
+            &.el-icon-close {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                margin: 0;
+                cursor: pointer;
+            }
+        }
+        div {
+            margin-bottom: 42px;
+        }
+        .confirm {
+            margin-left: 128px;
+        }
+    }
+</style>
