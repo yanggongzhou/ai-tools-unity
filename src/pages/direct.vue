@@ -462,7 +462,6 @@
           this.allScriptIndex = this.allScriptPlayIndex;
 
           //---------------------剧本内互动待处理
-
         }else{
           this.allScriptIndex=0;
           this.allScriptPlayIndex = 0;
