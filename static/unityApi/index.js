@@ -47,7 +47,12 @@ function UnityPreviewContinue(avatarName) {
   console.log('unity继续播放',avatarName)
 }
 
-//
+//unity互动播放结束
 function UnityInteractionEnd(avatarName) {
   console.log('unity互动播放结束',avatarName)
+}
+
+//unity互动播放开始
+function UnityInteractionStart(avatarName) {
+  console.log('unity互动播放开始',avatarName)
 }

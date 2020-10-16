@@ -292,6 +292,7 @@
         // interactionModel:false,//是否互动
         // webInteractionModel:false,//是否web互动
         isFirstScript:false,//是否是第一个脚本，来处理是否需要开场语
+        isOutInteraction:false,//是否脚本外互动
 
         isOpenInteractiveMode:true //- 是否打开了互动模式
 
@@ -400,9 +401,13 @@
       WebInteractionStart(){
         // this.interactionModel = true;
         // this.webInteractionModel = true;
-
-        this.isInnerJsonInteraction = true; // 将是否为脚本内互动设为 true
-        this.openInnerJsonInac(); // 开启脚本内互动模式
+        if(!this.isOutInteraction){
+          this.isInnerJsonInteraction = true; // 将是否为脚本内互动设为 true
+          this.openInnerJsonInac(); // 开启脚本内互动模式
+        }else{
+          // 打开互动模式，互动模式处理
+          this.handleInacLogic(); // 如果未开启脚本外互动则开启，如果已开启则进行互动流程
+        }
       },
       //互动结束回调
       handleInacEnd(){
@@ -506,7 +511,11 @@
           UnityPreview(this.previewData[0].avatar.unity,JSON.stringify(this.previewData),_state,"True")
           this.isFirstScript=false;
         }else{
-          UnityPreviewContinue(this.previewData[0].avatar.unity);
+          if(this.isOutInteraction){
+           this.AutoPlayEvent();
+          }else{
+            UnityPreviewContinue(this.previewData[0].avatar.unity);
+          }
         }
         // this.interactionModel = false;
       },
@@ -521,15 +530,21 @@
             } else {
               //---------------------剧本之间的互动
               if((this.isOpenInteractiveMode || this.isEnterInteraction) && !this.interactionModeIsEnd) {
-                // 打开互动模式，互动模式处理
-                this.handleInacLogic(); // 如果未开启脚本外互动则开启，如果已开启则进行互动流程
+                            if(this.isOutInteraction){
+                              // 打开互动模式，互动模式处理
+                              this.handleInacLogic(); // 如果未开启脚本外互动则开启，如果已开启则进行互动流程
+                            }else{
+                              UnityInteractionStart(this.previewData[0].avatar.unity);
+                              this.isOutInteraction = true;//脚本外互动
+                            }
               }else if(!this.isOpenInteractiveMode && this.isOpenSceneEnd && !this.isPlayingEndWords) {
                 // 关闭互动模式，场景话术的衔接语为开启状态
                 this.playSceneEndWords();
               }else {
                 // 播放下一个脚本
                 this.interactionModeIsEnd = false;
-                this.AutoPlayEvent();
+
+                // this.AutoPlayEvent();
               }
               // UnityInteractionEnd(this.previewData[0].avatar.unity);
             }

@@ -106,6 +106,9 @@
         maxChatCount: 5, // 最大弹幕消息数
       }
     },
+    // mounted() {
+    //   this.getAllWords()
+    // },
     methods: {
       // 获取场景话术
       async getAllWords() {
@@ -120,46 +123,59 @@
             // 需要进行 场景话术的 欢迎语、衔接语的 开关处理，通过对应数组长度判断是否需要播放场景话术
             // 场景话术 - 开场语
             if(res.result.words[1].length>0) {
-              this.addWords(res.result.words[1], this.sceneWelcomeWords);
+              let _obj = this.addWords(res.result.words[1], this.sceneWelcomeWords, true)
+              this.sceneWelcomeWords = _obj.arr;
+              this.isOpenSceneWelcome = _obj.isOpen;
             }
             // 场景话术 - 衔接语话术
             if(res.result.words[2].length>0) {
-              this.addWords(res.result.words[2], this.sceneEndWords);
+              let _obj = this.addWords(res.result.words[2], this.sceneEndWords, true);
+              this.sceneEndWords = _obj.arr;
+              this.isOpenSceneEnd = _obj.isOpen;
             }
             // 互动模式 - 引导语话术
             if(res.result.words[4].length>0) {
-              this.addWords(res.result.words[4], this.inacGuideWords);
+              let _obj = this.addWords(res.result.words[4], this.inacGuideWords, false);
+              this.inacGuideWords = _obj.arr;
             }
             // 互动模式 - 通用话术
             if(res.result.words[5].length>0) {
-              this.addWords(res.result.words[5], this.inacCommonWords);
+              let _obj = this.addWords(res.result.words[5], this.inacCommonWords, false);
+              this.inacCommonWords = _obj.arr;
             }
             // 互动模式 - 进入直播间话术
             if(res.result.words[6].length>0) {
-              this.addWords(res.result.words[6], this.inacEnterWords);
+              let _obj = this.addWords(res.result.words[6], this.inacEnterWords, false);
+              this.inacEnterWords = _obj.arr;
             }
             // 互动模式 - 回答问题话术
             if(res.result.words[7].length>0) {
-              this.addWords(res.result.words[7], this.inacQaWords);
+              let _obj = this.addWords(res.result.words[7], this.inacQaWords, false);
+              this.inacQaWords = _obj.arr;
             }
             // 互动模式 - 结束衔接语话术
             if(res.result.words[8].length>0) {
-              this.addWords(res.result.words[8], this.inacEndWords);
+              let _obj = this.addWords(res.result.words[8], this.inacEndWords, false);
+              this.inacEndWords = _obj.arr;
             }
-            if(this.sceneWelcomeWords.length>0) {
-              this.isOpenSceneWelcome = true;
-            }
-            if(this.sceneEndWords.length>0) {
-              this.isOpenSceneEnd = true;
-            }
+            // console.log(this.sceneWelcomeWords, this.sceneEndWords, this.isOpenSceneWelcome, this.isOpenSceneEnd)
           }
         })
       },
-      addWords(_arr, _target) {
+      addWords(_arr, _target, _isSwitch) {
         _target = [];
+        let _flag = false;
         _arr.forEach(item => {
-          _target.push(item.content);
+          if(_isSwitch) {
+            if(item.switch==0) {
+              _flag = true;
+              _target.push(item.content);
+            }
+          }else {
+            _target.push(item.content);
+          }
         })
+        return {arr: _target, isOpen: _flag};
       },
       openInnerJsonInac() {
         this.playWords(1);
@@ -259,6 +275,7 @@
         }
       },
       getChat() {
+        // if(this.isOfflineStop) return;
         let _time = this.getTime();
         let _md5 = md5('AIAssistant' + _time + 'QSS');
         let _data = new FormData();

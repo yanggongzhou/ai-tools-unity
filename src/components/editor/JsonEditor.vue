@@ -292,6 +292,7 @@
       //监听输入框文本，主要实现删除功能
       testData(newValue,oldValue){
         if(this.scriptChangeState) return false;
+        this.testData=this.testData.replaceAll('&amp;','&')//去除&占位问题
         // console.log(this.testData)
         if(newValue.length < oldValue.length&&(oldValue.length-newValue.length)>200){
           let newDom = document.getElementById('newDom');
@@ -589,7 +590,7 @@
             }
           }else if(val.type==="interaction"){
             let _data = JSON.stringify({id:self.getGuid(),type:'interaction', maximum:val.maximum,isSupport:val.isSupport}).replace(/"/g,"&quot;")
-            let _intervalDom = `<wise id="`+val.id+`" data-obj="`+_data+`"><div class="hudong tagtag">互动(`+val.maximum+`)<i class="el-icon-close" onclick="delTag(\``+val.id+`\`)"></i>&nbsp;</div></wise>`
+            let _intervalDom = `<wise id="`+val.id+`" data-obj="`+_data+`"><div class="hudong tagtag">互动<i class="el-icon-close" onclick="delTag(\``+val.id+`\`)"></i>&nbsp;</div></wise>`
             if(contentBDArr[val.index]===undefined){
               contentBDArr[val.index] = _intervalDom
             }else{
@@ -947,7 +948,7 @@
           maximum:10,
           id:_id
         }
-        let _text =  `<div class="hudong tagtag">互动(`+_data.maximum+`)<i class="el-icon-close" onClick="delTag(\``+_id+`\`)"></i>&nbsp;</div>`
+        let _text =  `<div class="hudong tagtag">互动<i class="el-icon-close" onClick="delTag(\``+_id+`\`)"></i>&nbsp;</div>`
         this.$refs.testText.addTag(_text,_data)
       },
       addTag (type,interval) {
