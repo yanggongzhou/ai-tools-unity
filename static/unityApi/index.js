@@ -7,8 +7,8 @@ function UnityUserInfo() {
 
 
 //在线预览--&播放
-function UnityPreview(avatarName,json){
-  console.log(avatarName,json)
+function UnityPreview(avatarName,json,bool,bool2){
+  console.log(avatarName,json,bool,bool2)
 }
 //在线预览--&开始播放
 function UnityPreviewStart(avatarName){
@@ -40,4 +40,14 @@ function UnityAvatarMotionInfo(val) {
 //播放临时话术
 function UnityPreviewTxt(avatarName,json) {
   console.log(avatarName,json)
+}
+
+//unity继续播放
+function UnityPreviewContinue(avatarName) {
+  console.log('unity继续播放',avatarName)
+}
+
+//
+function UnityInteractionEnd(avatarName) {
+  console.log('unity互动播放结束',avatarName)
 }

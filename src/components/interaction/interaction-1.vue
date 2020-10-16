@@ -11,7 +11,10 @@ export default {
             // 互动模式所在位置 1 - 脚本内 2 - 脚本间，结束时，采用 场景话术模式的衔接语话术
             type: 1,
             // 场景话术模式 - 开场语话术
-            sceneWelcomeWords: [],
+            sceneWelcomeWords: [
+                '大家好，欢迎大家来到我的直播间！',
+                '宝宝们，我来了，很高兴又和大家见面了'
+            ],
             // 互动模式 - 引导语话术
             inacGuideWords:[
                 '有什么想了解的，现在可以直接提问噢。',
@@ -45,9 +48,23 @@ export default {
                 '不要吝惜你们的赞，多给主播点点小红心啊，在这里谢谢大家了，一定要给我多点点赞。',
             ],
             // 互动模式 - 进入直播间话术
-            inacEnterWords: [],
+            inacEnterWords: [
+                '欢迎刚进入直播间的小伙伴',
+                '欢迎刚进入直播间的好朋友',
+                '欢迎宝宝进入直播间',
+                '欢迎小哥哥进入直播间',
+                '欢迎小姐姐进入直播间',
+                '欢迎女神进入直播间',
+            ],
             // 互动模式 - 回答问题话术
-            inacQaWords: [],
+            inacQaWords: [
+                '刚有宝宝问道',
+                '刚有人问道',
+                '刚有朋友问道',
+                '刚才有个问题问道',
+                '之前有人问',
+                '有个问题说',
+            ],
             // 互动模式 - 结束衔接语话术
             inacEndWords: [
                 '那我们继续介绍产品咯。',
@@ -61,7 +78,10 @@ export default {
                 '有小伙伴已经着急了，我们接着往下介绍了。',
             ],
             // 场景话术模式 - 衔接语话术
-            sceneEndWords: [],
+            sceneEndWords: [
+                '需要的宝宝们赶紧下单哦，下面为大家介绍下一个商品了！',
+                '宝宝们注意喽，接下来要为大家介绍的这款商品，也是非常不错的！'
+            ],
             // 弹幕消息 - 问答 & 进入直播间
             chatMsgs: [],
             chatMsgsIdx: 0, // 当前播放弹幕下标
@@ -86,45 +106,42 @@ export default {
     methods: {
         // 获取场景话术
         async getAllWords() {
-          debugger
             await requestServices.getWords({
                 user_id:this.$Session.get('ai_user_id'),
                 role_id: 21,
                 access_token:this.$Session.get('ai_user_token'),
-                type: '1,2',
-                words_type: '1,2'
+                type: '1,2,4,5,6,7,8'
             }).then(res => {
                 console.log('getWords: ', res);
                 if(res.return_code==1000) {
                     // 需要进行 场景话术的 欢迎语、衔接语的 开关处理，通过对应数组长度判断是否需要播放场景话术
-                    // 欢迎语
+                    // 场景话术 - 开场语
                     if(res.result.words[1].length>0) {
-                        this.inacEnter = [];
-                        this.sceneWelcomeWords = [];
-                        res.result.words[1].forEach(item => {
-                            switch(item.words_type) {
-                                case 1:  // 互动模式 - 进入直播间话术
-                                    this.inacEnterWords.push(item.content)
-                                    break;
-                                case 0:
-                                case 2: // 场景话术的开场语
-                                    this.sceneWelcomeWords.push(item.content);
-                            }
-                        })
+                        this.addWords(res.result.words[1], this.sceneWelcomeWords);
                     }
+                    // 场景话术 - 衔接语话术
                     if(res.result.words[2].length>0) {
-                        this.qaWords = [];
-                        this.sceneEndWords = [];
-                        res.result.words[2].forEach(item => {
-                            switch(item.words_type) {
-                                case 1:  // 互动模式 - 回答问题话术
-                                    this.inacQaWords.push(item.content)
-                                    break;
-                                case 0:
-                                case 2: // 场景话术的衔接语
-                                    this.sceneEndWords.push(item.content);
-                            }
-                        })
+                        this.addWords(res.result.words[2], this.sceneEndWords);
+                    }
+                    // 互动模式 - 引导语话术
+                    if(res.result.words[4].length>0) {
+                        this.addWords(res.result.words[4], this.inacGuideWords);
+                    }
+                    // 互动模式 - 通用话术
+                    if(res.result.words[5].length>0) {
+                        this.addWords(res.result.words[5], this.inacCommonWords);
+                    }
+                    // 互动模式 - 进入直播间话术
+                    if(res.result.words[6].length>0) {
+                        this.addWords(res.result.words[6], this.inacEnterWords);
+                    }
+                    // 互动模式 - 回答问题话术
+                    if(res.result.words[7].length>0) {
+                        this.addWords(res.result.words[7], this.inacQaWords);
+                    }
+                    // 互动模式 - 结束衔接语话术
+                    if(res.result.words[8].length>0) {
+                        this.addWords(res.result.words[8], this.inacEndWords);
                     }
                     if(this.sceneWelcomeWords.length>0) {
                         this.isOpenSceneWelcome = true;
@@ -132,11 +149,30 @@ export default {
                     if(this.sceneEndWords.length>0) {
                         this.isOpenSceneEnd = true;
                     }
-                    // console.log(this.inacEnterWords, this.sceneWelcomeWords, this.qaWords, this.sceneEndWords)
                 }
             })
         },
-
+        addWords(_arr, _target) {
+            _target = [];
+            _arr.forEach(item => {
+                _target.push(item.content);
+            })
+        },
+        openInnerJsonInac() {
+            this.playWords(1);
+        },
+        handleInacLogic() {
+            if(this.isPlayingEndWords) {
+                this.exitInacMode();
+                return;
+            }
+            if(!this.isPlayingWords && !this.isPlayingChats) {
+                this.playWords(2);
+            }else {
+                this.isPlayingWords = false;
+                this.enterChat();
+            }
+        },
         playWelcomeWords() {
             this.getAudio('interaction', this.getRandomWords(this.sceneWelcomeWords), false);
         },
@@ -185,19 +221,13 @@ export default {
             this.getAudio('interaction', _txt, false);
             this.getChat();
         },
-
         exitInacMode() {
-
             this.inacLoop = 2;
             this.currentStep = 1;
             this.isEnterInteraction = false;
             this.interactionModeIsEnd = true;
             this.isPlayingEndWords = false;
-            if(this.type == 1) {
-                this.handleInnerJsonLogic();
-            }else if(this.type == 2) {
-                this.handleOuterJsonLogic();
-            }
+            this.handleInacEnd();
         },
         enterChat() { // 文本1播放结束，进入 欢迎语&问答环节
             console.log('是否有弹幕消息: ', this.chatMsgs.length)

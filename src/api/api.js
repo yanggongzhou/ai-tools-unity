@@ -6,7 +6,7 @@ import { Session } from "./auth";
 const prevHandler = ({data}) => {
   // if (data.return_code===1009) {
   // sessionStorage.setItem()
-  if (data.return_code!==1000) {
+  if (data.return_code!==1000&&data.return_code!=="0") {
     Message.error(data.result.message)
     UnityUserInfo()
     // if (data.return_code===1009) {
@@ -124,4 +124,6 @@ export const requestServices = {
 
   // 获取话术列表
   getWords: (params)=>apiInstance.post(`/guide_shopping/client/get_words`,params),
+  // 获取弹幕消息
+  getChat: (params) => apiInstance.post(`autosay/client//DKAutoSay_GetTask2`, params),
 }

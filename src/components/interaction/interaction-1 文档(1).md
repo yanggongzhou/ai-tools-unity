@@ -32,7 +32,7 @@ export const requestServices = {
 
 		```
 		this.isInnerJsonInteraction = true; // 将是否为脚本内互动设为 true
-		this.playWords(1); // 开启脚本内互动
+		this.openInnerJsonInac(); // 开启脚本内互动模式
 		```
 
 - 在Unity 语音结束回调里，判断当前的状态：播放脚本、脚本内互动、脚本外互动、当前脚本结束播放下一个脚本。
@@ -47,7 +47,8 @@ export const requestServices = {
 		// isInnerJsonInteraction - 是否是脚本内互动
 		if((this.isOpenInteractiveMode || this.isEnterInteraction) && !this.interactionModeIsEnd && this.isInnerJsonInteraction) {
           	    // 互动模式处理
-		     this.handleInacLogic();
+          	    this.magics.stopAction();
+		     this.handleInacLogic(); // 已经开启脚本内互动模式，正常处理互动流程
 		
 		 }else {
 		     // 继续播放脚本
@@ -62,7 +63,8 @@ export const requestServices = {
 		// isPlayingEndWords - 是否正在播放衔接语
 		if((this.isOpenInteractiveMode || this.isEnterInteraction) && !this.interactionModeIsEnd) { 
               // 打开互动模式，互动模式处理
-              this.handleInacLogic();
+              this.magics.stopAction();
+              this.handleInacLogic(); // 如果未开启脚本外互动则开启，如果已开启则进行互动流程
             }else if(!this.isOpenInteractiveMode && this.isOpenSceneEnd && !this.isPlayingEndWords) {
               // 关闭互动模式，场景话术的衔接语为开启状态
               this.playSceneEndWords();
@@ -72,26 +74,6 @@ export const requestServices = {
             }
 		```
 	
-	- 处理互动播放：
-
-		```
-		// isPlayingEndWords - 是否正在播放衔接语
-		// isPlayingWords - 是否正在播放互动的引导语、通用话术
-		// isPlayingChats - 是否正在播放弹幕
-		handleInacLogic() {
-	        this.magics.stopAction(); // 停止avatar当前动作
-	        if(this.isPlayingEndWords) {
-	          this.exitInacMode();
-	          return;
-	        }
-	        if(!this.isPlayingWords && !this.isPlayingChats) {
-	          this.playWords(2); // 播放脚本外互动
-	        }else {
-	          this.isPlayingWords = false;
-	          this.enterChat();
-	        }
-	      },
-		```
 		
 - 处理互动、场景话术的文本播放
 

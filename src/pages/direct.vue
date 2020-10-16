@@ -139,6 +139,7 @@
   import interaction from '../components/interaction/interaction-1';
   let that;
   export default {
+    mixins: [interaction],
     beforeCreate() {
       that = this;
     },
@@ -266,6 +267,14 @@
         queueList:[],//排队数据，最多3个
         queueContentItem:[],//段落排队数据，最多1个
 
+        isInnerJsonInteraction: false,
+        isUnity: true, // 是否为Unity
+
+        interactionModel:false,//是否互动
+        webInteractionModel:false,//是否web互动
+        isFirstScript:false,//是否是第一个脚本，来处理是否需要开场语
+
+        isOpenInteractiveMode:true //- 是否打开了互动模式
 
       }
     },
@@ -273,6 +282,9 @@
       window.WebPreviewEnd=this.WebPreviewEnd;
       window.WebPreviewReady = this.WebPreviewReady;
       window.WebSelectAvatarState=this.WebSelectAvatarState;
+      window.WebInteractionStart=this.WebInteractionStart;// 开始接收互动
+      window.WebInteractionEnd=this.WebInteractionEnd;// 结束接收
+      this.getAllWords();//请求 话术
     },
     mounted() {
       let self = this;
@@ -295,6 +307,7 @@
       this.getTempData().then(res=>{});
     },
     methods:{
+      //临时话术打开
       innerVisibleOpen(){
         if(!this.isAutoPlayBtn){
           this.innerVisible= true;
@@ -327,8 +340,63 @@
         }
         this.$forceUpdate();
       },
+
+      //处理互动、场景话术的文本播放
+      async getAudio(_type, _txt, _isHandleTimeline) {
+        switch(_type) {
+          case 'json': // 脚本   （Unity-WEB 可以忽略）
+            break;
+          case 'interaction': // 互动
+            // 进行文字转语音及播放处理
+            console.log('场景话术',_txt)
+            this.playInteraction(_txt);
+            break;
+        }
+      },
+
+      //播放场景话术
+      playInteraction(_txt){
+        let _arr =  _txt.split('')
+        let _res = []
+        for (let i = 0; i< Math.ceil(_arr.length/100);i++){
+          _res.push(_arr.splice(0,100).join(''));
+        }
+        let _json = JSON.parse(JSON.stringify(resultJSON.resultJsonObj))
+        let _unity = this.previewData[0].avatar.unity;
+        _json.avatar.unity = _unity
+        _res.forEach(resItem=>{
+          _json.param.push({
+            intervalTime:0,
+            trigger:[],
+            content:resItem,
+            interaction:{
+              isSupport:false,
+              maximum:10
+            }
+          })
+        })
+        UnityPreview(_unity,JSON.stringify([_json]),"False")
+      },
+      //播放互动标签-脚本内互动
+      WebInteractionStart(){
+        // this.interactionModel = true;
+        // this.webInteractionModel = true;
+
+        this.isInnerJsonInteraction = true; // 将是否为脚本内互动设为 true
+        this.openInnerJsonInac(); // 开启脚本内互动模式
+      },
+      //互动结束回调
+      handleInacEnd(){
+        console.log('互动结束回调')
+        // this.webInteractionModel = false;
+        UnityInteractionEnd(this.previewData[0].avatar.unity);
+        // this.AutoPlayEvent();
+        this.isInnerJsonInteraction = false;
+      },
+
       //自动播放
       autoPlayBtn(){
+        //是否有排队
         if(this.queueList.length!==0||this.queueContentItem.length!==0||this.isPlaying){
           return false;
         }
@@ -340,9 +408,11 @@
           UnityChangeAvatar(this.previewData[0].avatar.unity)
           this.previewReady = false;
           this.isPlaying = true;
+          if(this.allScriptIndex===0){  //判断是否是第一个脚本，是—播放开场欢迎语
+            this.isFirstScript = true;
+          }
         }else{
           this.$message.warning('当前任务正在执行中，请稍后...')
-          // todolist_____
         }
       },
       //停止播放
@@ -350,6 +420,7 @@
         this.previewReady = true;
         this.allScriptPlayIndex = '';
         this.isAutoPlayBtn = false;
+        this.resetIacParams();//停止抓取弹幕
         UnityPreviewCancel();//结束自动播放接口
         this.isPlaying = false;
         this.queueList = [];
@@ -357,7 +428,13 @@
       },
       WebSelectAvatarState(state){
         if(state==='True'){
-          UnityPreview(this.previewData[0].avatar.unity,JSON.stringify(this.previewData))
+          //_______________判断当前是不是第一句
+          //判断是否是第一个脚本，是—播放开场欢迎语
+          if(this.isFirstScript){
+            this.playWelcomeWords();
+          }else{
+            UnityPreview(this.previewData[0].avatar.unity,JSON.stringify(this.previewData))
+          }
         }else if(state==='False'){
           this.previewReady = true;
           this.isAutoPlayBtn = false;
@@ -368,7 +445,9 @@
       WebPreviewReady(state){
         if(state==='True'){
           UnityPreviewStart(this.previewData[0].avatar.unity);
-          this.$message.info('播放剧本'+(this.allScriptPlayIndex+1)+'--'+this.allScriptList[this.allScriptPlayIndex].name)
+          if(!this.isFirstScript){
+            this.$message.info('播放剧本'+(this.allScriptPlayIndex+1)+'--'+this.allScriptList[this.allScriptPlayIndex].name)
+          }
         }else if(state==='False'){
           this.isAutoPlayBtn = false;
           this.isPlaying = false;
@@ -376,26 +455,56 @@
         }
         this.previewReady = true;
       },
+      //自动播放
+      AutoPlayEvent(){
+        if(this.allScriptPlayIndex+1<this.allScriptList.length){
+          this.allScriptPlayIndex+=1;
+          this.allScriptIndex = this.allScriptPlayIndex;
 
-      //播放结束回调
-      WebPreviewEnd(){
-        if(this.isAutoPlayBtn){
-          if(this.allScriptPlayIndex+1<this.allScriptList.length){
-            this.allScriptPlayIndex+=1;
-            this.allScriptIndex = this.allScriptPlayIndex;
-          }else{
-            this.allScriptIndex=0;
-            this.allScriptPlayIndex = 0;
-          }
-          this.scriptChange(this.allScriptIndex)
+          //---------------------剧本内互动待处理
 
-          this.$message.info('播放剧本'+(this.allScriptPlayIndex+1)+'--'+this.allScriptList[this.allScriptPlayIndex].name)
-          this.previewData = this.allScriptList[this.allScriptPlayIndex].scriptList;
-          UnityPreview(this.previewData[0].avatar.unity,JSON.stringify(this.previewData))
-          // tolist
-          this.previewReady = true;
-          this.isPlaying = true;
         }else{
+          this.allScriptIndex=0;
+          this.allScriptPlayIndex = 0;
+        }
+        this.scriptChange(this.allScriptIndex)
+
+        this.$message.info('播放剧本'+(this.allScriptPlayIndex+1)+'--'+this.allScriptList[this.allScriptPlayIndex].name)
+        this.previewData = this.allScriptList[this.allScriptPlayIndex].scriptList;
+        UnityPreview(this.previewData[0].avatar.unity,JSON.stringify(this.previewData))
+        // tolist
+        this.previewReady = true;
+        this.isPlaying = true;
+      },
+
+      //对应于UnityInteractionEnd，结束状态返回继续播放
+      WebInteractionEnd(){
+        if(this.isFirstScript){
+          UnityPreview(this.previewData[0].avatar.unity,JSON.stringify(this.previewData))
+          this.isFirstScript=false;
+        }else{
+          UnityPreviewContinue(this.previewData[0].avatar.unity);
+        }
+        // this.interactionModel = false;
+      },
+
+      //播放结束回调  播放一句互动结束回调Unity
+      WebPreviewEnd(){
+        if(this.isAutoPlayBtn){//是否自动播放
+          // if(this.interactionModel&&this.webInteractionModel){
+            if((this.isOpenInteractiveMode || this.isEnterInteraction) && !this.interactionModeIsEnd && this.isInnerJsonInteraction) {
+              // 互动模式处理
+              this.handleInacLogic(); // 已经开启脚本内互动模式，正常处理互动流程
+            } else {
+              this.AutoPlayEvent();
+              // UnityInteractionEnd(this.previewData[0].avatar.unity);
+            }
+          // }
+        // else if(!this.interactionModel&&!this.webInteractionModel){
+        //     this.AutoPlayEvent();
+        //   }
+        }
+        else{
           if(this.queueList.length){
             let _Obj  = this.queueList.shift();
             UnityPreviewTxt(_Obj.name,_Obj.item)
@@ -423,6 +532,7 @@
           }
         }
       },
+
       //播放下一个
       nextPlayBtn(){
         if(this.isAutoPlayBtn){
@@ -623,7 +733,11 @@
             _json.param.push({
               intervalTime:0,
               trigger:[],
-              content:resItem
+              content:resItem,
+              interaction:{
+                isSupport:false,
+                maximum:10
+              }
             })
           })
           if(!this.isPlaying){
