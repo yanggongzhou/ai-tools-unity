@@ -24,10 +24,10 @@ export const requestServices = {
 ### 处理脚本组件
 - 获取脚本内容时，同时请求 话术
 	-  `await this.getAllWords();`
-	
+
 - 播放开场语
 	- `this.playWelcomeWords();`
-	
+
 - 触发脚本内互动，需要处理（Unity-WEB 在接收到脚本内互动回调时进行该处理）：
 
 		```
@@ -49,19 +49,19 @@ export const requestServices = {
           	    // 互动模式处理
           	    this.magics.stopAction();
 		     this.handleInacLogic(); // 已经开启脚本内互动模式，正常处理互动流程
-		
+
 		 }else {
 		     // 继续播放脚本
 		 }
 		```
 	- 触发脚本外互动，在语音播放结束回调里，需要处理：
-		
+
 		```
 		// isOpenInteractiveMode - 是否打开了互动模式
 		// isEnterInteraction - 是否进入了互动模式
 		// interactionModeIsEnd - 互动模式是否结束
 		// isPlayingEndWords - 是否正在播放衔接语
-		if((this.isOpenInteractiveMode || this.isEnterInteraction) && !this.interactionModeIsEnd) { 
+		if((this.isOpenInteractiveMode || this.isEnterInteraction) && !this.interactionModeIsEnd) {
               // 打开互动模式，互动模式处理
               this.magics.stopAction();
               this.handleInacLogic(); // 如果未开启脚本外互动则开启，如果已开启则进行互动流程
@@ -69,16 +69,16 @@ export const requestServices = {
               // 关闭互动模式，场景话术的衔接语为开启状态
               this.playSceneEndWords();
             }else {
-            		// 播放下一个脚本
+            		// 先去播放下一个
             		this.interactionModeIsEnd = false;
             }
 		```
-	
-		
+
+
 - 处理互动、场景话术的文本播放
 
 	```
-	// _type - 当前文本来源：脚本 / 互动 
+	// _type - 当前文本来源：脚本 / 互动
 	// _txt - 当前文本内容
 	// _isHandleTimeline - 是否需要时间戳 （Unity-WEB 可以忽略该字段）
 	async getAudio(_type, _txt, _isHandleTimeline) {
@@ -91,4 +91,3 @@ export const requestServices = {
         }
       },
 	```
-	

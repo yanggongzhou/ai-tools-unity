@@ -230,7 +230,7 @@
         avatarID:3,
         actionShowList:[],
         actionLoading:true,
-        testData:'',
+        testData:' ',
         intervalValue:0.5,//间隔时间
         dismissTimeTypeData:[
           {label:'至视频播放结束',value:0},

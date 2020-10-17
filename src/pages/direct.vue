@@ -3,7 +3,7 @@
 
     <div class="titleBox" style="margin-bottom: 10px">
       <span class="titleSpan">直播剧本</span>
-      <button class="backNormal backNormal2" @click="$router.back()">
+      <button class="backNormal backNormal2" @click="backBtn">
         <span class="_icon">< </span>
         <span>返回</span>
       </button>
@@ -292,6 +292,8 @@
         // interactionModel:false,//是否互动
         // webInteractionModel:false,//是否web互动
         isFirstScript:false,//是否是第一个脚本，来处理是否需要开场语
+        isFirstScriptOnce:false,//同上，但只监测到WebInteractionStart
+
         isOutInteraction:false,//是否脚本外互动
 
         isOpenInteractiveMode:true //- 是否打开了互动模式
@@ -327,6 +329,13 @@
       this.getTempData().then(res=>{});
     },
     methods:{
+      backBtn(){
+        if(this.isAutoPlayBtn){
+          this.$message.warning('请先停止直播！')
+        }else{
+          this.$router.back()
+        }
+      },
       //临时话术打开
       innerVisibleOpen(){
         if(!this.isAutoPlayBtn){
@@ -424,6 +433,7 @@
           this.isPlaying = true;
           if(this.allScriptIndex===0){  //判断是否是第一个脚本，是—播放开场欢迎语
             this.isFirstScript = true;
+            this.isFirstScriptOnce = true;
           }
         }else{
           this.$message.warning('当前任务正在执行中，请稍后...')
@@ -497,14 +507,21 @@
       WebInteractionStart(){
         // this.interactionModel = true;
         // this.webInteractionModel = true;
-        if(this.isFirstScript){this.playWelcomeWords(); return false}
+        if(this.isFirstScript&&this.isFirstScriptOnce){
+          this.playWelcomeWords();
+          this.isFirstScriptOnce = false;
+          return false
+        }
         if(!this.isOutInteraction){
           this.isInnerJsonInteraction = true; // 将是否为脚本内互动设为 true
-          this.openInnerJsonInac(); // 开启脚本内互动模式
-        }else{
+          this.openInnerJsonInac() // 开启脚本内互动模式
+        }else {
+          if(this.isFirstScript&&!this.isFirstScriptOnce){return false}
           // 打开互动模式，互动模式处理
           this.handleInacLogic(); // 如果未开启脚本外互动则开启，如果已开启则进行互动流程
         }
+
+
       },
       //对应于UnityInteractionEnd，结束状态返回继续播放
       WebInteractionEnd(){
@@ -517,6 +534,7 @@
           if(this.isOutInteraction){
            this.AutoPlayEvent();
            this.isOutInteraction = false;
+           this.interactionModeIsEnd = false;
           }else{
             UnityPreviewContinue(this.previewData[0].avatar.unity);
           }
@@ -527,7 +545,6 @@
       //播放结束回调  播放一句互动结束回调Unity
       WebPreviewEnd(){
         if(this.isAutoPlayBtn){//是否自动播放
-          debugger
           // if(this.interactionModel&&this.webInteractionModel){
             if((this.isOpenInteractiveMode || this.isEnterInteraction) && !this.interactionModeIsEnd && this.isInnerJsonInteraction) {
               // 互动模式处理
@@ -539,8 +556,8 @@
                               // 打开互动模式，互动模式处理
                               this.handleInacLogic(); // 如果未开启脚本外互动则开启，如果已开启则进行互动流程
                             }else{
+                              if(this.isFirstScript){  UnityInteractionEnd(this.previewData[0].avatar.unity);  return false}
                               UnityInteractionStart(this.previewData[0].avatar.unity);
-                              if(this.isFirstScript){return false}
                               this.isOutInteraction = true;//脚本外互动
                             }
               }else if(!this.isOpenInteractiveMode && this.isOpenSceneEnd && !this.isPlayingEndWords) {
@@ -549,7 +566,14 @@
               }else {
                 // 播放下一个脚本
                 this.interactionModeIsEnd = false;
+                if(this.isFirstScript){
+                  this.AutoPlayEvent();
+                  // this.interactionModeIsEnd = false;
+                  return false;
+                }
+
                 this.handleInacLogic();
+
                 // this.AutoPlayEvent();
               }
               // UnityInteractionEnd(this.previewData[0].avatar.unity);

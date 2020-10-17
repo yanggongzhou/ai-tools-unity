@@ -80,10 +80,10 @@ export const chatInterface={
   },
 };
 
-let _apiUrl = 'https://adtest.magics-ad.com';
-if(window.location.host=='demo.magics-ad.com' || window.location.host=='pro.magics-ad.com') {
-  _apiUrl = 'https://adserver.magics-ad.com';
-}
+let _apiUrl = 'https://adserver.magics-ad.com';
+// if(window.location.hostname=='0.0.0.0') {
+//   _apiUrl = 'https://adtest.magics-ad.com';
+// }
 const apiInstance = createAxios(_apiUrl);
 export const requestServices = {
   uploadUrl:  _apiUrl+"/common_server/client/upload",
