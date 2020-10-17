@@ -6,7 +6,7 @@ import { Session } from "./auth";
 const prevHandler = ({data}) => {
   // if (data.return_code===1009) {
   // sessionStorage.setItem()
-  if (data.return_code!==1000&&data.return_code!=="0") {
+  if (data.return_code!==1000&&data.return_code!=="0"&&data.return_code!=="1000") {
     Message.error(data.result.message)
     UnityUserInfo()
     // if (data.return_code===1009) {
@@ -80,7 +80,7 @@ export const chatInterface={
   },
 };
 
-let _apiUrl = 'https://adserver.magics-ad.com';
+let _apiUrl = 'https://adtest.magics-ad.com';
 // if(window.location.hostname=='0.0.0.0') {
 //   _apiUrl = 'https://adtest.magics-ad.com';
 // }

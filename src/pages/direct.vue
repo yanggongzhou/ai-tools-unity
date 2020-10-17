@@ -397,7 +397,7 @@
           _json.param.push({
             intervalTime:0,
             trigger:[],
-            content:resItem,
+            content:encodeURIComponent(resItem),
             interaction:{
               isSupport:false,
               maximum:10
