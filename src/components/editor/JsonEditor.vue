@@ -61,8 +61,11 @@
           <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
             <el-form-item label="展示区" prop="region">
               <el-select v-model="ruleForm.region" placeholder="请选择展示区域">
-                <el-option label="区域一" value="1"></el-option>
-                <el-option label="区域二" value="2"></el-option>
+                <el-option label="展位一" value="1"></el-option>
+                <el-option label="展位二" value="2"></el-option>
+                <el-option label="展位三" value="3"></el-option>
+                <el-option label="展位四" value="4"></el-option>
+                <el-option label="展位五" value="5"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="上传文件">
@@ -111,11 +114,11 @@
           <el-form :model="imgForm" :rules="imgRules" ref="imgForm" label-width="100px" class="demo-ruleForm">
             <el-form-item label="展示区" prop="region">
               <el-select v-model="imgForm.region" placeholder="请选择展示区域">
-                <el-option label="展示位一" value="1"></el-option>
-                <el-option label="展示位二" value="2"></el-option>
-                <el-option label="展示位三" value="3"></el-option>
-                <el-option label="展示位四" value="4"></el-option>
-                <el-option label="展示位五" value="5"></el-option>
+                <el-option label="展位一" value="1"></el-option>
+                <el-option label="展位二" value="2"></el-option>
+                <el-option label="展位三" value="3"></el-option>
+                <el-option label="展位四" value="4"></el-option>
+                <el-option label="展位五" value="5"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="上传文件">
