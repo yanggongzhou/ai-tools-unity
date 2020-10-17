@@ -106,6 +106,20 @@
         maxChatCount: 5, // 最大弹幕消息数
       }
     },
+    mounted() {
+      // this.getAllWords()
+      let _this = this;
+      window.addEventListener('load', function() {
+        function updateOnlineStatus(event) {
+          var condition = navigator.onLine ? "online" : "offline";
+          if(condition == 'offline'&&_this.isEnterInteraction) {
+            _this.exitInacMode();
+          }
+        }
+        window.addEventListener('online',  updateOnlineStatus);
+        window.addEventListener('offline', updateOnlineStatus);
+      });
+    },
     // mounted() {
     //   this.getAllWords()
     // },

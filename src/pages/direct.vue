@@ -397,18 +397,7 @@
         })
         UnityPreview(_unity,JSON.stringify([_json]),"False","False")
       },
-      //播放互动标签-脚本内互动
-      WebInteractionStart(){
-        // this.interactionModel = true;
-        // this.webInteractionModel = true;
-        if(!this.isOutInteraction){
-          this.isInnerJsonInteraction = true; // 将是否为脚本内互动设为 true
-          this.openInnerJsonInac(); // 开启脚本内互动模式
-        }else{
-          // 打开互动模式，互动模式处理
-          this.handleInacLogic(); // 如果未开启脚本外互动则开启，如果已开启则进行互动流程
-        }
-      },
+
       //互动结束回调
       handleInacEnd(){
         console.log('互动结束回调')
@@ -422,6 +411,7 @@
       autoPlayBtn(){
         //是否有排队
         if(this.queueList.length!==0||this.queueContentItem.length!==0||this.isPlaying){
+          this.$message.info('检测到当前还有排队数据，请等待排队播放完毕')
           return false;
         }
         // UnityPreviewCancel();
@@ -455,7 +445,8 @@
           //_______________判断当前是不是第一句
           //判断是否是第一个脚本，是—播放开场欢迎语
           if(this.isFirstScript){
-            this.playWelcomeWords();
+            // this.playWelcomeWords();
+            UnityInteractionStart(this.previewData[0].avatar.unity);
           }else{
             let _state = "True";
             this.isAutoPlayBtn?_state="False":_state="True"
@@ -471,9 +462,9 @@
       WebPreviewReady(state){
         if(state==='True'){
           UnityPreviewStart(this.previewData[0].avatar.unity);
-          if(!this.isFirstScript){
-            this.$message.info('播放剧本'+(this.allScriptPlayIndex+1)+'--'+this.allScriptList[this.allScriptPlayIndex].name)
-          }
+          // if(!this.isFirstScript){
+          //   this.$message.info('播放剧本'+(this.allScriptPlayIndex+1)+'--'+this.allScriptList[this.allScriptPlayIndex].name)
+          // }
         }else if(state==='False'){
           this.isAutoPlayBtn = false;
           this.isPlaying = false;
@@ -502,7 +493,19 @@
         this.previewReady = true;
         this.isPlaying = true;
       },
-
+      //播放互动标签-脚本内互动
+      WebInteractionStart(){
+        // this.interactionModel = true;
+        // this.webInteractionModel = true;
+        if(this.isFirstScript){this.playWelcomeWords(); return false}
+        if(!this.isOutInteraction){
+          this.isInnerJsonInteraction = true; // 将是否为脚本内互动设为 true
+          this.openInnerJsonInac(); // 开启脚本内互动模式
+        }else{
+          // 打开互动模式，互动模式处理
+          this.handleInacLogic(); // 如果未开启脚本外互动则开启，如果已开启则进行互动流程
+        }
+      },
       //对应于UnityInteractionEnd，结束状态返回继续播放
       WebInteractionEnd(){
         if(this.isFirstScript){
@@ -513,6 +516,7 @@
         }else{
           if(this.isOutInteraction){
            this.AutoPlayEvent();
+           this.isOutInteraction = false;
           }else{
             UnityPreviewContinue(this.previewData[0].avatar.unity);
           }
@@ -523,6 +527,7 @@
       //播放结束回调  播放一句互动结束回调Unity
       WebPreviewEnd(){
         if(this.isAutoPlayBtn){//是否自动播放
+          debugger
           // if(this.interactionModel&&this.webInteractionModel){
             if((this.isOpenInteractiveMode || this.isEnterInteraction) && !this.interactionModeIsEnd && this.isInnerJsonInteraction) {
               // 互动模式处理
@@ -535,6 +540,7 @@
                               this.handleInacLogic(); // 如果未开启脚本外互动则开启，如果已开启则进行互动流程
                             }else{
                               UnityInteractionStart(this.previewData[0].avatar.unity);
+                              if(this.isFirstScript){return false}
                               this.isOutInteraction = true;//脚本外互动
                             }
               }else if(!this.isOpenInteractiveMode && this.isOpenSceneEnd && !this.isPlayingEndWords) {
@@ -543,7 +549,7 @@
               }else {
                 // 播放下一个脚本
                 this.interactionModeIsEnd = false;
-
+                this.handleInacLogic();
                 // this.AutoPlayEvent();
               }
               // UnityInteractionEnd(this.previewData[0].avatar.unity);
