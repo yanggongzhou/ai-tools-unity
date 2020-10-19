@@ -91,7 +91,7 @@ export const requestServices = {
   // 验证该用户是否存在
   // judgeUsers: (params) => apiInstance.post(`/user_server/client/get_user_details`, params),
   // getCaptcha: (params) => apiInstance.post(`/common_server/client/get_captcha`, params),
-  // login: (params) => apiInstance.post(`/guide_shopping/client/login`, params),
+  login: (params) => apiInstance.post(`/guide_shopping/client/login`, params),
   // 忘记密码
   // forgetPsw: (params) => apiInstance.post(`/guide_shopping/client/forget_password`, params),
   // 获取节目列表

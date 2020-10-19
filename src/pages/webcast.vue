@@ -433,6 +433,7 @@ export default {
                 user_id: this.$Session.get('ai_user_id'),
                 access_token: this.$Session.get('ai_user_token'),
                 gs_id: this.playScriptID,
+                role_id:23
                 // program_id: '' // 节目ID
             }
             requestServices.addScriptToPrograms(data).then(res => {
@@ -445,6 +446,7 @@ export default {
                 user_id: this.$Session.get('ai_user_id'),
                 access_token: this.$Session.get('ai_user_token'),
                 gs_id: _ids, // []
+                role_id:23
                 // program_id: '' // 节目ID
             }
             requestServices.delScriptInPrograms(data).then(res => {

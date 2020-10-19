@@ -128,7 +128,7 @@
       async getAllWords() {
         await requestServices.getWords({
           user_id:this.$Session.get('ai_user_id'),
-          role_id: 21,
+          role_id: 23,
           access_token:this.$Session.get('ai_user_token'),
           type: '1,2,4,5,6,7,8'
         }).then(res => {

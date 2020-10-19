@@ -22,6 +22,7 @@
                     show-word-limit
                     @input='hanleIptTxt'
                     ref='iptWords'
+                    resize="none"
                 ></el-input>
                 <p class="dialogTips">最多可输入40个字</p>
                 <span class="dialog-footer">

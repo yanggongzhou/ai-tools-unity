@@ -13,6 +13,7 @@
 <script>
 
 import {Session} from "../api/auth";
+import {requestServices} from "../api/api";
 
 export default {
     data() {
@@ -47,6 +48,18 @@ export default {
       window.WebErrorMessage=this.WebErrorMessage;
     },
     mounted() {
+      if(this.$route.query.phone){
+        requestServices.login({
+          phone:this.$route.query.phone,
+          password:this.$route.query.password,
+          role_id:23
+        }).then(res=>{
+          console.log(res)
+        })
+      }
+
+
+
         let self = this;
         //请求用户信息
         if(this.$Session.get('ai_user_id')&&this.$Session.get('ai_user_token')&&this.$Session.get('ai_user_phone')){
