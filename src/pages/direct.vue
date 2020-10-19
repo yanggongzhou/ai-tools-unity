@@ -22,7 +22,7 @@
         </div>
         <span slot="reference" style="cursor: help;position: relative;top: 4px">互动模式</span>
       </el-popover>
-      <el-switch v-model="isOpenInteractiveMode" active-color='#835BFF' style='margin-left:8px;margin-top:6px;' :disabled="isAutoPlayBtn"></el-switch>
+      <el-switch @change="SwitchChange" v-model="isOpenInteractiveMode" active-color='#835BFF' style='margin-left:8px;margin-top:6px;' :disabled="isAutoPlayBtn"></el-switch>
     </div>
 
     <div class="dialogBox">
@@ -296,8 +296,8 @@
 
         isOutInteraction:false,//是否脚本外互动
 
-        isOpenInteractiveMode:true //- 是否打开了互动模式
-
+        isOpenInteractiveMode:true, //- 是否打开了互动模式
+        isDisconnection:false,//断网
       }
     },
     created() {
@@ -307,6 +307,8 @@
       window.WebInteractionStart=this.WebInteractionStart;// 开始接收互动
       window.WebInteractionEnd=this.WebInteractionEnd;// 结束接收
       this.getAllWords();//请求 话术
+      window.WebErrorMessage=this.WebErrorMessage;
+      window.WebInteractionStateChange=this.WebInteractionStateChange;
     },
     mounted() {
       let self = this;
@@ -329,11 +331,53 @@
       this.getTempData().then(res=>{});
     },
     methods:{
+      //断网
+      WebErrorMessage(err){
+        if(err==="True"){
+          this.$notify.error({
+            title:  '网络连接已断开!',
+            message:"网络连接出现异常，请确认您的联网状态!",
+            duration: 0
+          });
+          this.isDisconnection=true;
+        }else{
+          this.$notify.success({
+            title:  '网络已重新连接!',
+            message:"网络连接已恢复，祝您使用愉快!",
+            duration: 0
+          });
+          this.isDisconnection=false;
+        }
+      },
       backBtn(){
         if(this.isAutoPlayBtn){
           this.$message.warning('请先停止直播！')
         }else{
           this.$router.back()
+        }
+      },
+      //互动模式切换
+      SwitchChange(val){
+        let _state = "True";
+        val?_state="False":_state="True"
+        UnityInteractionStateChange("True");
+        if(!val){
+          this.$confirm('关闭互动模式可能会增加被平台判定为录播的风险，请谨慎操作！', {
+            confirmButtonText: '知道了',
+            showCancelButton:false,
+            type: 'warning'
+          }).then(() => {
+
+          }).catch(() => {
+
+          });
+        }
+      },
+      WebInteractionStateChange(state){
+        if(state==="True"){
+          this.$message.info('互动模式已开启')
+        }else{
+          this.$message.info('互动模式已关闭')
         }
       },
       //临时话术打开
@@ -397,7 +441,7 @@
           _json.param.push({
             intervalTime:0,
             trigger:[],
-            content:encodeURIComponent(resItem),
+            content:resItem,//encodeURIComponent(resItem)
             interaction:{
               isSupport:false,
               maximum:10
@@ -454,7 +498,7 @@
         if(state==='True'){
           //_______________判断当前是不是第一句
           //判断是否是第一个脚本，是—播放开场欢迎语
-          if(this.isFirstScript){
+          if(this.isFirstScript&&this.isOpenInteractiveMode){
             // this.playWelcomeWords();
             UnityInteractionStart(this.previewData[0].avatar.unity);
           }else{
@@ -545,6 +589,11 @@
       //播放结束回调  播放一句互动结束回调Unity
       WebPreviewEnd(){
         if(this.isAutoPlayBtn){//是否自动播放
+            if(this.isDisconnection){//断网循环
+              this.AutoPlayEvent();
+              return false;
+            }
+
           // if(this.interactionModel&&this.webInteractionModel){
             if((this.isOpenInteractiveMode || this.isEnterInteraction) && !this.interactionModeIsEnd && this.isInnerJsonInteraction) {
               // 互动模式处理

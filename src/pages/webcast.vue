@@ -206,7 +206,21 @@ export default {
         checkSetting(_id) {
           this.currentSetting = _id;
         },
-
+        handlePreview(row) {
+          axios.get(row.script_url)
+            .then(res=>{
+              if(res.status===200){
+                // this.$message.warning('剧本数据获取异常，请重试')
+                // UnityPreview(res.data[0].avatar.unity,JSON.stringify(res.data))
+                this.previewData.name = res.data[0].avatar.unity;
+                this.previewData.script = JSON.stringify(res.data)
+                UnityPreviewCancel();
+                UnityChangeAvatar(res.data[0].avatar.unity);
+              }else{
+                this.$message.warning('剧本数据获取异常，请重试')
+              }
+            })
+        },
         WebSelectAvatarState(state){
           if(state==='True'){
             UnityPreview(this.previewData.name,this.previewData.script,"True","True")
@@ -383,21 +397,7 @@ export default {
             this.isChooseAllScript = checkCount>0 && checkCount<this.scriptData.length;
             this.isAddedScript = checkCount>0;
         },
-        handlePreview(row) {
-            axios.get(row.script_url)
-              .then(res=>{
-                if(res.status===200){
-                  this.$message.warning('剧本数据获取异常，请重试')
-                  // UnityPreview(res.data[0].avatar.unity,JSON.stringify(res.data))
-                  this.previewData.name = res.data[0].avatar.unity;
-                  this.previewData.script = JSON.stringify(res.data)
-                  UnityPreviewCancel();
-                  UnityChangeAvatar(res.data[0].avatar.unity);
-                }else{
-                  this.$message.warning('剧本数据获取异常，请重试')
-                }
-              })
-        },
+
         handleCheckAll(val) {
             let checkCount = 0;
             this.scriptData.forEach(item => {

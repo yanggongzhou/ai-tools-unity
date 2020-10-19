@@ -56,3 +56,8 @@ function UnityInteractionEnd(avatarName) {
 function UnityInteractionStart(avatarName) {
   console.log('unity互动播放开始',avatarName)
 }
+
+//unity互动状态
+function UnityInteractionStateChange(state) {
+  console.log('unity互动状态',state)
+}

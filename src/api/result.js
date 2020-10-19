@@ -49,7 +49,7 @@ export const resultJSON = {
       ind:3,
       name:'小吉',
       img:'https://large.magics-ad.com/ai-3D/static/avatar/weiya.png',
-      avatarName:'WeiYa'
+      avatarName:'WeiYa_WeiRuan'
     },
     {
       ind:4,

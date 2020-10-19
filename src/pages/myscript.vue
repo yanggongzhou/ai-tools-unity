@@ -235,6 +235,7 @@ export default {
             this.isShowDelDialog = false;
             // this.scriptData.splice(this.delScriptId, 1)
             requestServices.delScript({
+                role_id:23,
                 user_id:this.$Session.get('ai_user_id'),
                 access_token:this.$Session.get('ai_user_token'),
                 gs_id:this.delScriptId.id
