@@ -286,7 +286,12 @@
       //编辑的数据
       if(this.$route.params.data){
         let resArr  = this.$route.params.data
-        resultJSON.resultJsonObj.avatar.unity = resArr[0].avatar.unity;
+        if(this.$route.params.data instanceof Array){
+          resultJSON.resultJsonObj.avatar.unity = resArr[0].avatar.unity;
+        }else{
+          resArr.avatar.unity==="name"?resultJSON.resultJsonObj.avatar.unity = 'WeiYa_WeiRuan':resultJSON.resultJsonObj.avatar.unity = resArr.avatar.unity;
+          // resultJSON.resultJsonObj.avatar.unity = resArr.avatar.unity;
+        }
         //要动作
       }
       UnityChangeAvatar(resultJSON.resultJsonObj.avatar.unity);
@@ -361,7 +366,9 @@
       WebActionInfo(val){
         this.actionShowList = [];
         let labelData = val.split('-')[0].split(',')
+        labelData.pop()
         let valueData = val.split('-')[1].split(',')
+        valueData.pop()
         labelData.forEach((item,ind)=>{
           this.actionShowList.push({
             label:item,
@@ -374,9 +381,16 @@
         let self = this;
         //编辑时数据导入
         if(this.$route.params.data){
-          this.ScriptList = JSON.parse(JSON.stringify(this.$route.params.data))
           let resArr  = this.$route.params.data
-          resultJSON.resultJsonObj.avatar.unity = resArr[0].avatar.unity;
+          if(this.$route.params.data instanceof Array){
+            resultJSON.resultJsonObj.avatar.unity = resArr[0].avatar.unity;
+            this.ScriptList = JSON.parse(JSON.stringify(this.$route.params.data))
+          }else{
+            resArr.avatar.unity==="name"?resultJSON.resultJsonObj.avatar.unity = 'WeiYa_WeiRuan':resultJSON.resultJsonObj.avatar.unity = resArr.avatar.unity;
+            // resultJSON.resultJsonObj.avatar.unity = resArr.avatar.unity;
+            this.ScriptList = [JSON.parse(JSON.stringify(this.$route.params.data))]
+          }
+
           this.$nextTick(()=>{
             this.editImport(this.ScriptList[0]);
           })

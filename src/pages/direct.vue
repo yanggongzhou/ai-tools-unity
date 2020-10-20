@@ -329,6 +329,7 @@
         this.$message.error('未获取数据，请返回重试！')
       }
       this.getTempData().then(res=>{});
+      UnityInteractionStateChange("True");
     },
     methods:{
       //断网
@@ -359,8 +360,8 @@
       //互动模式切换
       SwitchChange(val){
         let _state = "True";
-        val?_state="False":_state="True"
-        UnityInteractionStateChange("True");
+        val?_state="True":_state="False"
+        UnityInteractionStateChange(_state);
         if(!val){
           this.$confirm('关闭互动模式可能会增加被平台判定为录播的风险，请谨慎操作！', {
             confirmButtonText: '知道了',
@@ -685,12 +686,21 @@
           axios.spread((...resList) => {
             // console.log('接口全部加载完成',resList) ;
             resList.forEach((resItem,resItemInd)=>{
-              self.allScriptList.push({
-                name:self.playData[resItemInd].name,
-                scriptList:resItem.data,
-                shortcut_json:data[resItemInd].shortcut_json,
-                gs_id:data[resItemInd].id
-              })
+              if(resItem instanceof Array){
+                self.allScriptList.push({
+                  name:self.playData[resItemInd].name,
+                  scriptList:resItem.data,
+                  shortcut_json:data[resItemInd].shortcut_json,
+                  gs_id:data[resItemInd].id
+                })
+              }else{
+                self.allScriptList.push({
+                  name:self.playData[resItemInd].name,
+                  scriptList:[resItem.data],
+                  shortcut_json:data[resItemInd].shortcut_json,
+                  gs_id:data[resItemInd].id
+                })
+              }
             })
             self.allScriptIndex = 0;
             self.contentList = self.allScriptList[0].scriptList

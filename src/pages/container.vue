@@ -75,8 +75,14 @@
       if(this.$route.params.data){
         this.jsonName = this.$route.params.name
         let resArr  = this.$route.params.data
-        resultJSON.resultJsonObj.avatar.unity = resArr[0].avatar.unity;
-        this.editImportTriggerDiv(resArr[0])
+        if(this.$route.params.data instanceof Array){
+          resultJSON.resultJsonObj.avatar.unity = resArr[0].avatar.unity;
+          this.editImportTriggerDiv(resArr[0])
+        }else{
+          resArr.avatar.unity==="name"?resultJSON.resultJsonObj.avatar.unity = 'WeiYa_WeiRuan':resultJSON.resultJsonObj.avatar.unity = resArr.avatar.unity;
+
+          this.editImportTriggerDiv(resArr)
+        }
       }
 
       Bus.$on('delTag',res=>{
