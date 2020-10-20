@@ -684,9 +684,9 @@
 
         axios.all(_arr).then(
           axios.spread((...resList) => {
-            // console.log('接口全部加载完成',resList) ;
+            console.log('接口全部加载完成',resList) ;
             resList.forEach((resItem,resItemInd)=>{
-              if(resItem instanceof Array){
+              if(resItem.data instanceof Array){
                 self.allScriptList.push({
                   name:self.playData[resItemInd].name,
                   scriptList:resItem.data,

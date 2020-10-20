@@ -389,6 +389,7 @@
             resArr.avatar.unity==="name"?resultJSON.resultJsonObj.avatar.unity = 'WeiYa_WeiRuan':resultJSON.resultJsonObj.avatar.unity = resArr.avatar.unity;
             // resultJSON.resultJsonObj.avatar.unity = resArr.avatar.unity;
             this.ScriptList = [JSON.parse(JSON.stringify(this.$route.params.data))]
+            this.ScriptList[0].avatar.unity='WeiYa_WeiRuan'
           }
 
           this.$nextTick(()=>{
@@ -511,9 +512,9 @@
             if(txtInd!==0&&!txtInd){//处理最后一个标签显示问题
               txtInd = param.content.length
             }
-            if(!val.index){
-              txtInd = 0
-            }
+            // if(!val.index){
+            //   txtInd = 0
+            // }
             if(val.type==="info"){
               if(val.info.child[0].type==="image"){
                 positionTag.push({

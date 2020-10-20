@@ -193,7 +193,7 @@
               .then(uploadRes=>{
                 let avatar_name = ''
                 resultJSON.avatarData.forEach(val=>{
-                  if(val.ind===resultJSON.avatarID){
+                  if(val.avatarName===resultJSON.resultJsonObj.avatar.unity){
                     avatar_name = val.name
                   }
                 })
@@ -206,7 +206,7 @@
                     preview_url:'',
                     script_url:uploadRes.data.result.upload_url,
                     paragraph_number:_JsonEditorRef.ScriptList.length,
-                    avatar_id:resultJSON.avatarID,
+                    // avatar_id:resultJSON.avatarID,
                     avatar_name:avatar_name,
                     scene_type:'1',//0-默认类型；1-淘宝；2-抖音；3-快手
                     time:0,
@@ -227,7 +227,7 @@
                     preview_url:'',
                     script_url:uploadRes.data.result.upload_url,
                     paragraph_number:_JsonEditorRef.ScriptList.length,
-                    avatar_id:resultJSON.avatarID,
+                    // avatar_id:resultJSON.avatarID,
                     avatar_name:avatar_name,
                     scene_type:'1',//0-默认类型；1-淘宝；2-抖音；3-快手
                     time:0,
