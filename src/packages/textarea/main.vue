@@ -252,11 +252,14 @@ export default {
       // console.log(this.savedRange)
       this.savedRange.deleteContents()
       // 插入链接
+      // // 插入链接
+      // this.savedRange.insertNode(node)
       // console.log(this.savedRange)
       let elem = this.savedRange.commonAncestorContainer;
       if(elem.nodeName=='#text' || elem.nodeName=='DIV'&&elem.id.indexOf('contentr')>-1) {
         this.savedRange.insertNode(node)
-      }else if(elem.nodeName=='DIV'&&elem.className.indexOf('el-input')>-1) {
+      }
+      else if(elem.nodeName=='DIV'&&elem.className.indexOf('el-input')>-1) {
         let nodes = this.$refs.wTextareaContent.childNodes;
         // console.log(nodes);
         let cursorTargetIdx = null;
@@ -342,7 +345,6 @@ export default {
       // 监听选定文本的变动
       let sel = window.getSelection();
       let range = sel.rangeCount > 0 ? sel.getRangeAt(0) : null;
-
       // console.log(this.isKeyDown, this.isLocked)
       if(range) {
         // console.log('selectHandler: ', range, range.commonAncestorContainer.ownerDocument.activeElement.id , this.contentId, range.commonAncestorContainer.ownerDocument.activeElement.id === this.contentId)
@@ -439,7 +441,6 @@ export default {
         this.savedRange = range;
 
       }
-
       // if (
       //   range &&
       //   range.commonAncestorContainer.ownerDocument.activeElement.id ===
@@ -447,6 +448,7 @@ export default {
       // ) {
       //   this.savedRange = range;
       // }
+      // console.log('光标',this.savedRange)
     }
   },
   watch: {

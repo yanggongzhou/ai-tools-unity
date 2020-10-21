@@ -233,7 +233,7 @@
         avatarID:3,
         actionShowList:[],
         actionLoading:true,
-        testData:' ',
+        testData:'',
         intervalValue:0.5,//间隔时间
         dismissTimeTypeData:[
           {label:'至视频播放结束',value:0},
@@ -301,7 +301,8 @@
       testData(newValue,oldValue){
         if(this.scriptChangeState) return false;
         this.testData=this.testData.replaceAll('&amp;','&')//去除&占位问题
-        // console.log(this.testData)
+        this.testData = this.testData.replaceAll('&nbsp;','')//去除编译后的&nbsp;
+        // console.log(this.testData,this.testData.length,this.testData.split(''))
         if(newValue.length < oldValue.length&&(oldValue.length-newValue.length)>200){
           let newDom = document.getElementById('newDom');
           newDom.innerHTML = newValue;
