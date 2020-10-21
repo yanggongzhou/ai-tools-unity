@@ -277,7 +277,7 @@
         previewReady:true,//是否资源准备完毕了
         isAutoPlayBtn:false,//是否在自动播放
         isPlaying:false,//是否在播放中
-
+        isPreviewBtn:false,//是否单点播放
 
         temporaryScriptList:[],//临时话术
         temporaryScriptTxt:'',
@@ -293,7 +293,6 @@
         // webInteractionModel:false,//是否web互动
         isFirstScript:false,//是否是第一个脚本，来处理是否需要开场语
         isFirstScriptOnce:false,//同上，但只监测到WebInteractionStart
-
         isOutInteraction:false,//是否脚本外互动
 
         isOpenInteractiveMode:true, //- 是否打开了互动模式
@@ -515,17 +514,27 @@
         }
       },
       WebPreviewReady(state){
-        if(state==='True'){
+        if(state==='True'&&this.isAutoPlayBtn||this.isPreviewBtn){
           UnityPreviewStart(this.previewData[0].avatar.unity);
+          if(this.isPreviewBtn){
+            this.isPreviewBtn = false;
+          }
           // if(!this.isFirstScript){
           //   this.$message.info('播放剧本'+(this.allScriptPlayIndex+1)+'--'+this.allScriptList[this.allScriptPlayIndex].name)
           // }
+          this.previewReady = true;
         }else if(state==='False'){
           this.isAutoPlayBtn = false;
           this.isPlaying = false;
-          this.$message.error('加载资源失败，请重试')
+          this.$notify.error({
+            title:  '加载资源失败!',
+            message:"加载资源失败，请重试！",
+            duration: 0
+          });
+          // this.$message.error('加载资源失败，请重试')
+        }else{
+          this.previewReady = false;
         }
-        this.previewReady = true;
       },
       //自动播放
       AutoPlayEvent(){
@@ -637,6 +646,7 @@
           if(this.queueList.length){
             let _Obj  = this.queueList.shift();
             UnityPreviewTxt(_Obj.name,_Obj.item)
+            this.isPreviewBtn = true;
             this.nowTempId = _Obj.id;
             this.previewData = JSON.parse(_Obj.item)
             this.previewReady = false;
@@ -644,6 +654,7 @@
             if(this.queueContentItem.length){
               let _Obj  = this.queueContentItem.shift();
               UnityPreview(_Obj.name,_Obj.item,'True','True')
+              this.isPreviewBtn = true;
               //当前播放脚本内容的定位信息
               this.nowContentIndex = _Obj.contentIndex;
               this.nowAllScriptIndex = _Obj.allScriptIndex;
@@ -653,7 +664,7 @@
             }else{
               this.previewReady = true;
               this.isPlaying = false;
-
+              this.isPreviewBtn = false;
               this.nowContentIndex = '';
               this.nowAllScriptIndex = '';
               this.nowTempId = '';
@@ -741,7 +752,7 @@
       //预览
       previewBtn(val,ind,allScriptIndex,bool){
         if(this.isAutoPlayBtn){return false}
-
+        this.isPreviewBtn = true;
         // UnityPreviewCancel();
         if(!this.isPlaying){
           if(this.previewReady){
@@ -795,6 +806,7 @@
             // UnityChangeAvatar(val.avatar.unity)
             this.previewData = [_json];
             UnityPreviewTxt('none',JSON.stringify([_json]))
+            this.isPreviewBtn = true;
             this.nowTempId = val.id;
             this.isPlaying = true;
             this.previewReady = false;
