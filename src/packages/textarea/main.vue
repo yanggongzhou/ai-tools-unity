@@ -121,6 +121,8 @@ export default {
     let self = this;
     //删除标签
     window.delTag = function(id){
+      // console.log(event)
+      event.stopPropagation();//防止冒泡
       let child = document.getElementById(id)
       // console.log(JSON.parse(child.dataset.obj).type)
       let _type = JSON.parse(child.dataset.obj).type;
@@ -254,6 +256,7 @@ export default {
       // 插入链接
       // // 插入链接
       // this.savedRange.insertNode(node)
+
       // console.log(this.savedRange)
       let elem = this.savedRange.commonAncestorContainer;
       if(elem.nodeName=='#text' || elem.nodeName=='DIV'&&elem.id.indexOf('contentr')>-1) {
@@ -441,6 +444,7 @@ export default {
         this.savedRange = range;
 
       }
+
       // if (
       //   range &&
       //   range.commonAncestorContainer.ownerDocument.activeElement.id ===

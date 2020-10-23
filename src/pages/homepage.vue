@@ -111,7 +111,7 @@ export default {
         this.$Session.set('ai_user_id', id);
         this.$Session.set('ai_user_token', token)
         this.$Session.set('ai_user_phone', phone)
-
+        // alert('id'+id+';   token:'+token+';    phone:'+phone)
         this.isUserInfo = false;
         clearTimeout(this.userInfoTimeOut)
         this.$message.success('用户信息已注入！')

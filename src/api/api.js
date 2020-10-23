@@ -80,7 +80,7 @@ export const chatInterface={
   },
 };
 
-let _apiUrl = 'https://adserver.magics-ad.com';
+let _apiUrl = 'https://adtest.magics-ad.com';
 // if(window.location.hostname=='0.0.0.0') {
 //   _apiUrl = 'https://adtest.magics-ad.com';
 // }

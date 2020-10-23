@@ -283,6 +283,34 @@
       window.WebSelectAvatarState = this.WebSelectAvatarState
     },
     mounted() {
+      let self = this;
+      //删除标签
+      window.editTag = function(id){
+        let domObj = JSON.parse(document.getElementById(id).dataset.obj)
+        console.log('editTag',id,domObj)
+        if(domObj.type==="image"){
+          self.imgForm.region = domObj.region;
+          domObj.isAll? self.imgForm.dismissTimeType = 1: self.imgForm.dismissTimeType = 2;
+          self.imgForm.url = domObj.url;
+          self.imgForm.name = domObj.name;
+          self.imgForm.dismissTime = domObj.time/1000;
+          self.imgForm.isAll=domObj.isAll;
+          self.videoVisible = false;
+          self.imgVisible = true;
+        }else if(domObj.type==="video"){
+          domObj.isAll? self.ruleForm.dismissTimeType = 1: self.ruleForm.dismissTimeType = 2;
+          self.ruleForm.url = domObj.url;
+          self.ruleForm.name = domObj.name;
+          self.ruleForm.region = domObj.region;
+          self.ruleForm.dismissTime = domObj.time/1000;
+          self.ruleForm.isAll=domObj.isAll;
+          self.videoVisible = true;
+          self.imgVisible = false;
+        }else if(domObj.type==="intervalTime"){
+
+        }
+      }
+
       //编辑的数据
       if(this.$route.params.data){
         let resArr  = this.$route.params.data
@@ -522,6 +550,7 @@
                   index:txtInd,
                   time:val.info.dismissTime,
                   type:"image",
+                  region:val.info.child[0].region,
                   name:val.info.child[0].name,
                   url:val.info.child[0].url,
                   id:val.info.child[0].id,
@@ -532,7 +561,9 @@
                   index:txtInd,
                   time:val.info.dismissTime,
                   type:"video",
+                  region:val.info.child[0].region,
                   name:val.info.child[0].name,
+                  isSupportAudio:val.info.child[0].isSupportAudio,
                   url:val.info.child[0].url,
                   id:val.info.child[0].id,
                   isAll:val.isAll,
@@ -553,12 +584,12 @@
         let contentBDArr = contentBD.split('')
         positionTag.forEach((val,ind)=>{
           if(val.type==="image"){
-            let _data = JSON.stringify({type:'image',name:val.name,time:val.time,url:val.url,id:val.id,isAll:val.isAll}).replace(/"/g,"&quot;")
+            let _data = JSON.stringify({type:'image',name:val.name,time:val.time,url:val.url,id:val.id,isAll:val.isAll,region:val.region}).replace(/"/g,"&quot;")
             let _time = val.time/1000+'s';
             if(val.isAll){
               _time = 'all'
             }
-            let _imageDom = `<wise id="`+val.id+`" data-obj="`+_data+`"><div class="tagImg tagtag">图片`+val.name+' ('+_time+`)<i class="el-icon-close" onclick="delTag(\``+val.id+`\`)"></i>&nbsp;</div></wise>`
+            let _imageDom = `<wise id="`+val.id+`" data-obj="`+_data+`"><div class="tagImg tagtag" onclick="editTag(\``+val.id+`\`)">图片`+val.name+' ('+_time+`)<i class="el-icon-close" onclick="delTag(\``+val.id+`\`)"></i>&nbsp;</div></wise>`
             // contentBDArr[val.index]= _imageDom + contentBDArr[val.index]
             if(contentBDArr[val.index]===undefined){
               contentBDArr[val.index] = _imageDom
@@ -569,12 +600,12 @@
               contentBDArr[val.index] = _txt.join('');
             }
           }else if(val.type==="video"){
-            let _data = JSON.stringify({type:'video',name:val.name,time:val.time,url:val.url,id:val.id,isAll:val.isAll}).replace(/"/g,"&quot;")
+            let _data = JSON.stringify({type:'video',name:val.name,time:val.time,url:val.url,id:val.id,isAll:val.isAll,region:val.region,isSupportAudio:val.isSupportAudio}).replace(/"/g,"&quot;")
             let _time = val.time/1000+'s';
             if(val.isAll){
               _time = 'all'
             }
-            let _videoDom = `<wise id="`+val.id+`" data-obj="`+_data+`"><div class="tagVideo tagtag">视频`+val.name+' ('+_time+`)<i class="el-icon-close" onclick="delTag(\``+val.id+`\`)"></i>&nbsp;</div></wise>`
+            let _videoDom = `<wise id="`+val.id+`" data-obj="`+_data+`"><div class="tagVideo tagtag" onclick="editTag(\``+val.id+`\`)">视频`+val.name+' ('+_time+`)<i class="el-icon-close" onclick="delTag(\``+val.id+`\`)"></i>&nbsp;</div></wise>`
             if(contentBDArr[val.index]===undefined){
               contentBDArr[val.index] = _videoDom
             }else{
@@ -587,7 +618,7 @@
             let _data = JSON.stringify({id:val.id, type:'action', actionName:val.actionName}).replace(/"/g,"&quot;")
             let _actionName = '';
             self.actionShowList.forEach(act=>{if(act.value===val.actionName){ _actionName = act.label}})
-            let _actionDom = `<wise id="`+val.id+`" data-obj="`+_data+`"><div class="action tagtag">`+_actionName+`<i class="el-icon-close" onclick="delTag(\``+val.id+`\`)"></i>&nbsp;</div></wise>`
+            let _actionDom = `<wise id="`+val.id+`" data-obj="`+_data+`"><div class="action tagtag" onclick="editTag(\``+val.id+`\`)">`+_actionName+`<i class="el-icon-close" onclick="delTag(\``+val.id+`\`)"></i>&nbsp;</div></wise>`
             if(contentBDArr[val.index]===undefined){
               contentBDArr[val.index] = _actionDom
             }else{
@@ -598,7 +629,7 @@
             }
           }else if(val.type==="interval"){
             let _data = JSON.stringify({id:self.getGuid(),type:'interval', time:val.time}).replace(/"/g,"&quot;")
-            let _intervalDom = `<wise id="`+val.id+`" data-obj="`+_data+`"><div class="jiange tagtag">间隔(`+val.time/1000+`s)<i class="el-icon-close" onclick="delTag(\``+val.id+`\`)"></i>&nbsp;</div></wise>`
+            let _intervalDom = `<wise id="`+val.id+`" data-obj="`+_data+`"><div class="jiange tagtag" onclick="editTag(\``+val.id+`\`)">间隔(`+val.time/1000+`s)<i class="el-icon-close" onclick="delTag(\``+val.id+`\`)"></i>&nbsp;</div></wise>`
             if(contentBDArr[val.index]===undefined){
               contentBDArr[val.index] = _intervalDom
             }else{
@@ -609,7 +640,7 @@
             }
           }else if(val.type==="interaction"){
             let _data = JSON.stringify({id:self.getGuid(),type:'interaction', maximum:val.maximum,isSupport:val.isSupport}).replace(/"/g,"&quot;")
-            let _intervalDom = `<wise id="`+val.id+`" data-obj="`+_data+`"><div class="hudong tagtag">互动<i class="el-icon-close" onclick="delTag(\``+val.id+`\`)"></i>&nbsp;</div></wise>`
+            let _intervalDom = `<wise id="`+val.id+`" data-obj="`+_data+`"><div class="hudong tagtag" onclick="editTag(\``+val.id+`\`)">互动<i class="el-icon-close" onclick="delTag(\``+val.id+`\`)"></i>&nbsp;</div></wise>`
             if(contentBDArr[val.index]===undefined){
               contentBDArr[val.index] = _intervalDom
             }else{
@@ -967,7 +998,7 @@
           maximum:10,
           id:_id
         }
-        let _text =  `<div class="hudong tagtag">互动<i class="el-icon-close" onClick="delTag(\``+_id+`\`)"></i>&nbsp;</div>`
+        let _text =  `<div class="hudong tagtag" onclick="editTag(\``+_id+`\`)">互动<i class="el-icon-close" onclick="delTag(\``+_id+`\`)"></i>&nbsp;</div>`
         this.$refs.testText.addTag(_text,_data)
       },
       addTag (type,interval) {
@@ -979,7 +1010,7 @@
             time:interval*1000,
             id:_id
           }
-          let _text =  `<div class="jiange tagtag">间隔(`+self.intervalValue+`s)<i class="el-icon-close" onClick="delTag(\``+_id+`\`)"></i>&nbsp;</div>`
+          let _text =  `<div class="jiange tagtag" onclick="editTag(\``+_id+`\`)">间隔(`+self.intervalValue+`s)<i class="el-icon-close" onclick="delTag(\``+_id+`\`)"></i>&nbsp;</div>`
           this.$refs.testText.addTag(_text,_data)
         }
         // this.$refs.testText.addTag(text,dataId)
@@ -992,7 +1023,7 @@
           actionName:val.value,
           id:_id
         }
-        let _text =  `<div class="action tagtag">`+val.label+`<i class="el-icon-close" onClick="delTag(\``+_id+`\`)"></i>&nbsp;</div>`
+        let _text =  `<div class="action tagtag" onclick="editTag(\``+_id+`\`)">`+val.label+`<i class="el-icon-close" onclick="delTag(\``+_id+`\`)"></i>&nbsp;</div>`
         this.$refs.testText.addTag(_text,_data)
       },
       getDisplayImg(Obj){
@@ -1023,7 +1054,7 @@
           if(this.ruleForm.isAll){
             _time = 'all'
           }
-          _text = `<div class="tagtag tagVideo">视频`+this.ruleForm.videoName+` (`+_time+`)<i class="el-icon-close" onClick="delTag(\``+_id+`\`)"></i>&nbsp;</div>`
+          _text = `<div class="tagtag tagVideo" onclick="editTag(\``+_id+`\`)">视频`+this.ruleForm.videoName+` (`+_time+`)<i class="el-icon-close" onclick="delTag(\``+_id+`\`)"></i>&nbsp;</div>`
           this.$refs.testText.addTag(_text,_data)
           this.$emit('displayVideoUrl',_data)
           this.videoVisible = false;
@@ -1041,7 +1072,7 @@
           if(this.imgForm.isAll){
             _time = 'all'
           }
-          _text =  `<div class="tagtag tagImg">图片`+this.imgForm.name+` (`+_time+`)<i class="el-icon-close" onClick="delTag(\``+_id+`\`)"></i>&nbsp;</div>`
+          _text =  `<div class="tagtag tagImg" onclick="editTag(\``+_id+`\`)">图片`+this.imgForm.name+` (`+_time+`)<i class="el-icon-close" onclick="delTag(\``+_id+`\`)"></i>&nbsp;</div>`
           this.$refs.testText.addTag(_text,_data)
           this.$emit('displayImgUrl',_data)
           this.imgVisible = false;

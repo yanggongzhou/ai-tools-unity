@@ -308,6 +308,7 @@
       this.getAllWords();//请求 话术
       window.WebErrorMessage=this.WebErrorMessage;
       window.WebInteractionStateChange=this.WebInteractionStateChange;
+      window.WebAckStopPlaySystem=this.WebAckStopPlaySystem;//强制中断接收
     },
     mounted() {
       let self = this;
@@ -331,6 +332,19 @@
       UnityInteractionStateChange("True");
     },
     methods:{
+      WebAckStopPlaySystem(){
+        this.previewReady = true;
+        this.allScriptPlayIndex = '';
+        this.resetIacParams();//停止抓取弹幕
+        // UnityPreviewCancel();//结束自动播放接口
+        this.isPlaying = false;
+        this.queueList = [];
+        this.queueContentItem = [];
+        //自动直播unity主动发送终止 需要继续播，待完成—————————————————————————————————————————————————————————————————————————
+        if(this.isAutoPlayBtn){
+          this.AutoPlayEvent();
+        }
+      },
       //断网
       WebErrorMessage(err){
         if(err==="True"){
