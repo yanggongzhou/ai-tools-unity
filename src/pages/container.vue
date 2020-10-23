@@ -253,28 +253,63 @@
       },
       //图片接受
       displayImgUrl(data){
-        let self = this;
-        let trigItem=JSON.parse(JSON.stringify(resultJSON.imageItem))
-        trigItem.info.child[0].type="image"
-        trigItem.isAll = data.isAll;
-        trigItem.info.dismissTime=data.time;
-        trigItem.info.child[0].url=data.url;
-        trigItem.info.child[0].id=data.id;
-        trigItem.info.child[0].region=data.region
-        trigItem.info.child[0].name=data.name
-        self.TriggerDiv.push(trigItem)
+        let self = this,isEditTag=false;
+        if(self.TriggerDiv.length){
+          self.TriggerDiv.forEach(val=>{
+            if(val.info.child[0].id===data.id){
+              isEditTag = true;
+              val.info.child[0].type="image"
+              val.isAll = data.isAll;
+              val.info.dismissTime=data.time;
+              val.info.child[0].url=data.url;
+              val.info.child[0].id=data.id;
+              val.info.child[0].region=data.region
+              val.info.child[0].name=data.name
+            }
+          })
+        }
+
+        if(!isEditTag){
+          let trigItem=JSON.parse(JSON.stringify(resultJSON.imageItem))
+          trigItem.info.child[0].type="image"
+          trigItem.isAll = data.isAll;
+          trigItem.info.dismissTime=data.time;
+          trigItem.info.child[0].url=data.url;
+          trigItem.info.child[0].id=data.id;
+          trigItem.info.child[0].region=data.region
+          trigItem.info.child[0].name=data.name
+          self.TriggerDiv.push(trigItem)
+        }
       },
       displayVideoUrl(data){
-        let trigItem=JSON.parse(JSON.stringify(resultJSON.videoItem))
-        trigItem.info.child[0].type="video";
-        trigItem.isAll = data.isAll;
-        trigItem.info.dismissTime=data.time;
-        trigItem.info.child[0].url=data.url;
-        trigItem.info.child[0].id=data.id
-        trigItem.info.child[0].region=data.region
-        trigItem.info.child[0].isSupportAudio=data.isSupportAudio
-        trigItem.info.child[0].name=data.name
-        this.TriggerDiv.push(trigItem)
+        let self = this,isEditTag=false;
+        if(self.TriggerDiv.length){
+          self.TriggerDiv.forEach(val=>{
+            if(val.info.child[0].id===data.id){
+              isEditTag = true;
+              val.info.child[0].type="video";
+              val.isAll = data.isAll;
+              val.info.dismissTime=data.time;
+              val.info.child[0].url=data.url;
+              val.info.child[0].id=data.id
+              val.info.child[0].region=data.region
+              val.info.child[0].isSupportAudio=data.isSupportAudio
+              val.info.child[0].name=data.name
+            }
+          })
+        }
+        if(!isEditTag){
+          let trigItem=JSON.parse(JSON.stringify(resultJSON.videoItem))
+          trigItem.info.child[0].type="video";
+          trigItem.isAll = data.isAll;
+          trigItem.info.dismissTime=data.time;
+          trigItem.info.child[0].url=data.url;
+          trigItem.info.child[0].id=data.id
+          trigItem.info.child[0].region=data.region
+          trigItem.info.child[0].isSupportAudio=data.isSupportAudio
+          trigItem.info.child[0].name=data.name
+          this.TriggerDiv.push(trigItem)
+        }
       },
       //输入框删除tag事件
       deleteTrigger(id){

@@ -123,6 +123,7 @@
             </el-form-item>
             <el-form-item label="上传文件">
               <my-upload :imgVisible="imgVisible" :videoVisible="videoVisible"
+                         ref="uploadRef"
                          @getDisplayImg="getDisplayImg" @getDisplayVideo="getDisplayVideo"></my-upload>
             </el-form-item>
             <el-form-item label="设置时长" prop="dismissTimeType">
@@ -267,6 +268,7 @@
 
         videoVisible:false,
         imgVisible:false,
+        editTagId:'',//是否是再次编辑
 
         cutTxtArr:[],//每次裁剪后被替换的缓存数据
         cutArr:[],//裁剪数据的缓存区
@@ -297,15 +299,33 @@
           self.imgForm.isAll=domObj.isAll;
           self.videoVisible = false;
           self.imgVisible = true;
+          self.editTagId= domObj.id;
+          self.$nextTick(()=>{
+            self.$refs.uploadRef.tempList= [{
+              name: domObj.name,
+              status: "success",
+              uid: self.getGuid(),
+              url: domObj.url
+            }]
+          })
         }else if(domObj.type==="video"){
           domObj.isAll? self.ruleForm.dismissTimeType = 1: self.ruleForm.dismissTimeType = 2;
-          self.ruleForm.url = domObj.url;
-          self.ruleForm.name = domObj.name;
+          self.ruleForm.videoUrl = domObj.url;
+          self.ruleForm.videoName = domObj.name;
           self.ruleForm.region = domObj.region;
           self.ruleForm.dismissTime = domObj.time/1000;
           self.ruleForm.isAll=domObj.isAll;
           self.videoVisible = true;
           self.imgVisible = false;
+          self.editTagId= domObj.id;
+          self.$nextTick(()=>{
+            self.$refs.uploadRef.tempList= [{
+              name: domObj.name,
+              status: "success",
+              uid: self.getGuid(),
+              url: domObj.url
+            }]
+          })
         }else if(domObj.type==="intervalTime"){
 
         }
@@ -1037,8 +1057,10 @@
       },
       //弹框确定
       confrimBtn(){
-        let _data,_text,_time;
-        let _id = this.getGuid()
+        let tagDom;
+        if(this.editTagId){tagDom =document.getElementById(this.editTagId);}
+        let _data,_text,_time,_id;
+        this.editTagId?_id = this.editTagId:_id = this.getGuid();
         if(this.videoVisible&&this.ruleForm.videoUrl){
           _data={
             type:'video',
@@ -1055,7 +1077,13 @@
             _time = 'all'
           }
           _text = `<div class="tagtag tagVideo" onclick="editTag(\``+_id+`\`)">视频`+this.ruleForm.videoName+` (`+_time+`)<i class="el-icon-close" onclick="delTag(\``+_id+`\`)"></i>&nbsp;</div>`
-          this.$refs.testText.addTag(_text,_data)
+          if(this.editTagId){
+            tagDom.dataset.obj = JSON.stringify(_data)
+            tagDom.innerHTML = _text;
+          }else{
+            this.$refs.testText.addTag(_text,_data)
+          }
+
           this.$emit('displayVideoUrl',_data)
           this.videoVisible = false;
         }else if(!this.videoVisible&&this.imgForm.url){
@@ -1073,7 +1101,12 @@
             _time = 'all'
           }
           _text =  `<div class="tagtag tagImg" onclick="editTag(\``+_id+`\`)">图片`+this.imgForm.name+` (`+_time+`)<i class="el-icon-close" onclick="delTag(\``+_id+`\`)"></i>&nbsp;</div>`
-          this.$refs.testText.addTag(_text,_data)
+          if(this.editTagId){
+            tagDom.dataset.obj = JSON.stringify(_data)
+            tagDom.innerHTML = _text;
+          }else{
+            this.$refs.testText.addTag(_text,_data)
+          }
           this.$emit('displayImgUrl',_data)
           this.imgVisible = false;
         }else{

@@ -79,7 +79,6 @@
             return false;
           }
           this.$refs.zipUpload.submit();
-
         }else{
             const isGif = file.raw.type === 'image/gif';
             const isPNG = file.raw.type === 'image/png';
@@ -96,7 +95,6 @@
               return false;
             }
             this.$refs.zipUpload.submit();
-
         }
 
       },
