@@ -46,7 +46,11 @@
 
         <!--      单个剧本内容-->
         <div class="contentBox float_left">
-          <div class="content-item" v-for="(val,ind) in contentList" :id="'content'+ind+'script'+allScriptIndex"  :key="ind+'content'"   :style="ind | styleFilter3">
+          <div class="content-item"
+               v-for="(val,ind) in contentList"
+               :id="'content'+ind+'script'+allScriptIndex"
+               :class="{'borderLeftGreen': recordId==='content'+ind+'script'+allScriptIndex}"
+               :key="ind+'content'"   :style="ind | styleFilter3">
             <div class="header clearfix">
               <div class="title float_left">第{{ind+1}}段</div>
               <div class="pdtip float_left"
@@ -263,6 +267,8 @@
         contentIndex:0,//下个脚本的下标
         nextPlayVal:'',//下个脚本的内容
         nextAllScriptIndex:0,///下个脚本的剧本下标
+
+        recordId:'',//记录播放的内容区
 
         nowContentIndex:'',//正在播放的脚本下标
         nowAllScriptIndex:'',//正在播放的剧本下标
@@ -656,6 +662,8 @@
             if(this.queueContentItem.length){
               let _Obj  = this.queueContentItem.shift();
               UnityPreview(_Obj.name,_Obj.item,'True','True')
+              this.recordId = 'content'+_Obj.contentIndex+'script'+_Obj.allScriptIndex;
+
               this.isPreviewBtn = true;
               //当前播放脚本内容的定位信息
               this.nowContentIndex = _Obj.contentIndex;
@@ -762,6 +770,7 @@
         if(!this.isPlaying){
           if(this.previewReady){
             UnityChangeAvatar(val.avatar.unity)
+            this.recordId = 'content'+ind+'script'+allScriptIndex;//记录播放痕迹
             this.previewData = [val];
             // UnityPreview(val.avatar.unity,JSON.stringify([val]))
             this.isPlaying = true;
@@ -1215,5 +1224,8 @@
   }
   .interaction_pop{
     font-size: 12px;
+  }
+  .borderLeftGreen{
+    border-left: 7px solid #4caf50!important;
   }
 </style>
