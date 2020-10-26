@@ -4,6 +4,7 @@
       <div class="leftBox2">
         <div class="left_div"
              v-for="(val,ind) in ScriptList"
+             :id="'model'+ind"
              :key="ind+'model'">
           <div class="left_icon">
             <i class="view el-icon-view" @click="previewBtn(val,ind)"></i>
@@ -200,7 +201,7 @@
         if((val+1).toString().length===1){
           return '0'+(val+1)
         }else{
-          return val;
+          return val+1;
         }
       },
       styleFilter(val){
@@ -516,6 +517,9 @@
           self.editImport(self.ScriptList[self.scriptIndex]);
         })
         this.$forceUpdate()
+        this.$nextTick(()=>{
+          document.querySelector("#model"+self.scriptIndex).scrollIntoView(true);
+        })
       },
       //预览动作
       previewAction(val){ UnityAvatarAction(resultJSON.resultJsonObj.avatar.unity,val.value) },
