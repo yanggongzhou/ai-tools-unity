@@ -93,7 +93,8 @@
 <!--              </el-tooltip>-->
 <!--            </el-col>-->
             <el-col :span="12">
-              <div class="icon2" @click="innerVisibleOpen" :class="{'disabled-icon2': isAutoPlayBtn}">
+<!--              :class="{'disabled-icon2': isAutoPlayBtn}"-->
+              <div class="icon2" @click="innerVisibleOpen">
                 <div class="huashu"></div>
                 <span>临时话术</span>
               </div>
@@ -289,7 +290,7 @@
         isInnerJsonInteraction: false,//是否为脚本内互动
         isUnity: true, // 是否为Unity
 
-        // interactionModel:false,//是否互动
+        interactionModel:false,//是否互动
         // webInteractionModel:false,//是否web互动
         isFirstScript:false,//是否是第一个脚本，来处理是否需要开场语
         isFirstScriptOnce:false,//同上，但只监测到WebInteractionStart
@@ -354,6 +355,9 @@
             duration: 0
           });
           this.isDisconnection=true;
+          if(this.interactionModel){
+            UnityInteractionEnd(this.previewData[0].avatar.unity);
+          }
         }else{
           this.$notify.success({
             title:  '网络已重新连接!',
@@ -396,9 +400,10 @@
       },
       //临时话术打开
       innerVisibleOpen(){
-        if(!this.isAutoPlayBtn){
-          this.innerVisible= true;
-        }
+        // if(!this.isAutoPlayBtn){
+        //   this.innerVisible= true;
+        // }
+        this.innerVisible= true;
       },
       //更改禁用状态
       updateState(ind){
@@ -573,8 +578,7 @@
       },
       //播放互动标签-脚本内互动
       WebInteractionStart(){
-        // this.interactionModel = true;
-        // this.webInteractionModel = true;
+        this.interactionModel = true;
         if(this.isFirstScript&&this.isFirstScriptOnce){
           this.playWelcomeWords();
           this.isFirstScriptOnce = false;
@@ -593,6 +597,10 @@
       },
       //对应于UnityInteractionEnd，结束状态返回继续播放
       WebInteractionEnd(){
+        if(this.isDisconnection){//断网循环
+          this.AutoPlayEvent();
+          return false;
+        }
         if(this.isFirstScript){
           let _state = "False"
           this.isOpenInteractiveMode?_state = "False":_state="True"
@@ -607,18 +615,12 @@
             UnityPreviewContinue(this.previewData[0].avatar.unity);
           }
         }
-        // this.interactionModel = false;
+        this.interactionModel = false;
       },
 
       //播放结束回调  播放一句互动结束回调Unity
       WebPreviewEnd(){
         if(this.isAutoPlayBtn){//是否自动播放
-            if(this.isDisconnection){//断网循环
-              this.AutoPlayEvent();
-              return false;
-            }
-
-          // if(this.interactionModel&&this.webInteractionModel){
             if((this.isOpenInteractiveMode || this.isEnterInteraction) && !this.interactionModeIsEnd && this.isInnerJsonInteraction) {
               // 互动模式处理
               this.handleInacLogic(); // 已经开启脚本内互动模式，正常处理互动流程
@@ -644,17 +646,9 @@
                   // this.interactionModeIsEnd = false;
                   return false;
                 }
-
                 this.handleInacLogic();
-
-                // this.AutoPlayEvent();
               }
-              // UnityInteractionEnd(this.previewData[0].avatar.unity);
             }
-          // }
-        // else if(!this.interactionModel&&!this.webInteractionModel){
-        //     this.AutoPlayEvent();
-        //   }
         }
         else{
           if(this.queueList.length){
