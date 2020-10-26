@@ -93,8 +93,7 @@
 <!--              </el-tooltip>-->
 <!--            </el-col>-->
             <el-col :span="12">
-<!--              :class="{'disabled-icon2': isAutoPlayBtn}"-->
-              <div class="icon2" @click="innerVisibleOpen">
+              <div class="icon2" @click="innerVisibleOpen"  :class="{'disabled-icon2': isAutoPlayBtn}">
                 <div class="huashu"></div>
                 <span>临时话术</span>
               </div>
@@ -314,7 +313,7 @@
     mounted() {
       let self = this;
       document.onkeydown = (event) => {
-        console.log(event)
+        // console.log(event)
         //ctrl+space
          if (event.ctrlKey && event.keyCode == 78){
            self.nextPlayBtn()
@@ -400,10 +399,10 @@
       },
       //临时话术打开
       innerVisibleOpen(){
-        // if(!this.isAutoPlayBtn){
-        //   this.innerVisible= true;
-        // }
-        this.innerVisible= true;
+        if(!this.isAutoPlayBtn){
+          this.innerVisible= true;
+        }
+        // this.innerVisible= true;
       },
       //更改禁用状态
       updateState(ind){
@@ -425,11 +424,6 @@
       //剧本切换
       scriptChange(val){
         this.contentList = this.allScriptList[val].scriptList
-        this.otherMsg = {
-          name:this.allScriptList[val].name,
-          shortcut_json:this.allScriptList[val].shortcut_json,
-          gs_id:this.allScriptList[val].id
-        }
         this.$forceUpdate();
       },
 
@@ -686,7 +680,7 @@
         if(this.isAutoPlayBtn){
           return false;
         }
-        console.log(this.nextPlayVal,this.contentIndex,this.nextAllScriptIndex)
+          console.log(this.nextPlayVal,this.contentIndex,this.nextAllScriptIndex)
         // if()
         this.previewBtn(this.nextPlayVal,this.contentIndex,this.nextAllScriptIndex,true)
       },
@@ -735,10 +729,11 @@
           this.allScriptIndex = this.nextAllScriptIndex;
           this.scriptChange(this.allScriptIndex)
         }
-        let _contentList = this.allScriptList[this.nextAllScriptIndex].scriptList
+        let _contentList = this.allScriptList[allScriptIndex].scriptList
 
         if(ind<_contentList.length-1){
           this.contentIndex = ind+1;
+          this.nextAllScriptIndex = allScriptIndex;
           this.nextPlayVal = this.contentList[ind+1]
         }else{
           this.contentIndex = 0;
@@ -748,10 +743,10 @@
             this.nextPlayVal = this.allScriptList[this.nextAllScriptIndex].scriptList[0]
           }else{
             this.nextAllScriptIndex = 0;
-            if(bool){
-              this.allScriptIndex = 0 ;
-              this.scriptChange(this.allScriptIndex)
-            }
+            // if(bool){
+            //   this.allScriptIndex = 0 ;
+            //   this.scriptChange(this.allScriptIndex)
+            // }
 
             this.nextPlayVal = this.allScriptList[0].scriptList[0]
           }
@@ -902,6 +897,7 @@
           })
           if(!this.isPlaying){
             UnityPreviewTxt('none',JSON.stringify([_json]))
+            this.isPreviewBtn = true;
             this.nowTempId = this.temporaryScriptList[this.temporaryScriptList.length-1].id
             this.previewData = JSON.parse(JSON.stringify([_json]))
             this.isPlaying = true;
