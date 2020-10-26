@@ -46,7 +46,7 @@
 
         <!--      单个剧本内容-->
         <div class="contentBox float_left">
-          <div class="content-item" v-for="(val,ind) in contentList"  :key="ind+'content'"   :style="ind | styleFilter3">
+          <div class="content-item" v-for="(val,ind) in contentList" :id="'content'+ind+'script'+allScriptIndex"  :key="ind+'content'"   :style="ind | styleFilter3">
             <div class="header clearfix">
               <div class="title float_left">第{{ind+1}}段</div>
               <div class="pdtip float_left"
@@ -677,10 +677,12 @@
 
       //播放下一个
       nextPlayBtn(){
+        let self = this;
         if(this.isAutoPlayBtn){
           return false;
         }
           console.log(this.nextPlayVal,this.contentIndex,this.nextAllScriptIndex)
+        document.querySelector("#content"+self.nowContentIndex+"script"+self.allScriptIndex).scrollIntoView(true);
         // if()
         this.previewBtn(this.nextPlayVal,this.contentIndex,this.nextAllScriptIndex,true)
       },
