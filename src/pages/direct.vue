@@ -621,6 +621,10 @@
       //播放结束回调  播放一句互动结束回调Unity
       WebPreviewEnd(){
         if(this.isAutoPlayBtn){//是否自动播放
+          if(this.isDisconnection){
+            this.AutoPlayEvent();
+            return false;
+          }
             if((this.isOpenInteractiveMode || this.isEnterInteraction) && !this.interactionModeIsEnd && this.isInnerJsonInteraction) {
               // 互动模式处理
               this.handleInacLogic(); // 已经开启脚本内互动模式，正常处理互动流程
