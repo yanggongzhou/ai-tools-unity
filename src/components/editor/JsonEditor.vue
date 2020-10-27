@@ -8,18 +8,27 @@
              :key="ind+'model'">
           <div class="left_icon">
             <i class="view el-icon-view" @click="previewBtn(val,ind)"></i>
-            <el-popconfirm
-              confirmButtonText='是的'
-              cancelButtonText='取消'
-              icon="el-icon-info"
-              iconColor="red"
-              title="这一段内容确定删除吗？"
-              @onConfirm="delBtn(ind)">
-              <i v-show="ScriptList.length!==1" slot="reference" class="delete el-icon-delete"></i>
-            </el-popconfirm>
-
+<!--            <el-popconfirm-->
+<!--              confirmButtonText='是的'-->
+<!--              cancelButtonText='取消'-->
+<!--              icon="el-icon-info"-->
+<!--              iconColor="red"-->
+<!--              title="这一段内容确定删除吗？"-->
+<!--              @onConfirm="delBtn(ind)">-->
+<!--              <i v-show="ScriptList.length!==1" slot="reference" class="delete el-icon-more"></i>-->
+<!--            </el-popconfirm>-->
+            <el-dropdown @command="proto=>handleCommand(ind,proto)" trigger="click">
+              <i class="moremore el-icon-arrow-down el-icon-more"></i>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item v-for="(value,index) in dropdownData"
+                                  :key="index+'dropdown'"
+                                  :command="value.value"
+                                  :icon="value.icon">
+                  {{value.label}}
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
           </div>
-
           <el-radio
             @change="scriptChange"
             class="left_card"
@@ -194,7 +203,6 @@
 <script>
   import upload from "./upload";
   import {resultJSON} from '../../api/result'
-  import textJSON from '../../api/text.json'
   export default {
     filters:{
       indFilter(val){
@@ -279,6 +287,15 @@
 
         scriptChangeState:false,
         scriptChangeTimeout:'',
+
+        dropdownData:[
+          {label:"上移",value:'1',icon:"el-icon-caret-top"},
+          {label:"下移",value:'2',icon:'el-icon-caret-bottom'},
+          {label:"置顶",value:'3',icon:'el-icon-top'},
+          {label:"置底",value:'4',icon:'el-icon-bottom'},
+          {label:"插入",value:'5',icon:'el-icon-circle-plus-outline'},
+          {label:"删除",value:'6',icon:'el-icon-delete'},
+        ]
       };
     },
     created() {
@@ -376,6 +393,103 @@
     },
 
     methods: {
+      handleCommand(ind,proto){
+        switch (proto) {
+          case "1":
+            this.moveUp(ind);
+            break;
+          case "2":
+            this.moveDown(ind);
+            break;
+          case "3":
+            this.toFirst(ind);
+            break;
+          case "4":
+            this.toLast(ind);
+            break;
+          case "5":
+            this.insertBtn(ind)
+            break;
+          case "6":
+            this.delBtn(ind)
+            break;
+        }
+      },
+      //上移
+      moveUp(ind){
+        if(ind){
+          if(this.scriptIndex === ind){
+            this.scriptIndex = ind-1
+            this.scriptIndexOld = this.scriptIndex;
+          }
+          this.ScriptList[ind] = JSON.parse(JSON.stringify(this.ScriptList.splice(ind-1,1,this.ScriptList[ind])[0]))
+        }else{
+          this.$message.warning('已至最高层')
+        }
+      },
+      //下移
+      moveDown(ind){
+        if(ind!==this.ScriptList.length-1){
+          if(this.scriptIndex === ind){
+            this.scriptIndex = ind+1
+            this.scriptIndexOld = this.scriptIndex;
+          }
+          this.ScriptList[ind] = JSON.parse(JSON.stringify(this.ScriptList.splice(ind+1,1,this.ScriptList[ind])[0]))
+        }else{
+          this.$message.warning('已至最底层')
+        }
+      },
+      //置顶
+      toFirst(ind){
+        if(ind){
+          if(this.scriptIndex === ind){
+            this.scriptIndex = 0;
+            this.scriptIndexOld = this.scriptIndex;
+          }
+          this.ScriptList.unshift(this.ScriptList.splice(ind , 1)[0]);
+        }else{
+          this.$message.warning('已至最高层')
+        }
+      },
+      //置底
+      toLast(ind){
+        if(ind!==this.ScriptList.length-1){
+          if(this.scriptIndex === ind){
+            this.scriptIndex = this.ScriptList.length-1
+            this.scriptIndexOld = this.scriptIndex;
+          }
+          this.ScriptList.push(this.ScriptList.splice(ind , 1)[0]);
+        }else{
+          this.$message.warning('已至最底层')
+        }
+      },
+      //插入
+      insertBtn(ind){
+        if(this.scriptIndex>ind){
+          this.scriptIndex+=1;
+          this.scriptIndexOld = this.scriptIndex;
+        }
+        this.ScriptList.splice(ind,1,JSON.parse(JSON.stringify(this.ScriptList[ind])),JSON.parse(JSON.stringify(resultJSON.resultJsonObj)))
+      },
+      //删除
+      delBtn(ind){
+        if(this.scriptIndex===ind&&ind){
+          this.scriptIndex-=1
+          // this.scriptChange(this.scriptIndex)
+          this.scriptIndexOld = this.scriptIndex;
+          this.$emit('editImportTriggerDiv',this.ScriptList[this.scriptIndex])
+          this.editImport(this.ScriptList[this.scriptIndex]);
+        }else if(this.scriptIndex===ind&&ind===0){
+          this.scriptIndex+=1
+          this.scriptIndexOld = this.scriptIndex;
+          this.$emit('editImportTriggerDiv',this.ScriptList[this.scriptIndex])
+          this.editImport(this.ScriptList[this.scriptIndex]);
+        }else if(this.scriptIndex>ind){
+          this.scriptIndex-=1
+        }
+        this.ScriptList.splice(ind,1);
+      },
+
       //预览
       previewBtn(val,ind){
         UnityPreviewCancel()
@@ -468,25 +582,6 @@
           this.$message.error('加载资源失败，请重试')
         }
         this.previewReady = true;
-      },
-
-      //删除
-      delBtn(ind){
-        if(this.scriptIndex===ind&&ind){
-          this.scriptIndex-=1
-          // this.scriptChange(this.scriptIndex)
-          this.scriptIndexOld = this.scriptIndex;
-          this.$emit('editImportTriggerDiv',this.ScriptList[this.scriptIndex])
-          this.editImport(this.ScriptList[this.scriptIndex]);
-        }else if(this.scriptIndex===ind&&ind===0){
-          this.scriptIndex+=1
-          this.scriptIndexOld = this.scriptIndex;
-          this.$emit('editImportTriggerDiv',this.ScriptList[this.scriptIndex])
-          this.editImport(this.ScriptList[this.scriptIndex]);
-        }else if(this.scriptIndex>ind){
-          this.scriptIndex-=1
-        }
-        this.ScriptList.splice(ind,1);
       },
 
       //切换段落
@@ -1241,6 +1336,7 @@
     height: 266px;
     text-align: right;
     position: relative;
+    z-index: 999;
     .left_div{
       position: relative;
       .left_icon{
@@ -1258,6 +1354,17 @@
           transition: all .3s;
           &:hover{
             background: #4CAF50;
+          }
+        }
+        .moremore{
+          cursor: pointer;
+          padding: 1.5px;
+          margin-top: 1px;
+          color: #FFFFFF;
+          background: #999999;
+          transition: all .3s;
+          &:hover{
+            background: #bfbfbf;
           }
         }
         .delete{

@@ -12,8 +12,6 @@ Vue.use(TagTextarea)
 import { Session } from "./api/auth";
 Vue.prototype.$Session = Session;
 
-import Cookies from 'js-cookie';
-
 import promptMessage from '@/components/tooltips/index.js'
 Vue.use(promptMessage)
 import drr from '@minogin/vue-drag-resize-rotate'
@@ -24,16 +22,6 @@ Vue.config.productionTip = false
 new Vue({
   el: '#app',
   router,
-  // data: () => {
-  //   return {
-  //     role_id:23,//角色ID；21-虚拟直播；23-真人+虚拟主播
-  //     // ai_user_id: 424,
-  //     ai_user_id: '' || Session.get('ai_user_id'),
-  //     ai_user_phone: '' || Session.get('ai_user_phone'),
-  //     // ai_user_token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJtYWdpY3MtYWQuY29tIiwiYXVkIjoiIiwiaWF0IjoxNjAxMjA3MTgwLCJuYmYiOjE2MDEyMDcxODIsImV4cCI6MTYwMTIxNDM4MCwiZGF0YSI6eyJ1c2VyaWQiOjQyNCwidXNlcm5hbWUiOiIifX0.Ev5WAEc4ptS9cyuj8aCms_Emk3WYLPOVWolrI8jIOHQ",
-  //     ai_user_token: '' || Session.get('ai_user_token'),
-  //   }
-  // },
   components: { App },
   template: '<App/>'
 })

@@ -52,7 +52,6 @@
 </template>
 
 <script>
-  import SSTTS from '@/api/sstts.js'
   import Bus from "@/api/bus";
 export default {
   name: 'wTextarea',
@@ -349,109 +348,109 @@ export default {
       let sel = window.getSelection();
       let range = sel.rangeCount > 0 ? sel.getRangeAt(0) : null;
       // console.log(this.isKeyDown, this.isLocked)
-      if(range) {
-        // console.log('selectHandler: ', range, range.commonAncestorContainer.ownerDocument.activeElement.id , this.contentId, range.commonAncestorContainer.ownerDocument.activeElement.id === this.contentId)
-
-        let elem = range.commonAncestorContainer;
-        let nodes = this.$refs.wTextareaContent.childNodes;
-        if(range.commonAncestorContainer.ownerDocument.activeElement.id === this.contentId) {
-          // console.log('=====')
-          if(elem.nodeName=='#text') {
-            // 修复输入第一个字符时，光标在字符前的bug
-            if(range.endOffset==0 && range.startOffset==0 && elem.textContent.length==1) {
-              // console.log('111')
-              let targetLen = elem.textContent.length;
-              range.setStart(elem, targetLen);
-              range.setEnd(elem, targetLen);
-            }else if(range.endOffset==0 && range.startOffset==0 && elem.textContent.length>1 && !this.isKeyDown ) {
-              // 当点击DIV时，如果已经插入标签、图片、视频，光标位于最后
-              // 此方法会导致光标在第一个元素前闪烁一下，随后定位到最后一个元素后。
-              // console.log('22222')
-              let _idx = 0;
-              nodes.forEach((item, idx)=> {
-                if(elem.textContent == item.textContent) {
-                  _idx = idx;
-                }
-              })
-              if(nodes.length>1 && _idx==0) {
-                // console.log('🌞')
-                // let idx = nodes.length-1;
-                range.selectNode(nodes[nodes.length-1])
-                if(!range.collapsed) range.collapse(false);
-              }
-            }else {
-              // console.log(range)
-              // 标记当前元素为 text 及光标位置
-              this.initCurrentTxtData.startOffset = range.startOffset;
-              this.initCurrentTxtData.txt = elem.textContent;
-              this.initCurrentTxtData.isDiv = false;
-            }
-          }
-          // 标记当前元素为div
-          if(elem.nodeName=='DIV') {
-            // console.log('99999')
-            this.initCurrentTxtData.isDiv = true;
-
-            // 开始和结束位置都为标签时，将光标置于最后
-            if(nodes.length>0 && nodes[0].nodeName=='WISE' && nodes[nodes.length-1].nodeName=='WISE' && !this.isKeyDown && this.isTextureClicked) {
-              range.selectNode(nodes[nodes.length-1])
-              this.isTextureClicked = false;
-            }
-
-            // 一个标签/多个标签+文本 situation1
-            if(nodes.length>0 && nodes[nodes.length-1].nodeName=='#text') {
-              let _isSituation1 = true;
-              nodes.forEach((item,idx) => {
-                if(idx < nodes.length-1 && item.nodeName!='WISE') {
-                  _isSituation1 = false
-                }
-              })
-              if(_isSituation1 && !this.inHandledSituation1) {
-                range.selectNode(nodes[nodes.length-1])
-                this.inHandledSituation1 = true;
-              }
-            }
-
-            if(!range.collapsed) range.collapse(false);
-          }
-        }else if(elem.className.indexOf('el-input')==-1){
-          // console.log('!!!!!!!!!!!!!', this.contentId, '; tagId: ', this.recentlyAddedTagsID)
-          // 不失焦的情况，插入图片、视频、标签后，光标位于当前插入标签的后面
-          if(elem.nodeName == 'DIV' && nodes.length>0) {
-            // console.log('🌛')
-            // if(this.recentlyAddedTagsID)
-            let recentlyAddedTagsIdx = 0;
-            for(let i=0; i<nodes.length; i++){
-              if(this.recentlyAddedTagsID == nodes[i].id) {
-                recentlyAddedTagsIdx = i;
-                break;
-              }
-            }
-            // console.log(nodes.length)
-            if(recentlyAddedTagsIdx == 0 && nodes.length==1) {
-              // console.log('33333')
-              range.setStart(elem, nodes.length)
-              range.setEnd(elem, nodes.length)
-            }else {
-              // console.log('44444')
-              range.setStart(elem, recentlyAddedTagsIdx+1)
-              range.setEnd(elem, recentlyAddedTagsIdx+1)
-            }
-            this.$refs.wTextareaContent.focus()
-          }
-        }
-
-        this.savedRange = range;
-
-      }
-
-      // if (
-      //   range &&
-      //   range.commonAncestorContainer.ownerDocument.activeElement.id ===
-      //   this.contentId
-      // ) {
+      // if(range) {
+      //   // console.log('selectHandler: ', range, range.commonAncestorContainer.ownerDocument.activeElement.id , this.contentId, range.commonAncestorContainer.ownerDocument.activeElement.id === this.contentId)
+      //
+      //   let elem = range.commonAncestorContainer;
+      //   let nodes = this.$refs.wTextareaContent.childNodes;
+      //   if(range.commonAncestorContainer.ownerDocument.activeElement.id === this.contentId) {
+      //     // console.log('=====')
+      //     if(elem.nodeName=='#text') {
+      //       // 修复输入第一个字符时，光标在字符前的bug
+      //       if(range.endOffset==0 && range.startOffset==0 && elem.textContent.length==1) {
+      //         // console.log('111')
+      //         let targetLen = elem.textContent.length;
+      //         range.setStart(elem, targetLen);
+      //         range.setEnd(elem, targetLen);
+      //       }else if(range.endOffset==0 && range.startOffset==0 && elem.textContent.length>1 && !this.isKeyDown ) {
+      //         // 当点击DIV时，如果已经插入标签、图片、视频，光标位于最后
+      //         // 此方法会导致光标在第一个元素前闪烁一下，随后定位到最后一个元素后。
+      //         // console.log('22222')
+      //         let _idx = 0;
+      //         nodes.forEach((item, idx)=> {
+      //           if(elem.textContent == item.textContent) {
+      //             _idx = idx;
+      //           }
+      //         })
+      //         if(nodes.length>1 && _idx==0) {
+      //           // console.log('🌞')
+      //           // let idx = nodes.length-1;
+      //           range.selectNode(nodes[nodes.length-1])
+      //           if(!range.collapsed) range.collapse(false);
+      //         }
+      //       }else {
+      //         // console.log(range)
+      //         // 标记当前元素为 text 及光标位置
+      //         this.initCurrentTxtData.startOffset = range.startOffset;
+      //         this.initCurrentTxtData.txt = elem.textContent;
+      //         this.initCurrentTxtData.isDiv = false;
+      //       }
+      //     }
+      //     // 标记当前元素为div
+      //     if(elem.nodeName=='DIV') {
+      //       // console.log('99999')
+      //       this.initCurrentTxtData.isDiv = true;
+      //
+      //       // 开始和结束位置都为标签时，将光标置于最后
+      //       if(nodes.length>0 && nodes[0].nodeName=='WISE' && nodes[nodes.length-1].nodeName=='WISE' && !this.isKeyDown && this.isTextureClicked) {
+      //         range.selectNode(nodes[nodes.length-1])
+      //         this.isTextureClicked = false;
+      //       }
+      //
+      //       // 一个标签/多个标签+文本 situation1
+      //       if(nodes.length>0 && nodes[nodes.length-1].nodeName=='#text') {
+      //         let _isSituation1 = true;
+      //         nodes.forEach((item,idx) => {
+      //           if(idx < nodes.length-1 && item.nodeName!='WISE') {
+      //             _isSituation1 = false
+      //           }
+      //         })
+      //         if(_isSituation1 && !this.inHandledSituation1) {
+      //           range.selectNode(nodes[nodes.length-1])
+      //           this.inHandledSituation1 = true;
+      //         }
+      //       }
+      //
+      //       if(!range.collapsed) range.collapse(false);
+      //     }
+      //   }else if(elem.className.indexOf('el-input')==-1){
+      //     // console.log('!!!!!!!!!!!!!', this.contentId, '; tagId: ', this.recentlyAddedTagsID)
+      //     // 不失焦的情况，插入图片、视频、标签后，光标位于当前插入标签的后面
+      //     if(elem.nodeName == 'DIV' && nodes.length>0) {
+      //       // console.log('🌛')
+      //       // if(this.recentlyAddedTagsID)
+      //       let recentlyAddedTagsIdx = 0;
+      //       for(let i=0; i<nodes.length; i++){
+      //         if(this.recentlyAddedTagsID == nodes[i].id) {
+      //           recentlyAddedTagsIdx = i;
+      //           break;
+      //         }
+      //       }
+      //       // console.log(nodes.length)
+      //       if(recentlyAddedTagsIdx == 0 && nodes.length==1) {
+      //         // console.log('33333')
+      //         range.setStart(elem, nodes.length)
+      //         range.setEnd(elem, nodes.length)
+      //       }else {
+      //         // console.log('44444')
+      //         range.setStart(elem, recentlyAddedTagsIdx+1)
+      //         range.setEnd(elem, recentlyAddedTagsIdx+1)
+      //       }
+      //       this.$refs.wTextareaContent.focus()
+      //     }
+      //   }
+      //
       //   this.savedRange = range;
+      //
       // }
+
+      if (
+        range &&
+        range.commonAncestorContainer.ownerDocument.activeElement.id ===
+        this.contentId
+      ) {
+        this.savedRange = range;
+      }
       // console.log('光标',this.savedRange)
     }
   },
