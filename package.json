@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@minogin/vue-drag-resize-rotate": "^1.0.5",
+    "ajv": "^6.12.6",
     "axios": "^0.20.0",
     "element-ui": "^2.13.2",
     "js-base64": "^3.5.2",
