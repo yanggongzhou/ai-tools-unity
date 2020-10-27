@@ -22,6 +22,7 @@
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item v-for="(value,index) in dropdownData"
                                   :key="index+'dropdown'"
+                                  :disabled="ScriptList.length===1&&value.value==='6'"
                                   :command="value.value"
                                   :icon="value.icon">
                   {{value.label}}
@@ -197,6 +198,14 @@
     <div style="display: none">
       <video id="videoDuration" :src="ruleForm.videoUrl"></video>
     </div>
+    <el-dialog  top="30vh" :visible.sync="isShowDelDialog" width='30%' style='text-align:center;'>
+      <i class="el-icon-warning-outline" style='font-size:42px;color:#7455FF;margin-bottom:18px;font-weight:600;'></i>
+      <div>是否删除第{{confrimDelInd+1}}段内容？</div>
+      <span slot="footer" class="dialog-footer">
+                    <el-button class="cancel" @click="cancelDel">取 消</el-button>
+                    <el-button class="confirm" type="primary" @click="confirmDel">确 定</el-button>
+                </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -239,7 +248,8 @@
         ScriptList:[],
         scriptIndex:0,
         scriptIndexOld:0,
-
+        confrimDelInd:'',
+        isShowDelDialog:false,
         avatarID:3,
         actionShowList:[],
         actionLoading:true,
@@ -473,9 +483,21 @@
       },
       //删除
       delBtn(ind){
+        this.isShowDelDialog = true;
+        this.confrimDelInd = ind;
+
+      },
+      cancelDel() {
+        this.isShowDelDialog = false;
+      },
+      confirmDel() {
+        this.isShowDelDialog = false;
+        let ind = this.confrimDelInd;
         if(this.scriptIndex===ind){
           if(ind){
             this.scriptIndex-=1
+            this.$emit('editImportTriggerDiv',this.ScriptList[this.scriptIndex])
+            this.editImport(this.ScriptList[this.scriptIndex]);
           }else{
             this.$emit('editImportTriggerDiv',this.ScriptList[this.scriptIndex+1])
             this.editImport(this.ScriptList[this.scriptIndex+1]);
@@ -486,7 +508,6 @@
         }
         this.ScriptList.splice(ind,1);
       },
-
       //预览
       previewBtn(val,ind){
         UnityPreviewCancel()
