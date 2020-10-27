@@ -690,9 +690,9 @@
           return false;
         }
           console.log(this.nextPlayVal,this.contentIndex,this.nextAllScriptIndex)
-        document.querySelector("#content"+self.nowContentIndex+"script"+self.allScriptIndex).scrollIntoView(true);
         // if()
         this.previewBtn(this.nextPlayVal,this.contentIndex,this.nextAllScriptIndex,true)
+        document.querySelector("#content"+self.nowContentIndex+"script"+self.allScriptIndex).scrollIntoView(true);
       },
       //获取直播列表json数据
       getPlayData(data){

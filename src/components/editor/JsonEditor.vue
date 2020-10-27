@@ -515,11 +515,11 @@
           self.scriptIndexOld = self.scriptIndex;
           self.$emit('editImportTriggerDiv',self.ScriptList[self.scriptIndex])
           self.editImport(self.ScriptList[self.scriptIndex]);
+          self.$nextTick(()=>{
+            document.querySelector("#model"+self.scriptIndex).scrollIntoView(true);
+          })
         })
         this.$forceUpdate()
-        this.$nextTick(()=>{
-          document.querySelector("#model"+self.scriptIndex).scrollIntoView(true);
-        })
       },
       //预览动作
       previewAction(val){ UnityAvatarAction(resultJSON.resultJsonObj.avatar.unity,val.value) },
