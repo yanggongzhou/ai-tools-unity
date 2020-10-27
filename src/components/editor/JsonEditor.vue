@@ -473,17 +473,14 @@
       },
       //删除
       delBtn(ind){
-        if(this.scriptIndex===ind&&ind){
-          this.scriptIndex-=1
-          // this.scriptChange(this.scriptIndex)
+        if(this.scriptIndex===ind){
+          if(ind){
+            this.scriptIndex-=1
+          }else{
+            this.$emit('editImportTriggerDiv',this.ScriptList[this.scriptIndex+1])
+            this.editImport(this.ScriptList[this.scriptIndex+1]);
+          }
           this.scriptIndexOld = this.scriptIndex;
-          this.$emit('editImportTriggerDiv',this.ScriptList[this.scriptIndex])
-          this.editImport(this.ScriptList[this.scriptIndex]);
-        }else if(this.scriptIndex===ind&&ind===0){
-          this.scriptIndex+=1
-          this.scriptIndexOld = this.scriptIndex;
-          this.$emit('editImportTriggerDiv',this.ScriptList[this.scriptIndex])
-          this.editImport(this.ScriptList[this.scriptIndex]);
         }else if(this.scriptIndex>ind){
           this.scriptIndex-=1
         }

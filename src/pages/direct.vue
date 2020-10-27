@@ -1016,7 +1016,9 @@
     /deep/.el-radio__label{
       padding-left: 0;
     }
-
+    /deep/.el-radio__input.is-disabled+span.el-radio__label{
+      color: #7C53FF;
+    }
     .left_card_item{
       font-size: 0;
       .left_card_icon{
