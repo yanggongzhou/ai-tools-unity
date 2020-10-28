@@ -505,6 +505,7 @@
           this.scriptIndexOld = this.scriptIndex;
         }else if(this.scriptIndex>ind){
           this.scriptIndex-=1
+          this.scriptIndexOld = this.scriptIndex;
         }
         this.ScriptList.splice(ind,1);
       },
