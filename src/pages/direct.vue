@@ -325,7 +325,7 @@
            self.nextPlayBtn()
           }
       }
-
+111
       // this.nextPlayVal = this.allScriptList[0].scriptList[0]
       this.contentIndex = 0;
       this.previewReady = true;
