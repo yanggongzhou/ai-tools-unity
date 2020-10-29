@@ -97,7 +97,8 @@
 <!--              </el-tooltip>-->
 <!--            </el-col>-->
             <el-col :span="12">
-              <div class="icon2" @click="innerVisibleOpen"  :class="{'disabled-icon2': isAutoPlayBtn}">
+<!--              :class="{'disabled-icon2': isAutoPlayBtn}"-->
+              <div class="icon2" @click="innerVisibleOpen" >
                 <div class="huashu"></div>
                 <span>临时话术</span>
               </div>
@@ -303,6 +304,8 @@
 
         isOpenInteractiveMode:true, //- 是否打开了互动模式
         isDisconnection:false,//断网
+
+        isUnityTemporaryInteractionStart:false,//是否是脚本内插入互动
       }
     },
     created() {
@@ -325,7 +328,7 @@
            self.nextPlayBtn()
           }
       }
-111
+
       // this.nextPlayVal = this.allScriptList[0].scriptList[0]
       this.contentIndex = 0;
       this.previewReady = true;
@@ -336,6 +339,7 @@
       }
       this.getTempData().then(res=>{});
       UnityInteractionStateChange("True");
+      console.log(this.previewData)
     },
     methods:{
       WebAckStopPlaySystem(){
@@ -405,10 +409,10 @@
       },
       //临时话术打开
       innerVisibleOpen(){
-        if(!this.isAutoPlayBtn){
-          this.innerVisible= true;
-        }
-        // this.innerVisible= true;
+        // if(!this.isAutoPlayBtn){
+        //   this.innerVisible= true;
+        // }
+        this.innerVisible= true;
       },
       //更改禁用状态
       updateState(ind){
@@ -576,8 +580,13 @@
         this.previewReady = true;
         this.isPlaying = true;
       },
-      //播放互动标签-脚本内互动
+      //播放互动标签
       WebInteractionStart(){
+        if(this.isUnityTemporaryInteractionStart){
+          UnityPreview(this.previewData[0].avatar.unity,JSON.stringify(this.previewData),"False","False")
+          return false;
+        }
+
         this.interactionModel = true;
         if(this.isFirstScript&&this.isFirstScriptOnce){
           this.playWelcomeWords();
@@ -597,6 +606,11 @@
       },
       //对应于UnityInteractionEnd，结束状态返回继续播放
       WebInteractionEnd(){
+        if(this.isUnityTemporaryInteractionStart){
+          this.isUnityTemporaryInteractionStart = false;
+          UnityPreviewContinue(this.previewData[0].avatar.unity);
+          return false;
+        }
         if(this.isDisconnection){//断网循环
           this.AutoPlayEvent();
           return false;
@@ -620,6 +634,19 @@
 
       //播放结束回调  播放一句互动结束回调Unity
       WebPreviewEnd(){
+        if(this.isUnityTemporaryInteractionStart&&this.interactionModel){
+          if(this.queueList.length){
+            let _Obj  = this.queueList.shift();
+            UnityPreview(_Obj.name,_Obj.item,"False","False")
+          }else{
+            this.isUnityTemporaryInteractionStart = false;
+          }
+          return false;
+        }
+        if(this.isUnityTemporaryInteractionStart&&!this.interactionModel){
+          UnityInteractionEnd(this.previewData[0].avatar.unity);
+          return false;
+        }
         if(this.isAutoPlayBtn){//是否自动播放
           if(this.isDisconnection){
             this.AutoPlayEvent();
@@ -819,30 +846,35 @@
             content:resItem
           })
         })
-        if(!this.isPlaying){
-          if(this.previewReady){
-            // UnityChangeAvatar(val.avatar.unity)
-            this.previewData = [_json];
-            UnityPreviewTxt('none',JSON.stringify([_json]))
-            this.isPreviewBtn = true;
-            this.nowTempId = val.id;
-            this.isPlaying = true;
-            this.previewReady = false;
+        if(!this.isAutoPlayBtn){
+          if(!this.isPlaying){
+            // if(this.previewReady){
+              // UnityChangeAvatar(val.avatar.unity)
+              this.previewData = [_json];
+              UnityPreviewTxt('none',JSON.stringify([_json]))
+              this.isPreviewBtn = true;
+              this.nowTempId = val.id;
+              this.isPlaying = true;
+              // this.previewReady = false;
+            // }else{
+            //   this.$message.warning('资源加载中，请稍后...')
+            // }
+            // UnityPreviewTxt('none',JSON.stringify([_json]))
+            // this.isPlaying = true;
           }else{
-            this.$message.warning('资源加载中，请稍后...')
+            if(this.queueList.length<3){
+              this.queueList.push({
+                name:'none',
+                item:JSON.stringify([_json]),
+                id:val.id,
+              })
+            }else{
+              this.$message.info('最多支持3个播放排队,请稍后!')
+            }
           }
-          // UnityPreviewTxt('none',JSON.stringify([_json]))
-          // this.isPlaying = true;
+
         }else{
-          if(this.queueList.length<3){
-            this.queueList.push({
-              name:'none',
-              item:JSON.stringify([_json]),
-              id:val.id,
-            })
-          }else{
-            this.$message.info('最多支持3个播放排队,请稍后!')
-          }
+          this.temporaryInsertAutoEvent(_json)
         }
       },
       getTempData(){
@@ -910,28 +942,52 @@
               }
             })
           })
-          if(!this.isPlaying){
-            UnityPreviewTxt('none',JSON.stringify([_json]))
-            this.isPreviewBtn = true;
-            this.nowTempId = this.temporaryScriptList[this.temporaryScriptList.length-1].id
-            this.previewData = JSON.parse(JSON.stringify([_json]))
-            this.isPlaying = true;
-            this.previewReady = false;
-          }else{
-            if(this.queueList.length<3){
-              this.queueList.push({
-                id:this.temporaryScriptList[this.temporaryScriptList.length-1].id,
-                name:'none',
-                item:JSON.stringify([_json])
-              })
+          if(!this.isAutoPlayBtn){
+            if(!this.isPlaying){
+              UnityPreviewTxt('none',JSON.stringify([_json]))
+              this.isPreviewBtn = true;
+              this.nowTempId = this.temporaryScriptList[this.temporaryScriptList.length-1].id
+              this.previewData = JSON.parse(JSON.stringify([_json]))
+              this.isPlaying = true;
+              // this.previewReady = false;
             }else{
-              this.$message.info('最多支持3个播放排队，请稍后！')
+              if(this.queueList.length<3){
+                this.queueList.push({
+                  id:this.temporaryScriptList[this.temporaryScriptList.length-1].id,
+                  name:'none',
+                  item:JSON.stringify([_json])
+                })
+              }else{
+                this.$message.info('最多支持3个播放排队，请稍后！')
+              }
             }
+
+          }else{//自动直播下外部插入临时会话
+            this.temporaryInsertAutoEvent(_json)
           }
         })
-
-
       },
+      //自动直播下插入临时话术
+      temporaryInsertAutoEvent(_json){
+        let _name = this.playData[this.allScriptIndex].avatar.unity;
+        _json.avatar.name = _name
+        this.isUnityTemporaryInteractionStart = true;
+        if(this.interactionModel){//互动模式下插入话语
+          if(this.queueList.length<3){
+            this.queueList.push({
+              id:this.temporaryScriptList[this.temporaryScriptList.length-1].id,
+              name:_name,
+              item:JSON.stringify([_json])
+            })
+          }else{
+            this.$message.info('最多支持3个播放排队，请稍后！')
+          }
+        }else{
+          UnityTemporaryInteractionStart();
+          this.previewData = [_json]
+        }
+      },
+
       getGuid() {
         // 生成随机ID
         return `r${new Date().getTime()}d${Math.ceil(Math.random() * 1000)}`;

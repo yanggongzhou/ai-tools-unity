@@ -6,18 +6,18 @@ function UnityUserInfo() {
 }
 
 
-//在线预览--&播放
+//在线预览--&播放 ---bool 是否是预览来处理是否需要互动，bool2是否需要本地存储
 function UnityPreview(avatarName,json,bool,bool2){
   console.log(avatarName,json,bool,bool2)
 }
 //在线预览--&开始播放
 function UnityPreviewStart(avatarName){
-  console.log(avatarName)
+  console.log('开始播放',avatarName)
 }
 
 //在线预览--&停止播放
 function UnityPreviewCancel(avatarName){
-  console.log(avatarName)
+  console.log('停止播放',avatarName)
 }
 
 
@@ -39,7 +39,7 @@ function UnityAvatarMotionInfo(val) {
 
 //播放临时话术
 function UnityPreviewTxt(avatarName,json) {
-  console.log(avatarName,json)
+  console.log('播放临时话术',avatarName,json)
 }
 
 //unity继续播放
@@ -60,4 +60,9 @@ function UnityInteractionStart(avatarName) {
 //unity互动状态
 function UnityInteractionStateChange(state) {
   console.log('unity互动状态',state)
+}
+
+//unity自动直播中插入互动对话--该功能会直接进入互动模式
+function UnityTemporaryInteractionStart() {
+  console.log('unity自动直播中插入互动对话')
 }
