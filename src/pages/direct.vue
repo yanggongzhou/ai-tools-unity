@@ -11,11 +11,23 @@
 
     <div class="interaction_Tip">
       <el-popover
-        placement="left-start"
+        placement="bottom"
+        width="280"
+        trigger="hover">
+        <div class="interaction_pop">
+          <p><b>随机播放</b></p>
+          <p>1、开启后，自动直播中剧本随机播放</p>
+          <p>2、依据剧本权重，权重越高，重复播放概率越大。</p>
+        </div>
+        <span slot="reference" style="cursor: help;position: relative;top: 4px">随机播放</span>
+      </el-popover>
+      <el-switch @change="isRandomChange" v-model="isRandom" active-color='#835BFF' style='margin:6px 18px 0 8px;' :disabled="isAutoPlayBtn"></el-switch>
+      <el-popover
+        placement="bottom"
         width="400"
         trigger="hover">
         <div class="interaction_pop">
-          <p>互动模式</p>
+          <p><b>互动模式</b></p>
           <p>1、开启后，虚拟主播可以与消费者互动，在互动时间时回答用户提问、欢迎用户进入直播间</p>
           <p>2、目前虚拟主播互动时间在每个剧本结束后及剧本中有互动标签的位置进入互动模式时间，当互动模式结束后，继续脚本直播。</p>
           <p>3、开启互动模式必须结合用户弹幕问题监测软件共同使用，且提前设定好问题和答案，否则互动模式无效。（ <span class='#835BFF'>弹幕问题监控软件及问答配置需联系商务处理</span> ）</p>
@@ -307,6 +319,8 @@
         isDisconnection:false,//断网
 
         isUnityTemporaryInteractionStart:false,//是否是脚本内插入互动
+
+        isRandom:true,//是否是随机直播
       }
     },
     created() {
@@ -395,6 +409,11 @@
         }else{
           this.$router.back()
         }
+      },
+      //互动模式切换
+      isRandomChange(val){
+
+
       },
       //互动模式切换
       SwitchChange(val){

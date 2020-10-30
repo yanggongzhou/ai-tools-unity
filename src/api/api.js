@@ -132,4 +132,7 @@ export const requestServices = {
 
   // 编辑/删除话术/修改话术状态
   editWrods: (params)=>apiInstance.post(`/guide_shopping/client/edit_gs_word`,params),
+
+  //获取弹幕中商品出现次数
+  getCommodityCount: (params)=>apiInstance.post(`/guide_shopping/client/get_commodity_count`,params),
 }
