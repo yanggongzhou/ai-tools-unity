@@ -1,6 +1,6 @@
 <template>
   <div class="common_content">
-
+<!--    <el-button @click="getSum">jisaun</el-button>-->
     <div class="titleBox" style="margin-bottom: 10px">
       <span class="titleSpan">直播剧本</span>
       <button class="backNormal backNormal2" @click="backBtn">
@@ -162,6 +162,7 @@
   import {resultJSON} from "../api/result";
   import {requestServices} from "../api/api";
   import interaction from '../components/interaction/interaction-1';
+  import { getWeightList } from '../api/Random'
   let that;
   export default {
     mixins: [interaction],
@@ -309,6 +310,7 @@
       }
     },
     created() {
+
       window.WebPreviewEnd=this.WebPreviewEnd;
       window.WebPreviewReady = this.WebPreviewReady;
       window.WebSelectAvatarState=this.WebSelectAvatarState;
@@ -342,6 +344,17 @@
       console.log(this.previewData)
     },
     methods:{
+      getSum(){
+        let List = [
+          {count:1, weight:10,},
+          {count:2, weight:7,},
+          {count:3, weight:5,},
+          {count:4, weight:5,},
+          {count:5, weight:2,},
+          {count:6, weight:2,},
+        ]
+        console.log('获取随机播放列表',getWeightList(List))
+      },
       WebAckStopPlaySystem(){
         this.previewReady = true;
         this.allScriptPlayIndex = '';
