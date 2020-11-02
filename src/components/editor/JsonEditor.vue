@@ -390,8 +390,6 @@
       //监听输入框文本，主要实现删除功能
       testData(newValue,oldValue){
         if(this.scriptChangeState) return false;
-        // this.testData=this.testData.replaceAll('&amp;','&')//去除&占位问题
-        // this.testData = this.testData.replaceAll('&nbsp;','')//去除编译后的&nbsp;
         // console.log(this.testData,this.testData.length,this.testData.split(''))
         if(newValue.length < oldValue.length&&(oldValue.length-newValue.length)>200){
           let newDom = document.getElementById('newDom');
