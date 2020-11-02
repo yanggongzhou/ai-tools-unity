@@ -186,7 +186,7 @@
         IndexNumArr.forEach((val,ind)=>{//整合标签下标
           messageArr[ind].index = val.length;
         })
-        resText = resText.replaceAll('&nbsp;','').replaceAll('&amp;','&')
+        resText = resText.replace(/&nbsp;/g,'').replaceAll(/&amp;/g,'&')
         return new Promise(resolve => {
           resolve({messageArr:messageArr,noTagText:resText})
         })
