@@ -166,6 +166,18 @@
 <!--              <el-button type="primary" @click="confrimBtn('imgForm')">确 定</el-button>-->
             </span>
         </el-dialog>
+        <div
+          class='timerDialog'
+          width="200px"
+          v-if="timerVisible"
+          :modal="false"
+          :show-close='false'
+        >
+          <el-input-number style='width: 110px;' v-model="intervalValue" controls-position="right" :step="0.5" :min="0.5" :max="10000"></el-input-number> s<br/>
+          <button class="dialogBtn quxiao" style='width:50px;border-radius:4px;' @click.stop="timerVisible = false">取 消</button>
+          <button class="dialogBtn queren" style='width:50px;margin-top:0;border-radius:4px;' @click.stop="addTag('间隔',intervalValue)">确 认</button>
+        </div>
+
         <div class="p10"
              style="min-height: 66px"
              v-loading="actionLoading"
@@ -287,6 +299,8 @@
 
         videoVisible:false,
         imgVisible:false,
+        timerVisible: false,
+
         editTagId:'',//是否是再次编辑
 
         cutTxtArr:[],//每次裁剪后被替换的缓存数据
@@ -376,8 +390,8 @@
       //监听输入框文本，主要实现删除功能
       testData(newValue,oldValue){
         if(this.scriptChangeState) return false;
-        this.testData=this.testData.replaceAll('&amp;','&')//去除&占位问题
-        this.testData = this.testData.replaceAll('&nbsp;','')//去除编译后的&nbsp;
+        // this.testData=this.testData.replaceAll('&amp;','&')//去除&占位问题
+        // this.testData = this.testData.replaceAll('&nbsp;','')//去除编译后的&nbsp;
         // console.log(this.testData,this.testData.length,this.testData.split(''))
         if(newValue.length < oldValue.length&&(oldValue.length-newValue.length)>200){
           let newDom = document.getElementById('newDom');
@@ -1105,6 +1119,7 @@
             this.ruleForm.isAll=false;
             this.imgVisible = false;
             this.videoVisible = true;
+            this.timerVisible = false;
             break;
           case 'img':
             this.imgForm.region = '1';
@@ -1115,6 +1130,7 @@
             this.imgForm.isAll=false;
             this.videoVisible = false;
             this.imgVisible = true;
+            this.timerVisible = false;
             break;
           case 'interaction':
             this.addInteraction();
@@ -1124,6 +1140,10 @@
               this.testData = res.noTagText
               this.$emit('cleanTriggerDiv')
             })
+            break;
+          case 'intervalTime':
+            this.timerVisible = true;
+            break;
         }
       },
       //添加互动标签
@@ -1257,10 +1277,18 @@
       width: calc(100% - 68px);
     }
   }
-
+  .timerDialog {
+    position: absolute;
+    top: -200px;
+    left: 196px;
+    padding: 20px;
+    background: #fff;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.3);
+  }
 
   .tagBox{
-    background: #8FAEB3;
+    background: #E3E5ED;
     position: relative;
   }
   .interval-tag{
@@ -1270,15 +1298,15 @@
   }
   .actionTitle{
     display: inline-block;
-    background: #fff;
-    color: #658f96;
+    background: #A2ACD3;
+    color: #fff;
     font-size: 13px;
     border-radius: 3px;
-    height: 24px;
+    height: 26px;
     margin: 5px;
-    line-height: 24px;
+    line-height: 26px;
     text-align: center;
-    border: 2px solid #658f96;
+    // border: 2px solid #658f96;
     font-weight: 600;
     width: 100px;
     letter-spacing: 1px;
