@@ -1,6 +1,5 @@
 <template>
   <div class="common_content">
-    <el-button @click="getSum">jisaun</el-button>
     <div class="titleBox" style="margin-bottom: 10px">
       <span class="titleSpan">直播剧本</span>
       <button class="backNormal backNormal2" @click="backBtn">
@@ -367,17 +366,6 @@
       console.log(this.previewData)
     },
     methods:{
-      getSum(){
-        let List = [
-          {count:1, weight:10,},
-          {count:2, weight:7,},
-          {count:3, weight:5,},
-          {count:4, weight:5,},
-          {count:5, weight:2,},
-          {count:6, weight:2,},
-        ]
-        console.log('获取随机播放列表',getWeightList(List))
-      },
       WebAckStopPlaySystem(){
         this.previewReady = true;
         this.allScriptPlayIndex = '';
@@ -527,7 +515,7 @@
       toGetWeightList(){
         let self = this;
         self._weightList = [];
-        self.allScriptList.forEach((val,ind)=>{
+        self.playData.forEach((val,ind)=>{
           self.weightData.forEach(wei=>{
             if(val.weight===wei.value){
               self._weightList.push({
@@ -550,10 +538,9 @@
         this.isAutoPlayBtn = true;
         if(this.previewReady){
             if(this.isRandom){//随机播放
-              if(this.weightListIndex>=this.weightList.length){
-                this.toGetWeightList()
-                this.weightListIndex=0;
-              }
+              this.toGetWeightList()
+              console.log(this.weightList)
+              this.weightListIndex=0;
               this.allScriptIndex=this.weightList[this.weightListIndex];
               this.weightListIndex+=1;
             }
@@ -626,7 +613,10 @@
       //自动播放
       AutoPlayEvent(){
         if(this.isRandom){//随机播放
-          this.toGetWeightList()
+          if(this.weightListIndex>=this.weightList.length){
+            this.toGetWeightList()
+            this.weightListIndex=0;
+          }
           this.allScriptIndex=this.weightList[this.weightListIndex];
           this.weightListIndex+=1;
         }else{
