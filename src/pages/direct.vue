@@ -670,6 +670,8 @@
           if(this.queueList.length){
             let _Obj  = this.queueList.shift();
             UnityPreview(_Obj.name,_Obj.item,"False","False")
+            this.nowTempId = _Obj.id;
+            this.previewData = JSON.parse(_Obj.item)
           }else{
             // this.handleInacLogic();
             this.previewEndIsAutoPlayBtnEvent()
@@ -976,7 +978,7 @@
         this.isUnityTemporaryInteractionStart = true;
         if(this.interactionModel){//互动模式下插入话语
           let _id;
-          ind?_id=this.temporaryScriptList[ind].id:_id=this.temporaryScriptList[this.temporaryScriptList.length-1].id;
+          ind===undefined?_id=this.temporaryScriptList[this.temporaryScriptList.length-1].id:_id=this.temporaryScriptList[ind].id;
           if(this.queueList.length<3){
             this.queueList.push({
               id:_id,
