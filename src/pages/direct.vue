@@ -1,6 +1,6 @@
 <template>
   <div class="common_content">
-<!--    <el-button @click="getSum">jisaun</el-button>-->
+    <el-button @click="getSum">jisaun</el-button>
     <div class="titleBox" style="margin-bottom: 10px">
       <span class="titleSpan">直播剧本</span>
       <button class="backNormal backNormal2" @click="backBtn">
@@ -18,6 +18,7 @@
           <p><b>随机播放</b></p>
           <p>1、开启后，自动直播中剧本随机播放</p>
           <p>2、依据剧本权重，权重越高，重复播放概率越大。</p>
+          <p>3、依据剧本权重，权重越高，重复播放概率越大。</p>
         </div>
         <span slot="reference" style="cursor: help;position: relative;top: 4px">随机播放</span>
       </el-popover>
@@ -320,11 +321,19 @@
 
         isUnityTemporaryInteractionStart:false,//是否是脚本内插入互动
 
-        isRandom:true,//是否是随机直播
+        isRandom:false,//是否是随机直播
+        weightData:[
+          {value:"最高",weight:10},
+          {value:"高",weight:7},
+          {value:"中",weight:5},
+          {value:"低",weight:2},
+        ],
+        _weightList:[],//脚本数据-脚本下标及对应权重 item-例：{count:1, weight:10,}
+        weightList:[],//两轮脚本随机数据，例：[1,2,0,1,2,1]
+        weightListIndex:0,//随机播放序列
       }
     },
     created() {
-
       window.WebPreviewEnd=this.WebPreviewEnd;
       window.WebPreviewReady = this.WebPreviewReady;
       window.WebSelectAvatarState=this.WebSelectAvatarState;
@@ -514,7 +523,22 @@
         // this.AutoPlayEvent();
         this.isInnerJsonInteraction = false;
       },
-
+      //获取权重列表
+      toGetWeightList(){
+        let self = this;
+        self._weightList = [];
+        self.allScriptList.forEach((val,ind)=>{
+          self.weightData.forEach(wei=>{
+            if(val.weight===wei.value){
+              self._weightList.push({
+                count:ind,
+                weight:wei.weight
+              });
+            }
+          })
+        })
+        self.weightList = getWeightList(self._weightList);
+      },
       //自动播放
       autoPlayBtn(){
         //是否有排队
@@ -525,6 +549,14 @@
         // UnityPreviewCancel();
         this.isAutoPlayBtn = true;
         if(this.previewReady){
+            if(this.isRandom){//随机播放
+              if(this.weightListIndex>=this.weightList.length){
+                this.toGetWeightList()
+                this.weightListIndex=0;
+              }
+              this.allScriptIndex=this.weightList[this.weightListIndex];
+              this.weightListIndex+=1;
+            }
           this.allScriptPlayIndex = this.allScriptIndex;
           this.previewData = this.allScriptList[this.allScriptPlayIndex].scriptList;
           UnityChangeAvatar(this.previewData[0].avatar.unity)
@@ -593,13 +625,20 @@
       },
       //自动播放
       AutoPlayEvent(){
-        if(this.allScriptPlayIndex+1<this.allScriptList.length){
-          this.allScriptPlayIndex+=1;
-          this.allScriptIndex = this.allScriptPlayIndex;
+        if(this.isRandom){//随机播放
+          this.toGetWeightList()
+          this.allScriptIndex=this.weightList[this.weightListIndex];
+          this.weightListIndex+=1;
         }else{
-          this.allScriptIndex=0;
-          this.allScriptPlayIndex = 0;
+          if(this.allScriptPlayIndex+1<this.allScriptList.length){
+            this.allScriptPlayIndex+=1;
+            this.allScriptIndex = this.allScriptPlayIndex;
+          }else{
+            this.allScriptIndex=0;
+            this.allScriptPlayIndex = 0;
+          }
         }
+
         this.scriptChange(this.allScriptIndex)
 
         this.$message.info('播放剧本'+(this.allScriptPlayIndex+1)+'--'+this.allScriptList[this.allScriptPlayIndex].name)
