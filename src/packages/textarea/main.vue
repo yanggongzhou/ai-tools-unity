@@ -32,7 +32,7 @@
       </el-tooltip>
       <button class="w-textarea_tools__item video float_left" @click="openTagDialog('video')">插入视频</button>
       <button class="w-textarea_tools__item picture float_left" @click="openTagDialog('img')">插入图片</button>
-      <button class="w-textarea_tools__item timer float_left" @click="openTagDialog('intervalTime')">添加间隔</button>
+<!--      <button class="w-textarea_tools__item timer float_left" @click="openTagDialog('intervalTime')">添加间隔</button>-->
 
       <!--      <button class="w-textarea_tools__item float_right"-->
       <!--        v-for="item in tools"-->

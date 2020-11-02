@@ -666,52 +666,23 @@
 
       //播放结束回调  播放一句互动结束回调Unity
       WebPreviewEnd(){
-        if(this.isUnityTemporaryInteractionStart&&this.interactionModel){
+        if(this.isUnityTemporaryInteractionStart&&this.interactionModel){//是否有互动插入且当前是互动模式的处理
           if(this.queueList.length){
             let _Obj  = this.queueList.shift();
             UnityPreview(_Obj.name,_Obj.item,"False","False")
           }else{
+            // this.handleInacLogic();
+            this.previewEndIsAutoPlayBtnEvent()
             this.isUnityTemporaryInteractionStart = false;
           }
           return false;
         }
-        if(this.isUnityTemporaryInteractionStart&&!this.interactionModel){
+        if(this.isUnityTemporaryInteractionStart&&!this.interactionModel){//插入互动开启且当前互动模式状态已关闭，手动通知unity关闭互动
           UnityInteractionEnd(this.previewData[0].avatar.unity);
           return false;
         }
         if(this.isAutoPlayBtn){//是否自动播放
-          if(this.isDisconnection){
-            this.AutoPlayEvent();
-            return false;
-          }
-            if((this.isOpenInteractiveMode || this.isEnterInteraction) && !this.interactionModeIsEnd && this.isInnerJsonInteraction) {
-              // 互动模式处理
-              this.handleInacLogic(); // 已经开启脚本内互动模式，正常处理互动流程
-            } else {
-              //---------------------剧本之间的互动
-              if((this.isOpenInteractiveMode || this.isEnterInteraction) && !this.interactionModeIsEnd) {
-                            if(this.isOutInteraction){
-                              // 打开互动模式，互动模式处理
-                              this.handleInacLogic(); // 如果未开启脚本外互动则开启，如果已开启则进行互动流程
-                            }else{
-                              if(this.isFirstScript){  UnityInteractionEnd(this.previewData[0].avatar.unity);  return false}
-                              UnityInteractionStart(this.previewData[0].avatar.unity);
-                              this.isOutInteraction = true;//脚本外互动
-                            }
-              }else if(!this.isOpenInteractiveMode && this.isOpenSceneEnd && !this.isPlayingEndWords) {
-                // 关闭互动模式，场景话术的衔接语为开启状态
-                this.playSceneEndWords();
-              }else {
-                // 播放下一个脚本
-                this.interactionModeIsEnd = false;
-                if(this.isFirstScript){
-                  this.AutoPlayEvent();
-                  // this.interactionModeIsEnd = false;
-                  return false;
-                }
-                this.handleInacLogic();
-              }
-            }
+          this.previewEndIsAutoPlayBtnEvent()
         }
         else{
           if(this.queueList.length){
@@ -745,7 +716,41 @@
           }
         }
       },
-
+      //语音结束回调中自动播放的判断逻辑
+      previewEndIsAutoPlayBtnEvent(){
+        if(this.isDisconnection){
+          this.AutoPlayEvent();
+          return false;
+        }
+        if((this.isOpenInteractiveMode || this.isEnterInteraction) && !this.interactionModeIsEnd && this.isInnerJsonInteraction) {
+          // 互动模式处理
+          this.handleInacLogic(); // 已经开启脚本内互动模式，正常处理互动流程
+        } else {
+          //---------------------剧本之间的互动
+          if((this.isOpenInteractiveMode || this.isEnterInteraction) && !this.interactionModeIsEnd) {
+            if(this.isOutInteraction){
+              // 打开互动模式，互动模式处理
+              this.handleInacLogic(); // 如果未开启脚本外互动则开启，如果已开启则进行互动流程
+            }else{
+              if(this.isFirstScript){  UnityInteractionEnd(this.previewData[0].avatar.unity);  return false}
+              UnityInteractionStart(this.previewData[0].avatar.unity);
+              this.isOutInteraction = true;//脚本外互动
+            }
+          }else if(!this.isOpenInteractiveMode && this.isOpenSceneEnd && !this.isPlayingEndWords) {
+            // 关闭互动模式，场景话术的衔接语为开启状态
+            this.playSceneEndWords();
+          }else {
+            // 播放下一个脚本
+            this.interactionModeIsEnd = false;
+            if(this.isFirstScript){
+              this.AutoPlayEvent();
+              // this.interactionModeIsEnd = false;
+              return false;
+            }
+            this.handleInacLogic();
+          }
+        }
+      },
       //播放下一个
       nextPlayBtn(){
         let self = this;
@@ -906,45 +911,10 @@
           }
 
         }else{
-          this.temporaryInsertAutoEvent(_json)
+          this.temporaryInsertAutoEvent(_json,ind)
         }
       },
-      getTempData(){
-        let self = this;
-        return new Promise(resolve =>{
-          requestServices.getTempList({
-            user_id:self.$Session.get('ai_user_id'),
-            role_id:23,
-            access_token: self.$Session.get('ai_user_token'),
-            type:3
-          }).then(res=>{
-            // console.log(res.result.words)
-            if(res.return_code===1000){
-              self.temporaryScriptList=res.result.words.slice(-4)
-              self.$forceUpdate();
-              resolve(self.temporaryScriptList)
-            }
-          })
-        })
-      },
-      addTempData(text){
-        return new Promise(resolve =>{
-          requestServices.addTemp({
-            user_id:this.$Session.get('ai_user_id'),
-            role_id:23,
-            access_token: this.$Session.get('ai_user_token'),
-            type:3,
-            content:text
-          }).then(res=>{
-            if(res.return_code===1000){
-              this.getTempData().then(res=>{
-                resolve('11111111111')
-              })
-            }
-          })
-        })
 
-      },
       //临时话术播放按钮
       temporaryScriptPlay(){
         if(this.queueList.length>=3){
@@ -1000,14 +970,16 @@
         })
       },
       //自动直播下插入临时话术
-      temporaryInsertAutoEvent(_json){
-        let _name = this.playData[this.allScriptIndex].avatar.unity;
-        _json.avatar.name = _name
+      temporaryInsertAutoEvent(_json,ind){
+        let _name = this.allScriptList[this.allScriptPlayIndex].scriptList[0].avatar.unity;
+        _json.avatar.unity = _name
         this.isUnityTemporaryInteractionStart = true;
         if(this.interactionModel){//互动模式下插入话语
+          let _id;
+          ind?_id=this.temporaryScriptList[ind].id:_id=this.temporaryScriptList[this.temporaryScriptList.length-1].id;
           if(this.queueList.length<3){
             this.queueList.push({
-              id:this.temporaryScriptList[this.temporaryScriptList.length-1].id,
+              id:_id,
               name:_name,
               item:JSON.stringify([_json])
             })
@@ -1019,7 +991,42 @@
           this.previewData = [_json]
         }
       },
+      getTempData(){
+        let self = this;
+        return new Promise(resolve =>{
+          requestServices.getTempList({
+            user_id:self.$Session.get('ai_user_id'),
+            role_id:23,
+            access_token: self.$Session.get('ai_user_token'),
+            type:3
+          }).then(res=>{
+            // console.log(res.result.words)
+            if(res.return_code===1000){
+              self.temporaryScriptList=res.result.words.slice(-4)
+              self.$forceUpdate();
+              resolve(self.temporaryScriptList)
+            }
+          })
+        })
+      },
+      addTempData(text){
+        return new Promise(resolve =>{
+          requestServices.addTemp({
+            user_id:this.$Session.get('ai_user_id'),
+            role_id:23,
+            access_token: this.$Session.get('ai_user_token'),
+            type:3,
+            content:text
+          }).then(res=>{
+            if(res.return_code===1000){
+              this.getTempData().then(res=>{
+                resolve('11111111111')
+              })
+            }
+          })
+        })
 
+      },
       getGuid() {
         // 生成随机ID
         return `r${new Date().getTime()}d${Math.ceil(Math.random() * 1000)}`;
