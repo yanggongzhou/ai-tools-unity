@@ -63,7 +63,6 @@
     methods:{
 
       fileChange(file){
-        console.log(file);
         if(this.videoVisible){
           const isMP4 = file.raw.type === 'video/mp4';
           // const isAVI = file.raw.type === 'video/avi';

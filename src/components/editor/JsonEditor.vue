@@ -81,6 +81,7 @@
             </el-form-item>
             <el-form-item label="上传文件">
               <my-upload :imgVisible="imgVisible" :videoVisible="videoVisible"
+                         ref="uploadRefVideo"
                          @getDisplayImg="getDisplayImg" @getDisplayVideo="getDisplayVideo"></my-upload>
             </el-form-item>
             <el-form-item label="设置时长" prop="dismissTimeType">
@@ -134,7 +135,7 @@
             </el-form-item>
             <el-form-item label="上传文件">
               <my-upload :imgVisible="imgVisible" :videoVisible="videoVisible"
-                         ref="uploadRef"
+                         ref="uploadRefImg"
                          @getDisplayImg="getDisplayImg" @getDisplayVideo="getDisplayVideo"></my-upload>
             </el-form-item>
             <el-form-item label="设置时长" prop="dismissTimeType">
@@ -343,7 +344,7 @@
           self.imgVisible = true;
           self.editTagId= domObj.id;
           self.$nextTick(()=>{
-            self.$refs.uploadRef.tempList= [{
+            self.$refs.uploadRefImg.tempList= [{
               name: domObj.name,
               status: "success",
               uid: self.getGuid(),
@@ -361,7 +362,7 @@
           self.imgVisible = false;
           self.editTagId= domObj.id;
           self.$nextTick(()=>{
-            self.$refs.uploadRef.tempList= [{
+            self.$refs.uploadRefVideo.tempList= [{
               name: domObj.name,
               status: "success",
               uid: self.getGuid(),
@@ -1219,7 +1220,7 @@
           }else{
             this.$refs.testText.addTag(_text,_data)
           }
-
+          this.editTagId = "";
           this.$emit('displayVideoUrl',_data)
           this.videoVisible = false;
         }else if(!this.videoVisible&&this.imgForm.url){
@@ -1243,6 +1244,7 @@
           }else{
             this.$refs.testText.addTag(_text,_data)
           }
+          this.editTagId = "";
           this.$emit('displayImgUrl',_data)
           this.imgVisible = false;
         }else{

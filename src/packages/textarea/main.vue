@@ -117,6 +117,7 @@
       let self = this;
       //删除标签
       window.delTag = function(id){
+        event.stopPropagation();//阻止事件冒泡
         let child = document.getElementById(id)
         // console.log(JSON.parse(child.dataset.obj).type)
         let _type = JSON.parse(child.dataset.obj).type;
