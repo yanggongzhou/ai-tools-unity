@@ -163,4 +163,40 @@ export const resultJSON = {
     }
   },
 
+  textItem: {
+    "index": 0,
+    "type": "info",
+    "info": {
+      "margins": {
+        "left": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0
+      },
+      "autoDismiss": false,
+      "dismissTime": 10000,
+      "url": "",
+      "width": 0,
+      "height": 0,
+      "child": [
+        {
+          "type": "text",
+          "text": "",
+          "textColor": "",
+          "textSize": "",
+          "gravity": "",
+          "ellipsize": false,//是否支持跑马灯
+          "id": "",
+          "width": 0,
+          "height": 0,
+          "margins": {
+            "left": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0
+          }
+        }
+      ]
+    }
+  }
 }

@@ -463,7 +463,7 @@
   // 给标签默认样式，不可scoped
   .w-textarea {
     .w-textarea_input {
-      caret-color:#FC9C76;
+      caret-color:red;
     }
     wise {
       color: #26a2ff;
@@ -493,7 +493,8 @@
       height: 300px;
       min-height: 100px;
       /*background: white;*/
-      background: #FFFBF2;
+      background: linear-gradient(#fffefc, #fdf5eb);
+      /*background: #FFFBF2;*/
       box-sizing: border-box;
       border: 1px solid #FEE0C7;
       overflow: scroll;

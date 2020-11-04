@@ -567,6 +567,8 @@
         this.isPlaying = false;
         this.queueList = [];
         this.queueContentItem = [];
+        this.isUnityTemporaryInteractionStart = false;
+        this.interactionModel = false;
       },
       WebSelectAvatarState(state){
         if(state==='True'){
@@ -647,7 +649,6 @@
           UnityPreview(this.previewData[0].avatar.unity,JSON.stringify(this.previewData),"False","False")
           return false;
         }
-
         this.interactionModel = true;
         if(this.isFirstScript&&this.isFirstScriptOnce){
           this.playWelcomeWords();
@@ -667,6 +668,7 @@
       },
       //对应于UnityInteractionEnd，结束状态返回继续播放
       WebInteractionEnd(){
+        this.interactionModel = false;
         if(this.isUnityTemporaryInteractionStart){
           this.isUnityTemporaryInteractionStart = false;
           UnityPreviewContinue(this.previewData[0].avatar.unity);
@@ -690,7 +692,6 @@
             UnityPreviewContinue(this.previewData[0].avatar.unity);
           }
         }
-        this.interactionModel = false;
       },
 
       //播放结束回调  播放一句互动结束回调Unity
@@ -702,6 +703,7 @@
             this.nowTempId = _Obj.id;
             this.previewData = JSON.parse(_Obj.item)
           }else{
+            this.nowTempId =""
             // this.handleInacLogic();
             this.previewEndIsAutoPlayBtnEvent()
             this.isUnityTemporaryInteractionStart = false;
@@ -709,7 +711,15 @@
           return false;
         }
         if(this.isUnityTemporaryInteractionStart&&!this.interactionModel){//插入互动开启且当前互动模式状态已关闭，手动通知unity关闭互动
-          UnityInteractionEnd(this.previewData[0].avatar.unity);
+          if(this.queueList.length){
+            let _Obj  = this.queueList.shift();
+            UnityPreview(_Obj.name,_Obj.item,"False","False")
+            this.nowTempId = _Obj.id;
+            this.previewData = JSON.parse(_Obj.item)
+          }else{
+            this.nowTempId =""
+            UnityInteractionEnd(this.previewData[0].avatar.unity);
+          }
           return false;
         }
         if(this.isAutoPlayBtn){//是否自动播放
@@ -1004,10 +1014,9 @@
       temporaryInsertAutoEvent(_json,ind){
         let _name = this.allScriptList[this.allScriptPlayIndex].scriptList[0].avatar.unity;
         _json.avatar.unity = _name
-        this.isUnityTemporaryInteractionStart = true;
-        if(this.interactionModel){//互动模式下插入话语
-          let _id;
-          ind===undefined?_id=this.temporaryScriptList[this.temporaryScriptList.length-1].id:_id=this.temporaryScriptList[ind].id;
+        let _id;
+        ind===undefined?_id=this.temporaryScriptList[this.temporaryScriptList.length-1].id:_id=this.temporaryScriptList[ind].id;
+        if(this.interactionModel||this.isUnityTemporaryInteractionStart){//互动模式下插入话语
           if(this.queueList.length<3){
             this.queueList.push({
               id:_id,
@@ -1019,6 +1028,8 @@
           }
         }else{
           UnityTemporaryInteractionStart();
+          this.nowTempId = _id;
+          this.isUnityTemporaryInteractionStart = true;
           this.previewData = [_json]
         }
       },
