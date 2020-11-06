@@ -109,11 +109,11 @@
                 inactive-text="关闭">
               </el-switch>
             </el-form-item>
-          </el-form>
-          <span slot="footer" class="dialog-footer">
+            <el-form-item align="right">
               <button class="dialogBtn quxiao" @click.stop="videoVisible = false">取 消</button>
-             <button class="dialogBtn queren" @click.stop="confrimBtn('ruleForm')">确 认</button>
-            </span>
+              <button class="dialogBtn queren" @click.stop="confrimBtn('ruleForm')">确 认</button>
+            </el-form-item>
+          </el-form>
         </el-dialog>
         <el-dialog
           style="border-radius: 10px;"
@@ -157,15 +157,19 @@
               <el-col :span="4">
                 <el-tag v-if="!imgForm.isAll">秒</el-tag>
               </el-col>
-
+            </el-form-item>
+            <el-form-item align="right">
+              <button class="dialogBtn quxiao" @click.stop="imgVisible = false">取 消</button>
+              <button class="dialogBtn queren" @click.stop="confrimBtn('image')">确 认</button>
             </el-form-item>
           </el-form>
-          <span slot="footer" class="dialog-footer">
-<!--              <el-button @click="imgVisible = false">取 消</el-button>-->
-             <button class="dialogBtn quxiao" @click.stop="imgVisible = false">取 消</button>
-             <button class="dialogBtn queren" @click.stop="confrimBtn('imgForm')">确 认</button>
-<!--              <el-button type="primary" @click="confrimBtn('imgForm')">确 定</el-button>-->
-            </span>
+        </el-dialog>
+        <el-dialog
+          style="border-radius: 10px;"
+          :visible.sync="textVisible"
+          :modal="false"
+          width="500px">
+          <textEditor @confrimBtn="confrimBtn" @cancelBtn="cancelBtn"></textEditor>
         </el-dialog>
         <div
           class='timerDialog'
@@ -224,6 +228,7 @@
 
 <script>
   import upload from "./upload";
+  import textEditor from './textEditor'
   import {resultJSON} from '../../api/result'
   export default {
     filters:{
@@ -252,6 +257,7 @@
     },
     components:{
       'my-upload':upload,
+      textEditor
     },
     props:{
       TriggerDiv:Array
@@ -298,9 +304,12 @@
         },
         imgRules:{},
 
+        textRules:{},
+
         videoVisible:false,
         imgVisible:false,
         timerVisible: false,
+        textVisible:false,
 
         editTagId:'',//是否是再次编辑
 
@@ -390,6 +399,7 @@
     watch:{
       //监听输入框文本，主要实现删除功能
       testData(newValue,oldValue){
+        console.log(this.testData)
         if(this.scriptChangeState) return false;
         // console.log(this.testData,this.testData.length,this.testData.split(''))
         if(newValue.length < oldValue.length&&(oldValue.length-newValue.length)>200){
@@ -416,6 +426,7 @@
     },
 
     methods: {
+      //更多操作
       handleCommand(ind,proto){
         switch (proto) {
           case "1":
@@ -1143,6 +1154,9 @@
           case 'intervalTime':
             this.timerVisible = true;
             break;
+          case 'text':
+            this.textVisible = true;
+            break;
         }
       },
       //添加互动标签
@@ -1192,12 +1206,43 @@
         this.ruleForm.videoName = Obj.name;
 
       },
+      cancelBtn(type){
+        switch (type) {
+          case 'text':
+            this.textVisible = false;
+            break;
+        }
+      },
       //弹框确定
-      confrimBtn(){
+      confrimBtn(type,form){
         let tagDom;
         if(this.editTagId){tagDom =document.getElementById(this.editTagId);}
         let _data,_text,_time,_id;
         this.editTagId?_id = this.editTagId:_id = this.getGuid();
+        if(type==='text'){
+          _data={
+            type:'text',
+            text:form.text,
+            textColor:form.textColor,
+            region:form.region,
+            textSize:form.textSize,
+            gravity:form.gravity,
+            id:_id
+          }
+          _text = `<div class="tagtag tagText" onclick="editTag(\``+_id+`\`)">文字 <i class="el-icon-close" onclick="delTag(\``+_id+`\`)"></i>&nbsp;</div>`
+          if(this.editTagId){
+            let _oldTag = this.$refs.testText.nodeToString( document.getElementById(_id) ).replace( "<" , "<" ).replace( ">" , ">");
+            tagDom.dataset.obj = JSON.stringify(_data)
+            tagDom.innerHTML = _text;
+            let _newTag = this.$refs.testText.nodeToString( document.getElementById(_id) ).replace( "<" , "<" ).replace( ">" , ">");
+            this.testData = this.testData.replace(_oldTag,_newTag);
+          }else{
+            this.$refs.testText.addTag(_text,_data)
+          }
+          this.editTagId = "";
+          this.$emit('addDisplay',_data)
+          return false;
+        }
         if(this.videoVisible&&this.ruleForm.videoUrl){
           _data={
             type:'video',
@@ -1215,8 +1260,11 @@
           }
           _text = `<div class="tagtag tagVideo" onclick="editTag(\``+_id+`\`)">视频`+this.ruleForm.videoName+` (`+_time+`)<i class="el-icon-close" onclick="delTag(\``+_id+`\`)"></i>&nbsp;</div>`
           if(this.editTagId){
+            let _oldTag = this.$refs.testText.nodeToString( document.getElementById(_id) ).replace( "<" , "<" ).replace( ">" , ">");
             tagDom.dataset.obj = JSON.stringify(_data)
             tagDom.innerHTML = _text;
+            let _newTag = this.$refs.testText.nodeToString( document.getElementById(_id) ).replace( "<" , "<" ).replace( ">" , ">");
+            this.testData = this.testData.replace(_oldTag,_newTag);
           }else{
             this.$refs.testText.addTag(_text,_data)
           }
@@ -1239,8 +1287,11 @@
           }
           _text =  `<div class="tagtag tagImg" onclick="editTag(\``+_id+`\`)">图片`+this.imgForm.name+` (`+_time+`)<i class="el-icon-close" onclick="delTag(\``+_id+`\`)"></i>&nbsp;</div>`
           if(this.editTagId){
+            let _oldTag = this.$refs.testText.nodeToString( document.getElementById(_id) ).replace( "<" , "<" ).replace( ">" , ">");
             tagDom.dataset.obj = JSON.stringify(_data)
             tagDom.innerHTML = _text;
+            let _newTag = this.$refs.testText.nodeToString( document.getElementById(_id) ).replace( "<" , "<" ).replace( ">" , ">");
+            this.testData = this.testData.replace(_oldTag,_newTag);
           }else{
             this.$refs.testText.addTag(_text,_data)
           }
@@ -1263,6 +1314,9 @@
 
 
 <style lang="less" scoped>
+  /deep/.el-dialog__body {
+    padding: 5px 20px !important;
+  }
   /deep/.el-icon-loading{
     font-size: 30px !important;
   }
@@ -1341,8 +1395,8 @@
     line-height: 1;
     padding: 5px 8px;
     margin-right: 8px;
-    height: 34px;
-    width: 92px;
+    height: 33px;
+    width: 78px;
     border-radius: 32px;
     cursor: pointer;
     border: 1px solid #dcdfe6;

@@ -36,6 +36,7 @@
       @deleteTrigger="deleteTrigger"
       @cleanTriggerDiv="cleanTriggerDiv"
       @editImportTriggerDiv="editImportTriggerDiv"
+      @addDisplay="addDisplay"
     ></JsonEditor>
   </div>
 </template>
@@ -308,6 +309,30 @@
           trigItem.info.child[0].region=data.region
           trigItem.info.child[0].isSupportAudio=data.isSupportAudio
           trigItem.info.child[0].name=data.name
+          this.TriggerDiv.push(trigItem)
+        }
+      },
+      addDisplay(data){
+        let isEditTag=false;
+        if(this.TriggerDiv.length){
+          this.TriggerDiv.forEach(val=>{
+            if(val.info.child[0].id===data.id){
+              isEditTag = true;
+              val.info.textColor=data.textColor;
+              val.info.child[0].region=data.region;
+              val.info.child[0].id=data.id
+              val.info.child[0].textSize=data.textSize
+              val.info.child[0].gravity=data.gravity
+            }
+          })
+        }
+        if(!isEditTag){
+          let trigItem=JSON.parse(JSON.stringify(resultJSON.textItem))
+          trigItem.info.textColor=data.textColor;
+          trigItem.info.child[0].region=data.region;
+          trigItem.info.child[0].id=data.id
+          trigItem.info.child[0].textSize=data.textSize
+          trigItem.info.child[0].gravity=data.gravity
           this.TriggerDiv.push(trigItem)
         }
       },

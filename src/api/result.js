@@ -181,12 +181,13 @@ export const resultJSON = {
       "child": [
         {
           "type": "text",
-          "text": "",
-          "textColor": "",
-          "textSize": "",
-          "gravity": "",
+          "text": "",//文字内容
+          "textColor": "",//字体颜色
+          "textSize": "",//字体大小
+          "gravity": "",//对齐方式 left right center
           "ellipsize": false,//是否支持跑马灯
           "id": "",
+          "region":"",//工具端使用，文字展示位
           "width": 0,
           "height": 0,
           "margins": {

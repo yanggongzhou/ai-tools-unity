@@ -32,6 +32,7 @@
       </el-tooltip>
       <button class="w-textarea_tools__item video float_left" @click="openTagDialog('video')">插入视频</button>
       <button class="w-textarea_tools__item picture float_left" @click="openTagDialog('img')">插入图片</button>
+      <button class="w-textarea_tools__item text float_left" @click="openTagDialog('text')">插入文字</button>
 <!--      <button class="w-textarea_tools__item timer float_left" @click="openTagDialog('intervalTime')">添加间隔</button>-->
 
       <!--      <button class="w-textarea_tools__item float_right"-->
@@ -515,8 +516,8 @@
 
     .w-textarea_tools {
       padding: 0 10px;
-      height: 70px;
-      line-height: 70px;
+      height: 65px;
+      line-height: 65px;
       /*background-color: #f5f7fa;*/
       background-color: #fff;
       color: #666;
@@ -540,28 +541,33 @@
         }
         &.clear {
           background: url(../../../static/icon/clear.png) no-repeat center;
-          background-size: 28px 28px;
+          background-size: 24px 24px;
           background-position: top center;
           margin-right: 8px;
         }
         &.inac {
           background: url(../../../static/icon/inac.png) no-repeat center;
-          background-size: 28px 28px;
+          background-size: 24px 24px;
           background-position: top center;
         }
         &.video {
           background: url(../../../static/icon/video.png) no-repeat center;
-          background-size: 28px 28px;
+          background-size: 24px 24px;
           background-position: top center;
         }
         &.picture {
           background: url(../../../static/icon/picture.png) no-repeat center;
-          background-size: 28px 28px;
+          background-size: 24px 24px;
           background-position: top center;
         }
         &.timer {
           background: url(../../../static/icon/timer.png) no-repeat center;
-          background-size: 28px 28px;
+          background-size: 24px 24px;
+          background-position: top center;
+        }
+        &.text{
+          background: url(../../../static/icon/text.png) no-repeat center;
+          background-size: 24px 24px;
           background-position: top center;
         }
       }
