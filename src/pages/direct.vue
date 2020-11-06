@@ -545,6 +545,7 @@
               this.weightListIndex+=1;
             }
           this.allScriptPlayIndex = this.allScriptIndex;
+            // this.$message.warning('this.allScriptPlayIndex播放下标',this.allScriptPlayIndex)
           this.previewData = this.allScriptList[this.allScriptPlayIndex].scriptList;
           UnityChangeAvatar(this.previewData[0].avatar.unity)
           this.previewReady = false;
@@ -622,6 +623,7 @@
           this.allScriptIndex=this.weightList[this.weightListIndex];
           this.weightListIndex+=1;
         }else{
+
           if(this.allScriptPlayIndex+1<this.allScriptList.length){
             this.allScriptPlayIndex+=1;
             this.allScriptIndex = this.allScriptPlayIndex;
@@ -723,7 +725,16 @@
           return false;
         }
         if(this.isAutoPlayBtn){//是否自动播放
-          this.previewEndIsAutoPlayBtnEvent()
+          if(this.queueList.length){
+            let _Obj  = this.queueList.shift();
+            UnityPreview(_Obj.name,_Obj.item,"False","False")
+            this.nowTempId = _Obj.id;
+            this.previewData = JSON.parse(_Obj.item)
+          }else{
+            this.nowTempId =""
+            // this.handleInacLogic();
+            this.previewEndIsAutoPlayBtnEvent()
+          }
         }
         else{
           if(this.queueList.length){
