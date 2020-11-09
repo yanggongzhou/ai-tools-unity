@@ -169,7 +169,7 @@
           :visible.sync="textVisible"
           :modal="false"
           width="500px">
-          <textEditor @confrimBtn="confrimBtn" @cancelBtn="cancelBtn"></textEditor>
+          <textEditor @confrimBtn="confrimBtn" ref="textEditorRef" @cancelBtn="cancelBtn"></textEditor>
         </el-dialog>
         <div
           class='timerDialog'
@@ -378,8 +378,9 @@
               url: domObj.url
             }]
           })
-        }else if(domObj.type==="intervalTime"){
-
+        }else if(domObj.type==="text"){
+          self.textVisible = true;
+          self.$refs.textEditorRef.textForm = domObj;
         }
       }
 
@@ -884,7 +885,7 @@
             let _actionMessage = [];//动作
             let _intervalMessage = [];//间隔标签数据
             res.messageArr.forEach((msg,msgInd)=>{
-              if(msg.datasetObj.type==="image"||msg.datasetObj.type==="video"){
+              if(msg.datasetObj.type==="image"||msg.datasetObj.type==="video"||msg.datasetObj.type==="text"){
                 _domMessage.push(msg);
               }else if(msg.datasetObj.type==='action'){
                 _actionMessage.push({
@@ -955,7 +956,7 @@
             //信息板
             _trigInfo.forEach((val,ind)=>{
               _domMessage.forEach(dom=>{
-                if(dom.datasetObj.url===val.info.child[0].url){
+                if(dom.datasetObj.id===val.info.child[0].id){
                   val.index = dom.index;
                 }
               })
@@ -1156,6 +1157,15 @@
             break;
           case 'text':
             this.textVisible = true;
+            this.$nextTick(()=>{
+              this.$refs.textEditorRef.textForm = {
+                text:"",
+                textColor:"#333333",
+                region:"1",
+                textSize:'14',
+                gravity:"center",
+              }
+            })
             break;
         }
       },
