@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-form :model="textForm" :rules="textRules" ref="imgForm" label-width="100px" class="demo-ruleForm">
+    <el-form :model="textForm" :rules="textRules" ref="imgForm" label-width="100px" class="demo-ruleForm" @submit.native.prevent>
       <el-row>
         <el-col :span="12">
           <el-form-item label="展示区" prop="region">

@@ -621,6 +621,7 @@
             this.weightListIndex=0;
           }
           this.allScriptIndex=this.weightList[this.weightListIndex];
+          this.allScriptPlayIndex= this.allScriptIndex;
           this.weightListIndex+=1;
         }else{
 
@@ -635,7 +636,7 @@
 
         this.scriptChange(this.allScriptIndex)
 
-        this.$message.info('播放剧本'+(this.allScriptPlayIndex+1)+'--'+this.allScriptList[this.allScriptPlayIndex].name)
+        // this.$message.info('播放剧本zz'+ (this.allScriptPlayIndex+1) + 'zz--'+this.allScriptList[this.allScriptPlayIndex].name)
         this.previewData = this.allScriptList[this.allScriptPlayIndex].scriptList;
 
         let _state = "True"
@@ -794,12 +795,12 @@
           }else {
             // 播放下一个脚本
             this.interactionModeIsEnd = false;
-            if(this.isFirstScript){
-              this.AutoPlayEvent();
-              // this.interactionModeIsEnd = false;
-              return false;
-            }
-            this.handleInacLogic();
+            // if(this.isFirstScript){
+            //   this.AutoPlayEvent();
+            //   // this.interactionModeIsEnd = false;
+            //   return false;
+            // }
+            this.AutoPlayEvent();
           }
         }
       },
@@ -810,7 +811,6 @@
           return false;
         }
           console.log(this.nextPlayVal,this.contentIndex,this.nextAllScriptIndex)
-        // if()
         this.previewBtn(this.nextPlayVal,this.contentIndex,this.nextAllScriptIndex,true)
         document.querySelector("#content"+self.nowContentIndex+"script"+self.allScriptIndex).scrollIntoView(true);
       },

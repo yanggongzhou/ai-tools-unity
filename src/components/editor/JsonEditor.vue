@@ -69,7 +69,7 @@
           <div slot="title">
 
           </div>
-          <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+          <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm" @submit.native.prevent>
             <el-form-item label="展示区" prop="region">
               <el-select v-model="ruleForm.region" placeholder="请选择展示区域">
                 <el-option label="展位一" value="1"></el-option>
@@ -123,7 +123,7 @@
 <!--          <div slot="title">-->
 <!--            上传文件-->
 <!--          </div>-->
-          <el-form :model="imgForm" :rules="imgRules" ref="imgForm" label-width="100px" class="demo-ruleForm">
+          <el-form :model="imgForm" :rules="imgRules" ref="imgForm" label-width="100px" class="demo-ruleForm" @submit.native.prevent>
             <el-form-item label="展示区" prop="region">
               <el-select v-model="imgForm.region" placeholder="请选择展示区域">
                 <el-option label="展位一" value="1"></el-option>
