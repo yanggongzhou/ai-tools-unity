@@ -92,7 +92,7 @@
                              :label="val.label" :value="val.value"></el-option>
                 </el-select>
               </el-col>
-              <el-col :span="1"><p class="center">-</p></el-col>
+              <el-col :span="1"><p  v-if="!ruleForm.isAll" class="center">-</p></el-col>
               <el-col :span="7">
                 <el-input-number
                   style="width: 100px;"
@@ -147,7 +147,7 @@
                              :label="val.label" :value="val.value"></el-option>
                 </el-select>
               </el-col>
-              <el-col :span="1"><p class="center">-</p></el-col>
+              <el-col :span="1"><p  v-if="!imgForm.isAll" class="center">-</p></el-col>
               <el-col :span="7">
                 <el-input-number
                   style="width: 100px;"
@@ -166,13 +166,97 @@
             </el-form-item>
           </el-form>
         </el-dialog>
+<!--        文字-->
         <el-dialog
           style="border-radius: 10px;"
           :visible.sync="textVisible"
           :modal="false"
           width="500px">
-          <textEditor @saveBtn="confrimBtn" ref="textEditorRef" @cancelBtn="cancelBtn"></textEditor>
+          <el-form :model="textForm" :rules="textRules" ref="imgForm" label-width="100px" class="demo-ruleForm" @submit.native.prevent>
+            <el-row>
+              <el-col :span="12">
+                <el-form-item label="展示区" prop="region">
+                  <el-select v-model="textForm.region" placeholder="请选择展示区域">
+                    <el-option label="展位一" value="1"></el-option>
+                    <el-option label="展位二" value="2"></el-option>
+                    <el-option label="展位三" value="3"></el-option>
+                    <el-option label="展位四" value="4"></el-option>
+                    <el-option label="展位五" value="5"></el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="字体颜色" prop="textColor">
+                  <el-input type="color" style="width: 65px"
+                            v-model="textForm.textColor">
+                  </el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="字体大小" prop="textSize">
+                  <el-select v-model="textForm.textSize" placeholder="请选择展示区域">
+                    <el-option v-for="(val,ind) in textSizeList"
+                               :label="val"
+                               :value="val"
+                               :key="ind+'foot'"></el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="对齐方式" prop="gravity">
+                  <el-select v-model="textForm.gravity" placeholder="请选择展示区域">
+                    <el-option label="居中" value="center"></el-option>
+                    <el-option label="左对齐" value="left"></el-option>
+                    <el-option label="右对齐" value="right"></el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-form-item label="设置时长" prop="dismissTimeType">
+              <el-col :span="12">
+                <el-select v-model="textForm.dismissTimeType" @change="textTypeChange" placeholder="请选择展示时长类型">
+                  <el-option v-for="(val,ind) in dismissTimeTypeData_img"
+                             :key="ind+'dismissTimeType'"
+                             :label="val.label" :value="val.value"></el-option>
+                </el-select>
+              </el-col>
+              <el-col :span="1"><p v-if="!textForm.isAll" class="center">-</p></el-col>
+              <el-col :span="7">
+                <el-input-number
+                  style="width: 100px;"
+                  v-if="!textForm.isAll"
+                  v-model="textForm.dismissTime" controls-position="right" :precision="1" :min="0.1" :step="0.5" :max="3600"></el-input-number>
+              </el-col>
+              <el-col :span="4">
+                <el-tag v-if="!textForm.isAll">秒</el-tag>
+              </el-col>
+            </el-form-item>
+            <!--      <el-col :span="12">-->
+            <!--      </el-col>-->
+
+            <el-form-item label="字体内容">
+              <el-input type="textArea" v-model="textForm.text"></el-input>
+            </el-form-item>
+            <el-form-item label="预览">
+              <div class="text_preview">
+                <p :style="{
+                  'text-align':textForm.gravity,
+                  'color':textForm.textColor,
+                  'font-size':textForm.textSize+'px',
+                  'width':'90%'
+                }">
+                  {{textForm.text}}
+                </p>
+              </div>
+            </el-form-item>
+            <el-form-item align="right">
+              <button class="dialogBtn quxiao" @click.stop="textVisible = false">取 消</button>
+              <button class="dialogBtn queren" @click.stop="confrimBtn('text')">确 认</button>
+            </el-form-item>
+          </el-form>
+<!--          <textEditor @saveBtn="confrimBtn" ref="textEditorRef" @cancelBtn="cancelBtn"></textEditor>-->
         </el-dialog>
+
         <div
           class='timerDialog'
           width="200px"
@@ -230,7 +314,6 @@
 
 <script>
   import upload from "./upload";
-  import textEditor from './textEditor'
   import {resultJSON} from '../../api/result'
   export default {
     filters:{
@@ -259,7 +342,6 @@
     },
     components:{
       'my-upload':upload,
-      textEditor
     },
     props:{
       TriggerDiv:Array
@@ -285,7 +367,19 @@
           {label:'至脚本播放结束',value:1},
           {label:'自定义时长',value:2},
         ],
-
+        textForm:{
+          dismissTimeType:2,
+          text:"测试字体",
+          textColor:"#333333",
+          region:"1",
+          textSize:'14',
+          gravity:"center",
+          ellipsize:false,
+          dismissTime:3,
+          isAll:false,
+        },
+        textSizeList:["12","14","16","18","20","22","24","26","28","30","32",],
+        textRules:{},
         ruleForm:{
           region:'1',//展示区域
           dismissTimeType:2,//播放时间的方式
@@ -305,8 +399,6 @@
           name:'',
         },
         imgRules:{},
-
-        textRules:{},
 
         videoVisible:false,
         imgVisible:false,
@@ -384,15 +476,15 @@
           self.textVisible = true;
           self.editTagId= domObj.id;
           self.$nextTick(()=>{
-            domObj.isAll? self.$refs.textEditorRef.textForm.dismissTimeType = 1: self.$refs.textEditorRef.textForm.dismissTimeType = 2;
-            self.$refs.textEditorRef.textForm.text = domObj.text;
-            self.$refs.textEditorRef.textForm.textColor = domObj.textColor;
-            self.$refs.textEditorRef.textForm.region = domObj.region;
-            self.$refs.textEditorRef.textForm.textSize = domObj.textSize;
-            self.$refs.textEditorRef.textForm.gravity = domObj.gravity;
-            self.$refs.textEditorRef.textForm.ellipsize = domObj.ellipsize;
-            self.$refs.textEditorRef.textForm.dismissTime = domObj.dismissTime;
-            self.$refs.textEditorRef.textForm.isAll = domObj.isAll;
+            domObj.isAll? self.textForm.dismissTimeType = 1: self.textForm.dismissTimeType = 2;
+            self.textForm.text = domObj.text;
+            self.textForm.textColor = domObj.textColor;
+            self.textForm.region = domObj.region;
+            self.textForm.textSize = domObj.textSize;
+            self.textForm.gravity = domObj.gravity;
+            self.textForm.ellipsize = domObj.ellipsize;
+            self.textForm.dismissTime = domObj.dismissTime/1000;
+            self.textForm.isAll = domObj.isAll;
           })
         }
       }
@@ -805,8 +897,12 @@
               contentBDArr[val.index] = _txt.join('');
             }
           }else if(val.type==="text"){
+            let _time = val.dismissTime/1000+'s';
+            if(val.isAll){
+              _time = 'all'
+            }
             let _data = JSON.stringify({type:'text',text:val.text,textColor:val.textColor,textSize:val.textSize,id:val.id,gravity:val.gravity,region:val.region,ellipsize:val.ellipsize,isAll:val.isAll,dismissTime:val.dismissTime}).replace(/"/g,"&quot;")
-            let _textDom = `<wise id="`+val.id+`" data-obj="`+_data+`"><div class="tagText tagtag" onclick="editTag(\``+val.id+`\`)">文字 <i class="el-icon-close" onclick="delTag(\``+val.id+`\`)"></i>&nbsp;</div></wise>`
+            let _textDom = `<wise id="`+val.id+`" data-obj="`+_data+`"><div class="tagText tagtag" onclick="editTag(\``+val.id+`\`)">文字`+ ' ('+_time+`)<i class="el-icon-close" onclick="delTag(\``+val.id+`\`)"></i>&nbsp;</div></wise>`
             if(contentBDArr[val.index]===undefined){
               contentBDArr[val.index] = _textDom
             }else{
@@ -889,7 +985,18 @@
             break;
         }
       },
-
+      textTypeChange(val){
+        switch (val) {
+          case 1:
+            this.textForm.dismissTime = 999;
+            this.textForm.isAll = true;
+            break;
+          case 2:
+            this.textForm.dismissTime = 3;
+            this.textForm.isAll = false;
+            break;
+        }
+      },
       getTruePos(contentBD,index){
         let _txtInd;
         let _index=0
@@ -1196,13 +1303,16 @@
           case 'text':
             this.textVisible = true;
             this.$nextTick(()=>{
-              this.$refs.textEditorRef.textForm = {
+              this.textForm = {
                 text:"",
                 textColor:"#333333",
                 region:"1",
                 textSize:'14',
                 gravity:"center",
                 ellipsize:false,
+                dismissTimeType:2,
+                dismissTime:3,
+                isAll:false,
               }
             })
             break;
@@ -1263,25 +1373,33 @@
         }
       },
       //弹框确定
-      confrimBtn(type,form){
+      confrimBtn(type){
         let tagDom;
         if(this.editTagId){tagDom =document.getElementById(this.editTagId);}
         let _data,_text,_time,_id;
         this.editTagId?_id = this.editTagId:_id = this.getGuid();
         if(type==='text'){
+          if(!this.textForm.text.replace(/ /g,'')){
+            this.$message.error('请输入文字')
+            return false;
+          }
           _data={
             type:'text',
-            text:form.text,
-            textColor:form.textColor,
-            region:form.region,
-            textSize:form.textSize,
-            gravity:form.gravity,
-            ellipsize:form.ellipsize,
-            dismissTime:form.dismissTime*1000,
-            isAll:form.isAll,
+            text:this.textForm.text,
+            textColor:this.textForm.textColor,
+            region:this.textForm.region,
+            textSize:this.textForm.textSize,
+            gravity:this.textForm.gravity,
+            ellipsize:this.textForm.ellipsize,
+            dismissTime:this.textForm.dismissTime*1000,
+            isAll:this.textForm.isAll,
             id:_id
           }
-          _text = `<div class="tagtag tagText" onclick="editTag(\``+_id+`\`)">文字 <i class="el-icon-close" onclick="delTag(\``+_id+`\`)"></i>&nbsp;</div>`
+          _time = this.textForm.dismissTime+'s';
+          if(this.textForm.isAll){
+            _time = 'all'
+          }
+          _text = `<div class="tagtag tagText" onclick="editTag(\``+_id+`\`)">文字`+' ('+_time+`)<i class="el-icon-close" onclick="delTag(\``+_id+`\`)"></i>&nbsp;</div>`
           if(this.editTagId){
             let _oldTag = this.$refs.testText.nodeToString( document.getElementById(_id) ).replace( "<" , "<" ).replace( ">" , ">");
             tagDom.dataset.obj = JSON.stringify(_data)
@@ -1293,9 +1411,14 @@
           }
           this.editTagId = "";
           this.$emit('addDisplay',_data)
+          this.textVisible = false;
           return false;
         }
         if(this.videoVisible&&this.ruleForm.videoUrl){
+          if(!this.ruleForm.dismissTime){
+            this.$message.error('请确认呈现时间')
+            return false;
+          }
           _data={
             type:'video',
             name:this.ruleForm.videoName,
@@ -1324,6 +1447,10 @@
           this.$emit('displayVideoUrl',_data)
           this.videoVisible = false;
         }else if(!this.videoVisible&&this.imgForm.url){
+          if(!this.imgForm.dismissTime){
+            this.$message.error('请确认呈现时间')
+            return false;
+          }
           _data={
             type:'image',
             name:this.imgForm.name,
@@ -1587,5 +1714,12 @@
       }
     }
   }
-
+  .text_preview{
+    padding: 3px;
+    border: 1px solid gainsboro;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 </style>
