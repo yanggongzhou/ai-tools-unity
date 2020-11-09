@@ -42,6 +42,14 @@
                     <span>{{scope.row.paragraph_number}}</span>
                   </template>
                 </el-table-column>
+                <el-table-column width="100" align="center" label="播放权重" :render-header="renderWeightHeader">
+                  <template slot-scope="scope">
+                    <!-- <span>{{handleScriptWeight(scope.row.weight)}}</span> -->
+                    <el-select v-model='scope.row.weight' @change='handleChangePlayWeight(scope.row.id, scope.$index)'>
+                      <el-option v-for='item in playWeight' :key='item.value' :label='item.label' :value='item.value' ></el-option>
+                    </el-select>
+                  </template>
+                </el-table-column>
                 <el-table-column align="center" label="操作" :render-header="renderHeader" width='120' >
                   <template slot-scope="scope">
                     <el-button @click='handleDelete(scope.$index, scope.row.id)' type="text" size="small">移除</el-button>
@@ -185,7 +193,24 @@ export default {
             isAddedScript: false,
 
             checkAllDisabled: false,
-
+          playWeight: [
+            {
+              value: 10,
+              label: '最高'
+            },
+            {
+              value: 7,
+              label: '高'
+            },
+            {
+              value: 5,
+              label: '中'
+            },
+            {
+              value: 2,
+              label: '低'
+            },
+          ],
           previewReady:true,
           previewData:{
               name:'',
@@ -203,6 +228,42 @@ export default {
         this.fetchAllScripts();
     },
     methods: {
+        renderWeightHeader(h, {column}) {
+          return  h(
+            'div',
+            {
+              style: 'display:flex;margin:auto;justify-content:center;'
+            },
+            [
+              h('span', column.label),
+              h('promptMessages', {
+                props: {
+                  messages: ['权重越高，随机播放时，被重复播放几率越大！'],
+                  icon: 'el-icon-question',
+                  iconStyle: 'color:#666666;margin-left:5px;cursor:pointer;',
+                  iconClick: this.emptyList
+                }
+              })
+            ],
+          );
+        },
+      handleChangePlayWeight(_scriptID, _idx) {
+        // console.log('handleChangePlayWeight: ', _scriptID, _idx, this.playScriptData[_idx].weight)
+        requestServices.updateGsProgram({
+          role_id: 23,
+          user_id: this.$Session.get('ai_user_id'),
+          access_token: this.$Session.get('ai_user_token'),
+          gs_id: _scriptID,
+          weight: this.playScriptData[_idx].weight
+        }).then(res => {
+          if(res.return_code==1000) {
+            this.$message.success('修改成功')
+            this.fetchAllPrograms();
+          }else {
+            this.$message.error('修改失败')
+          }
+        })
+      },
         checkSetting(_id) {
           this.currentSetting = _id;
         },

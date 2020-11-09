@@ -102,6 +102,8 @@ export const requestServices = {
   addScriptToPrograms: (params) => apiInstance.post(`/guide_shopping/client/related_gs_program`, params),
   // 解除节目与剧本关联
   delScriptInPrograms: (params) => apiInstance.post(`/guide_shopping/client/delete_gs_program`, params),
+// 设置关联节目的剧本
+  updateGsProgram: (params) => apiInstance.post(`guide_shopping/client/update_gs_program`, params),
 
   // 获取剧本列表
   getAllScripts: (params) => apiInstance.post(`/guide_shopping/client/get_guide_shopping`, params),
