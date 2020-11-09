@@ -27,6 +27,14 @@
                     <span style='display:none;'>{{scope.row.sortId}}</span>
                   </template>
                 </el-table-column>
+                <el-table-column align="center" label="商品号">
+                  <template slot-scope="scope">
+                    <div class="goods clearfix">
+                      <span>{{scope.row.commodity_id}}</span>
+                      <i class="el-icon-edit-outline" :ref="'setGoodsIdIcon'+scope.row.id" @click='showSetGoodsId(scope.row.id, scope.row.commodity_id)'></i>
+                    </div>
+                  </template>
+                </el-table-column>
                 <el-table-column align="center" label="剧本名称">
                   <template slot-scope="scope">
                     <span>{{scope.row.name}}</span>
@@ -134,6 +142,11 @@
 
           </div>
         </div>
+      <div class="setGoodsId" v-if='isShowSetGoodsId' :style='setGoodsIdStyle'>
+        <el-input placeholder="请输入对应的商品号" v-model="iptGoodsId" maxlength='3' @input="handleIptGoodsId"></el-input>
+        <button class="cancel" @click='cancelSetGoodsId'>取消</button>
+        <button class="confirm" @click='confirmSetGoodsId'>保存</button>
+      </div>
     </div>
 </template>
 <script>
@@ -215,9 +228,23 @@ export default {
           previewData:{
               name:'',
             script:''
-          }
+          },
+
+          isShowSetGoodsId: false,
+          editGoodsIdBtnTop: 0,
+          editGoodsIdBtnLeft: 0,
+          currentEditGSID: -1, // 当前编辑的脚本ID
+          iptGoodsId: '', // 当前输入的商品ID
         };
     },
+  computed: {
+    setGoodsIdStyle() {
+      const style = {}
+      style.top = this.editGoodsIdBtnTop + 'px';
+      style.left = this.editGoodsIdBtnLeft + 'px';
+      return style
+    }
+  },
     created() {
       window.WebPreviewReady = this.WebPreviewReady;
       window.WebSelectAvatarState=this.WebSelectAvatarState;
@@ -228,6 +255,56 @@ export default {
         this.fetchAllScripts();
     },
     methods: {
+      cancelSetGoodsId() {
+        this.isShowSetGoodsId = false;
+        this.iptGoodsId = '';
+      },
+      confirmSetGoodsId() {
+        if(this.iptGoodsId=='') {
+          this.$message.error('商品号不能为空');
+          return;
+        }
+        let _flag = false
+        for(let i=0; i<this.playScriptData.length; i++) {
+          if(this.playScriptData[i].commodity_id==this.iptGoodsId) {
+            _flag = true;
+            break;
+          }
+        }
+        if(_flag) {
+          this.$message.error('已添加过该商品号噢～');
+          return
+        }
+        this.isShowSetGoodsId = false;
+        requestServices.updateGsProgram({
+          role_id: 23,
+          user_id: this.$Session.get('ai_user_id'),
+          access_token: this.$Session.get('ai_user_token'),
+          gs_id: this.currentEditGSID,
+          commodity_id: this.iptGoodsId,
+        }).then(res => {
+          if(res.return_code==1000) {
+            this.$message.success('添加成功')
+            this.fetchAllPrograms();
+          }else {
+            this.$message.error('添加失败')
+          }
+        })
+        this.currentEditGSID = -1;
+        this.iptGoodsId = '';
+      },
+      handleIptGoodsId() {
+        this.iptGoodsId = this.iptGoodsId.replace(/[^\d]/g, '');
+      },
+      //商品号编辑
+      showSetGoodsId(_scriptID, _goodsId) {
+        this.iptGoodsId = _goodsId=='--'?'':_goodsId;
+        this.currentEditGSID = _scriptID;
+        this.isShowSetGoodsId = true;
+        let rect = this.$refs['setGoodsIdIcon'+_scriptID].getBoundingClientRect();
+        this.editGoodsIdBtnTop = rect.top;
+        this.editGoodsIdBtnLeft = rect.left+30;
+      },
         renderWeightHeader(h, {column}) {
           return  h(
             'div',
@@ -551,6 +628,43 @@ export default {
 }
 </script>
 <style scoped lang='less'>
+  .setGoodsId button {
+    width: 82px;
+    height: 30px;
+    border-radius: 17px;
+    cursor: pointer;
+    &.cancel {
+      opacity: 0.7;
+      color: #666;
+      border: 1px solid #666;
+      margin-right: 16px;
+      background: rgba(0,0,0,0);
+    }
+    &.confirm {
+      background: #7455FF;
+      color: #fff;
+      margin-left: 0;
+    }
+  }
+  .setGoodsId {
+    position: absolute;
+    padding: 20px;
+    background: #fff;
+    border-radius: 6px;
+    box-shadow: 0px 2px 28px 0px rgba(0, 0, 0, 0.19);
+  }
+  .goods {
+    display: flex;
+    justify-content: space-around;
+    padding-left: 22px;
+    padding-right: 20px;
+    i {
+      font-size: 16px;
+      margin-left: 6px;
+      line-height: 24px;
+      cursor: pointer;
+    }
+  }
   .tabs {
     width: 204px;
     margin-bottom: 10px;
@@ -860,5 +974,12 @@ export default {
     }
     .el-checkbox__input.is-disabled.is-checked .el-checkbox__inner::after {
         border-color: #fff!important;
+    }
+    .setGoodsId .el-dialog__header {
+      display: none!important;
+    }
+    .setGoodsId .el-input {
+      width: 200px;
+      margin-right: 16px;
     }
 </style>
