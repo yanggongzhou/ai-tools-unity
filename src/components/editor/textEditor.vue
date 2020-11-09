@@ -40,6 +40,25 @@
           </el-form-item>
         </el-col>
       </el-row>
+      <el-form-item label="设置时长" prop="dismissTimeType">
+        <el-col :span="12">
+          <el-select v-model="textForm.dismissTimeType" @change="dismissTimeTypeChange" placeholder="请选择展示时长类型">
+            <el-option v-for="(val,ind) in dismissTimeTypeData"
+                       :key="ind+'dismissTimeType'"
+                       :label="val.label" :value="val.value"></el-option>
+          </el-select>
+        </el-col>
+        <el-col :span="1"><p class="center">-</p></el-col>
+        <el-col :span="7">
+          <el-input-number
+            style="width: 100px;"
+            v-if="!textForm.isAll"
+            v-model="textForm.dismissTime" controls-position="right" :precision="1" :min="0.1" :step="0.5" :max="3600"></el-input-number>
+        </el-col>
+        <el-col :span="4">
+          <el-tag v-if="!textForm.isAll">秒</el-tag>
+        </el-col>
+      </el-form-item>
 <!--      <el-col :span="12">-->
 <!--      </el-col>-->
 
@@ -70,13 +89,20 @@
     data(){
       return{
         textForm:{
+          dismissTimeType:1,
           text:"测试字体",
           textColor:"#333333",
           region:"1",
           textSize:'14',
           gravity:"center",
           ellipsize:false,
+          dismissTime:3,
+          isAll:false,
         },
+        dismissTimeTypeData:[
+          {label:'至脚本播放结束',value:1},
+          {label:'自定义时长',value:2},
+        ],
         textSizeList:["12","14","16","18","20","22","24","26","28","30","32",],
         textRules:{},
       }
@@ -87,6 +113,18 @@
       //选择颜色
       changeColor(val){
         // console.log(val)
+      },
+      dismissTimeTypeChange(val){
+        switch (val) {
+          case 1:
+            this.textForm.dismissTime = 999;
+            this.textForm.isAll = true;
+            break;
+          case 2:
+            this.textForm.dismissTime = 3;
+            this.textForm.isAll = false;
+            break;
+        }
       },
       cancelBtn(){
         this.$emit('cancelBtn','text')

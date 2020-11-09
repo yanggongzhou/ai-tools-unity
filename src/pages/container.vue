@@ -325,6 +325,8 @@
               val.info.child[0].gravity=data.gravity
               val.info.child[0].text=data.text
               val.info.child[0].ellipsize=data.ellipsize
+              val.isAll = data.isAll;
+              val.info.dismissTime=data.dismissTime;
             }
           })
         }
@@ -337,6 +339,8 @@
           trigItem.info.child[0].gravity=data.gravity
           trigItem.info.child[0].text=data.text
           trigItem.info.child[0].ellipsize=data.ellipsize
+          trigItem.isAll = data.isAll;
+          trigItem.info.dismissTime=data.dismissTime;
           this.TriggerDiv.push(trigItem)
         }
       },

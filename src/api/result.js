@@ -172,6 +172,7 @@ export const resultJSON = {
   textItem: {
     "index": 0,
     "type": "info",
+    "isAll": false,//是否持续到剧本结束，true为持续至剧本结束,优先级高于autoDismiss｜dismissTime
     "info": {
       "margins": {
         "left": 0,
@@ -180,7 +181,7 @@ export const resultJSON = {
         "bottom": 0
       },
       "autoDismiss": false,
-      "dismissTime": 10000,
+      "dismissTime": 3000,
       "url": "",
       "width": 0,
       "height": 0,

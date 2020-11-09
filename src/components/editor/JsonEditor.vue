@@ -92,7 +92,8 @@
                              :label="val.label" :value="val.value"></el-option>
                 </el-select>
               </el-col>
-              <el-col :span="8">
+              <el-col :span="1"><p class="center">-</p></el-col>
+              <el-col :span="7">
                 <el-input-number
                   style="width: 100px;"
                   v-if="!ruleForm.isAll"
@@ -146,7 +147,8 @@
                              :label="val.label" :value="val.value"></el-option>
                 </el-select>
               </el-col>
-              <el-col :span="8">
+              <el-col :span="1"><p class="center">-</p></el-col>
+              <el-col :span="7">
                 <el-input-number
                   style="width: 100px;"
                   v-if="!imgForm.isAll"
@@ -380,8 +382,17 @@
           })
         }else if(domObj.type==="text"){
           self.textVisible = true;
+          self.editTagId= domObj.id;
           self.$nextTick(()=>{
-            self.$refs.textEditorRef.textForm = domObj;
+            domObj.isAll? self.$refs.textEditorRef.textForm.dismissTimeType = 1: self.$refs.textEditorRef.textForm.dismissTimeType = 2;
+            self.$refs.textEditorRef.textForm.text = domObj.text;
+            self.$refs.textEditorRef.textForm.textColor = domObj.textColor;
+            self.$refs.textEditorRef.textForm.region = domObj.region;
+            self.$refs.textEditorRef.textForm.textSize = domObj.textSize;
+            self.$refs.textEditorRef.textForm.gravity = domObj.gravity;
+            self.$refs.textEditorRef.textForm.ellipsize = domObj.ellipsize;
+            self.$refs.textEditorRef.textForm.dismissTime = domObj.dismissTime;
+            self.$refs.textEditorRef.textForm.isAll = domObj.isAll;
           })
         }
       }
@@ -744,6 +755,8 @@
                   gravity: val.info.child[0].gravity,
                   region: val.info.child[0].region,
                   ellipsize:val.info.child[0].ellipsize,
+                  dismissTime:val.info.dismissTime*1000,
+                  isAll:val.isAll,
                 })
               }
             }else if(val.type==="action"){
@@ -792,7 +805,7 @@
               contentBDArr[val.index] = _txt.join('');
             }
           }else if(val.type==="text"){
-            let _data = JSON.stringify({type:'text',text:val.text,textColor:val.textColor,textSize:val.textSize,id:val.id,gravity:val.gravity,region:val.region,ellipsize:val.ellipsize}).replace(/"/g,"&quot;")
+            let _data = JSON.stringify({type:'text',text:val.text,textColor:val.textColor,textSize:val.textSize,id:val.id,gravity:val.gravity,region:val.region,ellipsize:val.ellipsize,isAll:val.isAll,dismissTime:val.dismissTime}).replace(/"/g,"&quot;")
             let _textDom = `<wise id="`+val.id+`" data-obj="`+_data+`"><div class="tagText tagtag" onclick="editTag(\``+val.id+`\`)">文字 <i class="el-icon-close" onclick="delTag(\``+val.id+`\`)"></i>&nbsp;</div></wise>`
             if(contentBDArr[val.index]===undefined){
               contentBDArr[val.index] = _textDom
@@ -1264,6 +1277,8 @@
             textSize:form.textSize,
             gravity:form.gravity,
             ellipsize:form.ellipsize,
+            dismissTime:form.dismissTime*1000,
+            isAll:form.isAll,
             id:_id
           }
           _text = `<div class="tagtag tagText" onclick="editTag(\``+_id+`\`)">文字 <i class="el-icon-close" onclick="delTag(\``+_id+`\`)"></i>&nbsp;</div>`
