@@ -62,6 +62,12 @@ export const resultJSON = {
       name:'乐比',
       img:'https://large.magics-ad.com/ai-3D/static/avatar/xw.jpg',
       avatarName:'rubi'
+    },
+    {
+      ind:6,
+      name:'泰迪',
+      img:'https://large.magics-ad.com/ai-3D/static/avatar/taidi.png',
+      avatarName:'sakurateddy'
     }
   ],
 

@@ -330,6 +330,9 @@
         _weightList:[],//脚本数据-脚本下标及对应权重 item-例：{count:1, weight:10,}
         weightList:[],//两轮脚本随机数据，例：[1,2,0,1,2,1]
         weightListIndex:0,//随机播放序列
+
+        scriptBeginTime:'',//脚本开始播放的时间 Math.floor(new Date()/1000);
+        commodityData:[],
       }
     },
     created() {
@@ -364,8 +367,25 @@
       this.getTempData().then(res=>{});
       UnityInteractionStateChange("True");
       console.log(this.previewData)
+      // this.getScriptId()
     },
     methods:{
+      async getScriptId() {
+        await requestServices.getScriptIdInChat({
+          user_id: this.$Session.get('ai_user_id'),
+          access_token: this.$Session.get('ai_user_token'),
+          phone: this.$Session.get('ai_user_phone'),
+          role_id: 23,
+          start_time: this.scriptBeginTime,
+          // end_time: ''
+        }).then(res => {
+          if(res.return_code == 1000) {
+            console.log('getScriptId in chat 🌈🌈🌈', res.result.commodity)
+            this.commodityData = res.result.commodity
+          }
+        })
+      },
+
       WebAckStopPlaySystem(){
         this.previewReady = true;
         this.allScriptPlayIndex = '';
@@ -374,7 +394,7 @@
         this.isPlaying = false;
         this.queueList = [];
         this.queueContentItem = [];
-        //自动直播unity主动发送终止 需要继续播，待完成—————————————————————————————————————————————————————————————————————————
+        //自动直播unity主动发送终止 需要继续播
         if(this.isAutoPlayBtn){
           this.AutoPlayEvent();
         }
@@ -614,23 +634,46 @@
         }
       },
       //自动播放
-      AutoPlayEvent(){
-        if(this.isRandom){//随机播放
-          if(this.weightListIndex>=this.weightList.length){
-            this.toGetWeightList()
-            this.weightListIndex=0;
+      async AutoPlayEvent(){
+        let isGetValue = false;
+        if(!this.isDisconnection&&this.isOpenInteractiveMode){
+          this.commodityData = [];
+          await this.getScriptId();
+          if(this.commodityData.length){
+            for (let i=0; i<this.commodityData.length; i++){
+              if(this.commodityData[i].id!==this.playData[this.allScriptPlayIndex].id){
+                this.playData.forEach((val,ind)=>{
+                  if(val.id === this.commodityData[i].id){
+                    this.allScriptIndex = ind;
+                    this.allScriptPlayIndex= this.allScriptIndex;
+                    isGetValue = true;
+                  }
+                })
+                break;
+              }
+            }
           }
-          this.allScriptIndex=this.weightList[this.weightListIndex];
-          this.allScriptPlayIndex= this.allScriptIndex;
-          this.weightListIndex+=1;
-        }else{
-
-          if(this.allScriptPlayIndex+1<this.allScriptList.length){
-            this.allScriptPlayIndex+=1;
-            this.allScriptIndex = this.allScriptPlayIndex;
-          }else{
-            this.allScriptIndex=0;
-            this.allScriptPlayIndex = 0;
+        }
+        if(!isGetValue){
+          if(this.isRandom){//随机播放
+            if(this.weightListIndex>=this.weightList.length){
+              this.toGetWeightList()
+              this.weightListIndex=0;
+            }
+            if(this.allScriptIndex===this.weightList[this.weightListIndex]&&this.weightListIndex+1<this.weightList.length){
+              this.weightListIndex+=1;
+            }
+            this.allScriptIndex=this.weightList[this.weightListIndex];
+            this.allScriptPlayIndex= this.allScriptIndex;
+            this.weightListIndex+=1;
+          }else{//顺序播放
+            if(this.allScriptPlayIndex+1<this.allScriptList.length){
+              this.allScriptPlayIndex+=1;
+              this.allScriptIndex = this.allScriptPlayIndex;
+            }else{
+              this.allScriptIndex=0;
+              this.allScriptPlayIndex = 0;
+            }
           }
         }
 
@@ -827,7 +870,7 @@
 
         axios.all(_arr).then(
           axios.spread((...resList) => {
-            console.log('接口全部加载完成',resList) ;
+            // console.log('接口全部加载完成',resList) ;
             resList.forEach((resItem,resItemInd)=>{
               if(resItem.data instanceof Array){
                 self.allScriptList.push({

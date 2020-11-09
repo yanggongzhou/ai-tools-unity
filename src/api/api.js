@@ -113,6 +113,9 @@ export const requestServices = {
   editScript: (param) => apiInstance.post(`/guide_shopping/client/edit_guide_shopping`, param),
   // 删除剧本
   delScript: (param) => apiInstance.post(`/guide_shopping/client/delete_guide_shopping`, param),
+  // 获取商品出现次数
+  getScriptIdInChat: (param) => apiInstance.post(`/guide_shopping/client/get_commodity_count`, param),
+
 
   //获取精灵数据
   getAllAvatars:(params)=>apiInstance.get(`/guide_shopping/client/get_avatars`,{params:params},),
