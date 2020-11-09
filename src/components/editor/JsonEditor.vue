@@ -169,7 +169,7 @@
           :visible.sync="textVisible"
           :modal="false"
           width="500px">
-          <textEditor @confrimBtn="confrimBtn" ref="textEditorRef" @cancelBtn="cancelBtn"></textEditor>
+          <textEditor @saveBtn="confrimBtn" ref="textEditorRef" @cancelBtn="cancelBtn"></textEditor>
         </el-dialog>
         <div
           class='timerDialog'
@@ -380,7 +380,9 @@
           })
         }else if(domObj.type==="text"){
           self.textVisible = true;
-          self.$refs.textEditorRef.textForm = domObj;
+          self.$nextTick(()=>{
+            self.$refs.textEditorRef.textForm = domObj;
+          })
         }
       }
 
@@ -731,6 +733,18 @@
                   id:val.info.child[0].id,
                   isAll:val.isAll,
                 })
+              }else if(val.info.child[0].type==="text"){
+                positionTag.push({
+                  index:txtInd,
+                  type:"text",
+                  id:val.info.child[0].id,
+                  text: val.info.child[0].text,
+                  textColor: val.info.child[0].textColor,
+                  textSize: val.info.child[0].textSize,
+                  gravity: val.info.child[0].gravity,
+                  region: val.info.child[0].region,
+                  ellipsize:val.info.child[0].ellipsize,
+                })
               }
             }else if(val.type==="action"){
               positionTag.push({
@@ -775,6 +789,17 @@
               // contentBDArr[val.index]=_videoDom+contentBDArr[val.index]
               let _txt = contentBDArr[val.index].split('')
               _txt.splice(_txt.length-1,1,_videoDom+_txt[_txt.length-1]);
+              contentBDArr[val.index] = _txt.join('');
+            }
+          }else if(val.type==="text"){
+            let _data = JSON.stringify({type:'text',text:val.text,textColor:val.textColor,textSize:val.textSize,id:val.id,gravity:val.gravity,region:val.region,ellipsize:val.ellipsize}).replace(/"/g,"&quot;")
+            let _textDom = `<wise id="`+val.id+`" data-obj="`+_data+`"><div class="tagText tagtag" onclick="editTag(\``+val.id+`\`)">文字 <i class="el-icon-close" onclick="delTag(\``+val.id+`\`)"></i>&nbsp;</div></wise>`
+            if(contentBDArr[val.index]===undefined){
+              contentBDArr[val.index] = _textDom
+            }else{
+              // contentBDArr[val.index]=_videoDom+contentBDArr[val.index]
+              let _txt = contentBDArr[val.index].split('')
+              _txt.splice(_txt.length-1,1,_textDom+_txt[_txt.length-1]);
               contentBDArr[val.index] = _txt.join('');
             }
           }else if(val.type==="action"){
@@ -1164,6 +1189,7 @@
                 region:"1",
                 textSize:'14',
                 gravity:"center",
+                ellipsize:false,
               }
             })
             break;
@@ -1237,6 +1263,7 @@
             region:form.region,
             textSize:form.textSize,
             gravity:form.gravity,
+            ellipsize:form.ellipsize,
             id:_id
           }
           _text = `<div class="tagtag tagText" onclick="editTag(\``+_id+`\`)">文字 <i class="el-icon-close" onclick="delTag(\``+_id+`\`)"></i>&nbsp;</div>`

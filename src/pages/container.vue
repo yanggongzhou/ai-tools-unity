@@ -323,16 +323,20 @@
               val.info.child[0].id=data.id
               val.info.child[0].textSize=data.textSize
               val.info.child[0].gravity=data.gravity
+              val.info.child[0].text=data.text
+              val.info.child[0].ellipsize=data.ellipsize
             }
           })
         }
         if(!isEditTag){
           let trigItem=JSON.parse(JSON.stringify(resultJSON.textItem))
-          trigItem.info.textColor=data.textColor;
+          trigItem.info.child[0].textColor=data.textColor;
           trigItem.info.child[0].region=data.region;
           trigItem.info.child[0].id=data.id
           trigItem.info.child[0].textSize=data.textSize
           trigItem.info.child[0].gravity=data.gravity
+          trigItem.info.child[0].text=data.text
+          trigItem.info.child[0].ellipsize=data.ellipsize
           this.TriggerDiv.push(trigItem)
         }
       },

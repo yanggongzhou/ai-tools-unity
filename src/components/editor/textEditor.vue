@@ -60,7 +60,7 @@
       </el-form-item>
       <el-form-item align="right">
         <button class="dialogBtn quxiao" @click.stop="cancelBtn">取 消</button>
-        <button class="dialogBtn queren" @click.stop="confrimBtn('text')">确 认</button>
+        <button class="dialogBtn queren" @click.stop="saveBtn('text')">确 认</button>
       </el-form-item>
     </el-form>
   </div>
@@ -75,6 +75,7 @@
           region:"1",
           textSize:'14',
           gravity:"center",
+          ellipsize:false,
         },
         textSizeList:["12","14","16","18","20","22","24","26","28","30","32",],
         textRules:{},
@@ -91,8 +92,8 @@
         this.$emit('cancelBtn','text')
       },
 
-      confrimBtn(){
-        this.$emit('confrimBtn','text',this.textForm)
+      saveBtn(){
+        this.$emit('saveBtn','text',this.textForm)
       }
     }
   }
