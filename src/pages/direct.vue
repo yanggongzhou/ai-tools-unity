@@ -557,6 +557,7 @@
         // UnityPreviewCancel();
         this.isAutoPlayBtn = true;
         if(this.previewReady){
+          this.scriptBeginTime =  Math.floor(new Date()/1000);
             if(this.isRandom){//随机播放
               this.toGetWeightList()
               console.log(this.weightList)
@@ -641,7 +642,7 @@
           await this.getScriptId();
           if(this.commodityData.length){
             for (let i=0; i<this.commodityData.length; i++){
-              if(this.commodityData[i].id!==this.playData[this.allScriptPlayIndex].id){
+              if(this.commodityData[i].id!==this.playData[this.allScriptIndex].id){
                 this.playData.forEach((val,ind)=>{
                   if(val.id === this.commodityData[i].id){
                     this.allScriptIndex = ind;
@@ -676,6 +677,7 @@
             }
           }
         }
+        this.scriptBeginTime =  Math.floor(new Date()/1000);
 
         this.scriptChange(this.allScriptIndex)
 
