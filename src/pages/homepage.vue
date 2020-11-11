@@ -1,5 +1,8 @@
 <template>
     <div v-loading="isUserInfo" id='homepage'>
+      <div class="dev_tip" v-if="isShowDevTip">
+        测试版本v1.0
+      </div>
         <div class="cards common_content">
             <div class="card" v-for='(card, idx) in cards' :key='idx'>
                 <div class="poster" :class="'poster'+idx" @click='gotoPage(card.targetPage)'>
@@ -39,6 +42,7 @@ export default {
           notifyOption:'',
           userInfoTimeOut:'',
           isUserInfo:false,
+          isShowDevTip:false,
         };
     },
     computed: {},
@@ -46,6 +50,7 @@ export default {
     created() {
       window.WebUserMessage=this.WebUserMessage;
       window.WebErrorMessage=this.WebErrorMessage;
+      window.location.hostname==='demo.magics-ad.com'||window.location.hostname==='0.0.0.0'?this.isShowDevTip=true:this.isShowDevTip=false
     },
     mounted() {
       if(this.$route.query.phone){
@@ -140,6 +145,15 @@ export default {
 }
 </script>
 <style scoped >
+    .dev_tip{
+      position: absolute;
+      top: 50px;
+      left: 50px;
+      color: #E91E63;
+      font-size: 23px;
+      font-weight: 600;
+      z-index: 99;
+    }
     #homepage {
         display: flex;
         align-items: center;
