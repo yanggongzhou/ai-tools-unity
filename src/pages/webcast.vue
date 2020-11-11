@@ -27,14 +27,14 @@
                     <span style='display:none;'>{{scope.row.sortId}}</span>
                   </template>
                 </el-table-column>
-                <el-table-column align="center" label="商品号">
-                  <template slot-scope="scope">
-                    <div class="goods clearfix">
-                      <span>{{scope.row.commodity_id}}</span>
-                      <i class="el-icon-edit-outline" :ref="'setGoodsIdIcon'+scope.row.id" @click='showSetGoodsId(scope.row.id, scope.row.commodity_id)'></i>
-                    </div>
-                  </template>
-                </el-table-column>
+<!--                <el-table-column align="center" label="商品号">-->
+<!--                  <template slot-scope="scope">-->
+<!--                    <div class="goods clearfix">-->
+<!--                      <span>{{scope.row.commodity_id}}</span>-->
+<!--                      <i class="el-icon-edit-outline" :ref="'setGoodsIdIcon'+scope.row.id" @click='showSetGoodsId(scope.row.id, scope.row.commodity_id)'></i>-->
+<!--                    </div>-->
+<!--                  </template>-->
+<!--                </el-table-column>-->
                 <el-table-column align="center" label="剧本名称">
                   <template slot-scope="scope">
                     <span>{{scope.row.name}}</span>
@@ -50,14 +50,14 @@
                     <span>{{scope.row.paragraph_number}}</span>
                   </template>
                 </el-table-column>
-                <el-table-column width="100" align="center" label="播放权重" :render-header="renderWeightHeader">
-                  <template slot-scope="scope">
-                    <!-- <span>{{handleScriptWeight(scope.row.weight)}}</span> -->
-                    <el-select v-model='scope.row.weight' @change='handleChangePlayWeight(scope.row.id, scope.$index)'>
-                      <el-option v-for='item in playWeight' :key='item.value' :label='item.label' :value='item.value' ></el-option>
-                    </el-select>
-                  </template>
-                </el-table-column>
+<!--                <el-table-column width="100" align="center" label="播放权重" :render-header="renderWeightHeader">-->
+<!--                  <template slot-scope="scope">-->
+<!--                    &lt;!&ndash; <span>{{handleScriptWeight(scope.row.weight)}}</span> &ndash;&gt;-->
+<!--                    <el-select v-model='scope.row.weight' @change='handleChangePlayWeight(scope.row.id, scope.$index)'>-->
+<!--                      <el-option v-for='item in playWeight' :key='item.value' :label='item.label' :value='item.value' ></el-option>-->
+<!--                    </el-select>-->
+<!--                  </template>-->
+<!--                </el-table-column>-->
                 <el-table-column align="center" label="操作" :render-header="renderHeader" width='120' >
                   <template slot-scope="scope">
                     <el-button @click='handleDelete(scope.$index, scope.row.id)' type="text" size="small">移除</el-button>
