@@ -9,19 +9,19 @@
     </div>
 
     <div class="interaction_Tip">
-      <el-popover
-        placement="bottom"
-        width="280"
-        trigger="hover">
-        <div class="interaction_pop">
-          <p><b>随机播放</b></p>
-          <p>1、开启后，自动直播中剧本随机播放</p>
-          <p>2、依据剧本权重，权重越高，重复播放概率越大。</p>
-          <p>3、建议多个剧本（>4）时再开启随机播放</p>
-        </div>
-        <span slot="reference" style="cursor: help;position: relative;top: 4px">随机播放</span>
-      </el-popover>
-      <el-switch @change="isRandomChange" v-model="isRandom" active-color='#835BFF' style='margin:6px 18px 0 8px;' :disabled="isAutoPlayBtn"></el-switch>
+<!--      <el-popover-->
+<!--        placement="bottom"-->
+<!--        width="280"-->
+<!--        trigger="hover">-->
+<!--        <div class="interaction_pop">-->
+<!--          <p><b>随机播放</b></p>-->
+<!--          <p>1、开启后，自动直播中剧本随机播放</p>-->
+<!--          <p>2、依据剧本权重，权重越高，重复播放概率越大。</p>-->
+<!--          <p>3、建议多个剧本（>4）时再开启随机播放</p>-->
+<!--        </div>-->
+<!--        <span slot="reference" style="cursor: help;position: relative;top: 4px">随机播放</span>-->
+<!--      </el-popover>-->
+<!--      <el-switch @change="isRandomChange" v-model="isRandom" active-color='#835BFF' style='margin:6px 18px 0 8px;' :disabled="isAutoPlayBtn"></el-switch>-->
       <el-popover
         placement="bottom"
         width="400"
@@ -637,24 +637,24 @@
       //自动播放
       async AutoPlayEvent(){
         let isGetValue = false;
-        if(!this.isDisconnection&&this.isOpenInteractiveMode){
-          this.commodityData = [];
-          await this.getScriptId();
-          if(this.commodityData.length){
-            for (let i=0; i<this.commodityData.length; i++){
-              if(this.commodityData[i].id!==this.playData[this.allScriptIndex].id){
-                this.playData.forEach((val,ind)=>{
-                  if(val.id === this.commodityData[i].id){
-                    this.allScriptIndex = ind;
-                    this.allScriptPlayIndex= this.allScriptIndex;
-                    isGetValue = true;
-                  }
-                })
-                break;
-              }
-            }
-          }
-        }
+        // if(!this.isDisconnection&&this.isOpenInteractiveMode){
+        //   this.commodityData = [];
+        //   await this.getScriptId();
+        //   if(this.commodityData.length){
+        //     for (let i=0; i<this.commodityData.length; i++){
+        //       if(this.commodityData[i].id!==this.playData[this.allScriptIndex].id){
+        //         this.playData.forEach((val,ind)=>{
+        //           if(val.id === this.commodityData[i].id){
+        //             this.allScriptIndex = ind;
+        //             this.allScriptPlayIndex= this.allScriptIndex;
+        //             isGetValue = true;
+        //           }
+        //         })
+        //         break;
+        //       }
+        //     }
+        //   }
+        // }
         if(!isGetValue){
           if(this.isRandom){//随机播放
             if(this.weightListIndex>=this.weightList.length){
