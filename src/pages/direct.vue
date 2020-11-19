@@ -1,5 +1,12 @@
 <template>
   <div class="common_content">
+    <div class="progressBox" v-if="progressVisible">
+      <div class="progress-content clearfix">
+        <el-progress class="progress-item" :text-inside="true" :stroke-width="24" :percentage="progressPercentage" color="#8286FF"></el-progress>
+        <button class='progress-btn' @click='progressCancelBtn'>取消</button>
+      </div>
+    </div>
+
     <div class="titleBox" style="margin-bottom: 10px">
       <span class="titleSpan">直播剧本</span>
       <button class="backNormal backNormal2" @click="backBtn">
@@ -9,19 +16,19 @@
     </div>
 
     <div class="interaction_Tip">
-<!--      <el-popover-->
-<!--        placement="bottom"-->
-<!--        width="280"-->
-<!--        trigger="hover">-->
-<!--        <div class="interaction_pop">-->
-<!--          <p><b>随机播放</b></p>-->
-<!--          <p>1、开启后，自动直播中剧本随机播放</p>-->
-<!--          <p>2、依据剧本权重，权重越高，重复播放概率越大。</p>-->
-<!--          <p>3、建议多个剧本（>4）时再开启随机播放</p>-->
-<!--        </div>-->
-<!--        <span slot="reference" style="cursor: help;position: relative;top: 4px">随机播放</span>-->
-<!--      </el-popover>-->
-<!--      <el-switch @change="isRandomChange" v-model="isRandom" active-color='#835BFF' style='margin:6px 18px 0 8px;' :disabled="isAutoPlayBtn"></el-switch>-->
+      <el-popover
+        placement="bottom"
+        width="280"
+        trigger="hover">
+        <div class="interaction_pop">
+          <p><b>随机播放</b></p>
+          <p>1、开启后，自动直播中剧本随机播放</p>
+          <p>2、依据剧本权重，权重越高，重复播放概率越大。</p>
+          <p>3、建议多个剧本（>4）时再开启随机播放</p>
+        </div>
+        <span slot="reference" style="cursor: help;position: relative;top: 4px">随机播放</span>
+      </el-popover>
+      <el-switch @change="isRandomChange" v-model="isRandom" active-color='#835BFF' style='margin:6px 18px 0 8px;' :disabled="isAutoPlayBtn"></el-switch>
       <el-popover
         placement="bottom"
         width="400"
@@ -150,7 +157,6 @@
                 </div>
               </div>
 
-
               <p class="content">
                 {{val.content}}
               </p>
@@ -274,6 +280,9 @@
     },
     data(){
       return{
+        progressVisible:true,//进度条显示
+        progressPercentage:0,
+
         innerVisible:false,
         allScriptList:[],//全部脚本数据
         allScriptIndex:0,
@@ -370,6 +379,11 @@
       // this.getScriptId()
     },
     methods:{
+      progressCancelBtn(){
+        this.progressVisible = false;
+        UnityPreviewCancel()
+        this.progressVisible = 0;
+      },
       async getScriptId() {
         await requestServices.getScriptIdInChat({
           user_id: this.$Session.get('ai_user_id'),
@@ -612,10 +626,23 @@
         }
       },
       WebPreviewReady(state){
-        if(state==='True'&&this.isAutoPlayBtn||this.isPreviewBtn){
-          UnityPreviewStart(this.previewData[0].avatar.unity);
-          if(this.isPreviewBtn){
-            this.isPreviewBtn = false;
+        let self = this;
+        if(state==='True'){
+          if(this.progressVisible){
+            this.progressPercentage += Math.floor(100/this.allScriptList.length);
+            if((100-this.progressPercentage)<Math.floor(100/this.allScriptList.length)){
+              this.progressPercentage = 100;
+              setTimeout(()=>{
+                self.progressVisible = false;
+              },500)
+            }
+            return
+          }
+          if(this.isAutoPlayBtn||this.isPreviewBtn){
+            UnityPreviewStart(this.previewData[0].avatar.unity);
+            if(this.isPreviewBtn){
+              this.isPreviewBtn = false;
+            }
           }
           // if(!this.isFirstScript){
           //   this.$message.info('播放剧本'+(this.allScriptPlayIndex+1)+'--'+this.allScriptList[this.allScriptPlayIndex].name)
@@ -637,24 +664,24 @@
       //自动播放
       async AutoPlayEvent(){
         let isGetValue = false;
-        // if(!this.isDisconnection&&this.isOpenInteractiveMode){
-        //   this.commodityData = [];
-        //   await this.getScriptId();
-        //   if(this.commodityData.length){
-        //     for (let i=0; i<this.commodityData.length; i++){
-        //       if(this.commodityData[i].id!==this.playData[this.allScriptIndex].id){
-        //         this.playData.forEach((val,ind)=>{
-        //           if(val.id === this.commodityData[i].id){
-        //             this.allScriptIndex = ind;
-        //             this.allScriptPlayIndex= this.allScriptIndex;
-        //             isGetValue = true;
-        //           }
-        //         })
-        //         break;
-        //       }
-        //     }
-        //   }
-        // }
+        if(!this.isDisconnection&&this.isOpenInteractiveMode){
+          this.commodityData = [];
+          await this.getScriptId();
+          if(this.commodityData.length){
+            for (let i=0; i<this.commodityData.length; i++){
+              if(this.commodityData[i].id!==this.playData[this.allScriptIndex].id){
+                this.playData.forEach((val,ind)=>{
+                  if(val.id === this.commodityData[i].id){
+                    this.allScriptIndex = ind;
+                    this.allScriptPlayIndex= this.allScriptIndex;
+                    isGetValue = true;
+                  }
+                })
+                break;
+              }
+            }
+          }
+        }
         if(!isGetValue){
           if(this.isRandom){//随机播放
             if(this.weightListIndex>=this.weightList.length){
@@ -889,7 +916,13 @@
                   gs_id:data[resItemInd].id
                 })
               }
+
             })
+            self.progressPercentage = 0 ;
+            self.allScriptList.forEach(val=>{
+              UnityPreview(val.scriptList[0].avatar.unity,JSON.stringify(val.scriptList),"False","False")
+            });
+
             self.allScriptIndex = 0;
             self.contentList = self.allScriptList[0].scriptList
             // console.log('self.allScriptList',self.allScriptList)
@@ -1426,5 +1459,42 @@
   }
   .borderLeftGreen{
     border-left: 7px solid #4caf50!important;
+  }
+
+  .progressBox{
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: #2323239e;
+    z-index: 9999;
+    .progress-content{
+      width: 510px;
+      position: relative;
+      top: 50vh;
+      margin: 0 auto;
+    }
+    .progress-item{
+      width: 400px;
+      display: inline-block;
+    }
+    .progress-btn{
+      float: right;
+      width: 83px;
+      height: 27px;
+      line-height: 27px;
+      margin: 0 auto;
+      background: none;
+      border: 1px solid #fff;
+      border-radius: 16px;
+      color: #fff;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all .3s;
+      &:hover{
+        background: rgba(255, 255, 255, 0.37);
+      }
+    }
   }
 </style>
