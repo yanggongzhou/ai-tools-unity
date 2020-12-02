@@ -858,6 +858,7 @@
                   ellipsize:val.info.child[0].ellipsize,
                   dismissTime:val.info.dismissTime*1000,
                   isAll:val.isAll,
+                  fontFamily:val.info.child[0].fontFamily || "SimHei",
                 })
               }
             }else if(val.type==="action"){
@@ -910,7 +911,7 @@
             if(val.isAll){
               _time = 'all'
             }
-            let _data = JSON.stringify({type:'text',text:val.text,textColor:val.textColor,textSize:val.textSize,id:val.id,gravity:val.gravity,region:val.region,ellipsize:val.ellipsize,isAll:val.isAll,dismissTime:val.dismissTime}).replace(/"/g,"&quot;")
+            let _data = JSON.stringify({type:'text',text:val.text,textColor:val.textColor,textSize:val.textSize,id:val.id,gravity:val.gravity,region:val.region,ellipsize:val.ellipsize,isAll:val.isAll,dismissTime:val.dismissTime,fontFamily:val.fontFamily}).replace(/"/g,"&quot;")
             let _textDom = `<wise id="`+val.id+`" data-obj="`+_data+`"><div class="tagText tagtag" onclick="editTag(\``+val.id+`\`)">文字`+ ' ('+_time+`)<i class="el-icon-close" onclick="delTag(\``+val.id+`\`)"></i>&nbsp;</div></wise>`
             if(contentBDArr[val.index]===undefined){
               contentBDArr[val.index] = _textDom

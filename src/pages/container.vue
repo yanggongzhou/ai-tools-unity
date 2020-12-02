@@ -336,6 +336,7 @@
           trigItem.info.child[0].region=data.region;
           trigItem.info.child[0].id=data.id
           trigItem.info.child[0].textSize=data.textSize
+          trigItem.info.child[0].fontFamily=data.fontFamily
           trigItem.info.child[0].gravity=data.gravity
           trigItem.info.child[0].text=data.text
           trigItem.info.child[0].ellipsize=data.ellipsize

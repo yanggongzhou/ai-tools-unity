@@ -193,6 +193,7 @@ export const resultJSON = {
           "textSize": "",//字体大小
           "gravity": "",//对齐方式 left right center
           "ellipsize": false,//是否支持跑马灯
+          "fontFamily":"SimHei",//字体
           "id": "",
           "region":"",//工具端使用，文字展示位
           "width": 0,
