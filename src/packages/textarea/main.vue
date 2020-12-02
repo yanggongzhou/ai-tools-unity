@@ -32,7 +32,7 @@
       </el-tooltip>
       <button class="w-textarea_tools__item video float_left" @click="openTagDialog('video')">插入视频</button>
       <button class="w-textarea_tools__item picture float_left" @click="openTagDialog('img')">插入图片</button>
-<!--      <button class="w-textarea_tools__item text float_left" @click="openTagDialog('text')">插入文字</button>-->
+      <button class="w-textarea_tools__item text float_left" @click="openTagDialog('text')">插入文字</button>
 <!--      <button class="w-textarea_tools__item timer float_left" @click="openTagDialog('intervalTime')">添加间隔</button>-->
 
       <!--      <button class="w-textarea_tools__item float_right"-->
@@ -56,6 +56,8 @@
     name: 'wTextarea',
     data() {
       return {
+        //记录输入框光标位置
+        caretOffset:0,
         // 记录currentText以计算长度
         currentText: this.value,
         // 为input区域生成随机id，当在页面上有多个组件时，用于监听光标的变化
@@ -233,7 +235,9 @@
         node.id = data.id;
         node.dataset.obj=JSON.stringify(data)
         this.insertNode(node);
-
+        this.$nextTick(()=>{
+          this.setCaretPosition(document.getElementById(this.contentId), this.caretOffset-1)
+        })
         this.recentlyAddedTagsID = node.id;
       },
       addLink(text, url) {
@@ -243,6 +247,9 @@
         node.href = url;
         node.target = 'blank';
         this.insertNode(node)
+        this.$nextTick(()=>{
+          this.setCaretPosition(document.getElementById(this.contentId), this.caretOffset-1)
+        })
       },
       insertNode (node) { // 在内容中插入标签
         this.isKeyDown = false;
@@ -250,6 +257,7 @@
         // console.log(this.savedRange)
         this.savedRange.deleteContents()
         // 插入链接
+        // this.savedRange.insertNode(node)
         // console.log(this.savedRange)
         let elem = this.savedRange.commonAncestorContainer;
         if(elem.nodeName=='#text' || elem.nodeName=='DIV'&&elem.id.indexOf('contentr')>-1) {
@@ -282,8 +290,6 @@
           this.savedRange.insertNode(node)
         }
 
-
-        // 更新双向绑定数据
         let target = this.$refs.wTextareaContent
         this.updateData(target.innerHTML);
         this.currentText = target.innerText;
@@ -341,111 +347,90 @@
         let sel = window.getSelection();
         let range = sel.rangeCount > 0 ? sel.getRangeAt(0) : null;
 
-        // console.log(this.isKeyDown, this.isLocked)
-        if(range) {
-          // console.log('selectHandler: ', range, range.commonAncestorContainer.ownerDocument.activeElement.id , this.contentId, range.commonAncestorContainer.ownerDocument.activeElement.id === this.contentId)
-
-          let elem = range.commonAncestorContainer;
-          let nodes = this.$refs.wTextareaContent.childNodes;
-          if(range.commonAncestorContainer.ownerDocument.activeElement.id === this.contentId) {
-            // console.log('=====')
-            if(elem.nodeName=='#text') {
-              // 修复输入第一个字符时，光标在字符前的bug
-              if(range.endOffset==0 && range.startOffset==0 && elem.textContent.length==1) {
-                // console.log('111')
-                let targetLen = elem.textContent.length;
-                range.setStart(elem, targetLen);
-                range.setEnd(elem, targetLen);
-              }else if(range.endOffset==0 && range.startOffset==0 && elem.textContent.length>1 && !this.isKeyDown ) {
-                // 当点击DIV时，如果已经插入标签、图片、视频，光标位于最后
-                // 此方法会导致光标在第一个元素前闪烁一下，随后定位到最后一个元素后。
-                // console.log('22222')
-                let _idx = 0;
-                nodes.forEach((item, idx)=> {
-                  if(elem.textContent == item.textContent) {
-                    _idx = idx;
-                  }
-                })
-                if(nodes.length>1 && _idx==0) {
-                  // console.log('🌞')
-                  // let idx = nodes.length-1;
-                  range.selectNode(nodes[nodes.length-1])
-                  if(!range.collapsed) range.collapse(false);
-                }
-              }else {
-                // console.log(range)
-                // 标记当前元素为 text 及光标位置
-                this.initCurrentTxtData.startOffset = range.startOffset;
-                this.initCurrentTxtData.txt = elem.textContent;
-                this.initCurrentTxtData.isDiv = false;
-              }
-            }
-            // 标记当前元素为div
-            if(elem.nodeName=='DIV') {
-              // console.log('99999')
-              this.initCurrentTxtData.isDiv = true;
-
-              // 开始和结束位置都为标签时，将光标置于最后
-              if(nodes.length>0 && nodes[0].nodeName=='WISE' && nodes[nodes.length-1].nodeName=='WISE' && !this.isKeyDown && this.isTextureClicked) {
-                range.selectNode(nodes[nodes.length-1])
-                this.isTextureClicked = false;
-              }
-
-              // 一个标签/多个标签+文本 situation1
-              if(nodes.length>0 && nodes[nodes.length-1].nodeName=='#text') {
-                let _isSituation1 = true;
-                nodes.forEach((item,idx) => {
-                  if(idx < nodes.length-1 && item.nodeName!='WISE') {
-                    _isSituation1 = false
-                  }
-                })
-                if(_isSituation1 && !this.inHandledSituation1) {
-                  range.selectNode(nodes[nodes.length-1])
-                  this.inHandledSituation1 = true;
-                }
-              }
-
-              if(!range.collapsed) range.collapse(false);
-            }
-          }else if(elem.className.indexOf('el-input')==-1){
-            // console.log('!!!!!!!!!!!!!', this.contentId, '; tagId: ', this.recentlyAddedTagsID)
-            // 不失焦的情况，插入图片、视频、标签后，光标位于当前插入标签的后面
-            if(elem.nodeName == 'DIV' && nodes.length>0) {
-              // console.log('🌛')
-              // if(this.recentlyAddedTagsID)
-              let recentlyAddedTagsIdx = 0;
-              for(let i=0; i<nodes.length; i++){
-                if(this.recentlyAddedTagsID == nodes[i].id) {
-                  recentlyAddedTagsIdx = i;
-                  break;
-                }
-              }
-              // console.log(nodes.length)
-              if(recentlyAddedTagsIdx == 0 && nodes.length==1) {
-                // console.log('33333')
-                range.setStart(elem, nodes.length)
-                range.setEnd(elem, nodes.length)
-              }else {
-                // console.log('44444')
-                range.setStart(elem, recentlyAddedTagsIdx+1)
-                range.setEnd(elem, recentlyAddedTagsIdx+1)
-              }
-              this.$refs.wTextareaContent.focus()
-            }
-          }
-
+        if (
+          range &&
+          range.commonAncestorContainer.ownerDocument.activeElement.id ===
+          this.contentId
+        ) {
           this.savedRange = range;
-
         }
 
-        // if (
-        //   range &&
-        //   range.commonAncestorContainer.ownerDocument.activeElement.id ===
-        //   this.contentId
-        // ) {
-        //   this.savedRange = range;
-        // }
-      }
+        this.caretOffset = this.getPosition( document.getElementById(this.contentId))
+      },
+      //获取光标位置
+      getPosition (element) {
+        var caretOffset = 0;
+        var doc = element.ownerDocument || element.document;
+        var win = doc.defaultView || doc.parentWindow;
+        var sel;
+        if (typeof win.getSelection != "undefined") {//谷歌、火狐
+          sel = win.getSelection();
+          if (sel.rangeCount > 0) {//选中的区域
+            var range = win.getSelection().getRangeAt(0);
+            var preCaretRange = range.cloneRange();//克隆一个选中区域
+            preCaretRange.selectNodeContents(element);//设置选中区域的节点内容为当前节点
+            preCaretRange.setEnd(range.endContainer, range.endOffset);  //重置选中区域的结束位置
+            caretOffset = preCaretRange.toString().length;
+          }
+        } else if ((sel = doc.selection) && sel.type != "Control") {//IE
+          var textRange = sel.createRange();
+          var preCaretTextRange = doc.body.createTextRange();
+          preCaretTextRange.moveToElementText(element);
+          preCaretTextRange.setEndPoint("EndToEnd", textRange);
+          caretOffset = preCaretTextRange.text.length;
+        }
+        return caretOffset;
+      },
+      //设置光标位置
+      setCaretPosition(element, pos) {
+        let elementIndex;
+        let childNodeLength = 0;
+        element.childNodes.forEach((val,ind)=>{
+          if(val.id){
+            childNodeLength = val.innerText.length
+          }else{
+            childNodeLength = this.nodeToString(val).length
+          }
+          if(elementIndex===undefined){
+            if(childNodeLength<=pos){
+              pos-=childNodeLength;
+            }else{
+              elementIndex = ind;
+            }
+          }
+        })
+        var range, selection;
+        if (document.createRange)//Firefox, Chrome, Opera, Safari, IE 9+
+        {
+          range = document.createRange();//创建一个选中区域
+          range.selectNodeContents(element);//选中节点的内容
+          if(element.innerHTML.length > 0) {
+            if (elementIndex!==undefined){
+              // debugger
+              if(element.childNodes[elementIndex+2]!==undefined){
+                range.setStart(element.childNodes[elementIndex+2], 0);
+              }else{
+                document.getElementById(this.contentId).innerHTML+=" "
+                this.$nextTick(()=>{
+                  range.setStart(element.childNodes[elementIndex+2], 0);
+                })
+              }
+            }
+            // range.setStart(element.childNodes[elementIndex], pos+1); //设置光标起始为指定位置
+          }
+          range.collapse(true);       //设置选中区域为一个点
+          selection = window.getSelection();//获取当前选中区域
+          selection.removeAllRanges();//移出所有的选中范围
+          selection.addRange(range);//添加新建的范围
+        }
+        else if (document.selection)//IE 8 and lower
+        {
+          range = document.body.createTextRange();//Create a range (a range is a like the selection but invisible)
+          range.moveToElementText(element);//Select the entire contents of the element with the range
+          range.collapse(false);//collapse the range to the end point. false means collapse to end rather than the start
+          range.select();//Select the range (make it the visible selection
+        }
+      },
     },
     watch: {
       value(val) {

@@ -231,6 +231,13 @@
                 <el-tag v-if="!textForm.isAll">秒</el-tag>
               </el-col>
             </el-form-item>
+            <el-col :span="24">
+              <el-form-item label="选择字体" prop="gravity">
+                <el-select v-model="textForm.fontFamily" placeholder="请选择展示区域">
+                  <el-option label="黑体" value="SimHei"></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
             <!--      <el-col :span="12">-->
             <!--      </el-col>-->
 
@@ -372,6 +379,7 @@
           text:"测试字体",
           textColor:"#333333",
           region:"1",
+          fontFamily:"SimHei",
           textSize:'14',
           gravity:"center",
           ellipsize:false,
@@ -477,6 +485,7 @@
           self.editTagId= domObj.id;
           self.$nextTick(()=>{
             domObj.isAll? self.textForm.dismissTimeType = 1: self.textForm.dismissTimeType = 2;
+            self.textForm.fontFamily = domObj.fontFamily;
             self.textForm.text = domObj.text;
             self.textForm.textColor = domObj.textColor;
             self.textForm.region = domObj.region;
@@ -1276,6 +1285,8 @@
             this.imgVisible = false;
             this.videoVisible = true;
             this.timerVisible = false;
+
+            this.editTagId = "";
             break;
           case 'img':
             this.imgForm.region = '1';
@@ -1287,6 +1298,8 @@
             this.videoVisible = false;
             this.imgVisible = true;
             this.timerVisible = false;
+
+            this.editTagId = "";
             break;
           case 'interaction':
             this.addInteraction();
@@ -1302,9 +1315,11 @@
             break;
           case 'text':
             this.textVisible = true;
+            this.editTagId = "";
             this.$nextTick(()=>{
               this.textForm = {
                 text:"",
+                fontFamily:"SimHei",
                 textColor:"#333333",
                 region:"1",
                 textSize:'14',
@@ -1392,6 +1407,7 @@
             gravity:this.textForm.gravity,
             ellipsize:this.textForm.ellipsize,
             dismissTime:this.textForm.dismissTime*1000,
+            fontFamily:this.textForm.fontFamily,
             isAll:this.textForm.isAll,
             id:_id
           }

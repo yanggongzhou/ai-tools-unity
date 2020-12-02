@@ -354,6 +354,7 @@
       window.WebErrorMessage=this.WebErrorMessage;
       window.WebInteractionStateChange=this.WebInteractionStateChange;
       window.WebAckStopPlaySystem=this.WebAckStopPlaySystem;//强制中断接收
+      window.WebASRIdentifyContent=this.WebASRIdentifyContent;//接受ASR命令
     },
     mounted() {
       let self = this;
@@ -379,6 +380,27 @@
       // this.getScriptId()
     },
     methods:{
+      WebASRIdentifyContent(str){
+        console.log('Asr命令接收:',str)
+        if(!this.isAutoPlayBtn){
+          UnityPreviewCancel();
+          let _index;
+          this.allScriptList.forEach((val,ind)=>{
+            if(str.indexOf(val.name)!==-1){
+              _index=ind
+            }
+          });
+          if(_index!==undefined){
+            this.previewData = this.allScriptList[_index].scriptList
+            this.isPreviewBtn = true;
+            UnityPreview(this.previewData[0].avatar.unity,JSON.stringify(this.previewData),"True","True")
+            this.allScriptIndex = _index;
+            this.$message.info(`语音指令播放剧本${this.allScriptList[_index].name}`)
+          }else{
+            this.$message.warning(`语音指令未能匹配到相应剧本`)
+          }
+        }
+      },
       progressCancelBtn(){
         this.progressVisible = false;
         UnityPreviewCancel()
@@ -920,7 +942,8 @@
             })
             self.progressPercentage = 0 ;
             self.allScriptList.forEach(val=>{
-              UnityPreview(val.scriptList[0].avatar.unity,JSON.stringify(val.scriptList),"False","False")
+              //进入页面发送所有剧本，加载完成后再直播
+              UnityPreview(val.scriptList[0].avatar.unity,JSON.stringify(val.scriptList),"False","True")
             });
 
             self.allScriptIndex = 0;
@@ -1462,7 +1485,7 @@
   }
 
   .progressBox{
-    height: 100%;
+    height: 100vh;
     width: 100%;
     position: absolute;
     top: 0;
