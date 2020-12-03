@@ -2,7 +2,7 @@
   <div class="common_content">
     <div class="progressBox" v-if="progressVisible">
       <div class="progress-content clearfix">
-        <el-progress class="progress-item" :text-inside="true" :stroke-width="24" :percentage="progressPercentage" color="#8286FF"></el-progress>
+        <el-progress class="progress-item" :text-inside="true" :stroke-width="24" :percentage="progressPercentage" :color="progressPercentage | progressPercentageColor"></el-progress>
         <button class='progress-btn' @click='progressCancelBtn'>取消</button>
       </div>
     </div>
@@ -181,6 +181,7 @@
   import {requestServices} from "../api/api";
   import interaction from '../components/interaction/interaction-1';
   import { getWeightList } from '../api/Random'
+  import timer from "../api/timer";
   let that;
   export default {
     mixins: [interaction],
@@ -276,7 +277,20 @@
             'display' : "none"
           }
         }
-      }
+      },
+      progressPercentageColor(val){
+        if(val<=20){
+          return '#f56c6c'
+        }else if(val<=40&&val>20){
+          return '#e6a23c'
+        }else if(val<=60&&val>40){
+          return '#5cb87a'
+        }else if(val<=80&&val>60){
+          return '#1989fa'
+        }else if(val<=100&&val>80){
+          return '#6f7ad3'
+        }
+      },
     },
     data(){
       return{
@@ -383,7 +397,7 @@
       WebASRIdentifyContent(str){
         console.log('Asr命令接收:',str)
         if(!this.isAutoPlayBtn){
-          UnityPreviewCancel();
+          // UnityPreviewCancel();
           let _index;
           this.allScriptList.forEach((val,ind)=>{
             if(str.indexOf(val.name)!==-1){
@@ -391,11 +405,14 @@
             }
           });
           if(_index!==undefined){
-            this.previewData = this.allScriptList[_index].scriptList
-            this.isPreviewBtn = true;
-            UnityPreview(this.previewData[0].avatar.unity,JSON.stringify(this.previewData),"True","True")
             this.allScriptIndex = _index;
-            this.$message.info(`语音指令播放剧本${this.allScriptList[_index].name}`)
+            this.previewBtn(this.allScriptList[_index].scriptList[0],0,_index,false)
+
+            // this.previewData = this.allScriptList[_index].scriptList
+            // this.isPreviewBtn = true;
+            // UnityPreview(this.previewData[0].avatar.unity,JSON.stringify(this.previewData),"True","True")
+            // this.allScriptIndex = _index;
+            // this.$message.info(`语音指令播放剧本${this.allScriptList[_index].name}`)
           }else{
             this.$message.warning(`语音指令未能匹配到相应剧本`)
           }
