@@ -103,6 +103,24 @@
                 <el-tag v-if="!ruleForm.isAll">秒</el-tag>
               </el-col>
             </el-form-item>
+            </el-form-item>
+            <el-form-item label="动画效果">
+              <el-col :span="10">
+                <el-select v-model="ruleForm.enter" placeholder="入场效果" clearable>
+                  <el-option v-for="(val,ind) in animateList"
+                             :key="ind+'enter'"
+                             :label="val.label" :value="val.value"></el-option>
+                </el-select>
+              </el-col>
+              <el-col :span="1" class="center">-</el-col>
+              <el-col :span="10">
+                <el-select v-model="ruleForm.leave" placeholder="离场效果" clearable>
+                  <el-option v-for="(val,ind) in animateList"
+                             :key="ind+'leave'"
+                             :label="val.label" :value="val.value"></el-option>
+                </el-select>
+              </el-col>
+            </el-form-item>
             <el-form-item label="声音设置" prop="isSupportAudio">
               <el-switch
                 v-model="ruleForm.isSupportAudio"
@@ -160,6 +178,23 @@
                 <el-tag v-if="!imgForm.isAll">秒</el-tag>
               </el-col>
             </el-form-item>
+            <el-form-item label="动画效果">
+              <el-col :span="10">
+                <el-select v-model="imgForm.enter" placeholder="入场效果" clearable>
+                  <el-option v-for="(val,ind) in animateList"
+                             :key="ind+'enter'"
+                             :label="val.label" :value="val.value"></el-option>
+                </el-select>
+              </el-col>
+              <el-col :span="1" class="center">-</el-col>
+              <el-col :span="10">
+                <el-select v-model="imgForm.leave" placeholder="离场效果" clearable>
+                  <el-option v-for="(val,ind) in animateList"
+                             :key="ind+'leave'"
+                             :label="val.label" :value="val.value"></el-option>
+                </el-select>
+              </el-col>
+            </el-form-item>
             <el-form-item align="right">
               <button class="dialogBtn quxiao" @click.stop="imgVisible = false">取 消</button>
               <button class="dialogBtn queren" @click.stop="confrimBtn('image')">确 认</button>
@@ -172,7 +207,7 @@
           :visible.sync="textVisible"
           :modal="false"
           width="500px">
-          <el-form :model="textForm" :rules="textRules" ref="imgForm" label-width="100px" class="demo-ruleForm" @submit.native.prevent>
+          <el-form :model="textForm" :rules="textRules" ref="imgForm" label-width="80px" class="demo-ruleForm" @submit.native.prevent>
             <el-row>
               <el-col :span="12">
                 <el-form-item label="展示区" prop="region">
@@ -186,14 +221,24 @@
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="字体颜色" prop="textColor">
-                  <el-input type="color" style="width: 65px"
-                            v-model="textForm.textColor">
-                  </el-input>
+                <el-form-item label="选择字体" prop="gravity">
+                  <el-select v-model="textForm.fontFamily" placeholder="请选择展示区域">
+                    <el-option label="黑体" value="SimHei"></el-option>
+                  </el-select>
                 </el-form-item>
               </el-col>
-              <el-col :span="12">
-                <el-form-item label="字体大小" prop="textSize">
+
+              <el-col :span="8">
+                <el-form-item label="对齐" prop="gravity">
+                  <el-select v-model="textForm.gravity" placeholder="请选择展示区域">
+                    <el-option label="居中" value="center"></el-option>
+                    <el-option label="左对齐" value="left"></el-option>
+                    <el-option label="右对齐" value="right"></el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="大小" prop="textSize">
                   <el-select v-model="textForm.textSize" placeholder="请选择展示区域">
                     <el-option v-for="(val,ind) in textSizeList"
                                :label="val"
@@ -202,13 +247,11 @@
                   </el-select>
                 </el-form-item>
               </el-col>
-              <el-col :span="12">
-                <el-form-item label="对齐方式" prop="gravity">
-                  <el-select v-model="textForm.gravity" placeholder="请选择展示区域">
-                    <el-option label="居中" value="center"></el-option>
-                    <el-option label="左对齐" value="left"></el-option>
-                    <el-option label="右对齐" value="right"></el-option>
-                  </el-select>
+              <el-col :span="8">
+                <el-form-item label="颜色" prop="textColor">
+                  <div class="text_color-sty">
+                    <colorPicker v-model="textForm.textColor"/>
+                  </div>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -231,13 +274,25 @@
                 <el-tag v-if="!textForm.isAll">秒</el-tag>
               </el-col>
             </el-form-item>
-            <el-col :span="24">
-              <el-form-item label="选择字体" prop="gravity">
-                <el-select v-model="textForm.fontFamily" placeholder="请选择展示区域">
-                  <el-option label="黑体" value="SimHei"></el-option>
+            <el-form-item label="动画效果">
+              <el-col :span="10">
+                <el-select v-model="textForm.enter" placeholder="入场效果" clearable>
+                  <el-option v-for="(val,ind) in animateList"
+                             :key="ind+'enter'"
+                             :label="val.label" :value="val.value"></el-option>
                 </el-select>
-              </el-form-item>
-            </el-col>
+              </el-col>
+              <el-col :span="1" class="center">-</el-col>
+              <el-col :span="10">
+                <el-select v-model="textForm.leave" placeholder="离场效果" clearable>
+                  <el-option v-for="(val,ind) in animateList"
+                             :key="ind+'leave'"
+                             :label="val.label" :value="val.value"></el-option>
+                </el-select>
+              </el-col>
+            </el-form-item>
+
+
             <!--      <el-col :span="12">-->
             <!--      </el-col>-->
 
@@ -290,12 +345,16 @@
             <span class="actionTitle">插入动作</span>
           </el-tooltip>
 
-          <el-button class="actionBtn" size="small" v-for="(val,ind) in actionShowList" :key="ind+'animation'">
-            <div class="animation-name" @click="addAction(val)">{{val.label}}</div>
-            <div class="animation-show" @click="previewAction(val)">
-              <el-icon class="el-icon-video-play"></el-icon>
+          <el-tooltip :open-delay="300" v-for="(val,ind) in actionShowList" :key="ind+'animation'" placement="top">
+            <div slot="content" style="cursor: pointer" @click="previewAction(val)">
+              <i style="font-size: 24px" class="el-icon-video-play"></i>
             </div>
-          </el-button>
+            <el-button class="actionBtn" size="small">
+              {{val.label}}
+            </el-button>
+          </el-tooltip>
+
+
         </div>
       </div>
     </w-textarea>
@@ -322,6 +381,7 @@
 <script>
   import upload from "./upload";
   import {resultJSON} from '../../api/result'
+  import {animateData} from './anmate-data'
   export default {
     filters:{
       indFilter(val){
@@ -385,6 +445,8 @@
           ellipsize:false,
           dismissTime:3,
           isAll:false,
+          leave:"",//出场
+          enter:""//入场
         },
         textSizeList:["12","14","16","18","20","22","24","26","28","30","32",],
         textRules:{},
@@ -396,6 +458,8 @@
           videoName:'',
           isAll:false,
           isSupportAudio:false,
+          leave:"",//出场
+          enter:""//入场
         },
         rules:{},
         imgForm:{
@@ -405,6 +469,8 @@
           isAll:false,
           url:'',
           name:'',
+          leave:"",//出场
+          enter:""//入场
         },
         imgRules:{},
 
@@ -431,12 +497,20 @@
           {label:"置底",value:'4',icon:'el-icon-bottom'},
           {label:"插入",value:'5',icon:'el-icon-circle-plus-outline'},
           {label:"删除",value:'6',icon:'el-icon-delete'},
-        ]
+        ],
+
+        animateList:[]
       };
     },
     created() {
       window.WebActionInfo= this.WebActionInfo
       window.WebSelectAvatarState = this.WebSelectAvatarState
+      for(let ani in animateData){
+        this.animateList.push({
+          value:ani,
+          label:animateData[ani]
+        })
+      }
     },
     mounted() {
       let self = this;
@@ -451,6 +525,8 @@
           self.imgForm.name = domObj.name;
           self.imgForm.dismissTime = domObj.time/1000;
           self.imgForm.isAll=domObj.isAll;
+          self.imgForm.enter=domObj.enter;
+          self.imgForm.leave=domObj.leave;
           self.videoVisible = false;
           self.imgVisible = true;
           self.editTagId= domObj.id;
@@ -469,6 +545,8 @@
           self.ruleForm.region = domObj.region;
           self.ruleForm.dismissTime = domObj.time/1000;
           self.ruleForm.isAll=domObj.isAll;
+          self.ruleForm.enter=domObj.enter;
+          self.ruleForm.leave=domObj.leave;
           self.videoVisible = true;
           self.imgVisible = false;
           self.editTagId= domObj.id;
@@ -494,6 +572,8 @@
             self.textForm.ellipsize = domObj.ellipsize;
             self.textForm.dismissTime = domObj.dismissTime/1000;
             self.textForm.isAll = domObj.isAll;
+            self.textForm.enter=domObj.enter;
+            self.textForm.leave=domObj.leave;
           })
         }
       }
@@ -515,7 +595,7 @@
       //监听输入框文本，主要实现删除功能
       testData(newValue,oldValue){
         console.log(this.testData)
-        if(this.scriptChangeState) return false;
+        // if(this.scriptChangeState) return false;
         // console.log(this.testData,this.testData.length,this.testData.split(''))
         if(newValue.length < oldValue.length&&(oldValue.length-newValue.length)>200){
           let newDom = document.getElementById('newDom');
@@ -832,6 +912,8 @@
                   url:val.info.child[0].url,
                   id:val.info.child[0].id,
                   isAll:val.isAll,
+                  enter:val.info.child[0].animate!==undefined ? val.info.child[0].animate.enter : "",
+                  leave:val.info.child[0].animate!==undefined ? val.info.child[0].animate.leave : "",
                 })
               }else if(val.info.child[0].type==="video"){
                 positionTag.push({
@@ -844,6 +926,8 @@
                   url:val.info.child[0].url,
                   id:val.info.child[0].id,
                   isAll:val.isAll,
+                  enter:val.info.child[0].animate!==undefined ? val.info.child[0].animate.enter : "",
+                  leave:val.info.child[0].animate!==undefined ? val.info.child[0].animate.leave : "",
                 })
               }else if(val.info.child[0].type==="text"){
                 positionTag.push({
@@ -859,6 +943,8 @@
                   dismissTime:val.info.dismissTime*1000,
                   isAll:val.isAll,
                   fontFamily:val.info.child[0].fontFamily || "SimHei",
+                  enter:val.info.child[0].animate!==undefined ? val.info.child[0].animate.enter : "",
+                  leave:val.info.child[0].animate!==undefined ? val.info.child[0].animate.leave : "",
                 })
               }
             }else if(val.type==="action"){
@@ -876,12 +962,12 @@
         let contentBDArr = contentBD.split('')
         positionTag.forEach((val,ind)=>{
           if(val.type==="image"){
-            let _data = JSON.stringify({type:'image',name:val.name,time:val.time,url:val.url,id:val.id,isAll:val.isAll,region:val.region}).replace(/"/g,"&quot;")
+            let _data = JSON.stringify({type:'image',name:val.name,time:val.time,url:val.url,id:val.id,isAll:val.isAll,region:val.region,enter:val.enter,leave:val.leave}).replace(/"/g,"&quot;")
             let _time = val.time/1000+'s';
             if(val.isAll){
               _time = 'all'
             }
-            let _imageDom = `<wise id="`+val.id+`" data-obj="`+_data+`"><div class="tagImg tagtag" onclick="editTag(\``+val.id+`\`)">图片`+val.name+' ('+_time+`)<i class="el-icon-close" onclick="delTag(\``+val.id+`\`)"></i>&nbsp;</div></wise>`
+            let _imageDom = `<wise id="`+val.id+`" data-obj="`+_data+`"><div class="tag_image tagtag" onclick="editTag(\``+val.id+`\`)">图片`+val.name+' ('+_time+`)<i class="el-icon-close" onclick="delTag(\``+val.id+`\`)"></i></div>&nbsp;</wise>`
             // contentBDArr[val.index]= _imageDom + contentBDArr[val.index]
             if(contentBDArr[val.index]===undefined){
               contentBDArr[val.index] = _imageDom
@@ -892,12 +978,12 @@
               contentBDArr[val.index] = _txt.join('');
             }
           }else if(val.type==="video"){
-            let _data = JSON.stringify({type:'video',name:val.name,time:val.time,url:val.url,id:val.id,isAll:val.isAll,region:val.region,isSupportAudio:val.isSupportAudio}).replace(/"/g,"&quot;")
+            let _data = JSON.stringify({type:'video',name:val.name,time:val.time,url:val.url,id:val.id,isAll:val.isAll,region:val.region,enter:val.enter,leave:val.leave}).replace(/"/g,"&quot;")
             let _time = val.time/1000+'s';
             if(val.isAll){
               _time = 'all'
             }
-            let _videoDom = `<wise id="`+val.id+`" data-obj="`+_data+`"><div class="tagVideo tagtag" onclick="editTag(\``+val.id+`\`)">视频`+val.name+' ('+_time+`)<i class="el-icon-close" onclick="delTag(\``+val.id+`\`)"></i>&nbsp;</div></wise>`
+            let _videoDom = `<wise id="`+val.id+`" data-obj="`+_data+`"><div class="tag_video tagtag" onclick="editTag(\``+val.id+`\`)">视频`+val.name+' ('+_time+`)<i class="el-icon-close" onclick="delTag(\``+val.id+`\`)"></i></div>&nbsp;</wise>`
             if(contentBDArr[val.index]===undefined){
               contentBDArr[val.index] = _videoDom
             }else{
@@ -911,8 +997,8 @@
             if(val.isAll){
               _time = 'all'
             }
-            let _data = JSON.stringify({type:'text',text:val.text,textColor:val.textColor,textSize:val.textSize,id:val.id,gravity:val.gravity,region:val.region,ellipsize:val.ellipsize,isAll:val.isAll,dismissTime:val.dismissTime,fontFamily:val.fontFamily}).replace(/"/g,"&quot;")
-            let _textDom = `<wise id="`+val.id+`" data-obj="`+_data+`"><div class="tagText tagtag" onclick="editTag(\``+val.id+`\`)">文字`+ ' ('+_time+`)<i class="el-icon-close" onclick="delTag(\``+val.id+`\`)"></i>&nbsp;</div></wise>`
+            let _data = JSON.stringify({type:'text',text:val.text,textColor:val.textColor,textSize:val.textSize,id:val.id,gravity:val.gravity,region:val.region,ellipsize:val.ellipsize,isAll:val.isAll,dismissTime:val.dismissTime,fontFamily:val.fontFamily,enter:val.enter,leave:val.leave}).replace(/"/g,"&quot;")
+            let _textDom = `<wise id="`+val.id+`" data-obj="`+_data+`"><div class="tag_text tagtag" onclick="editTag(\``+val.id+`\`)">文字`+ ' ('+_time+`)<i class="el-icon-close" onclick="delTag(\``+val.id+`\`)"></i></div>&nbsp;</wise>`
             if(contentBDArr[val.index]===undefined){
               contentBDArr[val.index] = _textDom
             }else{
@@ -925,29 +1011,29 @@
             let _data = JSON.stringify({id:val.id, type:'action', actionName:val.actionName}).replace(/"/g,"&quot;")
             let _actionName = '';
             self.actionShowList.forEach(act=>{if(act.value===val.actionName){ _actionName = act.label}})
-            let _actionDom = `<wise id="`+val.id+`" data-obj="`+_data+`"><div class="action tagtag" onclick="editTag(\``+val.id+`\`)">`+_actionName+`<i class="el-icon-close" onclick="delTag(\``+val.id+`\`)"></i>&nbsp;</div></wise>`
+            let _actionDom = `<wise id="`+val.id+`" data-obj="`+_data+`"><div class="tag_action tagtag" onclick="editTag(\``+val.id+`\`)">`+_actionName+`<i class="el-icon-close" onclick="delTag(\``+val.id+`\`)"></i></div>&nbsp;</wise>`
             if(contentBDArr[val.index]===undefined){
               contentBDArr[val.index] = _actionDom
             }else{
+              // contentBDArr[val.index]=_actionDom+contentBDArr[val.index]
               let _txt = contentBDArr[val.index].split('')
               _txt.splice(_txt.length-1,1,_actionDom+_txt[_txt.length-1]);
               contentBDArr[val.index] = _txt.join('');
-              // contentBDArr[val.index]=_actionDom+contentBDArr[val.index]
             }
           }else if(val.type==="interval"){
             let _data = JSON.stringify({id:self.getGuid(),type:'interval', time:val.time}).replace(/"/g,"&quot;")
-            let _intervalDom = `<wise id="`+val.id+`" data-obj="`+_data+`"><div class="jiange tagtag" onclick="editTag(\``+val.id+`\`)">间隔(`+val.time/1000+`s)<i class="el-icon-close" onclick="delTag(\``+val.id+`\`)"></i>&nbsp;</div></wise>`
+            let _intervalDom = `<wise id="`+val.id+`" data-obj="`+_data+`"><div class="tag_interval tagtag" onclick="editTag(\``+val.id+`\`)">间隔(`+val.time/1000+`s)<i class="el-icon-close" onclick="delTag(\``+val.id+`\`)"></i></div>&nbsp;</wise>`
             if(contentBDArr[val.index]===undefined){
               contentBDArr[val.index] = _intervalDom
             }else{
+              // contentBDArr[val.index]=_intervalDom+contentBDArr[val.index]
               let _txt = contentBDArr[val.index].split('')
               _txt.splice(_txt.length-1,1,_intervalDom+_txt[_txt.length-1]);
               contentBDArr[val.index] = _txt.join('');
-              // contentBDArr[val.index]=_intervalDom+contentBDArr[val.index]
             }
           }else if(val.type==="interaction"){
             let _data = JSON.stringify({id:self.getGuid(),type:'interaction', maximum:val.maximum,isSupport:val.isSupport}).replace(/"/g,"&quot;")
-            let _intervalDom = `<wise id="`+val.id+`" data-obj="`+_data+`"><div class="hudong tagtag" onclick="editTag(\``+val.id+`\`)">互动<i class="el-icon-close" onclick="delTag(\``+val.id+`\`)"></i>&nbsp;</div></wise>`
+            let _intervalDom = `<wise id="`+val.id+`" data-obj="`+_data+`"><div class="tag_interaction tagtag" onclick="editTag(\``+val.id+`\`)">互动<i class="el-icon-close" onclick="delTag(\``+val.id+`\`)"></i></div>&nbsp;</wise>`
             if(contentBDArr[val.index]===undefined){
               contentBDArr[val.index] = _intervalDom
             }else{
@@ -1273,34 +1359,41 @@
         Array.prototype.splice.apply(arr, this.cutTxtArr);
         this.cutArr.push(arr);
       },
-
+      handleAddVideo(){
+        this.ruleForm.videoName = '';
+        this.ruleForm.videoUrl = '';
+        this.ruleForm.region = '1';
+        this.ruleForm.leave = '';
+        this.ruleForm.enter = '';
+        this.ruleForm.dismissTimeType = 2;
+        this.ruleForm.dismissTime = 3;
+        this.ruleForm.isAll=false;
+        this.imgVisible = false;
+        this.videoVisible = true;
+        this.timerVisible = false;
+        this.editTagId = "";
+      },
+      handleAddImage(){
+        this.imgForm.region = '1';
+        this.imgForm.dismissTimeType = 2;
+        this.imgForm.dismissTime = 3;
+        this.imgForm.url = '';
+        this.imgForm.name = '';
+        this.imgForm.leave = '';
+        this.imgForm.enter = '';
+        this.imgForm.isAll=false;
+        this.videoVisible = false;
+        this.imgVisible = true;
+        this.timerVisible = false;
+        this.editTagId = "";
+      },
       handleAdd (type) {
         switch (type) {
           case "video":
-            this.ruleForm.videoName = '';
-            this.ruleForm.videoUrl = '';
-            this.ruleForm.region = '1';
-            this.ruleForm.dismissTimeType = 2;
-            this.ruleForm.dismissTime = 3;
-            this.ruleForm.isAll=false;
-            this.imgVisible = false;
-            this.videoVisible = true;
-            this.timerVisible = false;
-
-            this.editTagId = "";
+            this.handleAddVideo();
             break;
           case 'img':
-            this.imgForm.region = '1';
-            this.imgForm.dismissTimeType = 2;
-            this.imgForm.dismissTime = 3;
-            this.imgForm.url = '';
-            this.imgForm.name = '';
-            this.imgForm.isAll=false;
-            this.videoVisible = false;
-            this.imgVisible = true;
-            this.timerVisible = false;
-
-            this.editTagId = "";
+            this.handleAddImage();
             break;
           case 'interaction':
             this.addInteraction();
@@ -1320,15 +1413,17 @@
             this.$nextTick(()=>{
               this.textForm = {
                 text:"",
-                fontFamily:"SimHei",
                 textColor:"#333333",
                 region:"1",
                 textSize:'14',
                 gravity:"center",
+                fontFamily:"SimHei",
                 ellipsize:false,
                 dismissTimeType:2,
                 dismissTime:3,
                 isAll:false,
+                enter:"",
+                leave:""
               }
             })
             break;
@@ -1410,13 +1505,15 @@
             dismissTime:this.textForm.dismissTime*1000,
             fontFamily:this.textForm.fontFamily,
             isAll:this.textForm.isAll,
-            id:_id
+            id:_id,
+            enter:this.textForm.enter,
+            leave:this.textForm.leave
           }
           _time = this.textForm.dismissTime+'s';
           if(this.textForm.isAll){
             _time = 'all'
           }
-          _text = `<div class="tagtag tagText" onclick="editTag(\``+_id+`\`)">文字`+' ('+_time+`)<i class="el-icon-close" onclick="delTag(\``+_id+`\`)"></i>&nbsp;</div>`
+          _text = `<div class="tagtag tag_text" onclick="editTag(\``+_id+`\`)">文字`+' ('+_time+`)<i class="el-icon-close" onclick="delTag(\``+_id+`\`)"></i>&nbsp;</div>`
           if(this.editTagId){
             let _oldTag = this.$refs.testText.nodeToString( document.getElementById(_id) ).replace( "<" , "<" ).replace( ">" , ">");
             tagDom.dataset.obj = JSON.stringify(_data)
@@ -1444,13 +1541,15 @@
             isSupportAudio:this.ruleForm.isSupportAudio,
             region:this.ruleForm.region,
             isAll:this.ruleForm.isAll,
-            id:_id
+            id:_id,
+            enter:this.ruleForm.enter,
+            leave:this.ruleForm.leave
           }
           _time = this.ruleForm.dismissTime+'s';
           if(this.ruleForm.isAll){
             _time = 'all'
           }
-          _text = `<div class="tagtag tagVideo" onclick="editTag(\``+_id+`\`)">视频`+this.ruleForm.videoName+` (`+_time+`)<i class="el-icon-close" onclick="delTag(\``+_id+`\`)"></i>&nbsp;</div>`
+          _text = `<div class="tagtag tag_video" onclick="editTag(\``+_id+`\`)">视频`+this.ruleForm.videoName+` (`+_time+`)<i class="el-icon-close" onclick="delTag(\``+_id+`\`)"></i>&nbsp;</div>`
           if(this.editTagId){
             let _oldTag = this.$refs.testText.nodeToString( document.getElementById(_id) ).replace( "<" , "<" ).replace( ">" , ">");
             tagDom.dataset.obj = JSON.stringify(_data)
@@ -1475,13 +1574,15 @@
             url:this.imgForm.url,
             region:this.imgForm.region,
             isAll:this.imgForm.isAll,
-            id:_id
+            id:_id,
+            enter:this.imgForm.enter,
+            leave:this.imgForm.leave
           }
           _time = this.imgForm.dismissTime+'s';
           if(this.imgForm.isAll){
             _time = 'all'
           }
-          _text =  `<div class="tagtag tagImg" onclick="editTag(\``+_id+`\`)">图片`+this.imgForm.name+` (`+_time+`)<i class="el-icon-close" onclick="delTag(\``+_id+`\`)"></i>&nbsp;</div>`
+          _text =  `<div class="tagtag tag_image" onclick="editTag(\``+_id+`\`)">图片`+this.imgForm.name+` (`+_time+`)<i class="el-icon-close" onclick="delTag(\``+_id+`\`)"></i>&nbsp;</div>`
           if(this.editTagId){
             let _oldTag = this.$refs.testText.nodeToString( document.getElementById(_id) ).replace( "<" , "<" ).replace( ">" , ">");
             tagDom.dataset.obj = JSON.stringify(_data)
@@ -1565,23 +1666,12 @@
   .actionBtn{
     font-weight: 400;
     margin: 5px;
-    padding: 0;
+    padding: 6px;
     font-size: 12px;
-    .animation-name{
-      display: inline-block;
-      margin: 5px 0 5px 5px;
-      cursor: pointer;
-    }
-    .animation-show{
-      display: inline-block;
-      padding: 5px ;
-      cursor: pointer;
-      border-radius: 50%;
-      transition: all 0.5s;
-      &:hover{
-        background: #2196F3;
-        color: white;
-      }
+    &:hover{
+      background: #8D89DE;
+      color: #FFFFFF;
+      border: 1px solid #8D89DE;
     }
   }
   .dialogBtn{
@@ -1735,6 +1825,15 @@
     padding: 3px;
     border: 1px solid gainsboro;
     height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .text_color-sty{
+    width: 35px;
+    height: 30px;
+    border: 1px solid gainsboro;
+    border-radius: 5px;
     display: flex;
     align-items: center;
     justify-content: center;

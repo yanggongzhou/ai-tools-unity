@@ -11,6 +11,8 @@ import TagTextarea from './packages/index'
 Vue.use(TagTextarea)
 import { Session } from "./api/auth";
 Vue.prototype.$Session = Session;
+import vcolorpicker from 'vcolorpicker'//颜色选择器
+Vue.use(vcolorpicker)
 
 import promptMessage from '@/components/tooltips/index.js'
 Vue.use(promptMessage)

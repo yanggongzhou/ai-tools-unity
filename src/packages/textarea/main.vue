@@ -411,8 +411,13 @@
                 range.setStart(element.childNodes[elementIndex+2], 0);
               }else{
                 document.getElementById(this.contentId).innerHTML+=" "
+
                 this.$nextTick(()=>{
-                  range.setStart(element.childNodes[elementIndex+2], 0);
+                  if(element.childNodes.length<3){
+                    range.setStart(element.childNodes[1], 0);
+                  }else{
+                    range.setStart(element.childNodes[elementIndex+2], 0);
+                  }
                 })
               }
             }

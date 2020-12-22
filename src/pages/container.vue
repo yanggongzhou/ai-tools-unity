@@ -76,9 +76,14 @@
       if(this.$route.params.data){
         this.jsonName = this.$route.params.name
         let resArr  = this.$route.params.data
-        if(this.$route.params.data instanceof Array){
+        if(resArr instanceof Array){
+
+
           resultJSON.resultJsonObj.avatar.unity = resArr[0].avatar.unity;
           this.editImportTriggerDiv(resArr[0])
+
+
+
         }else{
           resArr.avatar.unity==="name"?resultJSON.resultJsonObj.avatar.unity = 'WeiYa_WeiRuan':resultJSON.resultJsonObj.avatar.unity = resArr.avatar.unity;
 
@@ -102,6 +107,14 @@
         data.param.forEach(val=>{
           val.trigger.forEach(val=>{
             if(val.type==="info"){
+              //兼容之前无动画效果/
+              if(!val.info.child[0].animate){
+                val.info.child[0].animate= {
+                  "enter":"",
+                  "leave":"",
+                  "duration":{'enter': 1000, 'leave': 1000}
+                }
+              }
               self.TriggerDiv.push(val)
             }
           })
@@ -168,6 +181,7 @@
             let valitade = true;
             _JsonEditorRef.ScriptList.forEach((scriptItem,scriptItemIndex)=>{
               let _content='';
+              scriptItem.name = this.jsonName;
               scriptItem.param.forEach(value=>{
                 _content += value.content
               })
@@ -212,7 +226,8 @@
                     scene_type:'1',//0-默认类型；1-淘宝；2-抖音；3-快手
                     time:0,
                     gs_id:self.$route.params.id,
-                    template_json:''//信息版位置信息数据
+                    template_json:'',//信息版位置信息数据
+                    layer:"",
                   }).then(res=>{
                     if(res.return_code===1000){
                       self.$message.success('保存成功');
@@ -232,7 +247,8 @@
                     avatar_name:avatar_name,
                     scene_type:'1',//0-默认类型；1-淘宝；2-抖音；3-快手
                     time:0,
-                    template_json:''
+                    template_json:'',
+                    layer:"",
                   }).then(res=>{
                     if(res.return_code===1000){
                       self.$route.params.id=res.result.gs_id
@@ -254,95 +270,91 @@
       },
       //图片接受
       displayImgUrl(data){
-        let self = this,isEditTag=false;
+        let self = this,editIndex,trigItem;
         if(self.TriggerDiv.length){
-          self.TriggerDiv.forEach(val=>{
+          self.TriggerDiv.forEach((val,ind)=>{
             if(val.info.child[0].id===data.id){
-              isEditTag = true;
-              val.info.child[0].type="image"
-              val.isAll = data.isAll;
-              val.info.dismissTime=data.time;
-              val.info.child[0].url=data.url;
-              val.info.child[0].id=data.id;
-              val.info.child[0].region=data.region
-              val.info.child[0].name=data.name
+              trigItem=JSON.parse(JSON.stringify(val))
+              editIndex = ind
             }
           })
         }
-
-        if(!isEditTag){
-          let trigItem=JSON.parse(JSON.stringify(resultJSON.imageItem))
-          trigItem.info.child[0].type="image"
-          trigItem.isAll = data.isAll;
-          trigItem.info.dismissTime=data.time;
-          trigItem.info.child[0].url=data.url;
-          trigItem.info.child[0].id=data.id;
-          trigItem.info.child[0].region=data.region
-          trigItem.info.child[0].name=data.name
+        if(editIndex===undefined){
+          trigItem=JSON.parse(JSON.stringify(this.imageItem))
+        }
+        trigItem.info.child[0].type="image"
+        trigItem.isAll = data.isAll;
+        trigItem.info.dismissTime=data.time;
+        trigItem.info.child[0].url=data.url;
+        trigItem.info.child[0].id=data.id;
+        trigItem.info.child[0].region=data.region
+        trigItem.info.child[0].name=data.name
+        trigItem.info.child[0].animate.enter=data.enter
+        trigItem.info.child[0].animate.leave=data.leave
+        if(editIndex!==undefined){
+          self.TriggerDiv.splice(editIndex,1,trigItem)
+        }else{
           self.TriggerDiv.push(trigItem)
         }
       },
       displayVideoUrl(data){
-        let self = this,isEditTag=false;
+        let self = this,editIndex,trigItem;
         if(self.TriggerDiv.length){
-          self.TriggerDiv.forEach(val=>{
+          self.TriggerDiv.forEach((val,ind)=>{
             if(val.info.child[0].id===data.id){
-              isEditTag = true;
-              val.info.child[0].type="video";
-              val.isAll = data.isAll;
-              val.info.dismissTime=data.time;
-              val.info.child[0].url=data.url;
-              val.info.child[0].id=data.id
-              val.info.child[0].region=data.region
-              val.info.child[0].isSupportAudio=data.isSupportAudio
-              val.info.child[0].name=data.name
+              trigItem=JSON.parse(JSON.stringify(val))
+              editIndex = ind;
             }
           })
         }
-        if(!isEditTag){
-          let trigItem=JSON.parse(JSON.stringify(resultJSON.videoItem))
-          trigItem.info.child[0].type="video";
-          trigItem.isAll = data.isAll;
-          trigItem.info.dismissTime=data.time;
-          trigItem.info.child[0].url=data.url;
-          trigItem.info.child[0].id=data.id
-          trigItem.info.child[0].region=data.region
-          trigItem.info.child[0].isSupportAudio=data.isSupportAudio
-          trigItem.info.child[0].name=data.name
+        if(editIndex===undefined) {
+          trigItem = JSON.parse(JSON.stringify(this.videoItem))
+        }
+        trigItem.info.child[0].type="video";
+        trigItem.isAll = data.isAll;
+        trigItem.info.dismissTime=data.time;
+        trigItem.info.child[0].url=data.url;
+        trigItem.info.child[0].id=data.id
+        trigItem.info.child[0].region=data.region
+        trigItem.info.child[0].isSupportAudio=data.isSupportAudio
+        trigItem.info.child[0].name=data.name
+        trigItem.info.child[0].animate.enter=data.enter
+        trigItem.info.child[0].animate.leave=data.leave
+        if(editIndex===undefined) {
           this.TriggerDiv.push(trigItem)
+        }else{
+          this.TriggerDiv.splice(editIndex,1,trigItem)
         }
       },
       addDisplay(data){
-        let isEditTag=false;
+        let editIndex,trigItem;
         if(this.TriggerDiv.length){
-          this.TriggerDiv.forEach(val=>{
+          this.TriggerDiv.forEach((val,ind)=>{
             if(val.info.child[0].id===data.id){
-              isEditTag = true;
-              val.info.textColor=data.textColor;
-              val.info.child[0].region=data.region;
-              val.info.child[0].id=data.id
-              val.info.child[0].textSize=data.textSize
-              val.info.child[0].gravity=data.gravity
-              val.info.child[0].text=data.text
-              val.info.child[0].ellipsize=data.ellipsize
-              val.isAll = data.isAll;
-              val.info.dismissTime=data.dismissTime;
+              trigItem=JSON.parse(JSON.stringify(val))
+              editIndex = ind
             }
           })
         }
-        if(!isEditTag){
-          let trigItem=JSON.parse(JSON.stringify(resultJSON.textItem))
-          trigItem.info.child[0].textColor=data.textColor;
-          trigItem.info.child[0].region=data.region;
-          trigItem.info.child[0].id=data.id
-          trigItem.info.child[0].textSize=data.textSize
-          trigItem.info.child[0].fontFamily=data.fontFamily
-          trigItem.info.child[0].gravity=data.gravity
-          trigItem.info.child[0].text=data.text
-          trigItem.info.child[0].ellipsize=data.ellipsize
-          trigItem.isAll = data.isAll;
-          trigItem.info.dismissTime=data.dismissTime;
+        if(editIndex===undefined){
+          trigItem=JSON.parse(JSON.stringify(this.textItem))
+        }
+        trigItem.info.child[0].textColor=data.textColor;
+        trigItem.info.child[0].region=data.region;
+        trigItem.info.child[0].id=data.id
+        trigItem.info.child[0].textSize=data.textSize
+        trigItem.info.child[0].gravity=data.gravity
+        trigItem.info.child[0].text=data.text
+        trigItem.info.child[0].ellipsize=data.ellipsize
+        trigItem.isAll = data.isAll;
+        trigItem.info.dismissTime=data.dismissTime;
+        trigItem.info.child[0].fontFamily=data.fontFamily
+        trigItem.info.child[0].animate.enter=data.enter
+        trigItem.info.child[0].animate.leave=data.leave
+        if(editIndex===undefined) {
           this.TriggerDiv.push(trigItem)
+        }else{
+          this.TriggerDiv.splice(editIndex,1,trigItem)
         }
       },
       //输入框删除tag事件
@@ -350,6 +362,7 @@
         this.TriggerDiv.forEach((val,ind)=>{
           if(val.info.child[0].id === id){
             this.TriggerDiv.splice(ind,1);
+            this.$forceUpdate()
           }
         })
       },

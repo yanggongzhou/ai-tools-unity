@@ -181,7 +181,7 @@
   import {requestServices} from "../api/api";
   import interaction from '../components/interaction/interaction-1';
   import { getWeightList } from '../api/Random'
-  import timer from "../api/timer";
+
   let that;
   export default {
     mixins: [interaction],
