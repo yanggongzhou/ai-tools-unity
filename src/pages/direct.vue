@@ -405,9 +405,14 @@
             }
           });
           if(_index!==undefined){
-            this.allScriptIndex = _index;
-            this.previewBtn(this.allScriptList[_index].scriptList[0],0,_index,false)
 
+            if(this.queueContentItem.length===0) {
+              this.allScriptIndex = _index;
+              this.scriptChange(this.allScriptIndex)
+              this.previewBtn(this.allScriptList[_index].scriptList[0],0,_index,false)
+            }else{
+              this.$message.warning('最多支持1个剧本段落排队，请稍后!')
+            }
             // this.previewData = this.allScriptList[_index].scriptList
             // this.isPreviewBtn = true;
             // UnityPreview(this.previewData[0].avatar.unity,JSON.stringify(this.previewData),"True","True")
@@ -649,7 +654,7 @@
         if(state==='True'){
           //_______________判断当前是不是第一句
           //判断是否是第一个脚本，是—播放开场欢迎语
-          if(this.isFirstScript&&this.isOpenInteractiveMode){
+          if(this.isFirstScript&&this.isOpenInteractiveMode && this.isAutoPlayBtn){
             // this.playWelcomeWords();
             UnityInteractionStart(this.previewData[0].avatar.unity);
           }else{
@@ -959,6 +964,10 @@
             })
             self.progressPercentage = 0 ;
             self.allScriptList.forEach(val=>{
+              //兼容之前版本 —— 无剧本名
+              val.scriptList.forEach(scriptItem=>{
+                scriptItem.name =  val.name;
+              })
               //进入页面发送所有剧本，加载完成后再直播
               UnityPreview(val.scriptList[0].avatar.unity,JSON.stringify(val.scriptList),"False","True")
             });

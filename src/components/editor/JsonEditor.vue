@@ -333,10 +333,7 @@
 
         <div class="p10"
              style="min-height: 66px"
-             v-loading="actionLoading"
-             element-loading-text="模型动作加载中"
-             element-loading-spinner="el-icon-loading"
-             element-loading-background="rgba(0, 0, 0, 0.8)">
+             v-loading="actionLoading">
           <el-tooltip  :open-delay="1000" placement="bottom" effect="dark">
             <div slot="content">
               <p class="center tip_title">动作标签</p>
