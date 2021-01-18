@@ -18,6 +18,7 @@
               <div style="text-align: right" class="clearfix">
                 <button class='addScript' type='primary' @click='addScript'>添加剧本</button>
               </div>
+              <span class="playSetting" @click='handlePlaySetting(true)' v-if='isShowPlaySettingFun'>播放设置</span>
 
               <el-table size="mini" class='playScripts' row-key="sortId" :data='playScriptData' style='width:100%' empty-text='暂未添加剧本' height='388' max-height='388' >
                 <el-table-column align="center" label="排序" width='100'>
@@ -68,7 +69,6 @@
               <transition name='slide'>
                 <div class="allScriptList" v-if='isShowAllList'>
                   <h3>剧本列表</h3>
-
                   <div class="filter">
                     <span>关联IP形象：</span>
                     <el-select class="filterOptions" @change='fetchAllScripts' v-model='anchorRoleValue'>
@@ -129,6 +129,15 @@
                   </div>
                 </div>
               </transition>
+
+              <!-- 播放设置 -->
+              <transition name='slide'>
+                <div class="playSettingWrap" v-if='isShowPlaySetting'>
+                  <i class="el-icon-close" @click='handlePlaySetting(false)'></i>
+                  <p class="title">播放设置</p>
+                  <PlaySetting :tabsHeight='playTableHeight'></PlaySetting>
+                </div>
+              </transition>
             </div>
 
             <div v-if='currentSetting==2' class="sceneWords">
@@ -154,13 +163,19 @@ import Sortable from 'sortablejs';
 import { requestServices } from '../api/api';
 import axios from "axios";
 import sceneWords from '../components/sceneWords/sceneWords';
+import PlaySetting from "../components/webcast/playSetting"
 export default {
     components:{
-      sceneWords
+      sceneWords,
+      PlaySetting
     },
     filters: {},
     data() {
         return {
+            isShowPlaySetting: false,
+            isShowPlaySettingFun: true, // 是否支持播放设置功能
+            playTableHeight: 500,
+
             currentSetting: 1, // 1-剧本设置 2-场景话术
 
             playScriptData: [],
@@ -243,7 +258,7 @@ export default {
       style.top = this.editGoodsIdBtnTop + 'px';
       style.left = this.editGoodsIdBtnLeft + 'px';
       return style
-    }
+    },
   },
     created() {
       window.WebPreviewReady = this.WebPreviewReady;
@@ -255,6 +270,9 @@ export default {
         this.fetchAllScripts();
     },
     methods: {
+      handlePlaySetting(_flag) {
+        this.isShowPlaySetting = _flag;
+      },
       cancelSetGoodsId() {
         this.isShowSetGoodsId = false;
         this.iptGoodsId = '';
@@ -342,6 +360,7 @@ export default {
         })
       },
         checkSetting(_id) {
+          if(this.isShowPlaySetting) return;
           this.currentSetting = _id;
         },
         handlePreview(row) {
@@ -746,6 +765,14 @@ export default {
         /*  */
 
         /*}*/
+      .playSetting {
+        margin-left: 20px;
+        font-size: 14px;
+        color: #835BFF;
+        cursor: pointer;
+        position: absolute;
+        top: 120px;
+      }
       .addScript {
         margin-bottom: 10px;
         width: 96px;
@@ -880,6 +907,32 @@ export default {
         -webkit-transition: all 0.5s ease-in-out;
         transition: all 0.5s ease-in-out;
     }
+  .playSettingWrap {
+    height: 500px;
+    position: absolute;
+    top: 40px;
+    left: 0;
+    width: 570px;
+    background: #fff;
+    box-shadow: 0px 2px 28px 0px rgba(0, 0, 0, 0.19);
+    border-radius: 4px;
+    padding: 30px;
+    box-sizing: border-box;
+    z-index: 80;
+    color: #666;
+    font-size: 16px;
+    .el-icon-close {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      font-size: 18px;
+      color: #999;
+      cursor: pointer;
+    }
+    .title {
+      margin-bottom: 20px;
+    }
+  }
 </style>
 <style>
 

@@ -90,7 +90,7 @@ export const requestServices = {
   // 智能导购平台接口
   // 验证该用户是否存在
   // judgeUsers: (params) => apiInstance.post(`/user_server/client/get_user_details`, params),
-  // getCaptcha: (params) => apiInstance.post(`/common_server/client/get_captcha`, params),
+  getCaptcha: (params) => apiInstance.post(`/common_server/client/get_captcha`, params),
   login: (params) => apiInstance.post(`/guide_shopping/client/login`, params),
   // 忘记密码
   // forgetPsw: (params) => apiInstance.post(`/guide_shopping/client/forget_password`, params),
@@ -140,4 +140,20 @@ export const requestServices = {
 
   //获取弹幕中商品出现次数
   getCommodityCount: (params)=>apiInstance.post(`/guide_shopping/client/get_commodity_count`,params),
+
+
+  // 获取互动模式
+  getInacType: (params)=>apiInstance.post(`/guide_shopping/client/get_interaction`,params),
+  // 添加互动模式
+  addInac: (params)=>apiInstance.post(`/guide_shopping/client/add_interaction`,params),
+  // 编辑互动模式
+  editInac: (params)=>apiInstance.post(`/guide_shopping/client/edit_interaction`,params),
+  // 删除互动模式
+  delInac: (params)=>apiInstance.post(`/guide_shopping/client/delete_interaction`,params),
+
+  // 查看紧急联系人
+  getMonitoringPhone: (params)=>apiInstance.post(`/guide_shopping/client/get_monitoring_phone`,params),
+  // 添加紧急联系人
+  addMonitoringPhone: (params)=>apiInstance.post(`/guide_shopping/client/add_monitoring_phone`,params),
+
 }

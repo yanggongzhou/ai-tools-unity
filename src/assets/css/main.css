@@ -1,3 +1,27 @@
+@font-face {
+  font-family: "沐瑶随心手写体";
+  src: url('https://large.magics-ad.com/ai-tools/fontFamily/%E6%B2%90%E7%91%B6%E9%9A%8F%E5%BF%83%E6%89%8B%E5%86%99%E4%BD%93.ttf');
+}
+@font-face {
+  font-family: "站酷快乐体";
+  src: url('https://large.magics-ad.com/ai-tools/fontFamily/%E7%AB%99%E9%85%B7%E5%BF%AB%E4%B9%90%E4%BD%93.ttf');
+}
+@font-face {
+  font-family: "包图小白体";
+  src: url('https://large.magics-ad.com/ai-tools/fontFamily/%E5%8C%85%E5%9B%BE%E5%B0%8F%E7%99%BD%E4%BD%93.ttf');
+}
+@font-face {
+  font-family: "千图小兔体";
+  src: url('https://large.magics-ad.com/ai-tools/fontFamily/%E5%8D%83%E5%9B%BE%E5%B0%8F%E5%85%94%E4%BD%93.ttf');
+}
+@font-face {
+  font-family: "王汉宗超黑体俏皮动物";
+  src: url('https://large.magics-ad.com/ai-tools/fontFamily/%E7%8E%8B%E6%B1%89%E5%AE%97%E8%B6%85%E9%BB%91%E4%BD%93%E4%BF%8F%E7%9A%AE%E5%8A%A8%E7%89%A9.ttf');
+}
+@font-face {
+  font-family: "王漢宗波卡體一空阴";
+  src: url('https://large.magics-ad.com/ai-tools/fontFamily/%E7%8E%8B%E6%BC%A2%E5%AE%97%E6%B3%A2%E5%8D%A1%E9%AB%94%E4%B8%80%E7%A9%BA%E9%98%B4.ttf');
+}
 html{
   min-height: 100vh;
   /*background: #f5f6fa;*/
@@ -171,31 +195,32 @@ button {
   user-select: none
   /*-webkit-user-modify: read-only !important;*/
 }
-.jiange{
+.tag_interval{
   /*background: #607D8B;*/
   color: #607D8B;
   border: 1px solid #607D8B;
 }
-.hudong{
+.tag_interaction{
   color: #673AB7;
   border: 1px solid #673AB7;
 }
-.action{
+.tag_action{
   /*background: #673AB7;*/
   color: #658f96;
   border: 1px solid #658f96;
 }
-.tagImg{
+
+.tag_image{
   /*background: #cf9236;*/
   color: #30CBD7;
   border: 1px solid #30CBD7;
 }
-.tagVideo{
+.tag_video{
   /*background: #009688;*/
   color: #6687FD;
   border: 1px solid #6687FD;
 }
-.tagText{
+.tag_text{
   color: #fd666b;
   border: 1px solid #fd666b;
 }
