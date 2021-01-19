@@ -280,7 +280,7 @@
           })
         }
         if(editIndex===undefined){
-          trigItem=JSON.parse(JSON.stringify(this.imageItem))
+          trigItem=JSON.parse(JSON.stringify(resultJSON.imageItem))
         }
         trigItem.info.child[0].type="image"
         trigItem.isAll = data.isAll;
@@ -308,7 +308,7 @@
           })
         }
         if(editIndex===undefined) {
-          trigItem = JSON.parse(JSON.stringify(this.videoItem))
+          trigItem = JSON.parse(JSON.stringify(resultJSON.videoItem))
         }
         trigItem.info.child[0].type="video";
         trigItem.isAll = data.isAll;
@@ -337,7 +337,7 @@
           })
         }
         if(editIndex===undefined){
-          trigItem=JSON.parse(JSON.stringify(this.textItem))
+          trigItem=JSON.parse(JSON.stringify(resultJSON.textItem))
         }
         trigItem.info.child[0].textColor=data.textColor;
         trigItem.info.child[0].region=data.region;

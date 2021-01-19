@@ -1,5 +1,5 @@
 <template>
-    <div v-loading="isUserInfo" id='homepage'>
+    <div id='homepage'>
       <div class="dev_tip" v-if="isShowDevTip">
         测试版本v1.0
       </div>
@@ -11,14 +11,19 @@
                 <button :class="['cardBtn', `cardBtn`+idx]" @click='gotoPage(card.targetPage)'>{{card.btnTxt}}</button>
             </div>
         </div>
+      <UError></UError>
+      <UuserInfo></UuserInfo>
     </div>
 </template>
 <script>
 
-import {Session} from "../api/auth";
-import {requestServices} from "../api/api";
-
+import UError from "../components/WebUnity/error";
+import UuserInfo from "../components/WebUnity/userInfo";
 export default {
+  components:{
+    UError,
+    UuserInfo
+  },
     data() {
         return {
             cards: [
@@ -38,107 +43,16 @@ export default {
                     targetPage: '/myscript'
                 }
             ],
-          getUserInfoCount:0,//请求用户数据次数
-          notifyOption:'',
-          userInfoTimeOut:'',
-          isUserInfo:false,
           isShowDevTip:false,
         };
     },
     computed: {},
     watch: {},
     created() {
-      window.WebUserMessage=this.WebUserMessage;
-      window.WebErrorMessage=this.WebErrorMessage;
       window.location.hostname==='demo.magics-ad.com'||window.location.hostname==='0.0.0.0'?this.isShowDevTip=true:this.isShowDevTip=false
     },
-    mounted() {
-      if(this.$route.query.phone){
-        requestServices.login({
-          phone:this.$route.query.phone,
-          password:this.$route.query.password,
-          role_id:23
-        }).then(res=>{
-          console.log(res)
-        })
-      }
 
-
-
-        let self = this;
-        //请求用户信息
-        if(this.$Session.get('ai_user_id')&&this.$Session.get('ai_user_token')&&this.$Session.get('ai_user_phone')){
-
-        }else{
-          if(this.userInfoTimeOut){  clearTimeout(this.userInfoTimeOut) }
-          this.notifyOption = this.$notify.info({
-            title:  '提示',
-            message:"用户信息注入中...",
-            duration: 0
-          });
-          this.isUserInfo = true;
-          this.getUserInfo();
-          this.userInfoTimeOut = setTimeout(()=>{
-            if(self.$Session.get('ai_user_id')&&self.$Session.get('ai_user_token')&&self.$Session.get('ai_user_phone')){
-              self.$message.error('请求用户信息失败,请重启窗口！')
-
-            }else {
-              self.isUserInfo = false;
-              self.$message.success('用户信息已注入！')
-            }
-          },100000)
-        }
-
-      },
     methods: {
-      //请求用户信息
-      getUserInfo(){
-        this.getUserInfoCount+=1;
-        let self = this;
-        UnityUserInfo();
-        if(this.getUserInfoCount < 3){
-          setTimeout(()=>{
-            if(self.$Session.get('ai_user_id')&&self.$Session.get('ai_user_token')&&self.$Session.get('ai_user_phone')){
-              // this.$message.success('用户信息已注入！')
-            }else{
-              self.getUserInfo();
-            }
-          },3000)
-        }
-        // self.$message.error('请求用户信息失败,请重启窗口！')
-      },
-      WebUserMessage(id,token,phone){
-        // this.$notify({
-        //   title: this.$Session.get('ai_user_id') +'用户'+ Session.get('ai_user_phone'),
-        //   message: Session.get('ai_user_token'),
-        //   duration: 0
-        // });
-        console.log(id,token,phone)
-        this.$Session.set('ai_user_id', id);
-        this.$Session.set('ai_user_token', token)
-        this.$Session.set('ai_user_phone', phone)
-        // alert('id'+id+';   token:'+token+';    phone:'+phone)
-        this.isUserInfo = false;
-        clearTimeout(this.userInfoTimeOut)
-        this.$message.success('用户信息已注入！')
-        this.notifyOption.close();
-      },
-      //断网
-      WebErrorMessage(err){
-        if(err==="True"){
-          this.$notify.error({
-            title:  '网络连接已断开!',
-            message:"网络连接出现异常，请确认您的联网状态!",
-            duration: 0
-          });
-        }else{
-          this.$notify.success({
-            title:  '网络已重新连接!',
-            message:"网络连接已恢复，祝您使用愉快!",
-            duration: 0
-          });
-        }
-      },
         gotoPage(_page) {
           this.$router.push(_page)
         }

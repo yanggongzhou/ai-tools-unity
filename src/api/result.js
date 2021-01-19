@@ -92,31 +92,6 @@ export const resultJSON = {
 
 
 
-  resultJsonObjCopy:{
-    "version": 1,
-    "url": "zip下载地址",
-    "name": "",
-    "background":"",
-    "auto":false,
-    "avatar":{
-      "h5":"",
-      "app":"",
-      "unity":"",
-      "def": {
-        "x": 0,
-        "y": 0,
-        "scale": 1,
-        "rotation": {
-          "x": 0,
-          "y": 0,
-          "z": 0
-        }
-      }
-    },
-    "tts": {},
-    "param": []
-  },
-
   textItem: {
     "index": 0,
     "type": "info",

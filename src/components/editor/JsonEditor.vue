@@ -1436,7 +1436,7 @@
           maximum:10,
           id:_id
         }
-        let _text =  `<div class="hudong tagtag" onclick="editTag(\``+_id+`\`)">互动<i class="el-icon-close" onclick="delTag(\``+_id+`\`)"></i>&nbsp;</div>`
+        let _text =  `<div class="tag_interaction tagtag" onclick="editTag(\``+_id+`\`)">互动<i class="el-icon-close" onclick="delTag(\``+_id+`\`)"></i>&nbsp;</div>`
         this.$refs.testText.addTag(_text,_data)
       },
       addTag (type,interval) {
@@ -1448,7 +1448,7 @@
             time:interval*1000,
             id:_id
           }
-          let _text =  `<div class="jiange tagtag" onclick="editTag(\``+_id+`\`)">间隔(`+self.intervalValue+`s)<i class="el-icon-close" onclick="delTag(\``+_id+`\`)"></i>&nbsp;</div>`
+          let _text =  `<div class="tag_interval tagtag" onclick="editTag(\``+_id+`\`)">间隔(`+self.intervalValue+`s)<i class="el-icon-close" onclick="delTag(\``+_id+`\`)"></i>&nbsp;</div>`
           this.$refs.testText.addTag(_text,_data)
         }
         // this.$refs.testText.addTag(text,dataId)
@@ -1461,7 +1461,7 @@
           actionName:val.value,
           id:_id
         }
-        let _text =  `<div class="action tagtag" onclick="editTag(\``+_id+`\`)">`+val.label+`<i class="el-icon-close" onclick="delTag(\``+_id+`\`)"></i>&nbsp;</div>`
+        let _text =  `<div class="tag_action tagtag" onclick="editTag(\``+_id+`\`)">`+val.label+`<i class="el-icon-close" onclick="delTag(\``+_id+`\`)"></i>&nbsp;</div>`
         this.$refs.testText.addTag(_text,_data)
       },
       getDisplayImg(Obj){
