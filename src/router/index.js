@@ -6,12 +6,7 @@ export default new Router({
   routes: [
     {
       path: '/',
-      redirect: '/homepage'
-    },
-    {
-      path: '/steper',
-      name: 'steper',
-      component: ()=>import ('@/pages/steper')
+      redirect: '/home'
     },
     {
       path: '/tools',
@@ -19,9 +14,9 @@ export default new Router({
       component: ()=>import ('@/pages/container'),
     },
     {
-      path: '/homepage',
-      name: 'homepage',
-      component: ()=>import ('@/pages/homepage'),
+      path: '/home',
+      name: 'home',
+      component: ()=>import ('@/pages/home'),
     },
     {
       path: '/webcast',

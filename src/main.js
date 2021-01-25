@@ -18,12 +18,15 @@ import promptMessage from '@/components/tooltips/index.js'
 Vue.use(promptMessage)
 import drr from '@minogin/vue-drag-resize-rotate'
 Vue.component('drr', drr)
+
+import store from './store';
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
   template: '<App/>'
 })

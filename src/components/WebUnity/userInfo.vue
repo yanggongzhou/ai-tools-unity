@@ -23,6 +23,7 @@
           role_id:23
         }).then(res=>{
           console.log('\x1b[33m%s\x1b[0m','账号信息',res)
+          this.WebUserMessage(res.result.user_profile.id,res.result.access_token,res.result.user_profile.phone)
         })
       }
 

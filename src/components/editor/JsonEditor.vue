@@ -72,11 +72,10 @@
           <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm" @submit.native.prevent>
             <el-form-item label="展示区" prop="region">
               <el-select v-model="ruleForm.region" placeholder="请选择展示区域">
-                <el-option label="展位一" value="1"></el-option>
-                <el-option label="展位二" value="2"></el-option>
-                <el-option label="展位三" value="3"></el-option>
-                <el-option label="展位四" value="4"></el-option>
-                <el-option label="展位五" value="5"></el-option>
+                <el-option v-for="(val,ind) in InfoModelData"
+                           :key="ind+'video'"
+                           :label="'展位'+val"
+                           :value="val"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="上传文件">
@@ -102,7 +101,6 @@
               <el-col :span="4">
                 <el-tag v-if="!ruleForm.isAll">秒</el-tag>
               </el-col>
-            </el-form-item>
             </el-form-item>
             <el-form-item label="动画效果">
               <el-col :span="10">
@@ -145,11 +143,10 @@
           <el-form :model="imgForm" :rules="imgRules" ref="imgForm" label-width="100px" class="demo-ruleForm" @submit.native.prevent>
             <el-form-item label="展示区" prop="region">
               <el-select v-model="imgForm.region" placeholder="请选择展示区域">
-                <el-option label="展位一" value="1"></el-option>
-                <el-option label="展位二" value="2"></el-option>
-                <el-option label="展位三" value="3"></el-option>
-                <el-option label="展位四" value="4"></el-option>
-                <el-option label="展位五" value="5"></el-option>
+                <el-option v-for="(val,ind) in InfoModelData"
+                           :key="ind+'image'"
+                           :label="'展位'+val"
+                           :value="val"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="上传文件">
@@ -212,11 +209,10 @@
               <el-col :span="12">
                 <el-form-item label="展示区" prop="region">
                   <el-select v-model="textForm.region" placeholder="请选择展示区域">
-                    <el-option label="展位一" value="1"></el-option>
-                    <el-option label="展位二" value="2"></el-option>
-                    <el-option label="展位三" value="3"></el-option>
-                    <el-option label="展位四" value="4"></el-option>
-                    <el-option label="展位五" value="5"></el-option>
+                    <el-option v-for="(val,ind) in InfoModelData"
+                               :key="ind+'text'"
+                               :label="'展位'+val"
+                               :value="val"></el-option>
                   </el-select>
                 </el-form-item>
               </el-col>
@@ -356,9 +352,6 @@
       </div>
     </w-textarea>
 <!--    <div style="color: white" v-html="testData"></div>-->
-
-<!--    <el-button @click="exportJson" type="success"> 生成JSON脚本</el-button>-->
-
     <div id="newDom" style="display: none"></div>
     <div id="oldDom" style="display: none"></div>
     <div style="display: none">
@@ -379,7 +372,15 @@
   import upload from "./upload";
   import {resultJSON} from '../../api/result'
   import {animateData} from './anmate-data'
+  import { mapGetters } from "vuex";
   export default {
+    computed: {
+      ...mapGetters([
+        'ResultJson',
+        'InfoModelData',
+
+      ])
+    },
     filters:{
       indFilter(val){
         if((val+1).toString().length===1){
@@ -578,15 +579,9 @@
       //编辑的数据
       if(this.$route.params.data){
         let resArr  = this.$route.params.data
-        if(this.$route.params.data instanceof Array){
-          resultJSON.resultJsonObj.avatar.unity = resArr[0].avatar.unity;
-        }else{
-          resArr.avatar.unity==="name"?resultJSON.resultJsonObj.avatar.unity = 'WeiYa_WeiRuan':resultJSON.resultJsonObj.avatar.unity = resArr.avatar.unity;
-          // resultJSON.resultJsonObj.avatar.unity = resArr.avatar.unity;
-        }
-        //要动作
+        resultJSON.resultJsonObj.avatar.unity = resArr[0].avatar.unity;
+        UnityChangeAvatar(resultJSON.resultJsonObj.avatar.unity);
       }
-      UnityChangeAvatar(resultJSON.resultJsonObj.avatar.unity);
     },
     watch:{
       //监听输入框文本，主要实现删除功能
@@ -1609,7 +1604,7 @@
 
 <style lang="less" scoped>
   /deep/.el-dialog__body {
-    padding: 5px 20px !important;
+    padding: 25px 20px 5px!important;
   }
   /deep/.el-icon-loading{
     font-size: 30px !important;

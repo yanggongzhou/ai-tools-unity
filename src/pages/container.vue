@@ -18,7 +18,7 @@
         </div>
         <div  class="float_right right-control">
 
-          <button class="back" @click="$router.push('/homepage')">返回首页</button>
+          <button class="back" @click="$router.push('/home')">返回首页</button>
           <button class="back preview" @click="previewBtn">预览</button>
           <button class="back save" @click="saveBtn('保存')">保存</button>
           <button v-if="$route.params.id" class="back save" @click="saveBtn('另存为')">另存为</button>
@@ -48,11 +48,16 @@
   import axios from "axios";
   import {requestServices} from "../api/api";
   import {Session} from "../api/auth";
+  import {mapGetters} from "vuex";
   export default {
     components:{
       JsonEditor,
     },
-
+    computed: {
+      ...mapGetters([
+        'AvatarChName'
+      ])
+    },
     data () {
       return {
         jsonName:'',//剧本名称
@@ -206,12 +211,6 @@
             fd.append("type", 0);
             axios.post(requestServices.uploadUrl,fd,{responseType:'multipart/form-data'})
               .then(uploadRes=>{
-                let avatar_name = ''
-                resultJSON.avatarData.forEach(val=>{
-                  if(val.avatarName===resultJSON.resultJsonObj.avatar.unity){
-                    avatar_name = val.name
-                  }
-                })
                 if(self.$route.params.id && type!=='另存为'){
                   requestServices.editScript({
                     role_id:23,
@@ -221,8 +220,7 @@
                     preview_url:'',
                     script_url:uploadRes.data.result.upload_url,
                     paragraph_number:_JsonEditorRef.ScriptList.length,
-                    // avatar_id:resultJSON.avatarID,
-                    avatar_name:avatar_name,
+                    avatar_name:this.AvatarChName,
                     scene_type:'1',//0-默认类型；1-淘宝；2-抖音；3-快手
                     time:0,
                     gs_id:self.$route.params.id,
@@ -243,8 +241,7 @@
                     preview_url:'',
                     script_url:uploadRes.data.result.upload_url,
                     paragraph_number:_JsonEditorRef.ScriptList.length,
-                    // avatar_id:resultJSON.avatarID,
-                    avatar_name:avatar_name,
+                    avatar_name:this.AvatarChName,
                     scene_type:'1',//0-默认类型；1-淘宝；2-抖音；3-快手
                     time:0,
                     template_json:'',
@@ -368,12 +365,7 @@
       },
       //返回上一页
       backspace(){
-        //创建脚本返回
-        if(!this.$route.params.id){
-          this.$router.push('/steper')
-        }else{
-          this.$router.push('/myscript')
-        }
+        this.$router.push('/myscript')
       },
     },
     beforeDestroy() {

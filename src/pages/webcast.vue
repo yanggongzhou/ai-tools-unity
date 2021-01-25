@@ -410,7 +410,7 @@ export default {
                 }else if(res.return_code==1009) { // token过期
                     // this.$Session.set('ai_user_id', '');
                     // this.$Session.set('ai_user_token', '')
-                    // this.$router.push({name:"homepage"})
+                    // this.$router.push({name:"home"})
                 }
             })
         },

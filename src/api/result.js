@@ -41,54 +41,11 @@ export const resultJSON = {
     "tts": {},
     "param": []
   },
-  avatarBox:{width:320,height:568},
+  avatarChName:'',//avatar中文名
+  infoModelData:['1'],//展示位
 
-  avatarID:1,//avatar
+  avatarID:1,//
 
-  avatarData:[
-    {
-      ind:0,
-      name:'潇洒姐',
-      img:'https://large.magics-ad.com/ai-3D/static/avatar/xiaosajie.jpg',
-      avatarName:'pc_XiaoSaJie'
-    },
-    {
-      ind:1,
-      name:'不白吃',
-      img:'https://large.magics-ad.com/ai-3D/static/avatar/bubaichi.jpg',
-      avatarName:'bubaichi'
-    },
-    {
-      ind:2,
-      name:'小迈',
-      img:'https://large.magics-ad.com/ai-3D/static/avatar/lijiaqi.png',
-      avatarName:'LiJiaQi'
-    },
-    {
-      ind:3,
-      name:'小吉-微软',
-      img:'https://large.magics-ad.com/ai-3D/static/avatar/weiya.png',
-      avatarName:'WeiYa_WeiRuan'
-    },
-    {
-      ind:4,
-      name:'宝爷',
-      img:'https://large.magics-ad.com/ai-3D/static/avatar/panda.png',
-      avatarName:'xiongmao'
-    },
-    {
-      ind:5,
-      name:'乐比',
-      img:'https://large.magics-ad.com/ai-3D/static/avatar/xw.jpg',
-      avatarName:'rubi'
-    },
-    {
-      ind:6,
-      name:'泰迪',
-      img:'https://large.magics-ad.com/ai-3D/static/avatar/taidi.png',
-      avatarName:'sakurateddy'
-    }
-  ],
 
 
 

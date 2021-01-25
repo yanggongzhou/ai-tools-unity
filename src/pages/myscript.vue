@@ -4,7 +4,7 @@
             <div class="list_title clearfix">
               <div class="titleBox">
                 <span class="titleSpan">剧本列表</span>
-                <button class="backNormal backNormal2" @click="$router.push('/homePage')">
+                <button class="backNormal backNormal2" @click="$router.push('/home')">
                   <span class="_icon">< </span>
                   <span>返回</span>
                 </button>
@@ -27,7 +27,7 @@
                     <button class='light-btn search_btn' type="primary" @click="fetchAllScripts">查询</button>
                 </div>
               <div class="float_right">
-                <button class="light-btn create-btn ml10" @click="gotoPage('steper')">创建剧本</button>
+                <button class="light-btn create-btn ml10" @click="gotoPage('tools')">创建剧本</button>
                 <button class="light-btn play-btn" @click="gotoPage('webcast')">去直播</button>
               </div>
             </div>
@@ -66,7 +66,7 @@
 
                 <div slot="empty" style="height:200px;line-height: 300px;">
                   <i class="el-icon-warning-outline"></i>暂无剧本，去
-                  <el-button type="text"  @click="gotoPage('steper')" style="color:#7455FF;">创建脚本</el-button>
+                  <el-button type="text"  @click="gotoPage('tools')" style="color:#7455FF;">创建脚本</el-button>
                 </div>
 
             </el-table>
@@ -107,7 +107,6 @@
 import { requestServices } from '../api/api';
 import myscriptDialog from '../components/myscript-dialog'
 import axios from "axios";
-import homepage from "./homepage";
 export default {
   components:{
     myscriptDialog
@@ -189,7 +188,6 @@ export default {
                 }else if(res.return_code==1009) { // token过期
                     // this.$Session.set('ai_user_id', '');
                     // this.$Session.set('ai_user_token', '');
-                    // this.$router.push({name:"homepage"})
                 }else {
                     this.$message.error('获取剧本列表失败')
                 }
