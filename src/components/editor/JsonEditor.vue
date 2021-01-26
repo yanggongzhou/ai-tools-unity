@@ -342,7 +342,7 @@
             <div slot="content" style="cursor: pointer" @click="previewAction(val)">
               <i style="font-size: 24px" class="el-icon-video-play"></i>
             </div>
-            <el-button class="actionBtn" size="small">
+            <el-button class="actionBtn" size="small" @click="addAction(val)">
               {{val.label}}
             </el-button>
           </el-tooltip>
@@ -1501,12 +1501,14 @@
           }
           _text = `<div class="tagtag tag_text" onclick="editTag(\``+_id+`\`)">文字`+' ('+_time+`)<i class="el-icon-close" onclick="delTag(\``+_id+`\`)"></i>&nbsp;</div>`
           if(this.editTagId){
+            UnityEditTag(JSON.stringify(_data))
             let _oldTag = this.$refs.testText.nodeToString( document.getElementById(_id) ).replace( "<" , "<" ).replace( ">" , ">");
             tagDom.dataset.obj = JSON.stringify(_data)
             tagDom.innerHTML = _text;
             let _newTag = this.$refs.testText.nodeToString( document.getElementById(_id) ).replace( "<" , "<" ).replace( ">" , ">");
             this.testData = this.testData.replace(_oldTag,_newTag);
           }else{
+            UnityInsertTag(JSON.stringify(_data))
             this.$refs.testText.addTag(_text,_data)
           }
           this.editTagId = "";
@@ -1537,12 +1539,14 @@
           }
           _text = `<div class="tagtag tag_video" onclick="editTag(\``+_id+`\`)">视频`+this.ruleForm.videoName+` (`+_time+`)<i class="el-icon-close" onclick="delTag(\``+_id+`\`)"></i>&nbsp;</div>`
           if(this.editTagId){
+            UnityEditTag(JSON.stringify(_data))
             let _oldTag = this.$refs.testText.nodeToString( document.getElementById(_id) ).replace( "<" , "<" ).replace( ">" , ">");
             tagDom.dataset.obj = JSON.stringify(_data)
             tagDom.innerHTML = _text;
             let _newTag = this.$refs.testText.nodeToString( document.getElementById(_id) ).replace( "<" , "<" ).replace( ">" , ">");
             this.testData = this.testData.replace(_oldTag,_newTag);
           }else{
+            UnityInsertTag(JSON.stringify(_data))
             this.$refs.testText.addTag(_text,_data)
           }
           this.editTagId = "";
@@ -1570,12 +1574,14 @@
           }
           _text =  `<div class="tagtag tag_image" onclick="editTag(\``+_id+`\`)">图片`+this.imgForm.name+` (`+_time+`)<i class="el-icon-close" onclick="delTag(\``+_id+`\`)"></i>&nbsp;</div>`
           if(this.editTagId){
+            UnityEditTag(JSON.stringify(_data))
             let _oldTag = this.$refs.testText.nodeToString( document.getElementById(_id) ).replace( "<" , "<" ).replace( ">" , ">");
             tagDom.dataset.obj = JSON.stringify(_data)
             tagDom.innerHTML = _text;
             let _newTag = this.$refs.testText.nodeToString( document.getElementById(_id) ).replace( "<" , "<" ).replace( ">" , ">");
             this.testData = this.testData.replace(_oldTag,_newTag);
           }else{
+            UnityInsertTag(JSON.stringify(_data))
             this.$refs.testText.addTag(_text,_data)
           }
           this.editTagId = "";

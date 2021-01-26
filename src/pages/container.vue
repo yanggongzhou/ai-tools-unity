@@ -50,7 +50,8 @@
     computed: {
       ...mapGetters([
         'AvatarChName',
-        'ResultJson'
+        'ResultJson',
+        'InfoModelData'
       ])
     },
     data () {
@@ -381,6 +382,9 @@
       //清空标签对应的dom元素
       cleanTriggerDiv(){
         this.TriggerDiv = [];
+        this.InfoModelData.forEach(val=>{
+          UnityDelTag(val);
+        })
       },
       //图片接受
       displayImgUrl(data){

@@ -124,8 +124,11 @@
         let child = document.getElementById(id)
         // console.log(JSON.parse(child.dataset.obj).type)
         let _type = JSON.parse(child.dataset.obj).type;
-        if(_type==="image"||_type==="video"){
+        if(_type==="image"||_type==="video"||_type==="text"){
           Bus.$emit('delTag',id)
+          let domObj = JSON.parse(document.getElementById(id).dataset.obj)
+          console.log('dom元素携带信息',domObj)
+          UnityDelTag(domObj.region)
         }
         let parent = self.$refs.wTextareaContent
         // let parent=document.getElementById(self.contentId);

@@ -90,6 +90,19 @@ function UnityJsonInfo(param) {
   WebJsonInfo('{}')
 }
 
+//info标签插入 图片/视频/文字
+function UnityInsertTag(param) {
+  console.log('\x1b[92m%s\x1b[0m',`info标签插入- ${param}`)
+}
+//info标签修改
+function UnityEditTag(param) {
+  console.log('\x1b[92m%s\x1b[0m',`info标签修改- ${param}`)
+}
+//info标签删除
+function UnityDelTag(param) {
+  console.log('\x1b[92m%s\x1b[0m',`info标签删除- ${param}`)
+}
+
 
 // for (let i=0;i<200;i++){
 //   console.log(`\x1b[${i}m%s\x1b[0m`,`步骤-${i}`)
