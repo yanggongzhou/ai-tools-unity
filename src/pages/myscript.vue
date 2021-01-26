@@ -4,10 +4,6 @@
             <div class="list_title clearfix">
               <div class="titleBox">
                 <span class="titleSpan">剧本列表</span>
-                <button class="backNormal backNormal2" @click="$router.push('/home')">
-                  <span class="_icon">< </span>
-                  <span>返回</span>
-                </button>
               </div>
             </div>
 
@@ -28,7 +24,7 @@
                 </div>
               <div class="float_right">
                 <button class="light-btn create-btn ml10" @click="gotoPage('tools')">创建剧本</button>
-                <button class="light-btn play-btn" @click="gotoPage('webcast')">去直播</button>
+                <button class="light-btn play-btn" @click="$router.push('/webcast')">去直播</button>
               </div>
             </div>
 
@@ -214,6 +210,7 @@ export default {
           axios.get(_idx.script_url)
             .then(result=>{
               if(result.status===200){
+                UnityRoute('step');
                 this.$router.push({name:'tools',params:{data:result.data,id:_idx.id,name:_idx.name,avatarName:_idx.avatar_name}})
               }else{
                 this.$message.warning('剧本数据获取异常，请重试')
@@ -253,12 +250,8 @@ export default {
             this.page_start = val;
             this.fetchAllScripts();
         },
-        gotoPage(_page) {
-          this.$router.push(_page)
-          // let route = this.$router.resolve({
-          //   name: _page
-          // })
-          // window.open(route.href, '_blank');
+        gotoPage(page) {
+          UnityRoute('step')
         }
     },
 }

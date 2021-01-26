@@ -66,3 +66,22 @@ function UnityInteractionStateChange(state) {
 function UnityTemporaryInteractionStart() {
   console.log('\x1b[33m%s\x1b[0m',`unity自动直播中插入互动对话`)
 }
+
+//web端环境准备完毕
+function UnityNativeReady() {
+  console.log('\x1b[33m%s\x1b[0m',`**web端环境准备完毕**`)
+}
+
+//路由跳转
+function UnityRoute(param) {
+  console.log('\x1b[44m%s\x1b[0m',`路由跳转-${param}`)
+}
+
+//步骤
+function UnityStepChange(param) {
+  console.log('\x1b[36m%s\x1b[0m',`步骤-${param}`)
+}
+
+// for (let i=0;i<200;i++){
+//   console.log(`\x1b[${i}m%s\x1b[0m`,`步骤-${i}`)
+// }

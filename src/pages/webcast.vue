@@ -5,10 +5,6 @@
           <div class="scriptList">
             <div class="titleBox">
               <span class="titleSpan">剧本列表</span>
-              <button class="backNormal backNormal2" @click="$router.back()">
-                <span class="_icon">< </span>
-                <span>返回</span>
-              </button>
             </div>
             <div class="tabs">
               <span class="tab" :class="{'selected': currentSetting==1}" @click='checkSetting(1)'>剧本设置</span>

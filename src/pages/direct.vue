@@ -970,9 +970,9 @@
             self.progressPercentage = 0 ;
             self.allScriptList.forEach(val=>{
               //兼容之前版本 —— 无剧本名
-              val.scriptList.forEach(scriptItem=>{
-                scriptItem.name =  val.name;
-              })
+              // val.scriptList.forEach(scriptItem=>{
+              //   scriptItem.name =  val.name;
+              // })
               //进入页面发送所有剧本，加载完成后再直播
               UnityPreview(val.scriptList[0].avatar.unity,JSON.stringify(val.scriptList),"False","True")
             });
@@ -1254,6 +1254,7 @@
     position: relative;
   }
   .dialogBox{
+    box-shadow: 0px 0px 3px #ddd6ff;
     height: 536px;
     width: 750px;
     background: #FFF;

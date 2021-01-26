@@ -24,7 +24,12 @@ UnityPreviewCancel()跳转页面后强制结束播放状态
 
 **路由跳转**
 UnityNativeReady()           web端环境准备完毕
-WebRoute(route)              参数'myscript'--我的剧本  'tools'--创建剧本  'webcast'--开始直播
+UnityRoute(route)            参数'myscript'--我的剧本 'webcast'--开始直播 'step'--创建编辑剧本步骤页 'tools'- 文本域
+WebRoute(route)              参数'myscript'--我的剧本 'webcast'--开始直播 'step'--创建编辑剧本步骤页 'tools'- 文本域
+
+**步骤**
+UnityStepChange(param)       web点击步骤条 参数 '1'，'2'，'3'，'4'
+WebStepChange(param)         unity点击步骤条 参数 '1'，'2'，'3'，'4'
 
 **展示位**
 WebInfoModelMsg(param)       web接收展示位信息 参数param -- 展示位['1'，'2'，'3']

@@ -6,7 +6,7 @@ export default new Router({
   routes: [
     {
       path: '/',
-      redirect: '/home'
+      redirect: '/myscript'
     },
     {
       path: '/tools',
@@ -14,9 +14,9 @@ export default new Router({
       component: ()=>import ('@/pages/container'),
     },
     {
-      path: '/home',
-      name: 'home',
-      component: ()=>import ('@/pages/home'),
+      path: '/step',
+      name: 'step',
+      component: ()=>import ('@/pages/step'),
     },
     {
       path: '/webcast',

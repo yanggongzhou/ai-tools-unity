@@ -3,10 +3,6 @@
     <div class="headerBox">
       <div class="titleBox">
         <span class="titleSpan">剧本编辑</span>
-        <button class="backNormal backNormal2" @click="backspace">
-          <span class="_icon">< </span>
-          <span>返回</span>
-        </button>
       </div>
 
 
@@ -18,7 +14,7 @@
         </div>
         <div  class="float_right right-control">
 
-          <button class="back" @click="$router.push('/home')">返回首页</button>
+<!--          <button class="back" @click="$router.push('/home')">返回首页</button>-->
           <button class="back preview" @click="previewBtn">预览</button>
           <button class="back save" @click="saveBtn('保存')">保存</button>
           <button v-if="$route.params.id" class="back save" @click="saveBtn('另存为')">另存为</button>
@@ -227,14 +223,14 @@
         data.param.forEach(val=>{
           val.trigger.forEach(val=>{
             if(val.type==="info"){
-              //兼容之前无动画效果/
-              if(!val.info.child[0].animate){
-                val.info.child[0].animate= {
-                  "enter":"",
-                  "leave":"",
-                  "duration":{'enter': 1000, 'leave': 1000}
-                }
-              }
+              // //兼容之前无动画效果/
+              // if(!val.info.child[0].animate){
+              //   val.info.child[0].animate= {
+              //     "enter":"",
+              //     "leave":"",
+              //     "duration":{'enter': 1000, 'leave': 1000}
+              //   }
+              // }
               self.TriggerDiv.push(val)
             }
           })
@@ -477,10 +473,6 @@
             this.$forceUpdate()
           }
         })
-      },
-      //返回上一页
-      backspace(){
-        this.$router.push('/myscript')
       },
     },
     beforeDestroy() {
