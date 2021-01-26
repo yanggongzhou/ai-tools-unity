@@ -13,7 +13,8 @@ import { Session } from "./api/auth";
 Vue.prototype.$Session = Session;
 import vcolorpicker from 'vcolorpicker'//颜色选择器
 Vue.use(vcolorpicker)
-
+import animated from "animate.css"
+Vue.use(animated)
 import promptMessage from '@/components/tooltips/index.js'
 Vue.use(promptMessage)
 import drr from '@minogin/vue-drag-resize-rotate'

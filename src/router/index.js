@@ -6,7 +6,12 @@ export default new Router({
   routes: [
     {
       path: '/',
-      redirect: '/myscript'
+      redirect: '/start'
+    },
+    {
+      path: '/start',
+      name: 'start',
+      component: ()=>import ('@/pages/start'),
     },
     {
       path: '/tools',

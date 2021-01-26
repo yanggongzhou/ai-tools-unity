@@ -12,11 +12,11 @@
             </div>
             <div v-if='currentSetting==1'>
               <div style="text-align: right" class="clearfix">
-                <button class='addScript' type='primary' @click='addScript'>添加剧本</button>
+                <button class='addScript' type='primary' @click='addScript'>+ 添加剧本</button>
               </div>
               <span class="playSetting" @click='handlePlaySetting(true)' v-if='isShowPlaySettingFun'>播放设置</span>
 
-              <el-table size="mini" class='playScripts' row-key="sortId" :data='playScriptData' style='width:100%' empty-text='暂未添加剧本' height='388' max-height='388' >
+              <el-table size="mini" class='playScripts' row-key="sortId"  :data='playScriptData' style='width:100%' empty-text='暂未添加剧本' height='388' max-height='388' >
                 <el-table-column align="center" label="排序" width='100'>
                   <template slot-scope="scope">
                     <!--                            <i class="el-icon-video-camera-solid" v-if='isPlayingIdx==scope.$index+1'></i>-->
@@ -143,7 +143,10 @@
 
           </div>
           <div class="handleWebcastBtnBox">
-            <button class='handleWebcastBtn' v-if="playScriptData.length" :class="{'disabled': isShowAllList}" @click='handleWebcast'>{{webcastBtnTxt}}</button>
+            <button class='handleWebcastBtn' v-if="playScriptData.length" :class="{'disabled': isShowAllList}" @click='handleWebcast'>
+              <span></span>
+              开始直播
+            </button>
 
           </div>
         </div>
@@ -176,7 +179,6 @@ export default {
 
             playScriptData: [],
             playScriptID: [],
-            webcastBtnTxt: '开始直播',
             isShowAllList: false,
             isChooseAllScript: true,
             checkAll: false,
@@ -732,12 +734,8 @@ export default {
       height: 40px;
       line-height: 38px;
       border-radius: 30px;
-      /*width: 96px;*/
-      /*height: 32px;*/
       margin: 0 auto;
-      /*background: linear-gradient(166deg, #BA71FF 0%, #5648FF 100%);*/
-      background: linear-gradient(90deg,  #BA71FF,#5648FF,#f441a5,#BA71FF ,#BA71FF );
-      background-size: 400%;
+      background: linear-gradient(317deg, #FF8A90 0%, #FFAA5F 100%);
       /*border-radius: 16px;*/
       color: #fff;
       font-size: 14px;
@@ -746,6 +744,15 @@ export default {
       &:hover{
         opacity: 0.9;
         animation: sun 8s;
+      }
+      span{
+        background: url(data:image/png;base64,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) 50% no-repeat;
+        background-size: 22px 22px;
+        background-position: -2px 0px;
+        width: 20px;
+        height: 20px;
+        display: inline-block;
+        vertical-align: sub;
       }
     }
     .scriptList {
@@ -773,7 +780,7 @@ export default {
         margin-bottom: 10px;
         width: 96px;
         height: 32px;
-        background: linear-gradient(332deg, #FF71B5 0%, #FFBA48 100%);
+        background: #8f8cf1;
         border-radius: 16px;
         color: #fff;
         font-size: 14px;

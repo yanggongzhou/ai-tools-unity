@@ -7,7 +7,11 @@
         <el-button @click="gotoPage('myscript')">我的剧本</el-button>
       </el-button-group>
     </div>
-    <router-view/>
+    <transition enter-active-class="animated fadeIn"
+                leave-active-class="animated zoomOut"
+                :duration="{enter: 500, leave: 500}">
+      <router-view/>
+    </transition>
 <!--    unity端avatar切换记录-->
     <editInfo/>
     <UError></UError>
@@ -46,6 +50,7 @@ export default {
   methods:{
     gotoPage(val){
       UnityRoute(val)
+      WebRoute(val)
     },
   }
 }

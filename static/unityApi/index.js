@@ -35,7 +35,7 @@ function UnityChangeAvatar(val) {
 //要动作
 function UnityAvatarMotionInfo(val) {
   console.log('\x1b[33m%s\x1b[0m',`请求角色动作- ${val}`)
-  WebActionInfo('测试动作,-a,')
+  // WebActionInfo('测试动作,-a,')
 }
 
 //播放临时话术
@@ -76,7 +76,7 @@ function UnityNativeReady() {
 //路由跳转
 function UnityRoute(param) {
   console.log('\x1b[44m%s\x1b[0m',`路由跳转-${param}`)
-  WebRoute(param)
+  // WebRoute(param)
 }
 
 //步骤
@@ -87,7 +87,7 @@ function UnityStepChange(param) {
 //保存脚本信息（unity必要信息)
 function UnityJsonInfo(param) {
   console.log('\x1b[33m%s\x1b[0m',`获取unityMessage信息-${param}`)
-  WebJsonInfo('{}')
+  // WebJsonInfo('{}')
 }
 
 //info标签插入 图片/视频/文字
