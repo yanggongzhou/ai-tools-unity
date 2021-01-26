@@ -46,7 +46,6 @@ export default {
   methods:{
     gotoPage(val){
       UnityRoute(val)
-      this.$router.push({name:val})
     },
   }
 }

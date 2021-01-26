@@ -197,6 +197,8 @@
     created() {
       this.jsonNameValidate = false;
       window.WebPreviewReady = this.WebPreviewReady;
+      window.WebJsonInfo = this.WebJsonInfo;//保存时获取必要的unityMessage
+
     },
     mounted() {
       let self = this;
@@ -286,6 +288,10 @@
       },
       //保存脚本
       saveBtn(type){
+        UnityJsonInfo();
+      },
+      //获取unityMessage之后保存
+      WebJsonInfo(_unityMessage){
         let self = this;
         if(this.jsonName.replace(/[\r\n]/g, "").replace(/\s+/g, "")){
           this.jsonNameValidate = false;
@@ -297,6 +303,7 @@
             let valitade = true;
             _JsonEditorRef.ScriptList.forEach((scriptItem,scriptItemIndex)=>{
               let _content='';
+              scriptItem.unityMessage = _unityMessage
               scriptItem.name = this.jsonName;
               scriptItem.param.forEach(value=>{
                 _content += value.content
@@ -305,10 +312,10 @@
                 valitade = false;
               }
             })
-              if(!valitade){
-                this.$message.error('请确认各段落是否含有有效文本！')
-                return
-              }
+            if(!valitade){
+              this.$message.error('请确认各段落是否含有有效文本！')
+              return
+            }
 
             let content = JSON.stringify(_JsonEditorRef.ScriptList);
             let blob = new Blob([content], { type: "text/plain;charset=utf-8" }); // 把数据转化成blob对象
@@ -371,7 +378,6 @@
           this.jsonNameValidate = true;
         }
       },
-
       //清空标签对应的dom元素
       cleanTriggerDiv(){
         this.TriggerDiv = [];
