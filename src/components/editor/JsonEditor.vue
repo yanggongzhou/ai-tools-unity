@@ -370,7 +370,6 @@
 
 <script>
   import upload from "./upload";
-  import {resultJSON} from '../../api/result'
   import {animateData} from './anmate-data'
   import { mapGetters } from "vuex";
   export default {
@@ -418,7 +417,7 @@
         scriptIndexOld:0,
         confrimDelInd:'',
         isShowDelDialog:false,
-        avatarID:3,
+
         actionShowList:[],
         actionLoading:true,
         testData:'',
@@ -503,6 +502,7 @@
     created() {
       window.WebActionInfo= this.WebActionInfo
       window.WebSelectAvatarState = this.WebSelectAvatarState
+
       for(let ani in animateData){
         this.animateList.push({
           value:ani,
@@ -579,8 +579,10 @@
       //编辑的数据
       if(this.$route.params.data){
         let resArr  = this.$route.params.data
-        resultJSON.resultJsonObj.avatar.unity = resArr[0].avatar.unity;
-        UnityChangeAvatar(resultJSON.resultJsonObj.avatar.unity);
+        UnityChangeAvatar(resArr[0].avatar.unity);
+        this.$store.commit('set_avatarName',{name:resArr[0].avatar.unity,chName:this.$route.params.avatarName})
+      }else{
+        UnityAvatarMotionInfo(this.ResultJson.avatar.unity);
       }
     },
     watch:{
@@ -690,7 +692,7 @@
           this.scriptIndex+=1;
           this.scriptIndexOld = this.scriptIndex;
         }
-        this.ScriptList.splice(ind,1,JSON.parse(JSON.stringify(this.ScriptList[ind])),JSON.parse(JSON.stringify(resultJSON.resultJsonObj)))
+        this.ScriptList.splice(ind,1,JSON.parse(JSON.stringify(this.ScriptList[ind])),JSON.parse(JSON.stringify(this.ResultJson)))
       },
       //删除
       delBtn(ind){
@@ -739,7 +741,7 @@
           UnityPreview(val.avatar.unity,JSON.stringify([val]),"True","False")
         }else{
           this.exportJson().then((data)=>{
-            let _jsonArr = JSON.parse(JSON.stringify(resultJSON.resultJsonObj))
+            let _jsonArr = JSON.parse(JSON.stringify(this.ResultJson))
             _jsonArr.param = data.param
 
             _jsonArr.param.forEach(value=>{
@@ -776,16 +778,8 @@
         //编辑时数据导入
         if(this.$route.params.data){
           let resArr  = this.$route.params.data
-          if(this.$route.params.data instanceof Array){
-            resultJSON.resultJsonObj.avatar.unity = resArr[0].avatar.unity;
-            this.ScriptList = JSON.parse(JSON.stringify(this.$route.params.data))
-          }else{
-            resArr.avatar.unity==="name"?resultJSON.resultJsonObj.avatar.unity = 'WeiYa_WeiRuan':resultJSON.resultJsonObj.avatar.unity = resArr.avatar.unity;
-            // resultJSON.resultJsonObj.avatar.unity = resArr.avatar.unity;
-            this.ScriptList = [JSON.parse(JSON.stringify(this.$route.params.data))]
-            this.ScriptList[0].avatar.unity='WeiYa_WeiRuan'
-          }
-
+          this.$store.commit('set_avatarName',{name:resArr[0].avatar.unity,chName:this.$route.params.avatarName})
+          this.ScriptList = JSON.parse(JSON.stringify(this.$route.params.data))
           this.$nextTick(()=>{
             this.editImport(this.ScriptList[0]);
           })
@@ -793,13 +787,13 @@
         }else{
           // this.actionShowList = this.$route.params.actionShowList;
 
-          this.ScriptList[0] = JSON.parse(JSON.stringify(resultJSON.resultJsonObj))
+          this.ScriptList[0] = JSON.parse(JSON.stringify(this.ResultJson))
           this.$forceUpdate()
         }
       },
       WebSelectAvatarState(state){
         if(state==='True'){
-          UnityAvatarMotionInfo(resultJSON.resultJsonObj.avatar.unity);
+          UnityAvatarMotionInfo(this.ResultJson.avatar.unity);
         }else if(state==='False'){
           this.$message.error('切换角色失败，请重试')
           // this.previewReady = false;
@@ -807,7 +801,7 @@
       },
       WebPreviewReady(state){
         if(state==='True'){
-          UnityPreviewStart(resultJSON.resultJsonObj.avatar.unity);
+          UnityPreviewStart(this.ResultJson.avatar.unity);
         }else if(state==='False'){
           this.$message.error('加载资源失败，请重试')
         }
@@ -833,7 +827,7 @@
       //添加段落
       addScript(){
         let self = this;
-        this.ScriptList[this.ScriptList.length] = JSON.parse(JSON.stringify(resultJSON.resultJsonObj))
+        this.ScriptList[this.ScriptList.length] = JSON.parse(JSON.stringify(this.ResultJson))
         this.exportJson().then(data=>{
           self.ScriptList[self.scriptIndex].param = JSON.parse(JSON.stringify(data.param))
           self.scriptIndex = this.ScriptList.length-1;
@@ -847,7 +841,7 @@
         this.$forceUpdate()
       },
       //预览动作
-      previewAction(val){ UnityAvatarAction(resultJSON.resultJsonObj.avatar.unity,val.value) },
+      previewAction(val){ UnityAvatarAction(this.ResultJson.avatar.unity,val.value) },
       //删除标签更新testData
       delTagMain(txt){
         this.testData=this.testData.replace(txt,'')

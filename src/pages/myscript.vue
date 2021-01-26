@@ -209,11 +209,12 @@ export default {
         previewDialogClose(done){
           done();
         },
+      //编辑
         handleEdit(_idx) {
           axios.get(_idx.script_url)
             .then(result=>{
               if(result.status===200){
-                this.$router.push({name:'tools',params:{data:result.data,id:_idx.id,name:_idx.name}})
+                this.$router.push({name:'tools',params:{data:result.data,id:_idx.id,name:_idx.name,avatarName:_idx.avatar_name}})
               }else{
                 this.$message.warning('剧本数据获取异常，请重试')
               }

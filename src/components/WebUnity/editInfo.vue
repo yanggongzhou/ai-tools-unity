@@ -1,6 +1,5 @@
 <template></template>
 <script>
-  import {resultJSON} from '../../api/result'
   export default {
     data(){
       return{
@@ -12,8 +11,6 @@
     },
     methods:{
       WebEditAvatar(name,chName){
-        resultJSON.resultJsonObj.avatar.unity = name
-        resultJSON.avatarChName = chName
         this.$store.commit('set_avatarName', {name:name,chName:chName})
       },
 

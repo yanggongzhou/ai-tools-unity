@@ -16,7 +16,6 @@
 
 <script>
   import { NumToCh } from '../api/NumberToChinese'
-  import {resultJSON} from "../api/result";
   export default {
     props:['scriptRow','scriptName'],
     filters:{

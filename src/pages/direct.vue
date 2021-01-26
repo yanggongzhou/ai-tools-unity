@@ -177,13 +177,18 @@
 </template>
 <script>
   import axios from 'axios'
-  import {resultJSON} from "../api/result";
   import {requestServices} from "../api/api";
   import interaction from '../components/interaction/interaction-1';
   import { getWeightList } from '../api/Random'
+  import {mapGetters} from "vuex";
 
   let that;
   export default {
+    computed: {
+      ...mapGetters([
+        'ResultJson'
+      ])
+    },
     mixins: [interaction],
     beforeCreate() {
       that = this;
@@ -564,7 +569,7 @@
         for (let i = 0; i< Math.ceil(_arr.length/100);i++){
           _res.push(_arr.splice(0,100).join(''));
         }
-        let _json = JSON.parse(JSON.stringify(resultJSON.resultJsonObj))
+        let _json = JSON.parse(JSON.stringify(this.ResultJson))
         let _unity = this.previewData[0].avatar.unity;
         _json.avatar.unity = _unity
         _res.forEach(resItem=>{
@@ -1053,7 +1058,7 @@
         for (let i = 0; i< Math.ceil(_arr.length/100);i++){
           _res.push(_arr.splice(0,100).join(''));
         }
-        let _json = JSON.parse(JSON.stringify(resultJSON.resultJsonObj))
+        let _json = JSON.parse(JSON.stringify(this.ResultJson))
         _json.avatar.unity = 'none'
         _res.forEach(resItem=>{
           _json.param.push({
@@ -1110,7 +1115,7 @@
           for (let i = 0; i< Math.ceil(_arr.length/100);i++){
             _res.push(_arr.splice(0,100).join(''));
           }
-          let _json = JSON.parse(JSON.stringify(resultJSON.resultJsonObj))
+          let _json = JSON.parse(JSON.stringify(this.ResultJson))
           _json.avatar.unity = 'none'
           _res.forEach(resItem=>{
             _json.param.push({

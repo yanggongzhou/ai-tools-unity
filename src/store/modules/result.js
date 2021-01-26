@@ -1,6 +1,6 @@
 const state = {
   resultJson: {
-    "version": 1,
+    "version": '1.1',
     "url": "",
     "name": "",
     "totalSize":"16:9",
@@ -23,7 +23,6 @@ const state = {
         // }
       ]
     },
-    // "background": "https://large.magics-ad.com/mygz-file/modelBG/bg1/%E5%BD%A9%E5%A6%86.png",
     "auto": true,//加载完脚本是否立即播放
     "avatar": {
       "h5": "",
@@ -43,7 +42,7 @@ const state = {
       "id": 0
     },
     "tts": {},
-    'unityMessage':'{}',//开放给unity客户端编辑信息
+    'unityMessage':'',//开放给unity客户端编辑信息
     "param": []
   },
 

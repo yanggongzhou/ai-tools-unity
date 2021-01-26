@@ -43,11 +43,9 @@
 
 <script>
   import JsonEditor from "../components/editor/JsonEditor.vue";
-  import {resultJSON} from "../api/result";
   import Bus from "../api/bus";
   import axios from "axios";
   import {requestServices} from "../api/api";
-  import {Session} from "../api/auth";
   import {mapGetters} from "vuex";
   export default {
     components:{
@@ -55,7 +53,8 @@
     },
     computed: {
       ...mapGetters([
-        'AvatarChName'
+        'AvatarChName',
+        'ResultJson'
       ])
     },
     data () {
@@ -69,6 +68,134 @@
 
         TriggerDiv:[],
         previewReady:true,
+        textItem: {
+          "index": 0,
+          "type": "info",
+          "isAll": false,//是否持续到剧本结束，true为持续至剧本结束,优先级高于autoDismiss｜dismissTime
+          "info": {
+            "margins": {
+              "left": 0,
+              "top": 0,
+              "right": 0,
+              "bottom": 0
+            },
+            "zindex": 1,
+            "autoDismiss": false,
+            "dismissTime": 3000,
+            "url": "",
+            "width": 0,
+            "height": 0,
+            "child": [
+              {
+                "id": "",
+                "type": "text",
+                "text": "",//文字内容
+                "textColor": "",//字体颜色
+                "textSize": "",//字体大小
+                "fontFamily":"SimHei",//字体
+                "gravity": "",//对齐方式 left right center
+                "ellipsize": false,//是否支持跑马灯
+                "region":"1",//工具端使用，文字展示位
+                "width": 1,
+                "height": 1,
+                "animate":{
+                  "enter":"",
+                  "leave":"",
+                  "duration":{'enter': 1000, 'leave': 1000}
+                },
+                "margins": {
+                  "left": 0,
+                  "top": 0,
+                  "right": 0,
+                  "bottom": 0
+                }
+              }
+            ]
+          }
+        },
+        imageItem:{
+          "index": 0,
+          "type": "info",
+          "isAll": false,//是否持续到剧本结束，true为持续至剧本结束,优先级高于autoDismiss｜dismissTime
+          "info": {
+            "margins": {
+              "left": 0,
+              "top": 0,
+              "right": 0,
+              "bottom": 0
+            },
+            "zindex": 1,
+            "autoDismiss": false,
+            "dismissTime": 3000,
+            "url": "",
+            "width": 0,
+            "height": 0,
+            "child": [
+              {
+                "id":"",
+                "name": "",
+                "type": "",
+                "url": "",
+                "width": 1,
+                "height": 1,
+                "region":"1",
+                "animate":{
+                  "enter":"",
+                  "leave":"",
+                  "duration":{'enter': 1000, 'leave': 1000}
+                },
+                "margins": {
+                  "left": 0,
+                  "top": 0,
+                  "right": 0,
+                  "bottom": 0
+                }
+              },
+            ]
+          }
+        },
+        videoItem:{
+          "index": 0,
+          "type": "info",
+          "isAll": false,//是否持续到剧本结束，true为持续至结束,优先级高于autoDismiss｜dismissTime
+          "info": {
+            "margins": {
+              "left": 0,
+              "top": 0,
+              "right": 0,
+              "bottom": 0
+            },
+            "zindex": 1,
+            "autoDismiss": false,
+            "dismissTime": 3000,
+            "url": "",
+            "width": 0,
+            "height": 0,
+            "child": [
+              {
+                "id":"",
+                "name": "",
+                "type": "",
+                "url": "",
+                "region":"1",
+                "width": 1,
+                "height": 1,
+                "isSupportAudio":false,
+                "animate":{
+                  "enter":"",
+                  "leave":"",
+                  "duration":{'enter': 1000, 'leave': 1000}
+                },
+                "margins": {
+                  "left": 0,
+                  "top": 0,
+                  "right": 0,
+                  "bottom": 0
+                }
+              },
+            ]
+          }
+        },
       }
     },
     created() {
@@ -81,19 +208,7 @@
       if(this.$route.params.data){
         this.jsonName = this.$route.params.name
         let resArr  = this.$route.params.data
-        if(resArr instanceof Array){
-
-
-          resultJSON.resultJsonObj.avatar.unity = resArr[0].avatar.unity;
-          this.editImportTriggerDiv(resArr[0])
-
-
-
-        }else{
-          resArr.avatar.unity==="name"?resultJSON.resultJsonObj.avatar.unity = 'WeiYa_WeiRuan':resultJSON.resultJsonObj.avatar.unity = resArr.avatar.unity;
-
-          this.editImportTriggerDiv(resArr)
-        }
+        this.editImportTriggerDiv(resArr[0])
       }
 
       Bus.$on('delTag',res=>{
@@ -151,14 +266,14 @@
             this.$message.error('请确认各段落是否含有有效文本！')
             return
           }
-          UnityPreview(resultJSON.resultJsonObj.avatar.unity,JSON.stringify(_JsonEditorRef.ScriptList),"True","False")
+          UnityPreview(this.ResultJson.avatar.unity,JSON.stringify(_JsonEditorRef.ScriptList),"True","False")
           self.previewReady = false;
         })
       },
 
       WebPreviewReady(state){
         if(state==='True'){
-          UnityPreviewStart(resultJSON.resultJsonObj.avatar.unity);
+          UnityPreviewStart(this.ResultJson.avatar.unity);
         }else if(state==='False'){
           this.$message.error('加载资源失败，请重试')
         }
@@ -277,7 +392,7 @@
           })
         }
         if(editIndex===undefined){
-          trigItem=JSON.parse(JSON.stringify(resultJSON.imageItem))
+          trigItem=JSON.parse(JSON.stringify(this.imageItem))
         }
         trigItem.info.child[0].type="image"
         trigItem.isAll = data.isAll;
@@ -305,7 +420,7 @@
           })
         }
         if(editIndex===undefined) {
-          trigItem = JSON.parse(JSON.stringify(resultJSON.videoItem))
+          trigItem = JSON.parse(JSON.stringify(this.videoItem))
         }
         trigItem.info.child[0].type="video";
         trigItem.isAll = data.isAll;
@@ -334,7 +449,7 @@
           })
         }
         if(editIndex===undefined){
-          trigItem=JSON.parse(JSON.stringify(resultJSON.textItem))
+          trigItem=JSON.parse(JSON.stringify(this.textItem))
         }
         trigItem.info.child[0].textColor=data.textColor;
         trigItem.info.child[0].region=data.region;

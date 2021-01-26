@@ -1,7 +1,7 @@
 <template>
     <div id='homepage'>
       <div class="dev_tip" v-if="isShowDevTip">
-        测试版本v1.0
+        测试版本v{{ResultJson.version}}
         <el-button-group>
           <el-button @click="$router.push('/webcast')">开始直播</el-button>
           <el-button @click="$router.push('/myscript')">我的剧本</el-button>
@@ -17,7 +17,13 @@
 
 import UError from "../components/WebUnity/error";
 import UuserInfo from "../components/WebUnity/userInfo";
+import {mapGetters} from "vuex";
 export default {
+  computed: {
+    ...mapGetters([
+      'ResultJson'
+    ])
+  },
   components:{
     UError,
     UuserInfo
@@ -27,7 +33,6 @@ export default {
           isShowDevTip:false,
         };
     },
-    computed: {},
     watch: {},
     created() {
       window.location.hostname==='demo.magics-ad.com'||window.location.hostname==='0.0.0.0'?this.isShowDevTip=true:this.isShowDevTip=false
