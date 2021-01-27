@@ -43,9 +43,12 @@ export default {
   },
   created() {
     window.location.hostname==='demo.magics-ad.com'||window.location.hostname==='0.0.0.0'?this.isShowDevTip=true:this.isShowDevTip=false
-    UnityNativeReady();
+
   },
   mounted() {
+    setTimeout(()=>{
+      UnityNativeReady();
+    },3000)
   },
   methods:{
     gotoPage(val){

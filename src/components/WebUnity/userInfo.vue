@@ -58,6 +58,7 @@
         this.getUserInfoCount+=1;
         let self = this;
         UnityUserInfo();
+        // UnityNativeReady('测试参数web环境准备');
         if(this.getUserInfoCount < 3){
           setTimeout(()=>{
             if(self.$Session.get('ai_user_id')&&self.$Session.get('ai_user_token')&&self.$Session.get('ai_user_phone')){

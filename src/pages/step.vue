@@ -33,6 +33,7 @@ export default {
   methods: {
     WebStepChange(param){
       this.stepActive = JSON.parse(param);
+      console.log('step',param)
     },
   }
 }
