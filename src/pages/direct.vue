@@ -771,13 +771,19 @@
         this.scriptChange(this.allScriptIndex)
 
         // this.$message.info('播放剧本zz'+ (this.allScriptPlayIndex+1) + 'zz--'+this.allScriptList[this.allScriptPlayIndex].name)
-        this.previewData = this.allScriptList[this.allScriptPlayIndex].scriptList;
 
-        let _state = "True"
-        this.isOpenInteractiveMode?_state = "False":_state="True"
-        UnityPreview(this.previewData[0].avatar.unity,JSON.stringify(this.previewData),_state,"True")
-        // tolist
-        this.previewReady = true;
+        //下个脚本的avatar不一致时先切换再播放
+        let oldPreviewData = JSON.parse(JSON.stringify(this.previewData))
+        this.previewData = this.allScriptList[this.allScriptPlayIndex].scriptList;
+        if(oldPreviewData[0].avatar.unity!==this.previewData[0].avatar.unity){
+          UnityChangeAvatar(this.previewData[0].avatar.unity)
+          this.previewReady = false;
+        }else{
+          let _state = "True"
+          this.isOpenInteractiveMode?_state = "False":_state="True"
+          UnityPreview(this.previewData[0].avatar.unity,JSON.stringify(this.previewData),_state,"True")
+          this.previewReady = true;
+        }
         this.isPlaying = true;
       },
       //播放互动标签
@@ -800,8 +806,6 @@
           // 打开互动模式，互动模式处理
           this.handleInacLogic(); // 如果未开启脚本外互动则开启，如果已开启则进行互动流程
         }
-
-
       },
       //对应于UnityInteractionEnd，结束状态返回继续播放
       WebInteractionEnd(){
