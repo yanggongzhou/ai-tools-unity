@@ -6,9 +6,24 @@
   </div>
 </template>
 <script>
+  import {requestServices} from "../api/api";
+
   export default {
     data(){
       return{}
+    },
+    mounted() {
+      //测试专用，后拼接账号密码可在控制台查看登陆信息
+      if(this.$route.query.phone){
+        requestServices.login({
+          phone:this.$route.query.phone,
+          password:this.$route.query.password,
+          role_id:23
+        }).then(res=>{
+          console.log('\x1b[33m%s\x1b[0m','账号信息',res)
+          WebUserMessage(res.result.user_profile.id,res.result.access_token,res.result.user_profile.phone)
+        })
+      }
     }
   }
 </script>

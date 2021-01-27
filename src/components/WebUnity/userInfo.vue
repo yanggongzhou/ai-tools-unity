@@ -15,18 +15,6 @@
       window.WebUserMessage=this.WebUserMessage;
     },
     mounted() {
-      //测试专用，后拼接账号密码可在控制台查看登陆信息
-      if(this.$route.query.phone){
-        requestServices.login({
-          phone:this.$route.query.phone,
-          password:this.$route.query.password,
-          role_id:23
-        }).then(res=>{
-          console.log('\x1b[33m%s\x1b[0m','账号信息',res)
-          this.WebUserMessage(res.result.user_profile.id,res.result.access_token,res.result.user_profile.phone)
-        })
-      }
-
       let self = this;
       //请求用户信息
       if(this.$Session.get('ai_user_id')&&this.$Session.get('ai_user_token')&&this.$Session.get('ai_user_phone')){
@@ -70,7 +58,7 @@
         }
         // self.$message.error('请求用户信息失败,请重启窗口！')
       },
-      WebUserMessage(id,token,phone){
+          WebUserMessage(id,token,phone){
         // this.$notify({
         //   title: this.$Session.get('ai_user_id') +'用户'+ Session.get('ai_user_phone'),
         //   message: Session.get('ai_user_token'),
