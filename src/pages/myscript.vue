@@ -30,7 +30,7 @@
 
             <el-table
               size="mini"
-              row-key="updated_at" :data='scriptData' style='width:100%' empty-text='暂无剧本' height='450' max-height="450">
+              row-key="updated_at" :data='scriptData' style='width:100%' empty-text='暂无剧本' height='446' max-height="446">
                 <el-table-column align="center" label="更新时间" min-width="150">
                     <template slot-scope="scope">
                         <span>{{scope.row.updated_at | created_atFilter}}</span>
@@ -53,10 +53,10 @@
                 </el-table-column>
                 <el-table-column align="center" label="操作" min-width="130">
                     <template slot-scope="scope">
-                        <el-button @click='handleCheck(scope.row)' type="text" size="small">查看</el-button>
-                        <el-button @click='handleEdit(scope.row)' type="text" size="small">编辑</el-button>
+                        <el-button @click='handleCheck(scope.row)' type="text" size="mini">查看</el-button>
+                        <el-button @click='handleEdit(scope.row)' type="text" size="mini">编辑</el-button>
                         <!-- <el-button @click='handleCopy(scope.row)' type="text" size="small">复用</el-button> -->
-                        <el-button @click='handleDelete(scope.row)' type="text" size="small" style='color:#FF7272;'>删除</el-button>
+                        <el-button @click='handleDelete(scope.row)' type="text" size="mini" style='color:#FF7272;'>删除</el-button>
                     </template>
                 </el-table-column>
 

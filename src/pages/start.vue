@@ -94,7 +94,7 @@
     width: 150px;
     height: 40px;
     top: 70%;
-    animation: expand 4s infinite;
+    animation: expand 3.5s infinite;
     position: absolute;
     border-radius: 50%;
   }
