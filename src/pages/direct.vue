@@ -1,10 +1,18 @@
 <template>
   <div class="common_content">
+
+
     <div class="progressBox" v-if="progressVisible">
-      <div class="progress-content clearfix">
-        <el-progress class="progress-item" :text-inside="true" :stroke-width="24" :percentage="progressPercentage" :color="progressPercentage | progressPercentageColor"></el-progress>
-        <button class='progress-btn' @click='progressCancelBtn'>取消</button>
-      </div>
+      <radial-progress-bar :diameter="200"
+                           startColor="#BA71FF"
+                           stopColor="#5648FF"
+                           innerStrokeColor="#F6E7F9"
+                           :completed-steps="completedSteps"
+                           :total-steps="totalSteps">
+        <p class="midText">总剧本: {{ totalSteps }}</p>
+        <p class="midText">缓存进度: {{ completedSteps }}</p>
+        <button class='progress-btn' @click='progressCancelBtn' title="取消缓存">X</button>
+      </radial-progress-bar>
     </div>
 
     <div class="titleBox" style="margin-bottom: 10px">
@@ -181,13 +189,16 @@
   import interaction from '../components/interaction/interaction-1';
   import { getWeightList } from '../api/Random'
   import {mapGetters} from "vuex";
-
+  import RadialProgressBar from "../components/direct/RadialProgressBar";
   let that;
   export default {
     computed: {
       ...mapGetters([
         'ResultJson'
       ])
+    },
+    components: {
+      RadialProgressBar
     },
     mixins: [interaction],
     beforeCreate() {
@@ -299,8 +310,9 @@
     },
     data(){
       return{
+        completedSteps: 0,
+        totalSteps: 10,
         progressVisible:true,//进度条显示
-        progressPercentage:0,
 
         innerVisible:false,
         allScriptList:[],//全部脚本数据
@@ -678,13 +690,13 @@
         let self = this;
         if(state==='True'){
           if(this.progressVisible){
-            this.progressPercentage += Math.floor(100/this.allScriptList.length);
-            if((100-this.progressPercentage)<Math.floor(100/this.allScriptList.length)){
-              this.progressPercentage = 100;
+            this.completedSteps += 1;
+            if(this.completedSteps===this.totalSteps){
               setTimeout(()=>{
                 self.progressVisible = false;
               },500)
             }
+
             return
           }
           if(this.isAutoPlayBtn||this.isPreviewBtn){
@@ -700,6 +712,7 @@
         }else if(state==='False'){
           this.isAutoPlayBtn = false;
           this.isPlaying = false;
+          this.allScriptPlayIndex = ''
           this.$notify.error({
             title:  '加载资源失败!',
             message:"加载资源失败，请重试！",
@@ -967,7 +980,7 @@
               }
 
             })
-            self.progressPercentage = 0 ;
+            self.completedSteps = 0;
             self.allScriptList.forEach(val=>{
               //兼容之前版本 —— 无剧本名
               // val.scriptList.forEach(scriptItem=>{
@@ -976,7 +989,7 @@
               //进入页面发送所有剧本，加载完成后再直播
               UnityPreview(val.scriptList[0].avatar.unity,JSON.stringify(val.scriptList),"False","True")
             });
-
+            self.totalSteps = this.allScriptList.length;
             self.allScriptIndex = 0;
             self.contentList = self.allScriptList[0].scriptList
             // console.log('self.allScriptList',self.allScriptList)
@@ -1522,32 +1535,32 @@
     position: absolute;
     top: 0;
     left: 0;
-    background: #2323239e;
+    background: #ffffff73;
     z-index: 9999;
-    .progress-content{
-      width: 510px;
-      position: relative;
-      top: 50vh;
-      margin: 0 auto;
-    }
-    .progress-item{
-      width: 400px;
-      display: inline-block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .midText{
+      color: #9C27B0;
+      font-weight: 600;
     }
     .progress-btn{
-      float: right;
-      width: 83px;
-      height: 27px;
-      line-height: 27px;
-      margin: 0 auto;
+      width: 30px;
+      height: 30px;
+      line-height: 25px;
       background: none;
-      border: 1px solid #fff;
+      border: 4px solid #f6e6f9;
       border-radius: 16px;
-      color: #fff;
-      font-size: 12px;
+      color: #a030b3;
+      font-size: 14px;
+      font-weight: 600;
       cursor: pointer;
-      transition: all .3s;
+      transition: all 0.3s;
+      position: absolute;
+      right: -69px;
+      top: -9px;
       &:hover{
+        border: 4px solid #a030b3;
         background: rgba(255, 255, 255, 0.37);
       }
     }
