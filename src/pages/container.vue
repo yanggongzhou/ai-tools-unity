@@ -63,6 +63,30 @@
         'InfoModelData'
       ])
     },
+    watch:{
+      InfoModelData: {
+        handler: function(newVal,oldVal) {
+          console.log(newVal,oldVal)
+
+          if(newVal.length<oldVal.length){
+            oldVal.forEach(val=>{
+              if(newVal.indexOf(val)===-1){
+                let delTrigger = []
+                this.TriggerDiv.forEach((trig,trigInd)=>{
+                  if(trig.info.child[0].region===val){
+                    delTrigger.push(trig)
+                  }
+                })
+                delTrigger.forEach(delt=>{
+                  delTag(delt.info.child[0].id)
+                })
+              }
+            })
+          }
+        },
+        deep: true
+      },
+    },
     data () {
       return {
         jsonName:'',//剧本名称
