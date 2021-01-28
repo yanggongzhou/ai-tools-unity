@@ -579,6 +579,7 @@
       //编辑的数据
       if(this.$route.params.data){
         let resArr  = this.$route.params.data
+        UnityMessage(JSON.stringify(resArr[0].unityMessage))
         UnityChangeAvatar(resArr[0].avatar.unity);
         this.$store.commit('set_avatarName',{name:resArr[0].avatar.unity,chName:this.$route.params.avatarName})
       }else{

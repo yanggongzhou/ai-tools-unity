@@ -90,6 +90,12 @@ function UnityJsonInfo() {
   // WebJsonInfo('{}')
 }
 
+//编辑脚本信息（unity必要信息)
+function UnityMessage(param) {
+  console.log('\x1b[33m%s\x1b[0m',`发送unityMessage信息-${param}`)
+  // WebJsonInfo('{}')
+}
+
 //info标签插入 图片/视频/文字
 function UnityInsertTag(param) {
   console.log('\x1b[92m%s\x1b[0m',`info标签插入- ${param}`)
