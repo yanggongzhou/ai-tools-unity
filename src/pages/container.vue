@@ -304,7 +304,7 @@
             let valitade = true;
             _JsonEditorRef.ScriptList.forEach((scriptItem,scriptItemIndex)=>{
               let _content='';
-              scriptItem.unityMessage = _unityMessage
+              scriptItem.unityMessage = JSON.parse(_unityMessage)
               scriptItem.name = this.jsonName;
               scriptItem.param.forEach(value=>{
                 _content += value.content

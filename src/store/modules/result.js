@@ -42,7 +42,7 @@ const state = {
       "id": 0
     },
     "tts": {},
-    'unityMessage':'',//开放给unity客户端编辑信息
+    'unityMessage': {},//开放给unity客户端编辑信息
     "param": []
   },
 
@@ -65,44 +65,6 @@ const mutations = {
     state.resultJson.avatar.unity = data.name;
     state.avatarChName = data.chName
   },
-
-
-  set_actionAutomaticOptions(state,data) {
-    state.resultJson.actionAutomatic.isOpen = data;
-  },
-  set_CaptionsPos(state,data) {
-    state.resultJson.captions.margins.top = data.top;
-    state.resultJson.captions.margins.left = data.left;
-  },
-  setCaptionsHeight(state,data) {
-    state.resultJson.captions.height = data;
-    console.log(data)
-  },
-
-  set_background(state,data){
-    state.resultJson.background.url = data;
-  },
-  set_defxy(state,data){
-    state.resultJson.avatar.def.x = data.x;
-    state.resultJson.avatar.def.y = data.y;
-  },
-  set_rotation(state,data){
-    state.resultJson.avatar.def.rotation.z = data;
-  },
-  set_def_scale(state,data){
-    state.resultJson.avatar.def.scale = data;
-  },
-  avatarChange(state,data){
-    state.resultJson.avatar.h5 = data.h5;
-    state.resultJson.avatar.id = data.id;
-    state.resultJson.avatar.def.scale = 1;
-    state.resultJson.avatar.def.rotation.z = 0;
-  },
-
-  exportJsonName(state,data){
-    state.resultJson.name = data;
-  },
-
 }
 
 const actions = {
