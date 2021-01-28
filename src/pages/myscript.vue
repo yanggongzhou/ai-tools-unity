@@ -298,7 +298,7 @@ export default {
               border-radius: 32px;
               border: none;
               box-shadow: 0px 1px 1px #e4d9f9;
-              color: #7455FF;
+              color: #ff7599;
             }
         }
         .search {
@@ -328,46 +328,25 @@ export default {
         border-radius: 32px;
     }
     #myscript .el-table thead th {
-        background: #7455FF2e!important;
-        color: #6d6d6d;
+        background: #fab2c5!important;
+        color: #FFFFFF;
     }
     #myscript .el-table tbody tr:hover>td:first-of-type {
-        border-left: 3px solid #7455FF!important;
+        border-left: 3px solid #ff7599!important;
     }
     #myscript .el-table tbody tr:hover>td {
-        background-color: #7455FF0f!important;
+        background-color: rgba(250, 222, 237, 0.61) !important;
     }
     #myscript .el-pager li.active{
-      color: #7455FF;
+      color: #ff7599;
     }
     #myscript .el-pager li:hover{
-      color: #7455FFe0;
+      color: #ff7599;
     }
     #myscript .el-table__empty-block {
         background: url(https://large.magics-ad.com/ai-3D/static/img/null.png) no-repeat center;
         background-size: 256px 176px;
         background-position: center 90px;
-    }
-    .cancel.el-button {
-        width: 82px;
-        height: 34px;
-        border-radius: 17px;
-        cursor: pointer;
-        opacity: 0.7;
-        color: #B3B3B4;
-        border: 1px solid #979797;
-        margin-right: 16px;
-        background: rgba(0,0,0,0);
-    }
-    .confirm.el-button {
-        width: 82px;
-        height: 34px;
-        border-radius: 17px;
-        cursor: pointer;
-        opacity: 0.7;
-        background: #7455FF;
-        color: #fff;
-        border: none;
     }
 </style>
 <style lang="less" scoped>
@@ -375,9 +354,7 @@ export default {
     border: 1px solid #fff;
     outline: none;
     text-decoration: none;
-    background: linear-gradient(90deg,  #BA71FF,#5648FF,#f441a5,#BA71FF ,#BA71FF );
-    /*background: linear-gradient(90deg, #03a9f4, #f441a5, #ffeb3b, #03a9f4);*/
-    background-size: 400%;
+    background: linear-gradient(90deg,  #FFBA48,#FF71B5 );
     width: 100px;
     height: 38px;
     line-height: 37px;
@@ -397,14 +374,12 @@ export default {
 
   .light-btn::before {
     content: '';
-    background: linear-gradient(90deg, #BA71FF, #f441a5, #5648FF,#BA71FF );
-    background-size: 400%;
+    background: linear-gradient(90deg,  #FFBA48,#FF71B5 );
     border-radius: 50px;
     filter: blur(10px);
   }
   .create-btn{
-    background: linear-gradient(90deg,  #FFBA48,#FF71B5,#f441a5,#FFBA48 );
-    background-size: 400%;
+    background: linear-gradient(90deg,  #FFBA48,#FF71B5 );
     margin-right: 20px;
     /*position: absolute;*/
     /*right: 0px;*/
@@ -416,8 +391,7 @@ export default {
     /*top: -15px;*/
   }
   .search_btn{
-    background: linear-gradient(90deg,  #7455FF,#5648FF,#BA71FF ,#7455FF );
-    background-size: 400%;
+    background: linear-gradient(90deg, #fd9cb5,#f9becd );
     width: 76px;
     height: 32px;
     line-height: 30px;

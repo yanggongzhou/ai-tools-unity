@@ -295,18 +295,18 @@
             <el-form-item label="字体内容">
               <el-input type="textArea" v-model="textForm.text"></el-input>
             </el-form-item>
-            <el-form-item label="预览">
-              <div class="text_preview">
-                <p :style="{
-                  'text-align':textForm.gravity,
-                  'color':textForm.textColor,
-                  'font-size':textForm.textSize+'px',
-                  'width':'90%'
-                }">
-                  {{textForm.text}}
-                </p>
-              </div>
-            </el-form-item>
+<!--            <el-form-item label="预览">-->
+<!--              <div class="text_preview">-->
+<!--                <p :style="{-->
+<!--                  'text-align':textForm.gravity,-->
+<!--                  'color':textForm.textColor,-->
+<!--                  'font-size':textForm.textSize+'px',-->
+<!--                  'width':'90%'-->
+<!--                }">-->
+<!--                  {{textForm.text}}-->
+<!--                </p>-->
+<!--              </div>-->
+<!--            </el-form-item>-->
             <el-form-item align="right">
               <button class="dialogBtn quxiao" @click.stop="textVisible = false">取 消</button>
               <button class="dialogBtn queren" @click.stop="confrimBtn('text')">确 认</button>
@@ -1693,7 +1693,7 @@
     color: #a7a7a7;
   }
   .queren{
-    background: #7455FF;
+    background: #ff7599;
   }
 </style>
 <style lang="less" scoped>

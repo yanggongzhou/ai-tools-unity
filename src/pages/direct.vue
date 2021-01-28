@@ -4,9 +4,9 @@
 
     <div class="progressBox" v-if="progressVisible">
       <radial-progress-bar :diameter="200"
-                           startColor="#BA71FF"
-                           stopColor="#5648FF"
-                           innerStrokeColor="#F6E7F9"
+                           startColor="#ff7599"
+                           stopColor="#fab2c5"
+                           innerStrokeColor="#fbeff2"
                            :completed-steps="completedSteps"
                            :total-steps="totalSteps">
         <p class="midText">总剧本: {{ totalSteps }}</p>
@@ -36,7 +36,7 @@
         </div>
         <span slot="reference" style="cursor: help;position: relative;top: 4px">随机播放</span>
       </el-popover>
-      <el-switch @change="isRandomChange" v-model="isRandom" active-color='#835BFF' style='margin:6px 18px 0 8px;' :disabled="isAutoPlayBtn"></el-switch>
+      <el-switch @change="isRandomChange" v-model="isRandom" active-color='#ff7599' style='margin:6px 18px 0 8px;' :disabled="isAutoPlayBtn"></el-switch>
       <el-popover
         placement="bottom"
         width="400"
@@ -49,7 +49,7 @@
         </div>
         <span slot="reference" style="cursor: help;position: relative;top: 4px">互动模式</span>
       </el-popover>
-      <el-switch @change="SwitchChange" v-model="isOpenInteractiveMode" active-color='#835BFF' style='margin-left:8px;margin-top:6px;' :disabled="isAutoPlayBtn"></el-switch>
+      <el-switch @change="SwitchChange" v-model="isOpenInteractiveMode" active-color='#ff7599' style='margin-left:8px;margin-top:6px;' :disabled="isAutoPlayBtn"></el-switch>
     </div>
 
     <div class="dialogBox">
@@ -81,7 +81,7 @@
             <div class="header clearfix">
               <div class="title float_left">第{{ind+1}}段</div>
               <div class="pdtip float_left"
-                   style="color: #4CAF50"
+                   style="color: #ff7599"
                    :style="ind | styleFilter2"
               >正在播放中...</div>
               <div class="pdtip float_left"
@@ -261,8 +261,8 @@
         if(that.nowContentIndex!==""&&that.nowAllScriptIndex !== ''){
           if(ind===that.nowContentIndex&&that.nowAllScriptIndex===that.allScriptIndex){
             return {
-              'border': '1px solid #4CAF50',
-              'background': '#d6ffd7'
+              'border': '1px solid #ff7599',
+              'background': '#fff'
             }
           }else{
             return {
@@ -292,19 +292,6 @@
           return {
             'display' : "none"
           }
-        }
-      },
-      progressPercentageColor(val){
-        if(val<=20){
-          return '#f56c6c'
-        }else if(val<=40&&val>20){
-          return '#e6a23c'
-        }else if(val<=60&&val>40){
-          return '#5cb87a'
-        }else if(val<=80&&val>60){
-          return '#1989fa'
-        }else if(val<=100&&val>80){
-          return '#6f7ad3'
         }
       },
     },
@@ -1253,14 +1240,14 @@
     padding: 0px!important;
   }
   /deep/.el-radio{
-    color: #7C53FF !important;
+    color: #ff7599 !important;
     /*border-bottom: 1px solid #fff !important;*/
   }
   /deep/.el-radio.is-bordered.is-checked{
     /*border-color: #7C53FF !important;*/
     border-color: #FFF !important;
     border: 3px solid #FFF !important;
-    background: linear-gradient(166deg, #BA71FF 0%, #5648FF 100%)!important;
+    background: linear-gradient(166deg, #ff81a2 0%, #ffcfdc 100%) !important;
     border-radius: 8px;
   }
   /deep/.el-radio__input.is-checked+.el-radio__label{
@@ -1271,7 +1258,7 @@
     position: relative;
   }
   .dialogBox{
-    box-shadow: 0px 0px 3px #ddd6ff;
+    box-shadow: 0px 0px 3px #ff9db6;
     height: 536px;
     width: 650px;
     background: #FFF;
@@ -1283,14 +1270,14 @@
     height: 450px;
     width: 150px;
     background: #FBFAFF;
-    border: 0.5px solid #ddd6ff;
+    border: 0.5px solid #ff9db6;
     border-bottom: none;
     border-radius: 3px 0 0 0;
     font-size: 0;
     overflow-y: scroll;
   }
   .left_card{
-    background: #DDD6FF!important;
+    background: #f9edf1!important;
     position: relative;
     z-index: 10;
     width: 100%;
@@ -1351,13 +1338,36 @@
     height: 421px;
     margin: 28px 0 0 20px;
     overflow: scroll;
+    overflow-x: hidden;
+    padding-right: 13px;
+    &::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+      display: inline-block;
+    }
+    &::-webkit-scrollbar-track {
+      /*box-shadow: 1px 1px 5px rgba(0, 0, 0, .2) inset;*/
+      border: 1px solid #ffbdcf;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      min-height: 20px;
+      background-clip: content-box;
+      box-shadow: 0 0 0 5px rgb(255 140 171) inset;
+      border: 1px solid #ffbdcf;
+    }
+
+    &::-webkit-scrollbar-corner {
+      background: transparent;
+    }
+
     .content-item{
       padding: 10px 10px 6px;
       height: 77px;
       margin-top: 12px;
       background: #FFFBF2;
       border-radius: 4px;
-      border: 1px solid #FEE0C7;
+      border: 1px solid #ff89a8;
       .header{
         font-size: 12px;
         font-weight: 500;
@@ -1371,21 +1381,21 @@
         .play_icon{
           font-size: 18px;
           margin-left: 30px;
-          color: #8286FF;
+          color: #ff7599;
           cursor: pointer;
           transition: all .3s;
           &:hover{
-            color: #673ab7;
+            color: #f82f64;
           }
         }
         .keyboard{
           font-size: 12px;
-          color: #8286FF;
+          color: #ff7599;
           font-weight: 400;
           cursor: pointer;
           transition: all .3s;
           &:hover{
-            color: #673ab7;
+            color: #f82f64;
           }
           .keyboard_shortcut{
 
@@ -1413,9 +1423,9 @@
       height: 60px;
       margin-top: 0px;
       margin-bottom: 12px;
-      border: 1px solid #CDC7FE;
+      border: 1px solid #ff89a8;
       padding: 8px 10px 4px;
-      background: #F2F6FF;
+      background: #fff4f761;
       border-radius: 4px;
       .header{
         line-height: 1;
@@ -1437,7 +1447,7 @@
     }
   }
   .footBox{
-    border-top: 1px solid #DDD6FF;
+    border-top: 1px solid #ff9db6;
     padding: 19px;
     .leftIcon{
       width: 130px;
@@ -1485,7 +1495,8 @@
     height: 32px;
     line-height: 32px;
     margin: 0 auto;
-    background: linear-gradient(166deg, #BA71FF 0%, #5648FF 100%);
+    /*background: linear-gradient(166deg, #ff7599 0%, #ffdce5 100%);*/
+    background: #ff7599;
     border-radius: 16px;
     color: #fff;
     font-size: 12px;
@@ -1501,8 +1512,8 @@
     margin: 0 auto;
     background: #FFF;
     border-radius: 16px;
-    border: 1px solid #8286FF;
-    color: #8286FF;
+    border: 1px solid #ff7599;
+    color: #ff7599;
     font-size: 12px;
     cursor: pointer;
     position: absolute;
@@ -1530,7 +1541,7 @@
     font-size: 12px;
   }
   .borderLeftGreen{
-    border-left: 7px solid #4caf50!important;
+    border-left: 7px solid #ff7599!important;
   }
 
   .progressBox{
@@ -1545,7 +1556,7 @@
     align-items: center;
     justify-content: center;
     .midText{
-      color: #9C27B0;
+      color: #ff7599;
       font-weight: 600;
     }
     .progress-btn{
@@ -1555,7 +1566,7 @@
       background: none;
       border: 4px solid #f6e6f9;
       border-radius: 16px;
-      color: #a030b3;
+      color: #ff7599;
       font-size: 14px;
       font-weight: 600;
       cursor: pointer;
@@ -1564,7 +1575,7 @@
       right: -69px;
       top: -9px;
       &:hover{
-        border: 4px solid #a030b3;
+        border: 4px solid #ff7599;
         background: rgba(255, 255, 255, 0.37);
       }
     }

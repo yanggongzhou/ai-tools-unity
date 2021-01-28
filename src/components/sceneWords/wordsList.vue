@@ -6,7 +6,7 @@
             <span class="addTips">最多创建10条，开启多个话术时，随机播放一个</span>
             <div class="listWrap">
                 <div v-for='(item, idx) in list' :key='idx' class="list">
-                    <el-switch class="switch" v-model="item.switch==0" active-color="#835BFF" inactive-color="#ccc" @change='handleSwitch(item)'></el-switch>
+                    <el-switch class="switch" v-model="item.switch==0" active-color="#ff769a" inactive-color="#ccc" @change='handleSwitch(item)'></el-switch>
                     <span class="words">{{item.content}}</span>
                     <span class="edit" @click='handleEdit(item)'>编辑</span>
                     <span class="center"></span>
@@ -33,7 +33,7 @@
 
             <div v-if='isShowDelDialog' class="delDialog">
                 <i class="el-icon-close" @click='cancelDel'></i>
-                <i class="el-icon-warning-outline" style='font-size:42px;color:#7455FF;margin-bottom:18px;font-weight:600;'></i>
+                <i class="el-icon-warning-outline" style='font-size:42px;color:#ff7599;margin-bottom:18px;font-weight:600;'></i>
                 <div>是否删除话术？</div>
                 <span slot="footer" class="dialog-footer">
                     <el-button class="cancel" @click="cancelDel">取 消</el-button>
@@ -163,8 +163,8 @@ export default {
         width: 64px;
         height: 24px;
         border-radius: 12px;
-        border: 1px solid #835BFF;
-        color: #835BFF;
+        border: 1px solid #ff7599;
+        color: #ff7599;
         font-size: 12px;
         background: #fff;
         cursor: pointer;
@@ -182,9 +182,9 @@ export default {
     .list {
         position: relative;
         min-height: 45px;
-        background: #F9F7FF;
+        background: #fff6f9;
         border-radius: 6px;
-        border: 1px solid #835BFF;
+        border: 1px solid #ff769a;
         margin-bottom: 12px;
         box-sizing: border-box;
         padding: 0 30px 0 16px;
@@ -214,7 +214,7 @@ export default {
         right: 80px;
         top: 50%;
         transform: translate(0, -50%);
-        color: #835BFF;
+        color: #ff769a;
         font-size: 14px;
         cursor: pointer;
     }
@@ -272,10 +272,12 @@ export default {
         color: #FFFFFF;
         width: 94px;
         height: 34px;
-        background: #7455FF;
+        background: #ff7599;
         border-radius: 17px;
         margin-left: 12px;
         cursor: pointer;
+        outline: none;
+      border-color:#ff7599;
     }
     .delDialog {
         width: 392px;

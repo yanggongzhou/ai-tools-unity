@@ -449,7 +449,7 @@
                     right: 60px;
                     top: 50%;
                     transform: translate(0, -50%);
-                    color: #835BFF;
+                    color: #ff7599;
                     font-size: 14px;
                     cursor: pointer;
                 }
@@ -477,7 +477,7 @@
                 }
                 .addInacTimePart {
                     font-size: 14px;
-                    color: #9B82FF;
+                    color: #ff7599;
                     margin: 12px 0;
                     cursor: pointer;
                 }
@@ -516,7 +516,7 @@
             color: #666666;
         }
         .confirm {
-            background: #9B82FF;
+            background: #ff7599;
             color: #fff;
             margin-left: 114px;
         }
@@ -540,28 +540,28 @@
     }
     #playSetting .el-tabs__item.is-active, #playSetting .el-tabs__item:hover {
         width: 68px;
-        color: #7455FF!important;
+        color: #ff7599!important;
     }
     #playSetting .el-tabs__active-bar {
         display: none;
     }
     #playSetting .el-radio__input.is-checked .el-radio__inner {
-        border-color: #9B82FF;
-        background: #9B82FF;
+        border-color: #ff7599;
+        background: #ff7599;
     }
     #playSetting .el-radio__input.is-checked+.el-radio__label {
         color: #666666;
          /* #9B82FF; */
     }
     #playSetting .el-radio__inner:hover {
-        border-color: #9B82FF;
+        border-color: #ff7599;
     }
     #playSetting .el-input__inner:focus {
-        border-color: #9B82FF;
+        border-color: #ff7599;
     }
     #playSetting .el-button:hover, #playSetting .el-button:focus {
-        color:#9B82FF;
-        border-color: #9B82FF;
+        color:#ff7599;
+        border-color: #ff7599;
         background-color: #fff;
     }
     .fetchCaptcha.el-button {
@@ -570,7 +570,7 @@
         background: none;
         border: none;
         margin-top: 8px;
-        color: #4C5487;
+        color: #ff7599;
     }
     .fetchCaptcha.el-button.is-disabled {
         color: #C0C4CC;

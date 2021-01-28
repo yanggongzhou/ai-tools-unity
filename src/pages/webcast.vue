@@ -688,7 +688,7 @@ export default {
     padding: 4px;
     box-sizing: border-box;
     background:#E3E0F2;
-    color: #835BFF;
+    color: #ff7599;
     font-size: 14px;
     border-radius: 4px;
     .tab {
@@ -771,7 +771,7 @@ export default {
       .playSetting {
         margin-left: 20px;
         font-size: 14px;
-        color: #835BFF;
+        color: #ff7a9d;
         cursor: pointer;
         position: absolute;
         top: 120px;
@@ -780,18 +780,20 @@ export default {
         margin-bottom: 10px;
         width: 96px;
         height: 32px;
-        background: #8f8cf1;
+        background: #FFFFFF;
+        border: 1px solid #ff7a9d;
         border-radius: 16px;
-        color: #fff;
+        color: #ff7a9d;
         font-size: 14px;
-        line-height: 32px;
+        line-height: 30px;
         cursor: pointer;
         &.disabled {
           background: #B3B3B4;
         }
         transition: all .3s;
         &:hover{
-          opacity: 0.9;
+          background: #ff7a9d;
+          color:#FFFFFF;
         }
       }
         .title {
@@ -799,7 +801,7 @@ export default {
             margin-bottom: 20px;
             .empty {
                 font-size: 14px;
-                color: #409EFF;
+                color: #ff7599;
                 float: right;
                 margin-right: 20px;
                 cursor: pointer;
@@ -841,7 +843,7 @@ export default {
                     float: right;
                     width: 76px;
                     height: 28px;
-                    background: #7455FF;
+                    background: #ff7599;
                     border-radius: 16px;
                     font-size: 12px;
                     color: #fff;
@@ -851,7 +853,7 @@ export default {
             }
             .selectedDur {
                 font-size: 14px;
-                color: #7455FF;
+                color: #ff7599;
                 margin-top: 8px;
             }
             .noScript {
@@ -866,7 +868,7 @@ export default {
                 color: #9B9B9B;
                 span {
                     font-size: 16px;
-                    color: #7455FF;
+                    color: #ff7599;
                     cursor: pointer;
                 }
             }
@@ -893,7 +895,7 @@ export default {
                             margin-right: 16px;
                         }
                         &.confirmChoose {
-                            background: #7455FF;
+                            background: #ff7599;
                             color: #fff;
                         }
                     }
@@ -938,25 +940,23 @@ export default {
   }
 </style>
 <style>
-
-
     .search .el-input--small .el-input__inner {
         border-radius: 32px;
     }
     .playScripts .el-icon-video-camera-solid {
-        color: #7455FF9e;
+        color: #ff7599;
         font-size: 16px;
         margin-left: -22px;
     }
     .playScripts.el-table thead th {
-        background: #7455FF2e!important;
-        color: #6d6d6d;
+      background: #fab2c5!important;
+      color: #FFFFFF;
     }
     .playScripts.el-table tbody tr:hover>td:first-of-type {
-        border-left: 3px solid #7455FF!important;
+        border-left: 3px solid #ff7599!important;
     }
     .playScripts.el-table tbody tr:hover>td {
-        background-color: #7455FF0f!important;
+      background-color: rgba(250, 222, 237, 0.61) !important;
     }
     .playScripts.el-pagination {
         position: absolute;
@@ -964,10 +964,10 @@ export default {
         right: 40px;
     }
     .playScripts.el-pager li.active{
-      color: #7455FF!important;
+      color: #ff7599!important;
     }
     .playScripts.el-pager li:hover{
-      color: #7455FFe0!important;
+      color: #ff7599!important;
     }
     .playScripts .el-table__empty-block {
         background: url(https://large.magics-ad.com/ai-3D/static/img/nodata.png) no-repeat center;
@@ -997,16 +997,16 @@ export default {
         line-height: 28px;
     }
     .filter .el-input__inner:focus, .filter .el-input.is-active .el-input__inner {
-        border-color: #7455FF!important;
+        border-color: #ff7599!important;
     }
     .filter .el-select .el-input.is-focus .el-input__inner {
-        border-color: #7455FF;
+        border-color: #ff7599;
     }
     .el-select-dropdown__item.selected {
-        color: #7455FF!important;
+        color: #ff7599!important;
     }
     .filter .el-select:hover .el-input__inner, .filter .el-input__inner:hover {
-        border-color:  #7455FF;
+        border-color:  #ff7599;
     }
 
     .playScripts .el-button {
@@ -1018,9 +1018,12 @@ export default {
     .allScriptList .el-checkbox__inner:hover,
     .allScriptList .previewBtn.el-button,
     .allScriptList .el-checkbox__input.is-checked+.el-checkbox__label {
-        color: #7455FF;
+        color: #ff7599;
     }
-
+    .allScriptList .el-checkbox__input.is-checked .el-checkbox__inner, .el-checkbox__input.is-indeterminate .el-checkbox__inner{
+      background-color: #ff7599;
+      border-color: #ff7599;
+    }
     .el-checkbox__input.is-disabled.is-checked .el-checkbox__inner{
         background: #B3B3B4!important;
         border-color: #B3B3B4!important;
