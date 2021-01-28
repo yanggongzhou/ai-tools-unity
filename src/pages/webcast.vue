@@ -538,7 +538,7 @@ export default {
         },
 
         gotopage() {
-            this.$router.push('/steper')
+          UnityRoute('step')
         },
         handleCheckScript(_idx) {
             this.scriptData = JSON.parse(JSON.stringify(this.scriptData))

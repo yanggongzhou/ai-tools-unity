@@ -23,8 +23,8 @@
                     <button class='light-btn search_btn' type="primary" @click="fetchAllScripts">查询</button>
                 </div>
               <div class="float_right">
-                <button class="light-btn create-btn ml10" @click="gotoPage('tools')">创建剧本</button>
-                <button class="light-btn play-btn" @click="$router.push('/webcast')">去直播</button>
+                <button class="light-btn create-btn ml10" @click="gotoPage">创建剧本</button>
+                <button class="light-btn play-btn" @click="gotoPage2">去直播</button>
               </div>
             </div>
 
@@ -62,7 +62,7 @@
 
                 <div slot="empty" style="height:200px;line-height: 300px;">
                   <i class="el-icon-warning-outline"></i>暂无剧本，去
-                  <el-button type="text"  @click="gotoPage('tools')" style="color:#7455FF;">创建脚本</el-button>
+                  <el-button type="text"  @click="gotoPage" style="color:#7455FF;">创建脚本</el-button>
                 </div>
 
             </el-table>
@@ -250,9 +250,12 @@ export default {
             this.page_start = val;
             this.fetchAllScripts();
         },
-        gotoPage(page) {
+        gotoPage() {
           UnityRoute('step')
-        }
+        },
+      gotoPage2(){
+        UnityRoute('webcast')
+      }
     },
 }
 </script>
