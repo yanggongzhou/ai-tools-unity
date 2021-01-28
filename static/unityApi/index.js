@@ -85,8 +85,8 @@ function UnityStepChange(param) {
 }
 
 //保存脚本信息（unity必要信息)
-function UnityJsonInfo(param) {
-  console.log('\x1b[33m%s\x1b[0m',`获取unityMessage信息-${param}`)
+function UnityJsonInfo() {
+  console.log('\x1b[33m%s\x1b[0m',`获取unityMessage信息`)
   // WebJsonInfo('{}')
 }
 

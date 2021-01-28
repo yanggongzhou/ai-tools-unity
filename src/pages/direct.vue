@@ -1273,7 +1273,7 @@
   .dialogBox{
     box-shadow: 0px 0px 3px #ddd6ff;
     height: 536px;
-    width: 750px;
+    width: 650px;
     background: #FFF;
     margin: 0 auto;
     border-radius: 3px;
@@ -1347,7 +1347,7 @@
   }
 
   .contentBox{
-    width: 555px;
+    width: 455px;
     height: 421px;
     margin: 28px 0 0 20px;
     overflow: scroll;
@@ -1523,7 +1523,7 @@
     font-size: 13px;
     color: #616367;
     height: 30px;
-    width: 750px;
+    width: 600px;
     margin: 10px auto;
   }
   .interaction_pop{

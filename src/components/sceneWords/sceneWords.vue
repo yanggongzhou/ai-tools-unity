@@ -106,7 +106,6 @@ export default {
 <style scope lang='less'>
     .sceneWordsContent {
         height: 100%;
-        padding: 10px 0;
         background: #FFFFFF;
         box-shadow: 0px 1px 5px 0px #E6E7EB;
         border-radius: 4px;

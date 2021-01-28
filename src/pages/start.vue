@@ -41,15 +41,7 @@
     }
   }
   .homepage {
-    background-image: linear-gradient(
-      to bottom right,
-      #91defe,
-      #99c0f9,
-      #bdb6ec,
-      #d7b3e3,
-      #efb3d5,
-      #f9bccc
-    );
+    background-image: linear-gradient(to bottom right, #fffdfd, #fbe3e9, #f9ced8, #fdc0d0, #f9b0c3, #ff7599);
     display: flex;
     flex-direction: column;
     align-items: center;

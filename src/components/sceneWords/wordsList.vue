@@ -181,7 +181,7 @@ export default {
     }
     .list {
         position: relative;
-        min-height: 58px;
+        min-height: 45px;
         background: #F9F7FF;
         border-radius: 6px;
         border: 1px solid #835BFF;
@@ -202,7 +202,7 @@ export default {
         transform: translate(0, -50%);
         width: 520px;
         color: #333;
-        font-size: 16px;
+        font-size: 14px;
         overflow: hidden;
         text-overflow: ellipsis;
         display: -webkit-box;

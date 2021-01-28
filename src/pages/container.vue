@@ -15,9 +15,18 @@
         <div  class="float_right right-control">
 
 <!--          <button class="back" @click="$router.push('/home')">返回首页</button>-->
-          <button class="back preview" @click="previewBtn">预览</button>
-          <button class="back save" @click="saveBtn('保存')">保存</button>
-          <button v-if="$route.params.id" class="back save" @click="saveBtn('另存为')">另存为</button>
+          <button class="back preview" @click="previewBtn">
+            <span class="iconfont alicon-yulan posAdjustment"></span>
+            <span>预览</span>
+          </button>
+          <button class="back save" @click="saveBtn(1)">
+            <span class="iconfont alicon-baocun posAdjustment"></span>
+            <span>保存</span>
+          </button>
+          <button v-if="$route.params.id" class="back save" @click="saveBtn(2)">
+            <span class="iconfont alicon-lingcunwei posAdjustment"></span>
+            <span>另存</span>
+          </button>
           <!--        <el-button @click="downloadJSON" type="success">下载脚本</el-button>-->
         </div>
 
@@ -193,6 +202,8 @@
             ]
           }
         },
+
+        jsonInfoType:1,//要unityMessage时触发类型 1 保存，2另存
       }
     },
     created() {
@@ -279,8 +290,6 @@
         this.previewReady = true;
       },
 
-
-
       //剧本名称校验
       jsonNameFocus(value){
         if(value.replace(/[\r\n]/g, "").replace(/\s+/g, "")&&this.jsonNameValidate){
@@ -290,9 +299,11 @@
       //保存脚本
       saveBtn(type){
         UnityJsonInfo();
+        this.jsonInfoType = type
       },
       //获取unityMessage之后保存
       WebJsonInfo(_unityMessage){
+        //保存&另存
         let self = this;
         if(this.jsonName.replace(/[\r\n]/g, "").replace(/\s+/g, "")){
           this.jsonNameValidate = false;
@@ -330,7 +341,7 @@
             fd.append("type", 0);
             axios.post(requestServices.uploadUrl,fd,{responseType:'multipart/form-data'})
               .then(uploadRes=>{
-                if(self.$route.params.id && type!=='另存为'){
+                if(self.$route.params.id && this.jsonInfoType!==2){
                   requestServices.editScript({
                     role_id:23,
                     user_id:self.$Session.get('ai_user_id'),
@@ -493,6 +504,11 @@
 </script>
 
 <style lang="less" scoped>
+  .posAdjustment{
+    position: relative;
+    top: 1px;
+    font-size: 14px!important;
+  }
   .common_content {
     padding: 45px 20px;
     position: relative;
@@ -534,37 +550,39 @@
     .back{
       width: 111px;
       height: 30px;
+      line-height: 0;
       background: transparent;
-      border: 1px solid #7E59FF;
+      border: 1px solid #FF7599;
       cursor: pointer;
-      border-radius: 32px;
-      font-size: 13px;
-      color: #7E59FF;
+      border-radius: 5px;
+      font-size: 12px;
+      color: #FF7599;
       transition: all .5s;
+      &:focus{
+        border: 1px solid #FF7599;
+      }
       &:hover{
         background: #dacaf7;
-        border: 1px solid #d1b8ff;
-      }
-      &:focus{
-        border: 1px solid #7E59FF;
-        background: #dacaf7;
+        border: 1px solid #f596ae;
       }
     }
     .preview{
-      width: 78px;
-      margin-left: 60px;
+      width: 70px;
+      background: #FFFFFF;
+      border: 1px solid #FF7599;
+      &:hover{
+        background: #FF7599;
+        color: #FFFFFF;
+      }
     }
     .save{
-      width: 78px;
-      background: #7E59FF;
-      color: #FFFFFF;
-      margin-left: 22px;
+      width: 72px;
+      background: #eae9f6;
+      margin-left: 10px;
+      border: 1px solid transparent;
       &:hover{
-        background: #7e59ffbf;
-      }
-      &:focus{
-        border: 1px solid #d1b8ff;
-        background: #7e59ffbf;
+        background: #FF7599;
+        color: #FFFFFF;
       }
     }
   }
