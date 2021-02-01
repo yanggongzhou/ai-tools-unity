@@ -70,7 +70,7 @@ WebJsonInfo(param)           param -- '{}' 为pc端自定义属性值对应json�
 UnityInsertTag(param)        param -- {id:'',url:'xxx',region:'2'，type:'image'} video--{id:'',url:'xxx',region:'2'，isSupport:'false',type:'video'}  text--{id:'',text:'xxx',region:'2',ellipsize: false,gravity: "center",textColor: "#bb0c0c",textSize: "20",type:'text'}
 
 **info标签修改**
-UnityEditTag(param)          param -- {id:'',url:'xxx',region:'2'，type:'image'} video--同image  text--{id:'',text:'xxx',region:'2',ellipsize: false,gravity: "center",textColor: "#bb0c0c",textSize: "20",type:'text'}
+UnityEditTag(param，'True')  param -- {id:'',url:'xxx',region:'2'，type:'image'} video--同image  text--{id:'',text:'xxx',region:'2',ellipsize: false,gravity: "center",textColor: "#bb0c0c",textSize: "20",type:'text'}  'True'为确认时，'False'为点击时
 
 **info标签删除**
 UnityDelTag(param)           param -- 标签对应的展示位 '1'  //用于标签清空

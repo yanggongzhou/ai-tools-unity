@@ -295,18 +295,7 @@
             <el-form-item label="字体内容">
               <el-input type="textArea" v-model="textForm.text"></el-input>
             </el-form-item>
-<!--            <el-form-item label="预览">-->
-<!--              <div class="text_preview">-->
-<!--                <p :style="{-->
-<!--                  'text-align':textForm.gravity,-->
-<!--                  'color':textForm.textColor,-->
-<!--                  'font-size':textForm.textSize+'px',-->
-<!--                  'width':'90%'-->
-<!--                }">-->
-<!--                  {{textForm.text}}-->
-<!--                </p>-->
-<!--              </div>-->
-<!--            </el-form-item>-->
+<!--    y-->
             <el-form-item align="right">
               <button class="dialogBtn quxiao" @click.stop="textVisible = false">取 消</button>
               <button class="dialogBtn queren" @click.stop="confrimBtn('text')">确 认</button>
@@ -516,6 +505,7 @@
       window.editTag = function(id){
         let domObj = JSON.parse(document.getElementById(id).dataset.obj)
         console.log('editTag',id,domObj)
+        let _data;
         if(domObj.type==="image"){
           self.imgForm.region = domObj.region;
           domObj.isAll? self.imgForm.dismissTimeType = 1: self.imgForm.dismissTimeType = 2;
@@ -536,6 +526,18 @@
               url: domObj.url
             }]
           })
+          _data={
+            type:'image',
+            name:domObj.name,
+            time: domObj.time,
+            url:domObj.url,
+            region:domObj.region,
+            isAll:domObj.isAll,
+            id:domObj.id,
+            enter:domObj.enter,
+            leave:domObj.leave
+          }
+          UnityEditTag(JSON.stringify(_data),'False')
         }else if(domObj.type==="video"){
           domObj.isAll? self.ruleForm.dismissTimeType = 1: self.ruleForm.dismissTimeType = 2;
           self.ruleForm.videoUrl = domObj.url;
@@ -543,6 +545,7 @@
           self.ruleForm.region = domObj.region;
           self.ruleForm.dismissTime = domObj.time/1000;
           self.ruleForm.isAll=domObj.isAll;
+          self.ruleForm.isSupportAudio=domObj.isSupportAudio;
           self.ruleForm.enter=domObj.enter;
           self.ruleForm.leave=domObj.leave;
           self.videoVisible = true;
@@ -556,6 +559,19 @@
               url: domObj.url
             }]
           })
+           _data={
+            type:'video',
+            name:domObj.name,
+            time:domObj.time,
+            url: domObj.url,
+            isSupportAudio:self.ruleForm.isSupportAudio,
+            region:self.ruleForm.region,
+            isAll:self.ruleForm.isAll,
+            id:domObj.id,
+            enter:self.ruleForm.enter,
+            leave:self.ruleForm.leave
+          };
+          UnityEditTag(JSON.stringify(_data),'False')
         }else if(domObj.type==="text"){
           self.textVisible = true;
           self.editTagId= domObj.id;
@@ -573,6 +589,22 @@
             self.textForm.enter=domObj.enter;
             self.textForm.leave=domObj.leave;
           })
+          _data={
+            type:'text',
+            text:domObj.text,
+            textColor:domObj.textColor,
+            region:domObj.region,
+            textSize:domObj.textSize,
+            gravity:domObj.gravity,
+            ellipsize:domObj.ellipsize,
+            dismissTime:domObj.dismissTime,
+            fontFamily:domObj.fontFamily,
+            isAll:domObj.isAll,
+            id:domObj.id,
+            enter:domObj.enter,
+            leave:domObj.leave
+          }
+          UnityEditTag(JSON.stringify(_data),'False')
         }
       }
 
@@ -965,7 +997,7 @@
               contentBDArr[val.index] = _txt.join('');
             }
           }else if(val.type==="video"){
-            let _data = JSON.stringify({type:'video',name:val.name,time:val.time,url:val.url,id:val.id,isAll:val.isAll,region:val.region,enter:val.enter,leave:val.leave}).replace(/"/g,"&quot;")
+            let _data = JSON.stringify({type:'video',name:val.name,time:val.time,url:val.url,id:val.id,isAll:val.isAll,region:val.region,enter:val.enter,leave:val.leave,isSupportAudio:val.isSupportAudio}).replace(/"/g,"&quot;")
             let _time = val.time/1000+'s';
             if(val.isAll){
               _time = 'all'
@@ -1354,6 +1386,7 @@
         this.ruleForm.enter = '';
         this.ruleForm.dismissTimeType = 2;
         this.ruleForm.dismissTime = 3;
+        this.ruleForm.isSupportAudio = false;
         this.ruleForm.isAll=false;
         this.imgVisible = false;
         this.videoVisible = true;
@@ -1502,7 +1535,7 @@
           }
           _text = `<div class="tagtag tag_text" onclick="editTag(\``+_id+`\`)">文字`+' ('+_time+`)<i class="el-icon-close" onclick="delTag(\``+_id+`\`)"></i>&nbsp;</div>`
           if(this.editTagId){
-            UnityEditTag(JSON.stringify(_data))
+            UnityEditTag(JSON.stringify(_data),'True')
             let _oldTag = this.$refs.testText.nodeToString( document.getElementById(_id) ).replace( "<" , "<" ).replace( ">" , ">");
             tagDom.dataset.obj = JSON.stringify(_data)
             tagDom.innerHTML = _text;
@@ -1540,7 +1573,7 @@
           }
           _text = `<div class="tagtag tag_video" onclick="editTag(\``+_id+`\`)">视频`+this.ruleForm.videoName+` (`+_time+`)<i class="el-icon-close" onclick="delTag(\``+_id+`\`)"></i>&nbsp;</div>`
           if(this.editTagId){
-            UnityEditTag(JSON.stringify(_data))
+            UnityEditTag(JSON.stringify(_data),'True')
             let _oldTag = this.$refs.testText.nodeToString( document.getElementById(_id) ).replace( "<" , "<" ).replace( ">" , ">");
             tagDom.dataset.obj = JSON.stringify(_data)
             tagDom.innerHTML = _text;
@@ -1575,7 +1608,7 @@
           }
           _text =  `<div class="tagtag tag_image" onclick="editTag(\``+_id+`\`)">图片`+this.imgForm.name+` (`+_time+`)<i class="el-icon-close" onclick="delTag(\``+_id+`\`)"></i>&nbsp;</div>`
           if(this.editTagId){
-            UnityEditTag(JSON.stringify(_data))
+            UnityEditTag(JSON.stringify(_data),'True')
             let _oldTag = this.$refs.testText.nodeToString( document.getElementById(_id) ).replace( "<" , "<" ).replace( ">" , ">");
             tagDom.dataset.obj = JSON.stringify(_data)
             tagDom.innerHTML = _text;

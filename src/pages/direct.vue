@@ -1232,6 +1232,10 @@
   }
 </script>
 <style scoped lang="less">
+  /deep/.el-radio.is-bordered.is-disabled {
+    border-color: #fff;
+  }
+
   /deep/.el-dialog__headerbtn{
     display: none;
   }
@@ -1304,7 +1308,7 @@
       padding-left: 0;
     }
     /deep/.el-radio__input.is-disabled+span.el-radio__label{
-      color: #7C53FF;
+      color: #ff7599;
     }
     .left_card_item{
       font-size: 0;
