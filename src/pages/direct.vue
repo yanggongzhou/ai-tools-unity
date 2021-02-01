@@ -644,7 +644,7 @@
       },
       //停止播放
       stopPlayBtn(){
-        UnityDirectState('True');
+        UnityDirectState('False');
         this.previewReady = true;
         this.allScriptPlayIndex = '';
         this.isAutoPlayBtn = false;
