@@ -13,9 +13,34 @@ UnityChangeAvatar(AvatarName)
 **4.加载资源**
 WebPreviewReady(param)       参数‘True’（加载资源成功）/ ‘False’（加载资源失败）
 
-**强制结束播放状态**
-UnityPreviewCancel()跳转页面后强制结束播放状态
+**开始播放**
+UnityPreviewStart(param)     参数 param为角色名 "xiaosajie"
 
+**播放完毕（本段content）**
+WebPreviewEnd()
+
+**互动模式开启**
+UnityInteractionStateChange(param);  参数‘True’开启/ ‘False’关闭
+WebInteractionStateChange(param);  参数‘True’开启成功/ ‘False’关闭成功
+
+**互动模式(被动)进入(自动直播标签进入)**
+WebInteractionStart()         开始
+WebInteractionEnd()           结束
+
+**互动模式(主动)进入(临时会话插入/脚本间插入)**
+UnityInteractionStart(param)  参数 param为角色名 "xiaosajie"
+UnityInteractionEnd(param)    参数 param为角色名 "xiaosajie"
+
+**继续播放 （临时进入互动模式结束后的继续播放剩余content）**
+UnityPreviewContinue(param)   参数 param为角色名 "xiaosajie"
+
+**强制结束播放状态**
+UnityPreviewCancel()          跳转页面后强制结束播放状态
+
+WebAckStopPlaySystem()        强制中断接收,定义为unity异常中断恢复时发送给web端
+
+**接受ASR命令**
+WebASRIdentifyContent(str)    参数Asr转换的文字，用于语音指定某一剧本播放
 
 
 
@@ -24,8 +49,8 @@ UnityPreviewCancel()跳转页面后强制结束播放状态
 
 **路由跳转**
 UnityNativeReady()           web端环境准备完毕
-UnityRoute(route)            参数'myscript'--我的剧本 'webcast'--开始直播 'step'--创建编辑剧本步骤页 'tools'- 文本域
-WebRoute(route)              参数'myscript'--我的剧本 'webcast'--开始直播 'step'--创建编辑剧本步骤页 'tools'- 文本域
+UnityRoute(route)            参数'myscript'--我的剧本 'webcast'--开始直播 'step'--创建编辑剧本步骤页 'tools'- 文本域 'direct'--直播页
+WebRoute(route)              参数'myscript'--我的剧本 'webcast'--开始直播 'step'--创建编辑剧本步骤页 'tools'- 文本域 'direct'--直播页
 
 **步骤**
 UnityStepChange(param)       web点击步骤条 参数 '1'，'2'，'3'，'4'
@@ -49,3 +74,6 @@ UnityEditTag(param)          param -- {id:'',url:'xxx',region:'2'，type:'image'
 
 **info标签删除**
 UnityDelTag(param)           param -- 标签对应的展示位 '1'  //用于标签清空
+
+**告知Unity直播状态**
+UnityDirectState(param)      param -- 'True':开始直播 'False'：结束直播

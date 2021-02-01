@@ -109,6 +109,10 @@ function UnityDelTag(param) {
   console.log('\x1b[92m%s\x1b[0m',`info标签删除- ${param}`)
 }
 
+//告知Unity直播状态
+function UnityDirectState(param) {
+  console.log('\x1b[33m%s\x1b[0m',`告知Unity直播状态- ${param}`)
+}
 
 // for (let i=0;i<200;i++){
 //   console.log(`\x1b[${i}m%s\x1b[0m`,`步骤-${i}`)

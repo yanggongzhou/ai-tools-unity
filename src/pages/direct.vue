@@ -619,6 +619,7 @@
         // UnityPreviewCancel();
         this.isAutoPlayBtn = true;
         if(this.previewReady){
+          UnityDirectState('True');
           this.scriptBeginTime =  Math.floor(new Date()/1000);
             if(this.isRandom){//随机播放
               this.toGetWeightList()
@@ -643,6 +644,7 @@
       },
       //停止播放
       stopPlayBtn(){
+        UnityDirectState('True');
         this.previewReady = true;
         this.allScriptPlayIndex = '';
         this.isAutoPlayBtn = false;
