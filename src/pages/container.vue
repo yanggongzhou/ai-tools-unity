@@ -23,7 +23,7 @@
             <span class="iconfont alicon-baocun posAdjustment"></span>
             <span>保存</span>
           </button>
-          <button v-if="$route.params.id" class="back save" @click="saveBtn(2)">
+          <button v-if="editJsonData.id" class="back save" @click="saveBtn(2)">
             <span class="iconfont alicon-lingcunwei posAdjustment"></span>
             <span>另存</span>
           </button>
@@ -42,6 +42,7 @@
       @cleanTriggerDiv="cleanTriggerDiv"
       @editImportTriggerDiv="editImportTriggerDiv"
       @addDisplay="addDisplay"
+      :editJsonData="editJsonData"
     ></JsonEditor>
   </div>
 </template>
@@ -228,20 +229,22 @@
         },
 
         jsonInfoType:1,//要unityMessage时触发类型 1 保存，2另存
+
+        editJsonData:{},//编辑来的数据
       }
     },
     created() {
       this.jsonNameValidate = false;
       window.WebPreviewReady = this.WebPreviewReady;
       window.WebJsonInfo = this.WebJsonInfo;//保存时获取必要的unityMessage
-
+      this.editJsonData =  JSON.parse(this.$Session.get('Edit_JSON'));
     },
     mounted() {
       let self = this;
       //编辑的数据
-      if(this.$route.params.data){
-        this.jsonName = this.$route.params.name
-        let resArr  = this.$route.params.data
+      if(this.editJsonData.data){
+        this.jsonName =  this.editJsonData.name
+        let resArr  =  this.editJsonData.data
         this.editImportTriggerDiv(resArr[0])
       }
 
@@ -365,7 +368,7 @@
             fd.append("type", 0);
             axios.post(requestServices.uploadUrl,fd,{responseType:'multipart/form-data'})
               .then(uploadRes=>{
-                if(self.$route.params.id && this.jsonInfoType!==2){
+                if(self.editJsonData.id && this.jsonInfoType!==2){
                   requestServices.editScript({
                     role_id:23,
                     user_id:self.$Session.get('ai_user_id'),
@@ -377,7 +380,7 @@
                     avatar_name:this.AvatarChName,
                     scene_type:'1',//0-默认类型；1-淘宝；2-抖音；3-快手
                     time:0,
-                    gs_id:self.$route.params.id,
+                    gs_id:self.editJsonData.id,
                     template_json:'',//信息版位置信息数据
                     layer:"",
                   }).then(res=>{
@@ -402,7 +405,7 @@
                     layer:"",
                   }).then(res=>{
                     if(res.return_code===1000){
-                      self.$route.params.id=res.result.gs_id
+                      self.editJsonData.id=res.result.gs_id
                       self.$message.success('保存成功');
                     }
                   })
@@ -521,6 +524,7 @@
       },
     },
     beforeDestroy() {
+      this.$Session.set('Edit_JSON',"{}")//清空编辑数据
       //跳转页面后强制结束播放状态
       UnityPreviewCancel();
     },

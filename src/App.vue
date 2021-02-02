@@ -8,10 +8,12 @@
       </el-button-group>
     </div>
     <transition enter-active-class="animated fadeIn"
+                v-if="$route.name!=='tools'"
                 leave-active-class="animated zoomOut"
                 :duration="{enter: 500, leave: 500}">
       <router-view/>
     </transition>
+    <router-view v-if="$route.name==='tools'"/>
 <!--    unity端avatar切换记录-->
     <editInfo/>
     <UError></UError>

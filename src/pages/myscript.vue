@@ -210,8 +210,9 @@ export default {
           axios.get(_idx.script_url)
             .then(result=>{
               if(result.status===200){
-                UnityRoute('step');
-                this.$router.push({name:'tools',params:{data:result.data,id:_idx.id,name:_idx.name,avatarName:_idx.avatar_name}})
+                UnityRoute('tools');
+                this.$Session.set('Edit_JSON',JSON.stringify({data:result.data,id:_idx.id,name:_idx.name,avatarName:_idx.avatar_name}))
+                // this.$router.push({name:'tools',params:{data:result.data,id:_idx.id,name:_idx.name,avatarName:_idx.avatar_name}})
               }else{
                 this.$message.warning('剧本数据获取异常，请重试')
               }

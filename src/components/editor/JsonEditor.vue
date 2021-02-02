@@ -397,7 +397,8 @@
       'my-upload':upload,
     },
     props:{
-      TriggerDiv:Array
+      TriggerDiv:Array,
+      editJsonData:Object
     },
     data() {
       return {
@@ -607,13 +608,12 @@
           UnityEditTag(JSON.stringify(_data),'False')
         }
       }
-
       //编辑的数据
-      if(this.$route.params.data){
-        let resArr  = this.$route.params.data
+      if(this.editJsonData.data){
+        let resArr  = this.editJsonData.data
         UnityMessage(JSON.stringify(resArr[0].unityMessage))
         UnityChangeAvatar(resArr[0].avatar.unity);
-        this.$store.commit('set_avatarName',{name:resArr[0].avatar.unity,chName:this.$route.params.avatarName})
+        this.$store.commit('set_avatarName',{name:resArr[0].avatar.unity,chName:this.editJsonData.avatarName})
       }else{
         UnityAvatarMotionInfo(this.ResultJson.avatar.unity);
       }
@@ -809,17 +809,15 @@
 
         let self = this;
         //编辑时数据导入
-        if(this.$route.params.data){
-          let resArr  = this.$route.params.data
-          this.$store.commit('set_avatarName',{name:resArr[0].avatar.unity,chName:this.$route.params.avatarName})
-          this.ScriptList = JSON.parse(JSON.stringify(this.$route.params.data))
+        if(this.editJsonData.data){
+          let resArr  = this.editJsonData.data
+          this.$store.commit('set_avatarName',{name:resArr[0].avatar.unity,chName:this.editJsonData.avatarName})
+          this.ScriptList = JSON.parse(JSON.stringify(this.editJsonData.data))
           this.$nextTick(()=>{
             this.editImport(this.ScriptList[0]);
           })
           this.$forceUpdate()
         }else{
-          // this.actionShowList = this.$route.params.actionShowList;
-
           this.ScriptList[0] = JSON.parse(JSON.stringify(this.ResultJson))
           this.$forceUpdate()
         }
