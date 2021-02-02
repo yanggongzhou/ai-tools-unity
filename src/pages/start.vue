@@ -13,6 +13,7 @@
       return{}
     },
     mounted() {
+      this.$Session.set('Edit_JSON',"{}")
       //测试专用，后拼接账号密码可在控制台查看登陆信息
       if(this.$route.query.phone){
         requestServices.login({
