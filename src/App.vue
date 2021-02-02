@@ -48,9 +48,9 @@ export default {
 
   },
   mounted() {
-    setTimeout(()=>{
-      UnityNativeReady();
-    },3000)
+    // setTimeout(()=>{
+    //   UnityNativeReady();
+    // },3000)
   },
   methods:{
     gotoPage(val){

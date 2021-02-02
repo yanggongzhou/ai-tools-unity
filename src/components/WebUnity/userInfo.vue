@@ -9,6 +9,7 @@
         notifyOption:'',
         isUserInfo:false,
         userInfoTimeOut:'',
+        onceUnityNativeReady:false,//请求一次环境准备完毕
       }
     },
     created() {
@@ -59,6 +60,10 @@
         // self.$message.error('请求用户信息失败,请重启窗口！')
       },
           WebUserMessage(id,token,phone){
+        if(!this.onceUnityNativeReady){
+          this.onceUnityNativeReady = true;
+          UnityNativeReady();
+        }
         // this.$notify({
         //   title: this.$Session.get('ai_user_id') +'用户'+ Session.get('ai_user_phone'),
         //   message: Session.get('ai_user_token'),

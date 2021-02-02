@@ -84,8 +84,8 @@
 
   .shadow {
     background: #b490b2;
-    width: 150px;
-    height: 40px;
+    width: 120px;
+    height: 30px;
     top: 70%;
     animation: expand 3.5s infinite;
     position: absolute;
@@ -94,11 +94,10 @@
   @keyframes expand {
     0%,
     100% {
-      transform: scale(0.5);
+      transform: scale(1.5);
     }
-
     50% {
-      transform: scale(1);
+      transform: scale(0.8);
     }
   }
 
