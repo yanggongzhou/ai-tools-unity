@@ -621,7 +621,7 @@
     watch:{
       //监听输入框文本，主要实现删除功能
       testData(newValue,oldValue){
-        console.log(this.testData)
+        // console.log(this.testData)
         // if(this.scriptChangeState) return false;
         // console.log(this.testData,this.testData.length,this.testData.split(''))
         if(newValue.length < oldValue.length&&(oldValue.length-newValue.length)>200){

@@ -23,7 +23,7 @@
             <span class="iconfont alicon-baocun posAdjustment"></span>
             <span>保存</span>
           </button>
-          <button v-if="editJsonData.id" class="back save" @click="saveBtn(2)">
+          <button v-show="editJsonData.id" class="back save" @click="saveBtn(2)">
             <span class="iconfont alicon-lingcunwei posAdjustment"></span>
             <span>另存</span>
           </button>
@@ -406,6 +406,7 @@
                   }).then(res=>{
                     if(res.return_code===1000){
                       self.editJsonData.id=res.result.gs_id
+                      self.$forceUpdate();
                       self.$message.success('保存成功');
                     }
                   })
