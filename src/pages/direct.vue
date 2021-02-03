@@ -974,6 +974,7 @@
 
             })
             self.completedSteps = 0;
+            UnityMessage(JSON.stringify(self.allScriptList[0].scriptList[0].unityMessage))
             self.allScriptList.forEach(val=>{
               //兼容之前版本 —— 无剧本名
               // val.scriptList.forEach(scriptItem=>{
