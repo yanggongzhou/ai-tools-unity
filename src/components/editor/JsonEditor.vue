@@ -1377,6 +1377,10 @@
         this.cutArr.push(arr);
       },
       handleAddVideo(){
+        if(!this.InfoModelData.length){
+          this.$message.error('请先添加展示位')
+          return
+        }
         this.ruleForm.videoName = '';
         this.ruleForm.videoUrl = '';
         this.ruleForm.region = '1';
@@ -1392,6 +1396,10 @@
         this.editTagId = "";
       },
       handleAddImage(){
+        if(!this.InfoModelData.length){
+          this.$message.error('请先添加展示位')
+          return
+        }
         this.imgForm.region = '1';
         this.imgForm.dismissTimeType = 2;
         this.imgForm.dismissTime = 3;
@@ -1426,6 +1434,10 @@
             this.timerVisible = true;
             break;
           case 'text':
+            if(!this.InfoModelData.length){
+              this.$message.error('请先添加展示位')
+              return
+            }
             this.textVisible = true;
             this.editTagId = "";
             this.$nextTick(()=>{
