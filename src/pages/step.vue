@@ -79,6 +79,7 @@ export default {
     this.stepNoActive3=true;
     this.stepNoActive4=true;
     window.WebStepChange = this.WebStepChange;//web步骤
+    window.WebSelectAvatarState=this.WebSelectAvatarState;
   },
   methods: {
     WebStepChange(param){
@@ -95,6 +96,14 @@ export default {
           break;
       }
       console.log('step',param)
+    },
+    WebSelectAvatarState(state){
+      if(state==='True'){
+        // this.$message.error('切换角色')
+      }else if(state==='False'){
+        this.$message.error('切换角色失败，请重试')
+        this.previewReady = true;
+      }
     },
   }
 }
