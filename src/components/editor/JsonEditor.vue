@@ -611,7 +611,7 @@
       //编辑的数据
       if(this.editJsonData.data){
         let resArr  = this.editJsonData.data
-        UnityMessage(JSON.stringify(resArr[0].unityMessage))
+        UnityMessage(JSON.stringify(resArr[0].unityMessage),"True")
         UnityChangeAvatar(resArr[0].avatar.unity);
         this.$store.commit('set_avatarName',{name:resArr[0].avatar.unity,chName:this.editJsonData.avatarName})
       }else{
