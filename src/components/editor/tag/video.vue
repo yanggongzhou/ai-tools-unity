@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-form size="mini" :model="videoForm" :rules="rules" ref="videoForm" label-width="100px" @submit.native.prevent>
+    <el-form :model="videoForm" :rules="rules" ref="videoForm" label-width="100px" @submit.native.prevent>
       <el-form-item label="展示区" prop="region">
         <el-select v-model="videoForm.region" placeholder="请选择展示区域">
           <el-option
