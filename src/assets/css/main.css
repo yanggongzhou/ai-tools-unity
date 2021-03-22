@@ -402,3 +402,27 @@ input {
     background-position: -400% 0;
   }
 }
+
+/*Popconfirm 气泡确认框样式修改*/
+.el-popover{
+  background: #28223385;
+  border:1px solid transparent;
+  color: #f6f6f6;
+}
+.el-popper[x-placement^=top] .popper__arrow {
+  border-top-color: #28223385;
+}
+.el-popper[x-placement^=top] .popper__arrow::after {
+  border-top-color: #28223385;
+}
+.el-popper[x-placement^=bottom] .popper__arrow::after {
+  border-bottom-color: #28223385;
+}
+.el-popper[x-placement^=bottom] .popper__arrow {
+  border-top-color: #28223385;
+  border-bottom-color: #28223385;
+}
+.el-popconfirm__action {
+  position: relative;
+  bottom: -5px;
+}

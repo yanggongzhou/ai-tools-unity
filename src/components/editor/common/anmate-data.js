@@ -1,4 +1,4 @@
-export const animateData = {
+const animateData = {
   bounce: '弹跳',
   flash: '闪烁',
   pulse: '脉冲',
@@ -108,3 +108,12 @@ export const animateData = {
   slideOutRight:'向右滑动退出',
   slideOutUp:'向上滑动退出'
 }
+const animateList = []
+for(let ani in animateData){
+  animateList.push({
+    value:ani,
+    label:animateData[ani]
+  })
+}
+
+export const AnimateList = animateList;

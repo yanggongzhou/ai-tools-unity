@@ -69,134 +69,16 @@
           <div slot="title">
 
           </div>
-          <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm" @submit.native.prevent>
-            <el-form-item label="展示区" prop="region">
-              <el-select v-model="ruleForm.region" placeholder="请选择展示区域">
-                <el-option v-for="(val,ind) in InfoModelData"
-                           :key="ind+'video'"
-                           :label="'展位'+val"
-                           :value="val"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="上传文件">
-              <my-upload :imgVisible="imgVisible" :videoVisible="videoVisible"
-                         ref="uploadRefVideo"
-                         @getDisplayImg="getDisplayImg" @getDisplayVideo="getDisplayVideo"></my-upload>
-            </el-form-item>
-            <el-form-item label="设置时长" prop="dismissTimeType">
-              <el-col :span="12">
-                <el-select v-model="ruleForm.dismissTimeType" @change="dismissTimeTypeChange" placeholder="请选择展示时长类型">
-                  <el-option v-for="(val,ind) in dismissTimeTypeData"
-                             :key="ind+'dismissTimeType'"
-                             :label="val.label" :value="val.value"></el-option>
-                </el-select>
-              </el-col>
-              <el-col :span="1"><p  v-if="!ruleForm.isAll" class="center">-</p></el-col>
-              <el-col :span="7">
-                <el-input-number
-                  style="width: 100px;"
-                  v-if="!ruleForm.isAll"
-                  v-model="ruleForm.dismissTime" controls-position="right" :precision="1" :min="0.1" :step="0.5" :max="3600"></el-input-number>
-              </el-col>
-              <el-col :span="4">
-                <el-tag v-if="!ruleForm.isAll">秒</el-tag>
-              </el-col>
-            </el-form-item>
-            <el-form-item label="动画效果">
-              <el-col :span="10">
-                <el-select v-model="ruleForm.enter" placeholder="入场效果" clearable>
-                  <el-option v-for="(val,ind) in animateList"
-                             :key="ind+'enter'"
-                             :label="val.label" :value="val.value"></el-option>
-                </el-select>
-              </el-col>
-              <el-col :span="1" class="center">-</el-col>
-              <el-col :span="10">
-                <el-select v-model="ruleForm.leave" placeholder="离场效果" clearable>
-                  <el-option v-for="(val,ind) in animateList"
-                             :key="ind+'leave'"
-                             :label="val.label" :value="val.value"></el-option>
-                </el-select>
-              </el-col>
-            </el-form-item>
-            <el-form-item label="声音设置" prop="isSupportAudio">
-              <el-switch
-                v-model="ruleForm.isSupportAudio"
-                active-text="开启"
-                inactive-text="关闭">
-              </el-switch>
-            </el-form-item>
-            <el-form-item align="right">
-              <button class="dialogBtn quxiao" @click.stop="videoVisible = false">取 消</button>
-              <button class="dialogBtn queren" @click.stop="confrimBtn('ruleForm')">确 认</button>
-            </el-form-item>
-          </el-form>
+          <v-video ref="videoDom" :videoForm="ruleForm" @cancel="cancelBtn('video')"
+                   @confirm="data=>confrimBtn('video',data)"></v-video>
         </el-dialog>
         <el-dialog
           style="border-radius: 10px;"
           :visible.sync="imgVisible"
           :modal="false"
           width="500px">
-<!--          <div slot="title">-->
-<!--            上传文件-->
-<!--          </div>-->
-          <el-form :model="imgForm" :rules="imgRules" ref="imgForm" label-width="100px" class="demo-ruleForm" @submit.native.prevent>
-            <el-form-item label="展示区" prop="region">
-              <el-select v-model="imgForm.region" placeholder="请选择展示区域">
-                <el-option v-for="(val,ind) in InfoModelData"
-                           :key="ind+'image'"
-                           :label="'展位'+val"
-                           :value="val"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="上传文件">
-              <my-upload :imgVisible="imgVisible" :videoVisible="videoVisible"
-                         ref="uploadRefImg"
-                         @getDisplayImg="getDisplayImg" @getDisplayVideo="getDisplayVideo"></my-upload>
-            </el-form-item>
-            <el-form-item label="设置时长" prop="dismissTimeType">
-              <el-col :span="12">
-                <el-select v-model="imgForm.dismissTimeType" @change="imgTypeChange" placeholder="请选择展示时长类型">
-                  <el-option v-for="(val,ind) in dismissTimeTypeData_img"
-                             :key="ind+'dismissTimeType'"
-                             :label="val.label" :value="val.value"></el-option>
-                </el-select>
-              </el-col>
-              <el-col :span="1"><p  v-if="!imgForm.isAll" class="center">-</p></el-col>
-              <el-col :span="7">
-                <el-input-number
-                  style="width: 100px;"
-                  v-if="!imgForm.isAll"
-                  v-model="imgForm.dismissTime"
-                  controls-position="right"
-                  :precision="1" :min="0.1" :step="0.5" :max="3600"></el-input-number>
-              </el-col>
-              <el-col :span="4">
-                <el-tag v-if="!imgForm.isAll">秒</el-tag>
-              </el-col>
-            </el-form-item>
-            <el-form-item label="动画效果">
-              <el-col :span="10">
-                <el-select v-model="imgForm.enter" placeholder="入场效果" clearable>
-                  <el-option v-for="(val,ind) in animateList"
-                             :key="ind+'enter'"
-                             :label="val.label" :value="val.value"></el-option>
-                </el-select>
-              </el-col>
-              <el-col :span="1" class="center">-</el-col>
-              <el-col :span="10">
-                <el-select v-model="imgForm.leave" placeholder="离场效果" clearable>
-                  <el-option v-for="(val,ind) in animateList"
-                             :key="ind+'leave'"
-                             :label="val.label" :value="val.value"></el-option>
-                </el-select>
-              </el-col>
-            </el-form-item>
-            <el-form-item align="right">
-              <button class="dialogBtn quxiao" @click.stop="imgVisible = false">取 消</button>
-              <button class="dialogBtn queren" @click.stop="confrimBtn('image')">确 认</button>
-            </el-form-item>
-          </el-form>
+          <v-img ref="imgDom" :imgForm="imgForm" @cancel="cancelBtn('img')"
+                 @confirm="data=>confrimBtn('img',data)"></v-img>
         </el-dialog>
 <!--        文字-->
         <el-dialog
@@ -204,104 +86,7 @@
           :visible.sync="textVisible"
           :modal="false"
           width="500px">
-          <el-form :model="textForm" :rules="textRules" ref="imgForm" label-width="80px" class="demo-ruleForm" @submit.native.prevent>
-            <el-row>
-              <el-col :span="12">
-                <el-form-item label="展示区" prop="region">
-                  <el-select v-model="textForm.region" placeholder="请选择展示区域">
-                    <el-option v-for="(val,ind) in InfoModelData"
-                               :key="ind+'text'"
-                               :label="'展位'+val"
-                               :value="val"></el-option>
-                  </el-select>
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
-                <el-form-item label="选择字体" prop="gravity">
-                  <el-select v-model="textForm.fontFamily" placeholder="请选择展示区域">
-                    <el-option label="黑体" value="SimHei"></el-option>
-                  </el-select>
-                </el-form-item>
-              </el-col>
-
-              <el-col :span="8">
-                <el-form-item label="对齐" prop="gravity">
-                  <el-select v-model="textForm.gravity" placeholder="请选择展示区域">
-                    <el-option label="居中" value="center"></el-option>
-                    <el-option label="左对齐" value="left"></el-option>
-                    <el-option label="右对齐" value="right"></el-option>
-                  </el-select>
-                </el-form-item>
-              </el-col>
-              <el-col :span="8">
-                <el-form-item label="大小" prop="textSize">
-                  <el-select v-model="textForm.textSize" placeholder="请选择展示区域">
-                    <el-option v-for="(val,ind) in textSizeList"
-                               :label="val"
-                               :value="val"
-                               :key="ind+'foot'"></el-option>
-                  </el-select>
-                </el-form-item>
-              </el-col>
-              <el-col :span="8">
-                <el-form-item label="颜色" prop="textColor">
-                  <div class="text_color-sty">
-                    <colorPicker v-model="textForm.textColor"/>
-                  </div>
-                </el-form-item>
-              </el-col>
-            </el-row>
-            <el-form-item label="设置时长" prop="dismissTimeType">
-              <el-col :span="12">
-                <el-select v-model="textForm.dismissTimeType" @change="textTypeChange" placeholder="请选择展示时长类型">
-                  <el-option v-for="(val,ind) in dismissTimeTypeData_img"
-                             :key="ind+'dismissTimeType'"
-                             :label="val.label" :value="val.value"></el-option>
-                </el-select>
-              </el-col>
-              <el-col :span="1"><p v-if="!textForm.isAll" class="center">-</p></el-col>
-              <el-col :span="7">
-                <el-input-number
-                  style="width: 100px;"
-                  v-if="!textForm.isAll"
-                  v-model="textForm.dismissTime" controls-position="right" :precision="1" :min="0.1" :step="0.5" :max="3600"></el-input-number>
-              </el-col>
-              <el-col :span="4">
-                <el-tag v-if="!textForm.isAll">秒</el-tag>
-              </el-col>
-            </el-form-item>
-            <el-form-item label="动画效果">
-              <el-col :span="10">
-                <el-select v-model="textForm.enter" placeholder="入场效果" clearable>
-                  <el-option v-for="(val,ind) in animateList"
-                             :key="ind+'enter'"
-                             :label="val.label" :value="val.value"></el-option>
-                </el-select>
-              </el-col>
-              <el-col :span="1" class="center">-</el-col>
-              <el-col :span="10">
-                <el-select v-model="textForm.leave" placeholder="离场效果" clearable>
-                  <el-option v-for="(val,ind) in animateList"
-                             :key="ind+'leave'"
-                             :label="val.label" :value="val.value"></el-option>
-                </el-select>
-              </el-col>
-            </el-form-item>
-
-
-            <!--      <el-col :span="12">-->
-            <!--      </el-col>-->
-
-            <el-form-item label="字体内容">
-              <el-input type="textArea" v-model="textForm.text"></el-input>
-            </el-form-item>
-<!--    y-->
-            <el-form-item align="right">
-              <button class="dialogBtn quxiao" @click.stop="textVisible = false">取 消</button>
-              <button class="dialogBtn queren" @click.stop="confrimBtn('text')">确 认</button>
-            </el-form-item>
-          </el-form>
-<!--          <textEditor @saveBtn="confrimBtn" ref="textEditorRef" @cancelBtn="cancelBtn"></textEditor>-->
+          <v-text :textForm="textForm" @cancel="cancelBtn('text')" @confirm="data=>confrimBtn('text',data)"></v-text>
         </el-dialog>
 
         <div
@@ -358,9 +143,12 @@
 </template>
 
 <script>
-  import upload from "./upload";
-  import {animateData} from './anmate-data'
+  import { ExportMessage, NodeToString } from '../../packages/textarea/exportMessage'
   import { mapGetters } from "vuex";
+  import vText from './tag/text'
+  import vVideo from './tag/video'
+  import vImg from './tag/img'
+
   export default {
     computed: {
       ...mapGetters([
@@ -394,7 +182,9 @@
       }
     },
     components:{
-      'my-upload':upload,
+      vText,
+      vVideo,
+      vImg,
     },
     props:{
       TriggerDiv:Array,
@@ -412,15 +202,7 @@
         actionLoading:true,
         testData:'',
         intervalValue:0.5,//间隔时间
-        dismissTimeTypeData:[
-          {label:'至视频播放结束',value:0},
-          {label:'至脚本播放结束',value:1},
-          {label:'自定义时长',value:2},
-        ],
-        dismissTimeTypeData_img:[
-          {label:'至脚本播放结束',value:1},
-          {label:'自定义时长',value:2},
-        ],
+
         textForm:{
           dismissTimeType:2,
           text:"测试字体",
@@ -435,8 +217,6 @@
           leave:"",//出场
           enter:""//入场
         },
-        textSizeList:["12","14","16","18","20","22","24","26","28","30","32",],
-        textRules:{},
         ruleForm:{
           region:'1',//展示区域
           dismissTimeType:2,//播放时间的方式
@@ -448,7 +228,6 @@
           leave:"",//出场
           enter:""//入场
         },
-        rules:{},
         imgForm:{
           region:'1',//展示区域
           dismissTimeType:2,//播放时间的方式
@@ -459,7 +238,6 @@
           leave:"",//出场
           enter:""//入场
         },
-        imgRules:{},
 
         videoVisible:false,
         imgVisible:false,
@@ -485,20 +263,11 @@
           {label:"插入",value:'5',icon:'el-icon-circle-plus-outline'},
           {label:"删除",value:'6',icon:'el-icon-delete'},
         ],
-
-        animateList:[]
       };
     },
     created() {
       window.WebActionInfo= this.WebActionInfo
       window.WebSelectAvatarState = this.WebSelectAvatarState
-
-      for(let ani in animateData){
-        this.animateList.push({
-          value:ani,
-          label:animateData[ani]
-        })
-      }
     },
     mounted() {
       let self = this;
@@ -520,12 +289,7 @@
           self.imgVisible = true;
           self.editTagId= domObj.id;
           self.$nextTick(()=>{
-            self.$refs.uploadRefImg.tempList= [{
-              name: domObj.name,
-              status: "success",
-              uid: self.getGuid(),
-              url: domObj.url
-            }]
+            self.$refs.imgDom.cleanTempList(domObj)
           })
           _data={
             type:'image',
@@ -553,12 +317,7 @@
           self.imgVisible = false;
           self.editTagId= domObj.id;
           self.$nextTick(()=>{
-            self.$refs.uploadRefVideo.tempList= [{
-              name: domObj.name,
-              status: "success",
-              uid: self.getGuid(),
-              url: domObj.url
-            }]
+            self.$refs.videoDom.cleanTempList(domObj)
           })
            _data={
             type:'video',
@@ -622,8 +381,6 @@
       //监听输入框文本，主要实现删除功能
       testData(newValue,oldValue){
         // console.log(this.testData)
-        // if(this.scriptChangeState) return false;
-        // console.log(this.testData,this.testData.length,this.testData.split(''))
         if(newValue.length < oldValue.length&&(oldValue.length-newValue.length)>200){
           let newDom = document.getElementById('newDom');
           newDom.innerHTML = newValue;
@@ -1057,7 +814,6 @@
               let _txt = contentBDArr[val.index].split('')
               _txt.splice(_txt.length-1,1,_intervalDom+_txt[_txt.length-1]);
               contentBDArr[val.index] = _txt.join('');
-              // contentBDArr[val.index]=_intervalDom+contentBDArr[val.index]
             }
           }
         })
@@ -1065,51 +821,6 @@
         this.testData=contentBDArr.join('');
       },
 
-      //视频时长方式转换
-      dismissTimeTypeChange(val){
-        switch (val) {
-          case 0:
-            this.ruleForm.dismissTime = document.getElementById('videoDuration').duration
-            if(!this.ruleForm.dismissTime){
-              this.$message.warning('视频时长获取失败，请等待视频上传完成后再试！')
-            }
-            this.ruleForm.isAll = false;
-          break;
-          case 1:
-            this.ruleForm.dismissTime = 999;
-            this.ruleForm.isAll = true;
-            break;
-          case 2:
-            this.ruleForm.dismissTime = 3;
-            this.ruleForm.isAll = false;
-            break;
-        }
-      },
-      //图片时长转换
-      imgTypeChange(val){
-        switch (val) {
-          case 1:
-            this.imgForm.dismissTime = 999;
-            this.imgForm.isAll = true;
-            break;
-          case 2:
-            this.imgForm.dismissTime = 3;
-            this.imgForm.isAll = false;
-            break;
-        }
-      },
-      textTypeChange(val){
-        switch (val) {
-          case 1:
-            this.textForm.dismissTime = 999;
-            this.textForm.isAll = true;
-            break;
-          case 2:
-            this.textForm.dismissTime = 3;
-            this.textForm.isAll = false;
-            break;
-        }
-      },
       getTruePos(contentBD,index){
         let _txtInd;
         let _index=0
@@ -1130,7 +841,7 @@
         this.cutArr = [];
         // console.log(this.testData)
         return new Promise(resolve => {
-          self.$refs.testText.exportMessage().then(res=>{
+          ExportMessage(this.testData).then(res=>{
             if(!res.noTagText.replace(/[\ |\~|\`|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\-|\_|\+|\=|\||\\|\[|\]|\{|\}|\;|\:|\"|\'|\,|\<|\.|\>|\/|\?|\r\n]/g,"").match(/[\u4e00-\u9fa5\0-9]/g)){
               // self.$message.error('脚本内容需含有数字或汉字等有效文本内容！')
               // return false
@@ -1372,42 +1083,51 @@
         Array.prototype.splice.apply(arr, this.cutTxtArr);
         this.cutArr.push(arr);
       },
+
       handleAddVideo(){
         if(!this.InfoModelData.length){
           this.$message.error('请先添加展示位')
           return
         }
-        this.ruleForm.videoName = '';
-        this.ruleForm.videoUrl = '';
-        this.ruleForm.region = '1';
-        this.ruleForm.leave = '';
-        this.ruleForm.enter = '';
-        this.ruleForm.dismissTimeType = 2;
-        this.ruleForm.dismissTime = 3;
-        this.ruleForm.isSupportAudio = false;
-        this.ruleForm.isAll=false;
-        this.imgVisible = false;
         this.videoVisible = true;
         this.timerVisible = false;
         this.editTagId = "";
+        this.$nextTick(() => {
+          this.ruleForm = {
+            region: "1",
+            dismissTimeType: 2,
+            dismissTime: 3,
+            videoUrl: '',
+            videoName: "",
+            enter: "",
+            leave: "",
+            isAll: false,
+            isSupportAudio: false
+          }
+          this.$refs.videoDom.cleanTempList()
+        })
       },
       handleAddImage(){
         if(!this.InfoModelData.length){
           this.$message.error('请先添加展示位')
           return
         }
-        this.imgForm.region = '1';
-        this.imgForm.dismissTimeType = 2;
-        this.imgForm.dismissTime = 3;
-        this.imgForm.url = '';
-        this.imgForm.name = '';
-        this.imgForm.leave = '';
-        this.imgForm.enter = '';
-        this.imgForm.isAll=false;
-        this.videoVisible = false;
         this.imgVisible = true;
-        this.timerVisible = false;
         this.editTagId = "";
+        this.timerVisible = false;
+        this.$nextTick(() => {
+          this.imgForm = {
+            region: "1",
+            dismissTimeType: 2,
+            dismissTime: 3,
+            url: '',
+            name: "",
+            enter: "",
+            leave: "",
+            isAll: false
+          }
+          this.$refs.imgDom.cleanTempList()
+        })
       },
       handleAdd (type) {
         switch (type) {
@@ -1421,7 +1141,7 @@
             this.addInteraction();
             break;
           case 'clean':
-            this.$refs.testText.exportMessage().then(res=>{
+            ExportMessage(this.testData).then(res=>{
               this.testData = res.noTagText
               this.$emit('cleanTriggerDiv')
             })
@@ -1493,142 +1213,150 @@
         let _text =  `<div class="tag_action tagtag" onclick="editTag(\``+_id+`\`)">`+val.label+`<i class="el-icon-close" onclick="delTag(\``+_id+`\`)"></i>&nbsp;</div>`
         this.$refs.testText.addTag(_text,_data)
       },
-      getDisplayImg(Obj){
-        this.imgForm.url = Obj.url;
-        this.imgForm.name = Obj.name;
-      },
-      getDisplayVideo(Obj){
-        this.ruleForm.videoUrl = Obj.url;
-        this.ruleForm.videoName = Obj.name;
 
-      },
       cancelBtn(type){
         switch (type) {
           case 'text':
             this.textVisible = false;
             break;
+          case 'img':
+            this.imgVisible = false;
+            break;
+          case 'video':
+            this.videoVisible = false;
+            break;
         }
       },
       //弹框确定
-      confrimBtn(type){
+      confrimBtn(type,data){
         let tagDom;
         if(this.editTagId){tagDom =document.getElementById(this.editTagId);}
         let _data,_text,_time,_id;
         this.editTagId?_id = this.editTagId:_id = this.getGuid();
-        if(type==='text'){
-          if(!this.textForm.text.replace(/ /g,'')){
-            this.$message.error('请输入文字')
-            return false;
-          }
-          _data={
-            type:'text',
-            text:this.textForm.text,
-            textColor:this.textForm.textColor,
-            region:this.textForm.region,
-            textSize:this.textForm.textSize,
-            gravity:this.textForm.gravity,
-            ellipsize:this.textForm.ellipsize,
-            dismissTime:this.textForm.dismissTime*1000,
-            fontFamily:this.textForm.fontFamily,
-            isAll:this.textForm.isAll,
-            id:_id,
-            enter:this.textForm.enter,
-            leave:this.textForm.leave
-          }
-          _time = this.textForm.dismissTime+'s';
-          if(this.textForm.isAll){
-            _time = 'all'
-          }
-          _text = `<div class="tagtag tag_text" onclick="editTag(\``+_id+`\`)">文字`+' ('+_time+`)<i class="el-icon-close" onclick="delTag(\``+_id+`\`)"></i>&nbsp;</div>`
-          if(this.editTagId){
-            UnityEditTag(JSON.stringify(_data),'True')
-            let _oldTag = this.$refs.testText.nodeToString( document.getElementById(_id) ).replace( "<" , "<" ).replace( ">" , ">");
-            tagDom.dataset.obj = JSON.stringify(_data)
-            tagDom.innerHTML = _text;
-            let _newTag = this.$refs.testText.nodeToString( document.getElementById(_id) ).replace( "<" , "<" ).replace( ">" , ">");
-            this.testData = this.testData.replace(_oldTag,_newTag);
-          }else{
-            UnityInsertTag(JSON.stringify(_data))
-            this.$refs.testText.addTag(_text,_data)
-          }
-          this.editTagId = "";
-          this.$emit('addDisplay',_data)
-          this.textVisible = false;
-          return false;
-        }
-        if(this.videoVisible&&this.ruleForm.videoUrl){
-          if(!this.ruleForm.dismissTime){
-            this.$message.error('请确认呈现时间')
-            return false;
-          }
-          _data={
-            type:'video',
-            name:this.ruleForm.videoName,
-            time:this.ruleForm.dismissTime*1000,
-            url: this.ruleForm.videoUrl,
-            isSupportAudio:this.ruleForm.isSupportAudio,
-            region:this.ruleForm.region,
-            isAll:this.ruleForm.isAll,
-            id:_id,
-            enter:this.ruleForm.enter,
-            leave:this.ruleForm.leave
-          }
-          _time = this.ruleForm.dismissTime+'s';
-          if(this.ruleForm.isAll){
-            _time = 'all'
-          }
-          _text = `<div class="tagtag tag_video" onclick="editTag(\``+_id+`\`)">视频`+this.ruleForm.videoName+` (`+_time+`)<i class="el-icon-close" onclick="delTag(\``+_id+`\`)"></i>&nbsp;</div>`
-          if(this.editTagId){
-            UnityEditTag(JSON.stringify(_data),'True')
-            let _oldTag = this.$refs.testText.nodeToString( document.getElementById(_id) ).replace( "<" , "<" ).replace( ">" , ">");
-            tagDom.dataset.obj = JSON.stringify(_data)
-            tagDom.innerHTML = _text;
-            let _newTag = this.$refs.testText.nodeToString( document.getElementById(_id) ).replace( "<" , "<" ).replace( ">" , ">");
-            this.testData = this.testData.replace(_oldTag,_newTag);
-          }else{
-            UnityInsertTag(JSON.stringify(_data))
-            this.$refs.testText.addTag(_text,_data)
-          }
-          this.editTagId = "";
-          this.$emit('displayVideoUrl',_data)
-          this.videoVisible = false;
-        }else if(!this.videoVisible&&this.imgForm.url){
-          if(!this.imgForm.dismissTime){
-            this.$message.error('请确认呈现时间')
-            return false;
-          }
-          _data={
-            type:'image',
-            name:this.imgForm.name,
-            time:this.imgForm.dismissTime*1000,
-            url:this.imgForm.url,
-            region:this.imgForm.region,
-            isAll:this.imgForm.isAll,
-            id:_id,
-            enter:this.imgForm.enter,
-            leave:this.imgForm.leave
-          }
-          _time = this.imgForm.dismissTime+'s';
-          if(this.imgForm.isAll){
-            _time = 'all'
-          }
-          _text =  `<div class="tagtag tag_image" onclick="editTag(\``+_id+`\`)">图片`+this.imgForm.name+` (`+_time+`)<i class="el-icon-close" onclick="delTag(\``+_id+`\`)"></i>&nbsp;</div>`
-          if(this.editTagId){
-            UnityEditTag(JSON.stringify(_data),'True')
-            let _oldTag = this.$refs.testText.nodeToString( document.getElementById(_id) ).replace( "<" , "<" ).replace( ">" , ">");
-            tagDom.dataset.obj = JSON.stringify(_data)
-            tagDom.innerHTML = _text;
-            let _newTag = this.$refs.testText.nodeToString( document.getElementById(_id) ).replace( "<" , "<" ).replace( ">" , ">");
-            this.testData = this.testData.replace(_oldTag,_newTag);
-          }else{
-            UnityInsertTag(JSON.stringify(_data))
-            this.$refs.testText.addTag(_text,_data)
-          }
-          this.editTagId = "";
-          this.$emit('displayImgUrl',_data)
-          this.imgVisible = false;
-        }else{
-          this.$message.error('请先上传文件')
+        switch (type) {
+          case 'text':
+            if (!data.text.replace(/ /g, '')) {
+              this.$message.error('请输入文字')
+              return false;
+            }
+            _data = {
+              type: 'text',
+              text: data.text,
+              textColor: data.textColor,
+              region: data.region,
+              textSize: data.textSize,
+              gravity: data.gravity,
+              ellipsize: data.ellipsize,
+              dismissTime: data.dismissTime * 1000,
+              isAll: data.isAll,
+              fontFamily: data.fontFamily,
+              id: _id,
+              enter: data.enter,
+              leave: data.leave
+            }
+            _time = data.dismissTime + 's';
+            if (data.isAll) {
+              _time = 'all'
+            }
+            _text = `<div class="tagtag tag_text" onclick="editTag(\`` + _id + `\`)">文字` + ' (' + _time + `)<i class="el-icon-close" onclick="delTag(\`` + _id + `\`)"></i>&nbsp;</div>`
+            if (this.editTagId) {
+              UnityEditTag(JSON.stringify(_data),'True')
+              let _oldTag = NodeToString(document.getElementById(_id)).replace("<", "<").replace(">", ">");
+              tagDom.dataset.obj = JSON.stringify(_data)
+              tagDom.innerHTML = _text;
+              let _newTag = NodeToString(document.getElementById(_id)).replace("<", "<").replace(">", ">");
+              this.testData = this.testData.replace(_oldTag, _newTag);
+            } else {
+              UnityInsertTag(JSON.stringify(_data))
+              this.$refs.testText.addTag(_text, _data)
+            }
+            this.editTagId = "";
+            this.$emit('addDisplay', _data)
+            this.textVisible = false;
+            break;
+
+          case 'video':
+            if (!data.videoUrl) {
+              this.$message.error('请先上传文件')
+              return
+            }
+            if (!data.dismissTime) {
+              this.$message.error('请确认呈现时间')
+              return
+            }
+            _data = {
+              type: 'video',
+              name: data.videoName,
+              time: data.dismissTime * 1000,
+              url: data.videoUrl,
+              isSupportAudio: data.isSupportAudio,
+              region: data.region,
+              isAll: data.isAll,
+              id: _id,
+              enter: data.enter,
+              leave: data.leave
+            }
+            _time = data.dismissTime + 's';
+            if (data.isAll) {
+              _time = 'all'
+            }
+            _text = `<div class="tagtag tag_video" onclick="editTag(\`` + _id + `\`)">视频` + data.videoName + ` (` + _time + `)<i class="el-icon-close" onclick="delTag(\`` + _id + `\`)"></i>&nbsp;</div>`
+            if (this.editTagId) {
+              UnityEditTag(JSON.stringify(_data),'True')
+              let _oldTag = NodeToString(document.getElementById(_id)).replace("<", "<").replace(">", ">");
+              tagDom.dataset.obj = JSON.stringify(_data)
+              tagDom.innerHTML = _text;
+              let _newTag = NodeToString(document.getElementById(_id)).replace("<", "<").replace(">", ">");
+              this.testData = this.testData.replace(_oldTag, _newTag);
+            } else {
+              UnityInsertTag(JSON.stringify(_data))
+              this.$refs.testText.addTag(_text, _data)
+            }
+            this.editTagId = "";
+            this.$emit('displayVideoUrl', _data)
+            this.videoVisible = false;
+            break;
+
+          case 'img':
+            if (!data.url) {
+              this.$message.error('请先上传文件')
+              return
+            }
+            if (!data.dismissTime) {
+              this.$message.error('请确认呈现时间')
+              return false;
+            }
+            _data = {
+              type: 'image',
+              name: data.name,
+              time: data.dismissTime * 1000,
+              url: data.url,
+              region: data.region,
+              isAll: data.isAll,
+              id: _id,
+              enter: data.enter,
+              leave: data.leave
+            }
+            _time = data.dismissTime + 's';
+            if (data.isAll) {
+              _time = 'all'
+            }
+            _text = `<div class="tagtag tag_image" onclick="editTag(\`` + _id + `\`)">图片` + data.name + ` (` + _time + `)<i class="el-icon-close" onclick="delTag(\`` + _id + `\`)"></i>&nbsp;</div>`
+            if (this.editTagId) {
+              UnityEditTag(JSON.stringify(_data),'True')
+              let _oldTag = NodeToString(document.getElementById(_id)).replace("<", "<").replace(">", ">");
+              tagDom.dataset.obj = JSON.stringify(_data)
+              tagDom.innerHTML = _text;
+              let _newTag = NodeToString(document.getElementById(_id)).replace("<", "<").replace(">", ">");
+              this.testData = this.testData.replace(_oldTag, _newTag);
+            } else {
+              UnityInsertTag(JSON.stringify(_data))
+              this.$refs.testText.addTag(_text, _data)
+            }
+            this.$emit('displayImgUrl', _data)
+            this.imgVisible = false;
+            this.editTagId = "";
+            break;
         }
       },
       getGuid() {
@@ -1852,22 +1580,5 @@
         background: rgba(140, 147, 157, 0.19);
       }
     }
-  }
-  .text_preview{
-    padding: 3px;
-    border: 1px solid gainsboro;
-    height: 100px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .text_color-sty{
-    width: 35px;
-    height: 30px;
-    border: 1px solid gainsboro;
-    border-radius: 5px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
   }
 </style>

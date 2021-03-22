@@ -11,15 +11,20 @@
       @input="handleInput($event.target)"
     ></div>
 
-    <div class="w-textarea_tools clearfix" v-if="tools.length > 0 || maxlength">
+    <div class="w-textarea_tools" v-if="tools.length > 0 || maxlength">
       <el-popconfirm
-        confirmButtonText='是的'
-        cancelButtonText='不用了'
+        cancel-button-type="info"
+        confirm-button-type="info"
+        confirmButtonText='确认'
+        cancelButtonText='取消'
         icon="el-icon-info"
-        iconColor="red"
+        iconColor="#fbfbfb"
         @onConfirm="openTagDialog('clean')"
         title="确认清空所有标签？">
-        <button slot="reference" class="w-textarea_tools__item clear float_right"> 清空标签</button>
+        <button slot="reference" class="w-textarea_tools__item cleanTag">
+          <i class="iconfont alicon-qingkong tagLogo"></i>
+          <span>清空标签</span>
+        </button>
       </el-popconfirm>
 
       <el-tooltip  :open-delay="1000" placement="bottom" effect="dark">
@@ -27,13 +32,28 @@
           <p class="center tip_title">互动标签</p>
           <p class="center">注意文本中不要离得太近哦!</p>
         </div>
-        <button class="w-textarea_tools__item inac float_left"
-                @click="openTagDialog('interaction')">插入互动</button>
+        <button class="w-textarea_tools__item "
+                @click="openTagDialog('interaction')">
+          <i class="iconfont alicon-hudongguanli tagLogo"></i>
+          <span>插入互动</span>
+        </button>
       </el-tooltip>
-      <button class="w-textarea_tools__item video float_left" @click="openTagDialog('video')">插入视频</button>
-      <button class="w-textarea_tools__item picture float_left" @click="openTagDialog('img')">插入图片</button>
-      <button class="w-textarea_tools__item text float_left" @click="openTagDialog('text')">插入文字</button>
-<!--      <button class="w-textarea_tools__item timer float_left" @click="openTagDialog('intervalTime')">添加间隔</button>-->
+      <button class="w-textarea_tools__item " @click="openTagDialog('video')">
+        <i class="iconfont alicon-shipin tagLogo"></i>
+        <span>插入视频</span>
+      </button>
+      <button class="w-textarea_tools__item " @click="openTagDialog('img')">
+        <i class="iconfont alicon-tupian tagLogo"></i>
+        <span>插入图片</span>
+      </button>
+      <button class="w-textarea_tools__item " @click="openTagDialog('text')">
+        <i class="iconfont alicon-wenzi tagLogo"></i>
+        <span>插入文字</span>
+      </button>
+<!--      <button class="w-textarea_tools__item " @click="openTagDialog('timer')">-->
+<!--        <i class="iconfont alicon-jiange tagLogo"></i>-->
+<!--        <span>添加间隔</span>-->
+<!--      </button>-->
 
       <!--      <button class="w-textarea_tools__item float_right"-->
       <!--        v-for="item in tools"-->
@@ -51,6 +71,7 @@
 </template>
 
 <script>
+  import { NodeToString } from './exportMessage'
   import Bus from "@/api/bus";
   export default {
     name: 'wTextarea',
@@ -79,9 +100,6 @@
         recentlyAddedTagsID: '',
         initCurrentTxtData: {},
         currentTxtData: {},
-        isKeyDown: false,
-        isTextureClicked: false,
-        inHandledSituation1: false
       };
     },
     props: {
@@ -134,7 +152,7 @@
         }
         let parent = self.$refs.wTextareaContent
         // let parent=document.getElementById(self.contentId);
-        let _childTxt = self.nodeToString(child).replace( "<" , "<" ).replace( ">" , ">")
+        let _childTxt = NodeToString(child).replace( "<" , "<" ).replace( ">" , ">")
         // self.testData=self.testData.replace(_childTxt,'');
         self.$emit('delTagMain',_childTxt)
         parent.removeChild(child);
@@ -145,70 +163,14 @@
       this.createStyle();
       // 每次光标变化的时候，保存 range
       document.addEventListener('selectionchange', this.selectHandler);
-      // this.$refs.wTextareaContent.addEventListener('selectionchange', this.selectHandler);
-      document.addEventListener('keydown', this.handleKeyDown)
 
       this.$refs.wTextareaContent.focus()
     },
     beforeDestroy() {
       // 卸载事件
       document.removeEventListener('selectionchange', this.selectHandler);
-      // this.$refs.wTextareaContent.removeEventListener('selectionchange', this.selectHandler);
-      document.removeEventListener('keydown', this.handleKeyDown)
     },
     methods: {
-      handleKeyDown(e) {
-        if(e.keyCode==39 || e.keyCode==37) {
-          this.isKeyDown = true;
-        }
-      },
-      //去除标签的纯文本
-      exportMessage(){
-        let self = this;
-        let wiseDomList = document.getElementsByClassName('w-textarea_input')[0].querySelectorAll('wise')
-        let allText = document.getElementsByClassName('w-textarea_input')[0].innerText
-        // document.getElementsByClassName('w-textarea_input')[0].querySelectorAll('wise')[0].innerText
-        let resText=allText;
-        //IndexTextArr——全部带html文本标签分段数组；IndexNumArr为全部纯文本标签分段数组；resArr为data-obj和下标集合
-        let IndexTextArr = [],IndexNumArr=[],messageArr =[];
-        //筛选待处理
-        wiseDomList.forEach(wise=>{
-          resText = resText.replace(wise.innerText,'')
-          var escapedStr = this.nodeToString( wise ).replace( "<" , "<" ).replace( ">" , ">");
-          IndexTextArr.push(self.testData.split(escapedStr)[0]);
-          messageArr.push({
-            datasetObj:JSON.parse(wise.dataset.obj),
-            index:''
-          })
-        })
-
-        IndexTextArr.forEach((val,ind)=>{
-          let _text=val;
-          wiseDomList.forEach(wise=>{
-            var escapedStr = self.nodeToString( wise ).replace( "<" , "<" ).replace( ">" , ">");
-            _text = _text.replace(escapedStr,'')
-          })
-          IndexNumArr.push(_text);
-        })
-        console.log('纯文本缺最后一项文本，标签分段数组',IndexNumArr)
-
-        IndexNumArr.forEach((val,ind)=>{//整合标签下标
-          messageArr[ind].index = val.length;
-        })
-        resText = resText.replace(/&nbsp;/g,'').replace(/&amp;/g,'&')
-        return new Promise(resolve => {
-          resolve({messageArr:messageArr,noTagText:resText})
-        })
-      },
-      //dom转字符串
-      nodeToString ( node ) {
-        var tmpNode = document.createElement( "div" );
-        tmpNode.appendChild( node.cloneNode( true ) );
-        var str = tmpNode.innerHTML;
-        tmpNode = node = null; // prevent memory leaks in IE
-        return str;
-      },
-
 
       updateData(text) {
         this.$emit('input', text);
@@ -221,10 +183,6 @@
         -webkit-user-modify: read-only !important;
       }`;
         this.$refs.wTextarea.appendChild(style);
-      },
-      closeModal() {
-        this.form.text = '';
-        this.showModal = false;
       },
       openTagDialog(type) {
         // 将事件抛给父组件处理
@@ -257,7 +215,6 @@
         })
       },
       insertNode (node) { // 在内容中插入标签
-        this.isKeyDown = false;
         // 删掉选中的内容（如有）
         // console.log(this.savedRange)
         this.savedRange.deleteContents()
@@ -340,7 +297,6 @@
           this.currentTagId = null;
         }
         this.isTextureClicked = true;
-        this.isKeyDown = false;
         this.selectHandler();
       },
       getGuid() {
@@ -394,7 +350,7 @@
           if(val.id){
             childNodeLength = val.innerText.length
           }else{
-            childNodeLength = this.nodeToString(val).length
+            childNodeLength = NodeToString(val).length
           }
           if(elementIndex===undefined){
             if(childNodeLength<=pos){
@@ -519,52 +475,33 @@
       font-size: 0px;
       .w-textarea_tools__item {
         font-size: 12px;
-        margin-top: 14px;
+        margin: 12px 17px 0 0;
         display: inline-block;
         line-height: 1;
-        margin-right: 30px;
         padding-top: 30px;
         cursor: pointer;
         background: #fff;
         transition: all 0.3s;
         color: #666666;
+        position: relative;
+        .tagLogo{
+          font-size: 20px !important;
+          position: absolute;
+          top: 4px;
+          left: 12px;
+          color: #999999;
+          font-weight: 600;
+        }
         &:hover {
           opacity: .7;
         }
         &:focus {
           outline: none;
         }
-        &.clear {
-          background: url(../../../static/icon/clear.png) no-repeat center;
-          background-size: 24px 24px;
-          background-position: top center;
-          margin-right: 8px;
-        }
-        &.inac {
-          background: url(../../../static/icon/inac.png) no-repeat center;
-          background-size: 24px 24px;
-          background-position: top center;
-        }
-        &.video {
-          background: url(../../../static/icon/video.png) no-repeat center;
-          background-size: 24px 24px;
-          background-position: top center;
-        }
-        &.picture {
-          background: url(../../../static/icon/picture.png) no-repeat center;
-          background-size: 24px 24px;
-          background-position: top center;
-        }
-        &.timer {
-          background: url(../../../static/icon/timer.png) no-repeat center;
-          background-size: 24px 24px;
-          background-position: top center;
-        }
-        &.text{
-          background: url(../../../static/icon/text.png) no-repeat center;
-          background-size: 24px 24px;
-          background-position: top center;
-        }
+      }
+      .cleanTag{
+        position: absolute;
+        right: 0px;
       }
       &__text {
         display: inline-block;
