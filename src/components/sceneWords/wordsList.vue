@@ -6,7 +6,7 @@
             <span class="addTips">最多创建10条，开启多个话术时，随机播放一个</span>
             <div class="listWrap">
                 <div v-for='(item, idx) in list' :key='idx' class="list">
-                    <el-switch class="switch" v-model="item.switch==0" active-color="#ff769a" inactive-color="#ccc" @change='handleSwitch(item)'></el-switch>
+                    <el-switch class="switch" v-model="item.switch==0" active-color="#7694f3" inactive-color="#ccc" @change='handleSwitch(item)'></el-switch>
                     <span class="words">{{item.content}}</span>
                     <span class="edit" @click='handleEdit(item)'>编辑</span>
                     <span class="center"></span>
@@ -33,7 +33,7 @@
 
             <div v-if='isShowDelDialog' class="delDialog">
                 <i class="el-icon-close" @click='cancelDel'></i>
-                <i class="el-icon-warning-outline" style='font-size:42px;color:#ff7599;margin-bottom:18px;font-weight:600;'></i>
+                <i class="el-icon-warning-outline" style='font-size:42px;color:#b2c5ff;margin-bottom:18px;font-weight:600;'></i>
                 <div>是否删除话术？</div>
                 <span slot="footer" class="dialog-footer">
                     <el-button class="cancel" @click="cancelDel">取 消</el-button>
@@ -163,8 +163,8 @@ export default {
         width: 64px;
         height: 24px;
         border-radius: 12px;
-        border: 1px solid #ff7599;
-        color: #ff7599;
+        border: 1px solid #7694f3;
+        color: #7694f3;
         font-size: 12px;
         background: #fff;
         cursor: pointer;
@@ -182,9 +182,9 @@ export default {
     .list {
         position: relative;
         min-height: 45px;
-        background: #fff6f9;
+        background: #f5f6fd;
         border-radius: 6px;
-        border: 1px solid #ff769a;
+        border: 1px solid #7694f3;
         margin-bottom: 12px;
         box-sizing: border-box;
         padding: 0 30px 0 16px;
@@ -214,7 +214,7 @@ export default {
         right: 80px;
         top: 50%;
         transform: translate(0, -50%);
-        color: #ff769a;
+        color: #7694f3;
         font-size: 14px;
         cursor: pointer;
     }
@@ -223,7 +223,7 @@ export default {
         right: 70px;
         top: 50%;
         transform: translate(0, -50%);
-        background: #D4C6FF;
+        background: #c4cef8;
         width: 1px;
         height: 10px;
     }
@@ -259,9 +259,10 @@ export default {
         margin-top: 8px;
     }
     .cancel {
+        font-size: 13px;
         color: #979797;
-        width: 92px;
-        height: 34px;
+        width: 80px;
+        height: 28px;
         border-radius: 17px;
         opacity: 0.7;
         border: 1px solid #979797;
@@ -269,15 +270,16 @@ export default {
         cursor: pointer;
     }
     .confirm {
+      font-size: 13px;
         color: #FFFFFF;
-        width: 94px;
-        height: 34px;
-        background: #ff7599;
+        width: 80px;
+        height: 28px;
+        background: #7694f3;
         border-radius: 17px;
         margin-left: 12px;
         cursor: pointer;
         outline: none;
-      border-color:#ff7599;
+      border-color:#7694f3;
     }
     .delDialog {
         width: 392px;

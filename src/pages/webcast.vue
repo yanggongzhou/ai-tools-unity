@@ -949,7 +949,7 @@ export default {
         margin-left: -22px;
     }
     .playScripts.el-table thead th {
-      background: #abbdf5 !important;
+      background: #7694f3 !important;
       color: #FFFFFF;
     }
     .playScripts.el-table tbody tr:hover>td:first-of-type {

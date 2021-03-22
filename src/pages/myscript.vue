@@ -358,7 +358,7 @@ export default {
     border: 1px solid #fff;
     outline: none;
     text-decoration: none;
-    background: linear-gradient(90deg,  #d2dcfc, #7694f3);
+    background: linear-gradient(90deg, #3563f3, #97affb);
     width: 100px;
     height: 38px;
     line-height: 37px;
@@ -378,12 +378,12 @@ export default {
 
   .light-btn::before {
     content: '';
-    background: linear-gradient(90deg,  #d2dcfc, #7694f3 );
+    background: linear-gradient(90deg,  #3563f3, #97affb );
     border-radius: 50px;
     filter: blur(10px);
   }
   .create-btn{
-    background: linear-gradient(90deg,  #d2dcfc, #7694f3 );
+    background: linear-gradient(90deg,  #3563f3, #97affb );
     margin-right: 20px;
     /*position: absolute;*/
     /*right: 0px;*/
@@ -395,7 +395,7 @@ export default {
     /*top: -15px;*/
   }
   .search_btn{
-    background: linear-gradient(90deg, #d2dcfc, #7694f3 );
+    background: linear-gradient(90deg, #3563f3, #97affb );
     width: 76px;
     height: 32px;
     line-height: 30px;

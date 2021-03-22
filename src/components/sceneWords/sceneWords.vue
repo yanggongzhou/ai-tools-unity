@@ -141,6 +141,6 @@ export default {
         color: #000;
     }
     .el-tabs__active-bar {
-        background-color: #ff7599;
+        background-color: #7694f3;
     }
 </style>
