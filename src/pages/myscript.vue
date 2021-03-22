@@ -301,8 +301,8 @@ export default {
             /deep/.el-input__inner{
               border-radius: 32px;
               border: none;
-              box-shadow: 0px 1px 1px #e4d9f9;
-              color: #ff7599;
+              box-shadow: 0px 1px 1px #d9e2fd;
+              color: #5C83FF;
             }
         }
         .search {
@@ -332,20 +332,20 @@ export default {
         border-radius: 32px;
     }
     #myscript .el-table thead th {
-        background: #fab2c5!important;
+        background: #7694f3 !important;
         color: #FFFFFF;
     }
     #myscript .el-table tbody tr:hover>td:first-of-type {
-        border-left: 3px solid #ff7599!important;
+        border-left: 3px solid #7694f3!important;
     }
     #myscript .el-table tbody tr:hover>td {
-        background-color: rgba(250, 222, 237, 0.61) !important;
+        background-color: #d2dcfc !important;
     }
     #myscript .el-pager li.active{
-      color: #ff7599;
+      color: #d2dcfc;
     }
     #myscript .el-pager li:hover{
-      color: #ff7599;
+      color: #d2dcfc;
     }
     #myscript .el-table__empty-block {
         background: url(https://large.magics-ad.com/ai-3D/static/img/null.png) no-repeat center;
@@ -358,7 +358,7 @@ export default {
     border: 1px solid #fff;
     outline: none;
     text-decoration: none;
-    background: linear-gradient(90deg,  #FFBA48,#FF71B5 );
+    background: linear-gradient(90deg,  #d2dcfc, #7694f3);
     width: 100px;
     height: 38px;
     line-height: 37px;
@@ -368,7 +368,7 @@ export default {
     border-radius: 50px;
     cursor: pointer;
     &:focus{
-      border: 1px solid #9C27B0;
+      border: 1px solid #7694f3;
     }
   }
   .light-btn:hover::before,
@@ -378,12 +378,12 @@ export default {
 
   .light-btn::before {
     content: '';
-    background: linear-gradient(90deg,  #FFBA48,#FF71B5 );
+    background: linear-gradient(90deg,  #d2dcfc, #7694f3 );
     border-radius: 50px;
     filter: blur(10px);
   }
   .create-btn{
-    background: linear-gradient(90deg,  #FFBA48,#FF71B5 );
+    background: linear-gradient(90deg,  #d2dcfc, #7694f3 );
     margin-right: 20px;
     /*position: absolute;*/
     /*right: 0px;*/
@@ -395,7 +395,7 @@ export default {
     /*top: -15px;*/
   }
   .search_btn{
-    background: linear-gradient(90deg, #fd9cb5,#f9becd );
+    background: linear-gradient(90deg, #d2dcfc, #7694f3 );
     width: 76px;
     height: 32px;
     line-height: 30px;

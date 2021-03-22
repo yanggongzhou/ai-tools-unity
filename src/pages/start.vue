@@ -42,7 +42,7 @@
     }
   }
   .homepage {
-    background-image: linear-gradient(to bottom right, #fffdfd, #fbe3e9, #f7ced8, #fbd5df, #f9e8ec, #fffdfd);
+    background-image: linear-gradient(to bottom right, #fdfdfd, #e1e7fb, #b1c0f3, #b5c7ff, #e0e7fd, #fdfdfd);
     display: flex;
     flex-direction: column;
     align-items: center;

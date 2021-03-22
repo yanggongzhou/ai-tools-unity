@@ -4,9 +4,9 @@
 
     <div class="progressBox" v-if="progressVisible">
       <radial-progress-bar :diameter="200"
-                           startColor="#ff7599"
-                           stopColor="#fab2c5"
-                           innerStrokeColor="#fbeff2"
+                           startColor="#7094fb"
+                           stopColor="#c4d0f7"
+                           innerStrokeColor="#e8eeff"
                            :completed-steps="completedSteps"
                            :total-steps="totalSteps">
         <p class="midText">总剧本: {{ totalSteps }}</p>
@@ -36,7 +36,7 @@
         </div>
         <span slot="reference" style="cursor: help;position: relative;top: 4px">随机播放</span>
       </el-popover>
-      <el-switch @change="isRandomChange" v-model="isRandom" active-color='#ff7599' style='margin:6px 18px 0 8px;' :disabled="isAutoPlayBtn"></el-switch>
+      <el-switch @change="isRandomChange" v-model="isRandom" active-color='#7694f3' style='margin:6px 18px 0 8px;' :disabled="isAutoPlayBtn"></el-switch>
       <el-popover
         placement="bottom"
         width="400"
@@ -49,7 +49,7 @@
         </div>
         <span slot="reference" style="cursor: help;position: relative;top: 4px">互动模式</span>
       </el-popover>
-      <el-switch @change="SwitchChange" v-model="isOpenInteractiveMode" active-color='#ff7599' style='margin-left:8px;margin-top:6px;' :disabled="isAutoPlayBtn"></el-switch>
+      <el-switch @change="SwitchChange" v-model="isOpenInteractiveMode" active-color='#7694f3' style='margin-left:8px;margin-top:6px;' :disabled="isAutoPlayBtn"></el-switch>
     </div>
 
     <div class="dialogBox">
@@ -81,7 +81,7 @@
             <div class="header clearfix">
               <div class="title float_left">第{{ind+1}}段</div>
               <div class="pdtip float_left"
-                   style="color: #ff7599"
+                   style="color: #7694f3"
                    :style="ind | styleFilter2"
               >正在播放中...</div>
               <div class="pdtip float_left"
@@ -154,7 +154,7 @@
               <div class="header clearfix">
                 <div class="title float_left">{{val.created_at}}</div>
                 <div class="pdtip float_left"
-                     style="color: #4CAF50"
+                     style="color: #7694f3"
                      v-show="nowTempId===val.id"
                 >正在播放中...</div>
                 <div class="pdtip float_left"
@@ -261,19 +261,19 @@
         if(that.nowContentIndex!==""&&that.nowAllScriptIndex !== ''){
           if(ind===that.nowContentIndex&&that.nowAllScriptIndex===that.allScriptIndex){
             return {
-              'border': '1px solid #ff7599',
+              'border': '1px solid #7694f3',
               'background': '#fff'
             }
           }else{
             return {
-              'background': '#FFFBF2',
-              'border': '1px solid #FEE0C7'
+              'background': '#f5f8ff',
+              'border': '1px solid #bdd1ff'
             }
           }
         }else{
           return {
-            'background': '#FFFBF2',
-            'border': '1px solid #FEE0C7'
+            'background': '#f5f8ff',
+            'border': '1px solid #bdd1ff'
           }
         }
       },
@@ -1247,14 +1247,14 @@
     padding: 0px!important;
   }
   /deep/.el-radio{
-    color: #ff7599 !important;
+    color: #7694f3 !important;
     /*border-bottom: 1px solid #fff !important;*/
   }
   /deep/.el-radio.is-bordered.is-checked{
     /*border-color: #7C53FF !important;*/
     border-color: #FFF !important;
     border: 3px solid #FFF !important;
-    background: linear-gradient(166deg, #ff81a2 0%, #ffcfdc 100%) !important;
+    background: linear-gradient(166deg, #7694f3 0%, #a0b3ff 100%) !important;
     border-radius: 8px;
   }
   /deep/.el-radio__input.is-checked+.el-radio__label{
@@ -1265,7 +1265,7 @@
     position: relative;
   }
   .dialogBox{
-    box-shadow: 0px 0px 3px #ff9db6;
+    box-shadow: 0px 0px 3px #a5b8f5;
     height: 536px;
     width: 650px;
     background: #FFF;
@@ -1277,14 +1277,14 @@
     height: 450px;
     width: 150px;
     background: #FBFAFF;
-    border: 0.5px solid #ff9db6;
+    border: 0.5px solid #b2c3fd;
     border-bottom: none;
     border-radius: 3px 0 0 0;
     font-size: 0;
     overflow-y: scroll;
   }
   .left_card{
-    background: #f9edf1!important;
+    background: #e6ecff!important;
     position: relative;
     z-index: 10;
     width: 100%;
@@ -1309,7 +1309,7 @@
       padding-left: 0;
     }
     /deep/.el-radio__input.is-disabled+span.el-radio__label{
-      color: #ff7599;
+      color: #7694f3;
     }
     .left_card_item{
       font-size: 0;
@@ -1344,7 +1344,7 @@
     width: 455px;
     height: 421px;
     margin: 28px 0 0 20px;
-    overflow: scroll;
+    /*overflow: scroll;*/
     overflow-x: hidden;
     padding-right: 13px;
     &::-webkit-scrollbar {
@@ -1354,14 +1354,14 @@
     }
     &::-webkit-scrollbar-track {
       /*box-shadow: 1px 1px 5px rgba(0, 0, 0, .2) inset;*/
-      border: 1px solid #ffbdcf;
+      border: 1px solid #9bb2fa;
     }
 
     &::-webkit-scrollbar-thumb {
       min-height: 20px;
       background-clip: content-box;
-      box-shadow: 0 0 0 5px rgb(255 140 171) inset;
-      border: 1px solid #ffbdcf;
+      box-shadow: 0 0 0 5px #678af6 inset;
+      border: 1px solid #9bb2fa;
     }
 
     &::-webkit-scrollbar-corner {
@@ -1374,7 +1374,7 @@
       margin-top: 12px;
       background: #FFFBF2;
       border-radius: 4px;
-      border: 1px solid #ff89a8;
+      border: 1px solid #7694f3;
       .header{
         font-size: 12px;
         font-weight: 500;
@@ -1388,21 +1388,21 @@
         .play_icon{
           font-size: 18px;
           margin-left: 30px;
-          color: #ff7599;
+          color: #7694f3;
           cursor: pointer;
           transition: all .3s;
           &:hover{
-            color: #f82f64;
+            color: #194bfa;
           }
         }
         .keyboard{
           font-size: 12px;
-          color: #ff7599;
+          color: #7694f3;
           font-weight: 400;
           cursor: pointer;
           transition: all .3s;
           &:hover{
-            color: #f82f64;
+            color: #194bfa;
           }
           .keyboard_shortcut{
 
@@ -1430,7 +1430,7 @@
       height: 60px;
       margin-top: 0px;
       margin-bottom: 12px;
-      border: 1px solid #ff89a8;
+      border: 1px solid #7694f3;
       padding: 8px 10px 4px;
       background: #fff4f761;
       border-radius: 4px;
@@ -1454,7 +1454,7 @@
     }
   }
   .footBox{
-    border-top: 1px solid #ff9db6;
+    border-top: 1px solid #b2c3fd;
     padding: 19px;
     .leftIcon{
       width: 130px;
@@ -1503,7 +1503,7 @@
     line-height: 32px;
     margin: 0 auto;
     /*background: linear-gradient(166deg, #ff7599 0%, #ffdce5 100%);*/
-    background: #ff7599;
+    background: #7694f3;
     border-radius: 16px;
     color: #fff;
     font-size: 12px;
@@ -1519,8 +1519,8 @@
     margin: 0 auto;
     background: #FFF;
     border-radius: 16px;
-    border: 1px solid #ff7599;
-    color: #ff7599;
+    border: 1px solid #7694f3;
+    color: #7694f3;
     font-size: 12px;
     cursor: pointer;
     position: absolute;
@@ -1548,7 +1548,7 @@
     font-size: 12px;
   }
   .borderLeftGreen{
-    border-left: 7px solid #ff7599!important;
+    border-left: 7px solid #7694f3!important;
   }
 
   .progressBox{
@@ -1563,17 +1563,17 @@
     align-items: center;
     justify-content: center;
     .midText{
-      color: #ff7599;
+      color: #7694f3;
       font-weight: 600;
     }
     .progress-btn{
       width: 30px;
       height: 30px;
-      line-height: 25px;
+      line-height: 22px;
       background: none;
-      border: 4px solid #f6e6f9;
+      border: 4px solid #e2e7f8;
       border-radius: 16px;
-      color: #ff7599;
+      color: #7694f3;
       font-size: 14px;
       font-weight: 600;
       cursor: pointer;
@@ -1582,7 +1582,7 @@
       right: -69px;
       top: -9px;
       &:hover{
-        border: 4px solid #ff7599;
+        border: 4px solid #7694f3;
         background: rgba(255, 255, 255, 0.37);
       }
     }

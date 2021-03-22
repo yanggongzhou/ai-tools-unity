@@ -125,7 +125,7 @@ export default {
       .line{
         width: 173px;
         height: 13px;
-        background: rgba(141, 137, 222, 0.43);
+        background: #5C83FF42;
         position: relative;
         margin: 0 auto;
         top: -13px;

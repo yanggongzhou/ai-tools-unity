@@ -1736,7 +1736,7 @@
     color: #a7a7a7;
   }
   .queren{
-    background: #ff7599;
+    background: #7694f3;
   }
 </style>
 <style lang="less" scoped>
