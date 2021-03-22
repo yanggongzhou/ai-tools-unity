@@ -1,17 +1,11 @@
 import axios from 'axios'
-import qs from 'qs'//转换formdata类型数据
 import { Message } from "element-ui";
-import { Session } from "./auth";
 
 const prevHandler = ({data}) => {
-  // if (data.return_code===1009) {
-  // sessionStorage.setItem()
-  if (data.return_code!==1000&&data.return_code!=="0"&&data.return_code!=="1000") {
+  if (data.return_code===1009) {
     Message.error(data.result.message)
+    console.log('令牌过期',data)
     UnityUserInfo()
-    // if (data.return_code===1009) {
-    //   UnityUserInfo()
-    // }
   }
   return data
 };

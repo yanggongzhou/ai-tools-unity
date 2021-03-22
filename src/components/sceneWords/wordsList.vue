@@ -41,7 +41,9 @@
                 </span>
             </div>
         </div>
+
         <!-- <span v-for="(item,idx) in list" :key='idx'>{{item.content}}</span> -->
+
     </div>
 </template>
 <script>

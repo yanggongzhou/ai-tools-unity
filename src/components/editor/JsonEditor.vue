@@ -1218,10 +1218,6 @@
                   val.index = dom.index;
                 }
               })
-              // //删除id
-              // if(val.type==='info'){
-              //   delete val.info.child[0].id;
-              // }
             })
             let sortData =  function (a, b) {
               return a.index-b.index
