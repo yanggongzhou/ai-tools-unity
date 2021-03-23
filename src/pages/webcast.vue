@@ -956,7 +956,7 @@ export default {
         border-left: 3px solid #7694f3!important;
     }
     .playScripts.el-table tbody tr:hover>td {
-      background-color: rgba(250, 222, 237, 0.61) !important;
+      background-color: #d6dffd !important;
     }
     .playScripts.el-pagination {
         position: absolute;
