@@ -5,7 +5,8 @@
         <el-option
           v-for="(val,ind) in InfoModelData"
           :key="ind+'infoModel'"
-          :label="val.label" :value="val.region"></el-option>
+          :label="'展位'+val"
+          :value="val"></el-option>
       </el-select>
     </el-form-item>
     <el-form-item label="上传文件">
