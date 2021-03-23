@@ -7,8 +7,12 @@
 </template>
 <script>
   import {requestServices} from "../api/api";
+  import { mapGetters , mapActions } from "vuex";
 
   export default {
+    computed: {
+      ...mapGetters(["ali_tts_token", "ali_token_expires"]),
+    },
     data(){
       return{}
     },
@@ -25,6 +29,18 @@
           WebUserMessage(res.result.user_profile.id,res.result.access_token,res.result.user_profile.phone)
         })
       }
+
+      this.init();
+    },
+    methods:{
+      ...mapActions(["fetchSoundToken"]),
+      init() {
+        let time = new Date().getTime()
+        if (!this.ali_tts_token || time > this.ali_token_expires) {
+          console.log('获取阿里TTS token')
+          this.fetchSoundToken({ type: 'ali' })
+        }
+      },
     }
   }
 </script>

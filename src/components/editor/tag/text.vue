@@ -88,19 +88,19 @@
     <el-form-item label="字体内容">
       <el-input type="textArea" v-model="textForm.text"></el-input>
     </el-form-item>
-    <!--    <el-form-item label="预览">-->
-    <!--      <div class="text_preview">-->
-    <!--        <p :style="{-->
-    <!--                  'text-align':textForm.gravity,-->
-    <!--                  'color':textForm.textColor,-->
-    <!--                  'font-size':textForm.textSize+'px',-->
-    <!--                  'font-family':textForm.fontFamily,-->
-    <!--                  'width':'90%'-->
-    <!--                }">-->
-    <!--          {{textForm.text}}-->
-    <!--        </p>-->
-    <!--      </div>-->
-    <!--    </el-form-item>-->
+<!--    <el-form-item label="预览">-->
+<!--      <div class="text_preview">-->
+<!--        <p :style="{-->
+<!--                  'text-align':textForm.gravity,-->
+<!--                  'color':textForm.textColor,-->
+<!--                  'font-size':textForm.textSize+'px',-->
+<!--                  'font-family':textForm.fontFamily,-->
+<!--                  'width':'90%'-->
+<!--                }">-->
+<!--          {{textForm.text}}-->
+<!--        </p>-->
+<!--      </div>-->
+<!--    </el-form-item>-->
     <el-form-item align="right">
       <button class="dialogBtn quxiao" @click.stop="cancel">取 消</button>
       <button class="dialogBtn queren" @click.stop="confrim">确 认</button>

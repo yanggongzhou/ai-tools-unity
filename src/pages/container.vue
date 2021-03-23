@@ -52,7 +52,8 @@
   import Bus from "../api/bus";
   import axios from "axios";
   import {requestServices} from "../api/api";
-  import {mapGetters} from "vuex";
+  import {mapGetters,mapActions} from "vuex";
+  import {AMSound} from "../sound/sound";
   export default {
     components:{
       JsonEditor,
@@ -61,7 +62,9 @@
       ...mapGetters([
         'AvatarChName',
         'ResultJson',
-        'InfoModelData'
+        'InfoModelData',
+        "ali_tts_token",
+        "ali_token_expires",
       ])
     },
     watch:{
@@ -231,6 +234,9 @@
         jsonInfoType:1,//要unityMessage时触发类型 1 保存，2另存
 
         editJsonData:{},//编辑来的数据
+
+        scriptUrl:'',
+        AMSound:''
       }
     },
     created() {
@@ -258,6 +264,19 @@
 
     },
     methods:{
+      ...mapActions(["fetchSoundToken"]),
+      initSound() {
+        this.AMSound = new AMSound();
+        let _option = {
+            user_id: this.$Session.get('ai_user_id'),
+            access_token : this.ali_tts_token
+          },
+          _isInitInacTTS = false;
+
+        this.AMSound.init('ali', _option, _isInitInacTTS);
+      },
+
+
       editImportTriggerDiv(data){
         let self = this;
         self.TriggerDiv = [];
@@ -355,6 +374,13 @@
               this.$message.error('请确认各段落是否含有有效文本！')
               return
             }
+            Promise.all([this.uploadJSON(_JsonEditorRef),this.getAudio(data.noTagText)]).then(()=>{
+              console.log(this.scriptUrl, this.AMSound.TTS.audioInfo)
+
+              //todo
+
+
+            })
 
             let content = JSON.stringify(_JsonEditorRef.ScriptList);
             let blob = new Blob([content], { type: "text/plain;charset=utf-8" }); // 把数据转化成blob对象
@@ -368,49 +394,33 @@
             fd.append("type", 0);
             axios.post(requestServices.uploadUrl,fd,{responseType:'multipart/form-data'})
               .then(uploadRes=>{
+                let _data = {
+                  role_id:23,
+                  user_id:self.$Session.get('ai_user_id'),
+                  access_token:self.$Session.get('ai_user_token'),
+                  name:self.jsonName,
+                  preview_url:'',
+                  script_url:uploadRes.data.result.upload_url,
+                  paragraph_number:_JsonEditorRef.ScriptList.length,
+                  avatar_name:this.AvatarChName,
+                  scene_type:'1',//0-默认类型；1-淘宝；2-抖音；3-快手
+                  time:0,
+                  template_json:'',//信息版位置信息数据
+                  layer:"",
+                }
+                let _handleFun;
                 if(self.editJsonData.id && this.jsonInfoType!==2){
-                  requestServices.editScript({
-                    role_id:23,
-                    user_id:self.$Session.get('ai_user_id'),
-                    access_token:self.$Session.get('ai_user_token'),
-                    name:self.jsonName,
-                    preview_url:'',
-                    script_url:uploadRes.data.result.upload_url,
-                    paragraph_number:_JsonEditorRef.ScriptList.length,
-                    avatar_name:this.AvatarChName,
-                    scene_type:'1',//0-默认类型；1-淘宝；2-抖音；3-快手
-                    time:0,
-                    gs_id:self.editJsonData.id,
-                    template_json:'',//信息版位置信息数据
-                    layer:"",
-                  }).then(res=>{
-                    if(res.return_code===1000){
-                      self.$message.success('保存成功');
-                    }
-                  })
+                  _data.gs_id = self.editJsonData.id
+                  _handleFun = 'editScript'
+                } else{
+                  _handleFun = 'addScript'
                 }
-                else{
-                  requestServices.addScript({
-                    role_id:23,
-                    user_id:self.$Session.get('ai_user_id'),
-                    access_token:self.$Session.get('ai_user_token'),
-                    name:self.jsonName,
-                    preview_url:'',
-                    script_url:uploadRes.data.result.upload_url,
-                    paragraph_number:_JsonEditorRef.ScriptList.length,
-                    avatar_name:this.AvatarChName,
-                    scene_type:'1',//0-默认类型；1-淘宝；2-抖音；3-快手
-                    time:0,
-                    template_json:'',
-                    layer:"",
-                  }).then(res=>{
-                    if(res.return_code===1000){
-                      self.editJsonData.id=res.result.gs_id
-                      self.$forceUpdate();
-                      self.$message.success('保存成功');
-                    }
-                  })
-                }
+                requestServices[_handleFun](_data).then(res=>{
+                  if(res.return_code===1000){
+                    self.editJsonData.id=res.result.gs_id
+                    self.$message.success('保存成功');
+                  }
+                })
 
               })
           })
@@ -418,6 +428,52 @@
           this.jsonNameValidate = true;
         }
       },
+
+      async uploadJSON(_JsonEditorRef) {
+        let self = this
+        let content = JSON.stringify(_JsonEditorRef.ScriptList);
+        let blob = new Blob([content], { type: "text/plain;charset=utf-8" }); // 把数据转化成blob对象
+        // //file在edge浏览器中不支持
+        let file = new File([blob], "ai.json", { lastModified: Date.now() }); // blob转file
+        let fd = new FormData();
+        fd.append("file", file);
+        fd.append("user_id", self.$Session.get('ai_user_id'));
+        fd.append("access_token", self.$Session.get('ai_user_token'));
+        fd.append("target", 1);
+        fd.append("type", 0);
+
+        await axios.post(requestServices.uploadUrl, fd, {responseType: 'multipart/form-data'})
+          .then(uploadRes => {
+          self.scriptUrl = uploadRes.data.result.upload_url
+        })
+      },
+      async getAudio(_txt) {
+        console.log('getAudio: ', _txt, !this.AMSound)
+        if (!this.AMSound) {
+          this.initSound();
+        }
+        let time = new Date().getTime()
+        if ((!this.ali_tts_token || time > this.ali_token_expires) && _avatar.tts.type == 'ali') {
+          console.log('获取阿里TTS token')
+          await this.fetchSoundToken({ type: 'ali' })
+          await this.AMSound.refreshToken(this.ali_tts_token);
+        }
+
+        await this.AMSound.txtToAudio({
+          text: _txt,
+
+          tts: {
+            speechRate: -140, // 语速，取值范围 -500 ~ 500
+            volume:50, // 音量，取值范围 0 ~ 100
+            voiceName: "Aixia",
+            pitchRate:0, // 语调，取值范围 -500 ~ 500
+          },
+
+          isHandleTimeline: true
+        })
+        return
+      },
+
       //清空标签对应的dom元素
       cleanTriggerDiv(){
         this.TriggerDiv = [];

@@ -29,7 +29,7 @@ const prevErrHandler = ({response}) => {
   throw new Error('系统异常');
 };
 
-const createAxios = (_url) => {
+export const createAxios = (_url) => {
   const _instance = axios.create({
     baseURL: _url,
     timeout: 10000,
