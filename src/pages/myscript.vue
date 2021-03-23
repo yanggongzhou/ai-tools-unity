@@ -3,7 +3,7 @@
         <div class="common_content">
             <div class="list_title clearfix">
               <div class="titleBox">
-                <span class="titleSpan">剧本列表</span>
+                <span class="titleSpan">Script List</span>
               </div>
             </div>
 
@@ -19,50 +19,56 @@
                     ></el-option>
                 </el-select>
                 <div class='search'>
-                    <el-input  class='search_ipt' v-model="searchScriptName" placeholder="剧本名称" clearable></el-input>
-                    <button class='light-btn search_btn' type="primary" @click="fetchAllScripts">查询</button>
+                    <el-input  class='search_ipt' v-model="searchScriptName" placeholder="script's name" clearable></el-input>
+                    <button class='light-btn search_btn' type="primary" @click="fetchAllScripts">search</button>
                 </div>
               <div class="float_right">
-                <button class="light-btn create-btn ml10" @click="gotoPage">创建剧本</button>
-                <button class="light-btn play-btn" @click="gotoPage2">去直播</button>
+                <button class="light-btn create-btn ml10" @click="gotoPage">New Script</button>
+                <button class="light-btn play-btn" @click="gotoPage2">Go live</button>
               </div>
             </div>
 
             <el-table
               size="mini"
               row-key="updated_at" :data='scriptData' style='width:100%' empty-text='暂无剧本' height='446' max-height="446">
-                <el-table-column align="center" label="更新时间" min-width="150">
-                    <template slot-scope="scope">
-                        <span>{{scope.row.updated_at | created_atFilter}}</span>
-                    </template>
-                </el-table-column>
-                <el-table-column align="center" label="剧本名称">
+
+                <el-table-column align="center" label="name">
                     <template slot-scope="scope">
                         <span>{{scope.row.name}}</span>
                     </template>
                 </el-table-column>
-                <el-table-column align="center" label="剧本段数">
+                <el-table-column align="center" label="paragraph">
                     <template slot-scope="scope">
                         <span>{{scope.row.paragraph_number}}</span>
                     </template>
                 </el-table-column>
-                <el-table-column align="center" label="关联IP形象">
+                <el-table-column align="center" label="IP">
                     <template slot-scope="scope">
                         <span>{{scope.row.avatar_name}}</span>
                     </template>
                 </el-table-column>
-                <el-table-column align="center" label="操作" min-width="130">
+              <el-table-column align="center" label="duration" min-width="100">
+                <template slot-scope="scope">
+                  <span>{{handleScriptTime(scope.row.time)}}</span>
+                </template>
+              </el-table-column>
+              <el-table-column align="center" label="update" min-width="120">
+                <template slot-scope="scope">
+                  <span>{{scope.row.updated_at | created_atFilter}}</span>
+                </template>
+              </el-table-column>
+                <el-table-column align="center" label="handle" min-width="130">
                     <template slot-scope="scope">
-                        <el-button @click='handleCheck(scope.row)' type="text" size="mini">查看</el-button>
-                        <el-button @click='handleEdit(scope.row)' type="text" size="mini">编辑</el-button>
+                        <el-button @click='handleCheck(scope.row)' type="text" size="mini">check</el-button>
+                        <el-button @click='handleEdit(scope.row)' type="text" size="mini">edit</el-button>
                         <!-- <el-button @click='handleCopy(scope.row)' type="text" size="small">复用</el-button> -->
-                        <el-button @click='handleDelete(scope.row)' type="text" size="mini" style='color:#FF7272;'>删除</el-button>
+                        <el-button @click='handleDelete(scope.row)' type="text" size="mini" style='color:#FF7272;'>delete</el-button>
                     </template>
                 </el-table-column>
 
                 <div slot="empty" style="height:200px;line-height: 300px;">
-                  <i class="el-icon-warning-outline"></i>暂无剧本，去
-                  <el-button type="text"  @click="gotoPage" style="color:#7455FF;">创建脚本</el-button>
+                  <i class="el-icon-warning-outline"></i>No script
+                  <el-button type="text"  @click="gotoPage" style="color:#7455FF;">New Script</el-button>
                 </div>
 
             </el-table>
@@ -80,10 +86,10 @@
 
             <el-dialog  top="30vh" :visible.sync="isShowDelDialog" width='300px' style='text-align:center;'>
                 <i class="el-icon-warning-outline" style='font-size:42px;color:#5C83FF;margin-bottom:18px;font-weight:600;'></i>
-                <div>是否删除该剧本？</div>
+                <div>Delete the script?</div>
                 <span slot="footer" class="dialog-footer">
-                    <el-button class="cancel" @click="cancelDel">取 消</el-button>
-                    <el-button class="confirm" type="primary" @click="confirmDel">确 定</el-button>
+                    <el-button class="cancel" @click="cancelDel">Cancel</el-button>
+                    <el-button class="confirm" type="primary" @click="confirmDel">Confirm</el-button>
                 </span>
             </el-dialog>
             <el-dialog
@@ -101,7 +107,8 @@
 </template>
 <script>
 import { requestServices } from '../api/api';
-import myscriptDialog from '../components/myscript-dialog'
+import { handleScriptTime } from '../components/myscript/common/handleTime';
+import myscriptDialog from '../components/myscript/myscript-dialog'
 import axios from "axios";
 export default {
   components:{
@@ -109,8 +116,8 @@ export default {
   },
   filters:{
     created_atFilter(val){
-      return new Date(val*1000).toLocaleString()
-    },
+      return new Date(val*1000).toDateString()
+    }
   },
     data() {
         return {
@@ -166,6 +173,7 @@ export default {
         this.fetchAllScripts();
     },
     methods: {
+      handleScriptTime: handleScriptTime,
         fetchAllScripts() {
             requestServices.getAllScripts({
                 role_id:23,
