@@ -48,31 +48,6 @@ const createAxios = (_url) => {
   );
   return _instance;
 }
-const _baseURL = "https://openapi.data-baker.com/"
-const bbtts =createAxios(_baseURL);
-const chatinstance = createAxios('https://adtest.magics-ad.com');
-const QA_xiaoneng = createAxios('https://live.ntalker.com');
-export const chatInterface={
-  //互动-多轮对话
-  getChat(data) {
-    return chatinstance.post('/autoSay/client/DKAutoSay_GetTask', data)
-  },
-  getQARes(data) {
-    return QA_xiaoneng.post('/live/qa', data)
-  },
-  //标贝tts
-  token(params){
-    return bbtts.get(`oauth/2.0/token`,{params:params})
-  },
-  bbTTS:(params)=>{
-    return axios({
-      method: 'get',
-      url:_baseURL+'tts',
-      params:params,
-      responseType: 'arraybuffer'
-    })
-  },
-};
 
 let _apiUrl = 'https://adtest.magics-ad.com';
 // if(window.location.hostname=='0.0.0.0') {
