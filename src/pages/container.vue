@@ -375,54 +375,41 @@
               return
             }
             Promise.all([this.uploadJSON(_JsonEditorRef),this.getAudio(data.noTagText)]).then(()=>{
-              console.log(this.scriptUrl, this.AMSound.TTS.audioInfo)
-
-              //todo
-
-
-            })
-
-            let content = JSON.stringify(_JsonEditorRef.ScriptList);
-            let blob = new Blob([content], { type: "text/plain;charset=utf-8" }); // 把数据转化成blob对象
-            // //file在edge浏览器中不支持
-            let file = new File([blob], "ai.json", { lastModified: Date.now() }); // blob转file
-            let fd = new FormData();
-            fd.append("file", file);
-            fd.append("user_id", self.$Session.get('ai_user_id'));
-            fd.append("access_token", self.$Session.get('ai_user_token'));
-            fd.append("target", 1);
-            fd.append("type", 0);
-            axios.post(requestServices.uploadUrl,fd,{responseType:'multipart/form-data'})
-              .then(uploadRes=>{
-                let _data = {
-                  role_id:23,
-                  user_id:self.$Session.get('ai_user_id'),
-                  access_token:self.$Session.get('ai_user_token'),
-                  name:self.jsonName,
-                  preview_url:'',
-                  script_url:uploadRes.data.result.upload_url,
-                  paragraph_number:_JsonEditorRef.ScriptList.length,
-                  avatar_name:this.AvatarChName,
-                  scene_type:'1',//0-默认类型；1-淘宝；2-抖音；3-快手
-                  time:0,
-                  template_json:'',//信息版位置信息数据
-                  layer:"",
-                }
-                let _handleFun;
-                if(self.editJsonData.id && this.jsonInfoType!==2){
-                  _data.gs_id = self.editJsonData.id
-                  _handleFun = 'editScript'
-                } else{
-                  _handleFun = 'addScript'
-                }
-                requestServices[_handleFun](_data).then(res=>{
-                  if(res.return_code===1000){
-                    self.editJsonData.id=res.result.gs_id
-                    self.$message.success('保存成功');
-                  }
-                })
-
+              console.log( '脚本链接和tts信息',this.scriptUrl, this.AMSound.TTS.audioInfo)
+              let _twts = this.AMSound.TTS.audioInfo[0].currentWordsTimeArr;
+              let _time = _twts[_twts.length - 1].begin + _twts[_twts.length - 1].duration;
+              self.ResultJson.param.forEach(param => {
+                _time += param.intervalTime / 1000;
               })
+
+              let _data = {
+                role_id:23,
+                user_id:self.$Session.get('ai_user_id'),
+                access_token:self.$Session.get('ai_user_token'),
+                name:self.jsonName,
+                preview_url:'',
+                script_url:this.scriptUrl,
+                paragraph_number:_JsonEditorRef.ScriptList.length,
+                avatar_name:this.AvatarChName,
+                scene_type:'1',//0-默认类型；1-淘宝；2-抖音；3-快手
+                time:_time,
+                template_json:'',//信息版位置信息数据
+                layer:"",
+              }
+              let _handleFun;
+              if(self.editJsonData.id && this.jsonInfoType!==2){
+                _data.gs_id = self.editJsonData.id
+                _handleFun = 'editScript'
+              } else{
+                _handleFun = 'addScript'
+              }
+              requestServices[_handleFun](_data).then(res=>{
+                if(res.return_code===1000){
+                  self.editJsonData.id=res.result.gs_id
+                  self.$message.success('保存成功');
+                }
+              })
+            })
           })
         }else{
           this.jsonNameValidate = true;
