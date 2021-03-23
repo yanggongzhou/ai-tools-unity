@@ -78,8 +78,8 @@
                 :total="total_count"
             ></el-pagination>
 
-            <el-dialog  top="30vh" :visible.sync="isShowDelDialog" width='30%' style='text-align:center;'>
-                <i class="el-icon-warning-outline" style='font-size:42px;color:#7455FF;margin-bottom:18px;font-weight:600;'></i>
+            <el-dialog  top="30vh" :visible.sync="isShowDelDialog" width='300px' style='text-align:center;'>
+                <i class="el-icon-warning-outline" style='font-size:42px;color:#5C83FF;margin-bottom:18px;font-weight:600;'></i>
                 <div>是否删除该剧本？</div>
                 <span slot="footer" class="dialog-footer">
                     <el-button class="cancel" @click="cancelDel">取 消</el-button>

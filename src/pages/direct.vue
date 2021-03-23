@@ -717,7 +717,8 @@
         let isGetValue = false;
         if(!this.isDisconnection&&this.isOpenInteractiveMode){
           this.commodityData = [];
-          await this.getScriptId();
+          // 获取弹幕商品出现次数--一直没用
+          // await this.getScriptId();
           if(this.commodityData.length){
             for (let i=0; i<this.commodityData.length; i++){
               if(this.commodityData[i].id!==this.playData[this.allScriptIndex].id){

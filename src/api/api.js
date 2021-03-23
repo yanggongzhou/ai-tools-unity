@@ -107,6 +107,7 @@ export const requestServices = {
   editScript: (param) => apiInstance.post(`/guide_shopping/client/edit_guide_shopping`, param),
   // 删除剧本
   delScript: (param) => apiInstance.post(`/guide_shopping/client/delete_guide_shopping`, param),
+
   // 获取商品出现次数
   getScriptIdInChat: (param) => apiInstance.post(`/guide_shopping/client/get_commodity_count`, param),
 
@@ -132,8 +133,8 @@ export const requestServices = {
   // 编辑/删除话术/修改话术状态
   editWrods: (params)=>apiInstance.post(`/guide_shopping/client/edit_gs_word`,params),
 
-  //获取弹幕中商品出现次数
-  getCommodityCount: (params)=>apiInstance.post(`/guide_shopping/client/get_commodity_count`,params),
+  // //获取弹幕中商品出现次数
+  // getCommodityCount: (params)=>apiInstance.post(`/guide_shopping/client/get_commodity_count`,params),
 
 
   // 获取互动模式
