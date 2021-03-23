@@ -1,14 +1,17 @@
 <template>
   <el-form :model="textForm" :rules="rules" label-width="70px" @submit.native.prevent>
-    <el-row>
-      <el-col :span="8">
-        <el-form-item label="颜色" prop="textColor">
-          <div class="text_color-sty">
-            <colorPicker v-model="textForm.textColor"/>
-          </div>
+    <el-row :gutter="10">
+      <el-col :span="12">
+        <el-form-item label="展示区" prop="region">
+          <el-select v-model="textForm.region" placeholder="请选择展示区域">
+            <el-option v-for="(val,ind) in InfoModelData"
+                       :key="ind+'text'"
+                       :label="'展位'+val"
+                       :value="val"></el-option>
+          </el-select>
         </el-form-item>
       </el-col>
-      <el-col :span="8" >
+      <el-col :span="10" >
         <el-form-item label="大小" prop="textSize">
           <el-select v-model="textForm.textSize" placeholder="请选择展示区域">
             <el-option v-for="(val,ind) in textSizeList"
@@ -18,8 +21,16 @@
           </el-select>
         </el-form-item>
       </el-col>
+
     </el-row>
     <el-row>
+      <el-col :span="6">
+        <el-form-item label="颜色" prop="textColor">
+          <div class="text_color-sty">
+            <colorPicker v-model="textForm.textColor"/>
+          </div>
+        </el-form-item>
+      </el-col>
       <el-col :span="8">
         <el-form-item label="对齐" prop="gravity">
           <el-select v-model="textForm.gravity" placeholder="请选择展示区域">
@@ -77,19 +88,19 @@
     <el-form-item label="字体内容">
       <el-input type="textArea" v-model="textForm.text"></el-input>
     </el-form-item>
-    <el-form-item label="预览">
-      <div class="text_preview">
-        <p :style="{
-                  'text-align':textForm.gravity,
-                  'color':textForm.textColor,
-                  'font-size':textForm.textSize+'px',
-                  'font-family':textForm.fontFamily,
-                  'width':'90%'
-                }">
-          {{textForm.text}}
-        </p>
-      </div>
-    </el-form-item>
+    <!--    <el-form-item label="预览">-->
+    <!--      <div class="text_preview">-->
+    <!--        <p :style="{-->
+    <!--                  'text-align':textForm.gravity,-->
+    <!--                  'color':textForm.textColor,-->
+    <!--                  'font-size':textForm.textSize+'px',-->
+    <!--                  'font-family':textForm.fontFamily,-->
+    <!--                  'width':'90%'-->
+    <!--                }">-->
+    <!--          {{textForm.text}}-->
+    <!--        </p>-->
+    <!--      </div>-->
+    <!--    </el-form-item>-->
     <el-form-item align="right">
       <button class="dialogBtn quxiao" @click.stop="cancel">取 消</button>
       <button class="dialogBtn queren" @click.stop="confrim">确 认</button>
@@ -99,7 +110,13 @@
 
 <script>
   import { AnimateList } from '../common/anmate-data'
+  import {mapGetters} from "vuex";
   export default {
+    computed: {
+      ...mapGetters([
+        'InfoModelData',
+      ])
+    },
     name: "textform",
     props:{
       textForm:Object,
