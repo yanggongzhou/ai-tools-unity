@@ -28,9 +28,9 @@
       <div class="line"></div>
     </div>
     <div class="step_content">
-      <div class="step_img">
-        <img src='https://large.magics-ad.com/mygz-file/unityTools/panda.png' alt="">
-      </div>
+<!--      <div class="step_img">-->
+<!--        <img src='https://large.magics-ad.com/mygz-file/unityTools/panda.png' alt="">-->
+<!--      </div>-->
       <div class="step_line">
         <div class="line"></div>
         <img class="step_line-img1" :class="{'active':stepActive==='1'}" src="static/icon/background.png" alt="">
@@ -43,7 +43,7 @@
           <img src="static/icon/01.png" alt="">
           <div class="text">选择脚本使用的直播间背景</div>
         </div>
-        <div class="step_text-item item2" :class="{'active':stepActive==='2','noactive':stepNoActive2}">
+        <div class="step_text-item item2" :class="{'active2':stepActive==='2','noactive':stepNoActive2}">
           <img src="static/icon/02.png" alt="">
           <div class="text">选择脚本使用的角色模型</div>
         </div>
@@ -51,7 +51,7 @@
           <img src="static/icon/03.png" alt="">
           <div class="text">选择脚本使用的展示位的数量、大小和位置</div>
         </div>
-        <div class="step_text-item item4" :class="{'active':stepActive==='4','noactive':stepNoActive4}">
+        <div class="step_text-item item4" :class="{'active2':stepActive==='4','noactive':stepNoActive4}">
           <img src="static/icon/04.png" alt="">
           <div class="text">在右侧剧本编辑窗口编辑剧本</div>
         </div>
@@ -136,13 +136,14 @@ export default {
       align-items: center;
       justify-content: center;
       padding-top: 59px;
-      .step_img{
-        margin: 0px 45px 0 63px;
-        img{
-          width: 222px;
-          height: 332px;
-        }
-      }
+      padding-left: 257px;
+      /*.step_img{*/
+      /*  margin: 0px 45px 0 63px;*/
+      /*  img{*/
+      /*    width: 222px;*/
+      /*    height: 332px;*/
+      /*  }*/
+      /*}*/
       .step_line{
         width: 34px;
         position: relative;
@@ -174,7 +175,7 @@ export default {
       }
 
       .step_text{
-        margin: 0 56px 0 23px;
+        margin: 0 0 0 23px;
         height: 532px;
         width: 257px;
         font-size: 15px;
@@ -185,9 +186,6 @@ export default {
           border-radius: 10px;
           border: 1px solid transparent;
           background: #FFFFFF;
-          background: url(../../static/icon/qipao1.png);
-          background-size: 103% 112%;
-          background-position: -4px -4px;
           width: 257px;
           height: 84px;
           position: absolute;
@@ -201,20 +199,39 @@ export default {
         }
         .item1{
           top: 17px;
+          background: url(../../static/icon/qipao1.png);
+          background-size: 103% 112%;
+          background-position: -4px -4px;
         }
         .item2{
+          background: url(../../static/icon/qipao3.png);
+          background-size: 103% 112%;
+          background-position: -4px -6px;
           top: 144px;
+          left: -345px;
         }
         .item3{
           top: 271px;
+          background: url(../../static/icon/qipao1.png);
+          background-size: 103% 112%;
+          background-position: -4px -4px;
         }
         .item4{
+          background: url(../../static/icon/qipao3.png);
+          background-size: 103% 112%;
+          background-position: -4px -6px;
           top: 398px;
+          left: -345px;
         }
         .active{
           background: url(../../static/icon/qipao2.png);
           background-size: 103% 112%;
           background-position: -4px -4px;
+        }
+        .active2{
+          background: url(../../static/icon/qipao4.png);
+          background-size: 103% 112%;
+          background-position: -4px -6px;
         }
       }
     }
