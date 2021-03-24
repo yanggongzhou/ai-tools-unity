@@ -11,17 +11,6 @@
           </el-select>
         </el-form-item>
       </el-col>
-      <el-col :span="10" >
-        <el-form-item label="大小" prop="textSize">
-          <el-select v-model="textForm.textSize" placeholder="请选择展示区域">
-            <el-option v-for="(val,ind) in textSizeList"
-                       :label="val"
-                       :value="val"
-                       :key="ind+'foot'"></el-option>
-          </el-select>
-        </el-form-item>
-      </el-col>
-
     </el-row>
     <el-row>
       <el-col :span="6">
@@ -40,13 +29,23 @@
           </el-select>
         </el-form-item>
       </el-col>
-      <el-col :span="8">
-        <el-form-item label="字体" prop="gravity">
-          <el-select v-model="textForm.fontFamily" placeholder="请选择展示区域">
-            <el-option v-for="(val, ind) in fontFamilyList" :key="ind+'font'" :label="val.label" :value="val.value"></el-option>
+      <el-col :span="8" >
+        <el-form-item label="大小" prop="textSize">
+          <el-select v-model="textForm.textSize" placeholder="请选择展示区域">
+            <el-option v-for="(val,ind) in textSizeList"
+                       :label="val"
+                       :value="val"
+                       :key="ind+'foot'"></el-option>
           </el-select>
         </el-form-item>
       </el-col>
+<!--      <el-col :span="8">-->
+<!--        <el-form-item label="字体" prop="gravity">-->
+<!--          <el-select v-model="textForm.fontFamily" placeholder="请选择展示区域">-->
+<!--            <el-option v-for="(val, ind) in fontFamilyList" :key="ind+'font'" :label="val.label" :value="val.value"></el-option>-->
+<!--          </el-select>-->
+<!--        </el-form-item>-->
+<!--      </el-col>-->
     </el-row>
     <el-form-item label="设置时长" prop="dismissTimeType">
       <el-col :span="10">
@@ -67,40 +66,40 @@
         <el-tag v-if="!textForm.isAll">秒</el-tag>
       </el-col>
     </el-form-item>
-    <el-form-item label="动画效果">
-      <el-col :span="10">
-        <el-select v-model="textForm.enter" placeholder="入场效果" clearable>
-          <el-option v-for="(val,ind) in animateList"
-                     :key="ind+'enter'"
-                     :label="val.label" :value="val.value"></el-option>
-        </el-select>
-      </el-col>
-      <el-col :span="1" class="center">-</el-col>
-      <el-col :span="10">
-        <el-select v-model="textForm.leave" placeholder="离场效果" clearable>
-          <el-option v-for="(val,ind) in animateList"
-                     :key="ind+'leave'"
-                     :label="val.label" :value="val.value"></el-option>
-        </el-select>
-      </el-col>
-    </el-form-item>
+<!--    <el-form-item label="动画效果">-->
+<!--      <el-col :span="10">-->
+<!--        <el-select v-model="textForm.enter" placeholder="入场效果" clearable>-->
+<!--          <el-option v-for="(val,ind) in animateList"-->
+<!--                     :key="ind+'enter'"-->
+<!--                     :label="val.label" :value="val.value"></el-option>-->
+<!--        </el-select>-->
+<!--      </el-col>-->
+<!--      <el-col :span="1" class="center">-</el-col>-->
+<!--      <el-col :span="10">-->
+<!--        <el-select v-model="textForm.leave" placeholder="离场效果" clearable>-->
+<!--          <el-option v-for="(val,ind) in animateList"-->
+<!--                     :key="ind+'leave'"-->
+<!--                     :label="val.label" :value="val.value"></el-option>-->
+<!--        </el-select>-->
+<!--      </el-col>-->
+<!--    </el-form-item>-->
 
     <el-form-item label="字体内容">
       <el-input type="textArea" v-model="textForm.text"></el-input>
     </el-form-item>
-    <!--    <el-form-item label="预览">-->
-    <!--      <div class="text_preview">-->
-    <!--        <p :style="{-->
-    <!--                  'text-align':textForm.gravity,-->
-    <!--                  'color':textForm.textColor,-->
-    <!--                  'font-size':textForm.textSize+'px',-->
-    <!--                  'font-family':textForm.fontFamily,-->
-    <!--                  'width':'90%'-->
-    <!--                }">-->
-    <!--          {{textForm.text}}-->
-    <!--        </p>-->
-    <!--      </div>-->
-    <!--    </el-form-item>-->
+        <el-form-item label="预览">
+          <div class="text_preview">
+            <p :style="{
+                      'text-align':textForm.gravity,
+                      'color':textForm.textColor,
+                      'font-size':textForm.textSize+'px',
+                      'font-family':textForm.fontFamily,
+                      'width':'90%'
+                    }">
+              {{textForm.text}}
+            </p>
+          </div>
+        </el-form-item>
     <el-form-item align="right">
       <button class="dialogBtn quxiao" @click.stop="cancel">取 消</button>
       <button class="dialogBtn queren" @click.stop="confrim">确 认</button>

@@ -1372,7 +1372,7 @@
 
 <style lang="less" scoped>
   /deep/.el-dialog__body {
-    padding: 25px 20px 5px!important;
+    padding: 40px 20px 5px!important;
   }
   /deep/.el-icon-loading{
     font-size: 30px !important;

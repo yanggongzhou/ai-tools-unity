@@ -472,6 +472,7 @@
           this.isDisconnection=true;
           if(this.interactionModel){
             UnityInteractionEnd(this.previewData[0].avatar.unity);
+            console.log('UnityInteractionEnd互动停止')
           }
         }else{
           this.$notify.success({
@@ -555,7 +556,7 @@
             break;
           case 'interaction': // 互动
             // 进行文字转语音及播放处理
-            console.log('场景话术',_txt)
+            // console.log('场景话术',_txt)
             this.playInteraction(_txt);
             break;
         }
@@ -583,13 +584,15 @@
           })
         })
         UnityPreview(_unity,JSON.stringify([_json]),"False","False")
+        console.log('UnityPreview 场景话术')
       },
 
       //互动结束回调
       handleInacEnd(){
-        console.log('互动结束回调')
+        // console.log('互动结束回调')
         // this.webInteractionModel = false;
         UnityInteractionEnd(this.previewData[0].avatar.unity);
+        console.log('UnityInteractionEnd互动结束')
         // this.AutoPlayEvent();
         this.isInnerJsonInteraction = false;
       },
@@ -632,6 +635,7 @@
             // this.$message.warning('this.allScriptPlayIndex播放下标',this.allScriptPlayIndex)
           this.previewData = this.allScriptList[this.allScriptPlayIndex].scriptList;
           UnityChangeAvatar(this.previewData[0].avatar.unity)
+          console.log('UnityChangeAvatar切换角色')
           this.previewReady = false;
           this.isPlaying = true;
           if(this.allScriptIndex===0){  //判断是否是第一个脚本，是—播放开场欢迎语
@@ -657,16 +661,19 @@
         this.interactionModel = false;
       },
       WebSelectAvatarState(state){
+        console.log('WebSelectAvatarState切换角色')
         if(state==='True'){
           //_______________判断当前是不是第一句
           //判断是否是第一个脚本，是—播放开场欢迎语
           if(this.isFirstScript&&this.isOpenInteractiveMode && this.isAutoPlayBtn){
             // this.playWelcomeWords();
             UnityInteractionStart(this.previewData[0].avatar.unity);
+            console.log('UnityInteractionStart 互动模式开始 播放开场欢迎语')
           }else{
             let _state = "True";
             this.isAutoPlayBtn?_state="False":_state="True"
             UnityPreview(this.previewData[0].avatar.unity,JSON.stringify(this.previewData),_state,"True")
+            console.log('UnityPreview 开始预览')
           }
         }else if(state==='False'){
           this.previewReady = true;
@@ -676,6 +683,7 @@
         }
       },
       WebPreviewReady(state){
+        console.log('WebPreviewReady 预览准备')
         let self = this;
         if(state==='True'){
           if(this.progressVisible){
@@ -685,11 +693,11 @@
                 self.progressVisible = false;
               },500)
             }
-
             return
           }
           if(this.isAutoPlayBtn||this.isPreviewBtn){
             UnityPreviewStart(this.previewData[0].avatar.unity);
+            console.log('UnityPreviewStart 开始播放')
             if(this.isPreviewBtn){
               this.isPreviewBtn = false;
             }
@@ -767,19 +775,23 @@
         this.previewData = this.allScriptList[this.allScriptPlayIndex].scriptList;
         if(oldPreviewData[0].avatar.unity!==this.previewData[0].avatar.unity){
           UnityChangeAvatar(this.previewData[0].avatar.unity)
+          console.log('UnityChangeAvatar 角色切换')
           this.previewReady = false;
         }else{
           let _state = "True"
           this.isOpenInteractiveMode?_state = "False":_state="True"
           UnityPreview(this.previewData[0].avatar.unity,JSON.stringify(this.previewData),_state,"True")
+          console.log('UnityPreview 开始预览')
           this.previewReady = true;
         }
         this.isPlaying = true;
       },
       //播放互动标签
       WebInteractionStart(){
+        console.log('WebInteractionStart 互动开始')
         if(this.isUnityTemporaryInteractionStart){
           UnityPreview(this.previewData[0].avatar.unity,JSON.stringify(this.previewData),"False","False")
+          console.log('UnityPreview 开始预览')
           return false;
         }
         this.interactionModel = true;
@@ -799,38 +811,44 @@
       },
       //对应于UnityInteractionEnd，结束状态返回继续播放
       WebInteractionEnd(){
+        console.log('WebInteractionEnd互动结束')
         this.interactionModel = false;
         if(this.isUnityTemporaryInteractionStart){
           this.isUnityTemporaryInteractionStart = false;
           UnityPreviewContinue(this.previewData[0].avatar.unity);
+          console.log('UnityPreviewContinue继续播放')
           return false;
         }
         if(this.isDisconnection){//断网循环
           this.AutoPlayEvent();
           return false;
         }
+        this.interactionModeIsEnd = false;
         if(this.isFirstScript){
           let _state = "False"
           this.isOpenInteractiveMode?_state = "False":_state="True"
           UnityPreview(this.previewData[0].avatar.unity,JSON.stringify(this.previewData),_state,"True")
+          console.log('UnityPreview 开始预览')
           this.isFirstScript=false;
         }else{
           if(this.isOutInteraction){
            this.AutoPlayEvent();
            this.isOutInteraction = false;
-           this.interactionModeIsEnd = false;
           }else{
             UnityPreviewContinue(this.previewData[0].avatar.unity);
+            console.log('UnityPreviewContinue 继续播放')
           }
         }
       },
 
       //播放结束回调  播放一句互动结束回调Unity
       WebPreviewEnd(){
+        console.log('WebPreviewEnd 预览结束')
         if(this.isUnityTemporaryInteractionStart&&this.interactionModel){//是否有互动插入且当前是互动模式的处理
           if(this.queueList.length){
             let _Obj  = this.queueList.shift();
             UnityPreview(_Obj.name,_Obj.item,"False","False")
+            console.log('UnityPreview 开始预览')
             this.nowTempId = _Obj.id;
             this.previewData = JSON.parse(_Obj.item)
           }else{
@@ -845,11 +863,13 @@
           if(this.queueList.length){
             let _Obj  = this.queueList.shift();
             UnityPreview(_Obj.name,_Obj.item,"False","False")
+            console.log('UnityPreview 开始预览')
             this.nowTempId = _Obj.id;
             this.previewData = JSON.parse(_Obj.item)
           }else{
             this.nowTempId =""
             UnityInteractionEnd(this.previewData[0].avatar.unity);
+            console.log('UnityInteractionEnd 互动结束')
           }
           return false;
         }
@@ -857,6 +877,7 @@
           if(this.queueList.length){
             let _Obj  = this.queueList.shift();
             UnityPreview(_Obj.name,_Obj.item,"False","False")
+            console.log('UnityPreview 开始预览')
             this.nowTempId = _Obj.id;
             this.previewData = JSON.parse(_Obj.item)
           }else{
@@ -869,6 +890,7 @@
           if(this.queueList.length){
             let _Obj  = this.queueList.shift();
             UnityPreviewTxt(_Obj.name,_Obj.item)
+            console.log('UnityPreviewTxt 开始预览')
             this.isPreviewBtn = true;
             this.nowTempId = _Obj.id;
             this.previewData = JSON.parse(_Obj.item)
@@ -877,6 +899,7 @@
             if(this.queueContentItem.length){
               let _Obj  = this.queueContentItem.shift();
               UnityPreview(_Obj.name,_Obj.item,'True','True')
+              console.log('UnityPreview 开始预览')
               this.recordId = 'content'+_Obj.contentIndex+'script'+_Obj.allScriptIndex;
 
               this.isPreviewBtn = true;
@@ -913,8 +936,10 @@
               // 打开互动模式，互动模式处理
               this.handleInacLogic(); // 如果未开启脚本外互动则开启，如果已开启则进行互动流程
             }else{
-              if(this.isFirstScript){  UnityInteractionEnd(this.previewData[0].avatar.unity);  return false}
+              if(this.isFirstScript){  UnityInteractionEnd(this.previewData[0].avatar.unity);  console.log('UnityInteractionEnd互动结束'); return false}
               UnityInteractionStart(this.previewData[0].avatar.unity);
+              console.log('UnityInteractionStart互动开始')
+
               this.isOutInteraction = true;//脚本外互动
             }
           }else if(!this.isOpenInteractiveMode && this.isOpenSceneEnd && !this.isPlayingEndWords) {
@@ -983,6 +1008,7 @@
               // })
               //进入页面发送所有剧本，加载完成后再直播
               UnityPreview(val.scriptList[0].avatar.unity,JSON.stringify(val.scriptList),"False","True")
+              console.log('UnityPreview开始预览')
             });
             self.totalSteps = this.allScriptList.length;
             self.allScriptIndex = 0;
@@ -1030,6 +1056,7 @@
         if(!this.isPlaying){
           if(this.previewReady){
             UnityChangeAvatar(val.avatar.unity)
+            console.log('UnityChangeAvatar切换角色')
             this.recordId = 'content'+ind+'script'+allScriptIndex;//记录播放痕迹
             this.previewData = [val];
             // UnityPreview(val.avatar.unity,JSON.stringify([val]))
@@ -1081,6 +1108,7 @@
               // UnityChangeAvatar(val.avatar.unity)
               this.previewData = [_json];
               UnityPreviewTxt('none',JSON.stringify([_json]))
+              console.log('UnityPreviewTxt开始预览')
               this.isPreviewBtn = true;
               this.nowTempId = val.id;
               this.isPlaying = true;
@@ -1139,6 +1167,7 @@
           if(!this.isAutoPlayBtn){
             if(!this.isPlaying){
               UnityPreviewTxt('none',JSON.stringify([_json]))
+              console.log('UnityPreviewTxt开始预览')
               this.isPreviewBtn = true;
               this.nowTempId = this.temporaryScriptList[this.temporaryScriptList.length-1].id
               this.previewData = JSON.parse(JSON.stringify([_json]))

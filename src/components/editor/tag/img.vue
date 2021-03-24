@@ -34,23 +34,23 @@
       </el-col>
 
     </el-form-item>
-    <el-form-item label="动画效果" >
-      <el-col :span="10">
-        <el-select v-model="imgForm.enter" placeholder="入场效果" clearable>
-          <el-option v-for="(val,ind) in animateList"
-                     :key="ind+'enter'"
-                     :label="val.label" :value="val.value"></el-option>
-        </el-select>
-      </el-col>
-      <el-col :span="1" class="center">-</el-col>
-      <el-col :span="10">
-        <el-select v-model="imgForm.leave" placeholder="离场效果" clearable>
-          <el-option v-for="(val,ind) in animateList"
-                     :key="ind+'leave'"
-                     :label="val.label" :value="val.value"></el-option>
-        </el-select>
-      </el-col>
-    </el-form-item>
+<!--    <el-form-item label="动画效果" >-->
+<!--      <el-col :span="10">-->
+<!--        <el-select v-model="imgForm.enter" placeholder="入场效果" clearable>-->
+<!--          <el-option v-for="(val,ind) in animateList"-->
+<!--                     :key="ind+'enter'"-->
+<!--                     :label="val.label" :value="val.value"></el-option>-->
+<!--        </el-select>-->
+<!--      </el-col>-->
+<!--      <el-col :span="1" class="center">-</el-col>-->
+<!--      <el-col :span="10">-->
+<!--        <el-select v-model="imgForm.leave" placeholder="离场效果" clearable>-->
+<!--          <el-option v-for="(val,ind) in animateList"-->
+<!--                     :key="ind+'leave'"-->
+<!--                     :label="val.label" :value="val.value"></el-option>-->
+<!--        </el-select>-->
+<!--      </el-col>-->
+<!--    </el-form-item>-->
     <el-form-item align="right">
       <button class="dialogBtn quxiao" @click.stop="cancel">取 消</button>
       <button class="dialogBtn queren" @click.stop="confrim">确 认</button>

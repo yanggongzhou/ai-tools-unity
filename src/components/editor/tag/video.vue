@@ -32,23 +32,23 @@
           <el-tag v-if="!videoForm.isAll">秒</el-tag>
         </el-col>
       </el-form-item>
-      <el-form-item label="动画效果" >
-        <el-col :span="10">
-          <el-select v-model="videoForm.enter" placeholder="入场效果" clearable>
-            <el-option v-for="(val,ind) in animateList"
-                       :key="ind+'enter'"
-                       :label="val.label" :value="val.value"></el-option>
-          </el-select>
-        </el-col>
-        <el-col :span="1" class="center">-</el-col>
-        <el-col :span="10">
-          <el-select v-model="videoForm.leave" placeholder="离场效果" clearable>
-            <el-option v-for="(val,ind) in animateList"
-                       :key="ind+'leave'"
-                       :label="val.label" :value="val.value"></el-option>
-          </el-select>
-        </el-col>
-      </el-form-item>
+<!--      <el-form-item label="动画效果" >-->
+<!--        <el-col :span="10">-->
+<!--          <el-select v-model="videoForm.enter" placeholder="入场效果" clearable>-->
+<!--            <el-option v-for="(val,ind) in animateList"-->
+<!--                       :key="ind+'enter'"-->
+<!--                       :label="val.label" :value="val.value"></el-option>-->
+<!--          </el-select>-->
+<!--        </el-col>-->
+<!--        <el-col :span="1" class="center">-</el-col>-->
+<!--        <el-col :span="10">-->
+<!--          <el-select v-model="videoForm.leave" placeholder="离场效果" clearable>-->
+<!--            <el-option v-for="(val,ind) in animateList"-->
+<!--                       :key="ind+'leave'"-->
+<!--                       :label="val.label" :value="val.value"></el-option>-->
+<!--          </el-select>-->
+<!--        </el-col>-->
+<!--      </el-form-item>-->
       <el-form-item label="声音设置" prop="isSupportAudio">
         <el-switch
           v-model="videoForm.isSupportAudio"
@@ -88,7 +88,7 @@
       return{
         rules: {},
         dismissTimeTypeData:[
-          {label:'至视频播放结束',value:0},
+          // {label:'至视频播放结束',value:0},
           {label:'至剧本播放结束',value:1},
           {label:'自定义时长',value:2},
         ],

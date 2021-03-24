@@ -10,14 +10,14 @@
 <!--            <el-divider></el-divider>-->
             <div class="filter">
 <!--                <span class="filter_label">关联主播角色：</span>-->
-                <el-select class="filterOptions" @change='fetchAllScripts' v-model='anchorRoleValue'>
-                    <el-option
-                        v-for='(role,idx) in anchorRoles'
-                        :key='idx'
-                        :label='role.label'
-                        :value='role.value'
-                    ></el-option>
-                </el-select>
+<!--                <el-select class="filterOptions" @change='fetchAllScripts' v-model='anchorRoleValue'>-->
+<!--                    <el-option-->
+<!--                        v-for='(role,idx) in anchorRoles'-->
+<!--                        :key='idx'-->
+<!--                        :label='role.label'-->
+<!--                        :value='role.value'-->
+<!--                    ></el-option>-->
+<!--                </el-select>-->
                 <div class='search'>
                     <el-input  class='search_ipt' v-model="searchScriptName" placeholder="剧本名称" clearable></el-input>
                     <button class='light-btn search_btn' type="primary" @click="fetchAllScripts">查询</button>

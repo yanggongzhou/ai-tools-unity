@@ -66,15 +66,15 @@
                 <div class="allScriptList" v-if='isShowAllList'>
                   <h3>剧本列表</h3>
                   <div class="filter">
-                    <span>关联IP形象：</span>
-                    <el-select class="filterOptions" @change='fetchAllScripts' v-model='anchorRoleValue'>
-                      <el-option
-                        v-for='(role,idx) in anchorRoles'
-                        :key='idx'
-                        :label='role.label'
-                        :value='role.value'
-                      ></el-option>
-                    </el-select>
+<!--                    <span>关联IP形象：</span>-->
+<!--                    <el-select class="filterOptions" @change='fetchAllScripts' v-model='anchorRoleValue'>-->
+<!--                      <el-option-->
+<!--                        v-for='(role,idx) in anchorRoles'-->
+<!--                        :key='idx'-->
+<!--                        :label='role.label'-->
+<!--                        :value='role.value'-->
+<!--                      ></el-option>-->
+<!--                    </el-select>-->
                     <el-button class='search_btn' @click="fetchAllScripts">查询</el-button>
                     <el-input  class='search_ipt' v-model="searchScriptName" placeholder="剧本名称" clearable></el-input>
                   </div>
