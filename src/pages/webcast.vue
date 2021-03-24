@@ -683,7 +683,7 @@ export default {
     }
   }
   .tabs {
-    width: 204px;
+    width: 179px;
     margin-bottom: 10px;
     padding: 4px;
     box-sizing: border-box;

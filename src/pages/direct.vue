@@ -29,10 +29,10 @@
         width="280"
         trigger="hover">
         <div class="interaction_pop">
-          <p><b>随机播放</b></p>
-          <p>1、开启后，自动直播中剧本随机播放</p>
-          <p>2、依据剧本权重，权重越高，重复播放概率越大。</p>
-          <p>3、建议多个剧本（>4）时再开启随机播放</p>
+          <p><b>Random</b></p>
+          <p>1、After it is turned on, the script will be played randomly in the automatic live broadcast</p>
+          <p>2、According to the script weight, the higher the weight, the greater the probability of repeat play</p>
+          <p>3、It is recommended that random play be turned on when multiple plays (>4) are on</p>
         </div>
         <span slot="reference" style="cursor: help;position: relative;top: 4px">Random</span>
       </el-popover>
@@ -42,10 +42,10 @@
         width="400"
         trigger="hover">
         <div class="interaction_pop">
-          <p><b>互动模式</b></p>
-          <p>1、开启后，虚拟主播可以与消费者互动，在互动时间时回答用户提问、欢迎用户进入直播间</p>
-          <p>2、目前虚拟主播互动时间在每个剧本结束后及剧本中有互动标签的位置进入互动模式时间，当互动模式结束后，继续脚本直播。</p>
-          <p>3、开启互动模式必须结合用户弹幕问题监测软件共同使用，且提前设定好问题和答案，否则互动模式无效。（ <span class='#835BFF'>弹幕问题监控软件及问答配置需联系商务处理</span> ）</p>
+          <p><b>Interactive mode</b></p>
+          <p>1、After opening, the virtual anchor can interact with consumers, answer users' questions during the interaction time, and welcome users to the live room</p>
+          <p>2、At present, the virtual anchor interaction time enters the interaction mode after the end of each script and the position with interaction label in the script. When the interaction mode is over, the script will continue to be broadcast live.</p>
+          <p>3、Opening the interactive mode must be combined with the user screen question monitoring software, and set the questions and answers in advance, otherwise the interactive mode is invalid.（ <span class='#835BFF'>The monitoring software and Q & a configuration of barrage problems need to contact the business department for handling</span> ）</p>
         </div>
         <span slot="reference" style="cursor: help;position: relative;top: 4px">Interactive mode</span>
       </el-popover>
