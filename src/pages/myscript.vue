@@ -3,7 +3,7 @@
         <div class="common_content">
             <div class="list_title clearfix">
               <div class="titleBox">
-                <span class="titleSpan">Script List</span>
+                <span class="titleSpan">Script Table</span>
               </div>
             </div>
 
