@@ -24,7 +24,7 @@
 
   <div class="stepBox">
     <div class="step_title">
-      <p>创建和编辑剧本</p>
+      <p>Editing steps</p>
       <div class="line"></div>
     </div>
     <div class="step_content">
@@ -41,19 +41,19 @@
       <div class="step_text">
         <div class="step_text-item item1" :class="{'active':stepActive==='1'}">
           <img src="static/icon/01.png" alt="">
-          <div class="text">选择脚本使用的直播间背景</div>
+          <div class="text">Select the background of the studio to be used by the script</div>
         </div>
         <div class="step_text-item item2" :class="{'active2':stepActive==='2','noactive':stepNoActive2}">
           <img src="static/icon/02.png" alt="">
-          <div class="text">选择脚本使用的角色模型</div>
+          <div class="text">Select the Avatar used by the script</div>
         </div>
         <div class="step_text-item item3" :class="{'active':stepActive==='3','noactive':stepNoActive3}">
           <img src="static/icon/03.png" alt="">
-          <div class="text">选择脚本使用的展示位的数量、大小和位置</div>
+          <div class="text">Select the number, size, and location of display slots used by the script</div>
         </div>
         <div class="step_text-item item4" :class="{'active2':stepActive==='4','noactive':stepNoActive4}">
           <img src="static/icon/04.png" alt="">
-          <div class="text">在右侧剧本编辑窗口编辑剧本</div>
+          <div class="text">Edit the script in the right script editing window</div>
         </div>
       </div>
 
@@ -101,7 +101,7 @@ export default {
       if(state==='True'){
         // this.$message.error('切换角色')
       }else if(state==='False'){
-        this.$message.error('切换角色失败，请重试')
+        this.$message.error('Failed to change avatar. Please try again')
         this.previewReady = true;
       }
     },
@@ -122,6 +122,9 @@ export default {
       padding-top: 55px;
       margin: 0 auto;
       position: relative;
+      p{
+        text-align: center;
+      }
       .line{
         width: 173px;
         height: 13px;

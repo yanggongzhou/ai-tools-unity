@@ -1,20 +1,20 @@
 <template>
-  <el-form :model="imgForm" :rules="rules" label-width="100px" @submit.native.prevent>
-    <el-form-item label="展示区" prop="region">
-      <el-select v-model="imgForm.region" placeholder="请选择展示区域">
+  <el-form :model="imgForm" :rules="rules" label-width="120px" @submit.native.prevent>
+    <el-form-item label="ExhibitionSpace" prop="region">
+      <el-select v-model="imgForm.region">
         <el-option
           v-for="(val,ind) in InfoModelData"
           :key="ind+'infoModel'"
-          :label="'展位'+val"
+          :label="'exhibition space'+val"
           :value="val"></el-option>
       </el-select>
     </el-form-item>
-    <el-form-item label="上传文件">
+    <el-form-item label="File">
       <v-upload :types="'img'" ref="uploadRefVideo" @getDisplayImg="getDisplayImg"></v-upload>
     </el-form-item>
-    <el-form-item label="设置时长" prop="dismissTimeType" >
+    <el-form-item label="Duration" prop="dismissTimeType" >
       <el-col :span="10">
-        <el-select v-model="imgForm.dismissTimeType" @change="imgTypeChange" placeholder="请选择展示时长类型">
+        <el-select v-model="imgForm.dismissTimeType" @change="imgTypeChange" >
           <el-option v-for="(val,ind) in dismissTimeTypeData"
                      :key="ind+'dismissTimeType'"
                      :label="val.label" :value="val.value"></el-option>
@@ -30,13 +30,13 @@
           :precision="1" :min="0.1" :step="0.5" :max="3600"></el-input-number>
       </el-col>
       <el-col :span="4">
-        <el-tag v-if="!imgForm.isAll">秒</el-tag>
+        <el-tag v-if="!imgForm.isAll">s</el-tag>
       </el-col>
 
     </el-form-item>
-    <el-form-item label="动画效果" >
+    <el-form-item label="Animate" >
       <el-col :span="10">
-        <el-select v-model="imgForm.enter" placeholder="入场效果" clearable>
+        <el-select v-model="imgForm.enter" placeholder="enter" clearable>
           <el-option v-for="(val,ind) in animateList"
                      :key="ind+'enter'"
                      :label="val.label" :value="val.value"></el-option>
@@ -44,7 +44,7 @@
       </el-col>
       <el-col :span="1" class="center">-</el-col>
       <el-col :span="10">
-        <el-select v-model="imgForm.leave" placeholder="离场效果" clearable>
+        <el-select v-model="imgForm.leave" placeholder="leave" clearable>
           <el-option v-for="(val,ind) in animateList"
                      :key="ind+'leave'"
                      :label="val.label" :value="val.value"></el-option>
@@ -52,8 +52,8 @@
       </el-col>
     </el-form-item>
     <el-form-item align="right">
-      <button class="dialogBtn quxiao" @click.stop="cancel">取 消</button>
-      <button class="dialogBtn queren" @click.stop="confrim">确 认</button>
+      <button class="dialogBtn quxiao" @click.stop="cancel">cancel</button>
+      <button class="dialogBtn queren" @click.stop="confrim">confirm</button>
     </el-form-item>
   </el-form>
 </template>
@@ -79,8 +79,8 @@
       return{
         rules: {},
         dismissTimeTypeData:[
-          {label:'至剧本播放结束',value:1},
-          {label:'自定义时长',value:2},
+          {label:'To the end of the play',value:1},
+          {label:'Custom duration',value:2},
         ],
         animateList:[]
       }

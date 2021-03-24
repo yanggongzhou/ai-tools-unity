@@ -30,9 +30,9 @@
 
             <el-table
               size="mini"
-              row-key="updated_at" :data='scriptData' style='width:100%' empty-text='暂无剧本' height='446' max-height="446">
+              row-key="updated_at" :data='scriptData' style='width:100%' empty-text='none' height='446' max-height="446">
 
-                <el-table-column align="center" label="name">
+                <el-table-column align="center" label="title">
                     <template slot-scope="scope">
                         <span>{{scope.row.name}}</span>
                     </template>

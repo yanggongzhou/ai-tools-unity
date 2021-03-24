@@ -1,21 +1,21 @@
 <template>
   <div>
-    <el-form :model="videoForm" :rules="rules" ref="videoForm" label-width="100px" @submit.native.prevent>
-      <el-form-item label="展示区" prop="region">
-        <el-select v-model="videoForm.region" placeholder="请选择展示区域">
+    <el-form :model="videoForm" :rules="rules" ref="videoForm" label-width="120px" @submit.native.prevent>
+      <el-form-item label="ExhibitionSpace" prop="region">
+        <el-select v-model="videoForm.region">
           <el-option
             v-for="(val,ind) in InfoModelData"
             :key="ind+'infoModel'"
-            :label="'展位'+val"
+            :label="'exhibition space'+val"
             :value="val"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="上传文件">
+      <el-form-item label="File">
         <v-upload :types="'video'" ref="uploadRefVideo" @getDisplayVideo="getDisplayVideo"></v-upload>
       </el-form-item>
-      <el-form-item label="设置时长" prop="dismissTimeType">
+      <el-form-item label="Duration" prop="dismissTimeType">
         <el-col :span="10">
-          <el-select v-model="videoForm.dismissTimeType" @change="dismissTimeTypeChange" placeholder="请选择展示时长类型">
+          <el-select v-model="videoForm.dismissTimeType" @change="dismissTimeTypeChange">
             <el-option v-for="(val,ind) in dismissTimeTypeData"
                        :key="ind+'dismissTimeType'"
                        :label="val.label" :value="val.value"></el-option>
@@ -29,12 +29,12 @@
             v-model="videoForm.dismissTime" controls-position="right" :precision="1" :min="0.1" :step="0.5" :max="3600"></el-input-number>
         </el-col>
         <el-col :span="4">
-          <el-tag v-if="!videoForm.isAll">秒</el-tag>
+          <el-tag v-if="!videoForm.isAll">s</el-tag>
         </el-col>
       </el-form-item>
-      <el-form-item label="动画效果" >
+      <el-form-item label="Animate" >
         <el-col :span="10">
-          <el-select v-model="videoForm.enter" placeholder="入场效果" clearable>
+          <el-select v-model="videoForm.enter" placeholder="enter" clearable>
             <el-option v-for="(val,ind) in animateList"
                        :key="ind+'enter'"
                        :label="val.label" :value="val.value"></el-option>
@@ -42,23 +42,23 @@
         </el-col>
         <el-col :span="1" class="center">-</el-col>
         <el-col :span="10">
-          <el-select v-model="videoForm.leave" placeholder="离场效果" clearable>
+          <el-select v-model="videoForm.leave" placeholder="leave" clearable>
             <el-option v-for="(val,ind) in animateList"
                        :key="ind+'leave'"
                        :label="val.label" :value="val.value"></el-option>
           </el-select>
         </el-col>
       </el-form-item>
-      <el-form-item label="声音设置" prop="isSupportAudio">
+      <el-form-item label="Voice" prop="isSupportAudio">
         <el-switch
           v-model="videoForm.isSupportAudio"
-          active-text="开启"
-          inactive-text="关闭">
+          active-text="open"
+          inactive-text="close">
         </el-switch>
       </el-form-item>
       <el-form-item align="right">
-        <button class="dialogBtn quxiao" @click.stop="cancel">取 消</button>
-        <button class="dialogBtn queren" @click.stop="confrim">确 认</button>
+        <button class="dialogBtn quxiao" @click.stop="cancel">cancel</button>
+        <button class="dialogBtn queren" @click.stop="confrim">confirm</button>
       </el-form-item>
     </el-form>
     <div style="display: none">
@@ -88,9 +88,9 @@
       return{
         rules: {},
         dismissTimeTypeData:[
-          {label:'至视频播放结束',value:0},
-          {label:'至剧本播放结束',value:1},
-          {label:'自定义时长',value:2},
+          {label:'To the end of video playback',value:0},
+          {label:'To the end of the play',value:1},
+          {label:'Custom duration',value:2},
         ],
         animateList:[]
       }
@@ -128,7 +128,7 @@
           case 0:
             this.videoForm.dismissTime = document.getElementById('videoDuration').duration
             if(!this.videoForm.dismissTime){
-              this.$message.warning('视频时长获取失败，请等待视频上传完成后再试！')
+              this.$message.warning('Video duration acquisition failed, please wait for the video upload to complete and try again!')
             }
             this.videoForm.isAll = false;
             break;

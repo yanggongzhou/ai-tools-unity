@@ -2,21 +2,20 @@
     <div class="container">
         <span class="tips">{{tips[type]}}</span>
         <div>
-            <button class="addBtn" @click='handleAddBtn'>+新增</button>
-            <span class="addTips">最多创建10条，开启多个话术时，随机播放一个</span>
+            <button class="addBtn" @click='handleAddBtn'>+add</button>
+            <span class="addTips">Create up to 10 scripts, and play one script randomly when opening multiple scripts</span>
             <div class="listWrap">
                 <div v-for='(item, idx) in list' :key='idx' class="list">
                     <el-switch class="switch" v-model="item.switch==0" active-color="#7694f3" inactive-color="#ccc" @change='handleSwitch(item)'></el-switch>
                     <span class="words">{{item.content}}</span>
-                    <span class="edit" @click='handleEdit(item)'>编辑</span>
+                    <span class="edit" @click='handleEdit(item)'>edit</span>
                     <span class="center"></span>
-                    <span class="delete" @click='handleDel(item)'>删除</span>
+                    <span class="delete" @click='handleDel(item)'>delete</span>
                 </div>
             </div>
             <div v-if='isOpenAddDialog' class="addDialog">
                 <el-input
                     type="textarea"
-                    placeholder="输入话术文字"
                     v-model="iptWordsTxt"
                     maxlength="40"
                     show-word-limit
@@ -24,20 +23,20 @@
                     ref='iptWords'
                     resize="none"
                 ></el-input>
-                <p class="dialogTips">最多可输入40个字</p>
+                <p class="dialogTips">You can enter up to 40 words</p>
                 <span class="dialog-footer">
-                    <button class="cancel" @click="cancelAdd" >取消</button>
-                    <button class="confirm" @click="confirmAdd" type='primary' >确认添加</button>
+                    <button class="cancel" @click="cancelAdd" >cancel</button>
+                    <button class="confirm" @click="confirmAdd" type='primary' >confirm</button>
                 </span>
             </div>
 
             <div v-if='isShowDelDialog' class="delDialog">
                 <i class="el-icon-close" @click='cancelDel'></i>
                 <i class="el-icon-warning-outline" style='font-size:42px;color:#b2c5ff;margin-bottom:18px;font-weight:600;'></i>
-                <div>是否删除话术？</div>
+                <div>Delete script？</div>
                 <span slot="footer" class="dialog-footer">
-                    <el-button class="cancel" @click="cancelDel">取 消</el-button>
-                    <el-button class="confirm" type="primary" @click="confirmDel">确 定</el-button>
+                    <el-button class="cancel" @click="cancelDel">cancel</el-button>
+                    <el-button class="confirm" type="primary" @click="confirmDel">confirm</el-button>
                 </span>
             </div>
         </div>
@@ -65,8 +64,8 @@ export default {
     data() {
         return {
             tips: {
-                welcome: '设置直播开播的开场语话术',
-                endwords: '设置不同剧本间切换时的衔接话术'
+                welcome: 'Set up the opening language of live broadcast',
+                endwords: 'Set up the cohesive script when switching between different scripts'
             },
             state: '',
             wordsId: '',

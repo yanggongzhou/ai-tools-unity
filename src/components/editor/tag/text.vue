@@ -1,19 +1,19 @@
 <template>
-  <el-form :model="textForm" :rules="rules" label-width="70px" @submit.native.prevent>
+  <el-form :model="textForm" :rules="rules" label-width="120px" @submit.native.prevent>
     <el-row :gutter="10">
       <el-col :span="12">
-        <el-form-item label="展示区" prop="region">
-          <el-select v-model="textForm.region" placeholder="请选择展示区域">
+        <el-form-item label="ExhibitionSpace" prop="region">
+          <el-select v-model="textForm.region">
             <el-option v-for="(val,ind) in InfoModelData"
                        :key="ind+'text'"
-                       :label="'展位'+val"
+                       :label="'exhibition space'+val"
                        :value="val"></el-option>
           </el-select>
         </el-form-item>
       </el-col>
       <el-col :span="10" >
-        <el-form-item label="大小" prop="textSize">
-          <el-select v-model="textForm.textSize" placeholder="请选择展示区域">
+        <el-form-item label="Size" prop="textSize">
+          <el-select v-model="textForm.textSize">
             <el-option v-for="(val,ind) in textSizeList"
                        :label="val"
                        :value="val"
@@ -25,32 +25,32 @@
     </el-row>
     <el-row>
       <el-col :span="6">
-        <el-form-item label="颜色" prop="textColor">
+        <el-form-item label="Color" prop="textColor">
           <div class="text_color-sty">
             <colorPicker v-model="textForm.textColor"/>
           </div>
         </el-form-item>
       </el-col>
       <el-col :span="8">
-        <el-form-item label="对齐" prop="gravity">
-          <el-select v-model="textForm.gravity" placeholder="请选择展示区域">
-            <el-option label="居中" value="center"></el-option>
-            <el-option label="左对齐" value="left"></el-option>
-            <el-option label="右对齐" value="right"></el-option>
+        <el-form-item label="Align" prop="gravity">
+          <el-select v-model="textForm.gravity">
+            <el-option label="center" value="center"></el-option>
+            <el-option label="left" value="left"></el-option>
+            <el-option label="right" value="right"></el-option>
           </el-select>
         </el-form-item>
       </el-col>
       <el-col :span="8">
-        <el-form-item label="字体" prop="gravity">
-          <el-select v-model="textForm.fontFamily" placeholder="请选择展示区域">
+        <el-form-item label="FontFamily" prop="gravity">
+          <el-select v-model="textForm.fontFamily">
             <el-option v-for="(val, ind) in fontFamilyList" :key="ind+'font'" :label="val.label" :value="val.value"></el-option>
           </el-select>
         </el-form-item>
       </el-col>
     </el-row>
-    <el-form-item label="设置时长" prop="dismissTimeType">
+    <el-form-item label="Duration" prop="dismissTimeType">
       <el-col :span="10">
-        <el-select v-model="textForm.dismissTimeType" @change="textTypeChange" placeholder="请选择展示时长类型">
+        <el-select v-model="textForm.dismissTimeType" @change="textTypeChange">
           <el-option v-for="(val,ind) in dismissTimeTypeData_img"
                      :key="ind+'dismissTimeType'"
                      :label="val.label" :value="val.value"></el-option>
@@ -64,12 +64,12 @@
           v-model="textForm.dismissTime" controls-position="right" :precision="1" :min="0.1" :step="0.5" :max="3600"></el-input-number>
       </el-col>
       <el-col :span="4">
-        <el-tag v-if="!textForm.isAll">秒</el-tag>
+        <el-tag v-if="!textForm.isAll">s</el-tag>
       </el-col>
     </el-form-item>
-    <el-form-item label="动画效果">
+    <el-form-item label="Animate">
       <el-col :span="10">
-        <el-select v-model="textForm.enter" placeholder="入场效果" clearable>
+        <el-select v-model="textForm.enter" placeholder="enter" clearable>
           <el-option v-for="(val,ind) in animateList"
                      :key="ind+'enter'"
                      :label="val.label" :value="val.value"></el-option>
@@ -77,7 +77,7 @@
       </el-col>
       <el-col :span="1" class="center">-</el-col>
       <el-col :span="10">
-        <el-select v-model="textForm.leave" placeholder="离场效果" clearable>
+        <el-select v-model="textForm.leave" placeholder="leave" clearable>
           <el-option v-for="(val,ind) in animateList"
                      :key="ind+'leave'"
                      :label="val.label" :value="val.value"></el-option>
@@ -85,7 +85,7 @@
       </el-col>
     </el-form-item>
 
-    <el-form-item label="字体内容">
+    <el-form-item label="Text">
       <el-input type="textArea" v-model="textForm.text"></el-input>
     </el-form-item>
 <!--    <el-form-item label="预览">-->
@@ -102,8 +102,8 @@
 <!--      </div>-->
 <!--    </el-form-item>-->
     <el-form-item align="right">
-      <button class="dialogBtn quxiao" @click.stop="cancel">取 消</button>
-      <button class="dialogBtn queren" @click.stop="confrim">确 认</button>
+      <button class="dialogBtn quxiao" @click.stop="cancel">cancel</button>
+      <button class="dialogBtn queren" @click.stop="confrim">confirm</button>
     </el-form-item>
   </el-form>
 </template>
@@ -158,8 +158,8 @@
           {label:"素材集市酷方体",value:"素材集市酷方体",}
         ],
         dismissTimeTypeData_img:[
-          {label:'至剧本播放结束',value:1},
-          {label:'自定义时长',value:2},
+          {label:'To the end of the play',value:1},
+          {label:'Custom duration',value:2},
         ],
         animateList:[]
       }

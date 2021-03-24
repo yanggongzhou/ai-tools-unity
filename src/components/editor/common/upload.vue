@@ -10,12 +10,12 @@
     :on-change="fileChange"
     :auto-upload="false">
     <el-button type='warning' size="small" round>
-      <span v-if="types==='video'">上传视频</span>
-      <span v-if="types==='img'">上传图片</span>
+      <span v-if="types==='video'">Upload video</span>
+      <span v-if="types==='img'">Upload image</span>
     </el-button>
   </el-upload>
-  <span v-if="types==='video'" class="upload_tip">*支持MP4格式，最大不超过200M</span>
-  <span v-if="types==='img'" class="upload_tip">*支持jpg、png、gif格式，最大不超过5M</span>
+  <span v-if="types==='video'" class="upload_tip">*Support MP4 format, up to 200M</span>
+  <span v-if="types==='img'" class="upload_tip">*Support JPG, PNG, GIF format, up to 5M</span>
 </div>
 </template>
 <script>
@@ -55,12 +55,12 @@
             // const isMOV = file.raw.type === 'video/mov';
             const isLt256M = file.raw.size / 1024 / 1024 < 200;
             if (!isMP4) { //&&!isAVI&&!isMOV
-              this.$message.error('上传视频只能是 mp4 格式!'); ///avi/mov
+              this.$message.error('Upload video can only be in MP4 format!'); ///avi/mov
               this.tempList = [];
               return false;
             }
             if (!isLt256M) {
-              this.$message.error('上传视频大小不能超过 200MB!');
+              this.$message.error('Upload video size cannot exceed 200MB!');
               this.tempList = [];
               return false;
             }
@@ -74,12 +74,12 @@
             const isJPG = file.raw.type === 'image/jpeg';
             const isLt5M = file.raw.size / 1024 / 1024 < 5;
             if (!isJPG&&!isPNG&&!isGif) {
-              this.$message.error('上传图片只能是 JPG/PNG/GIF 格式!');
+              this.$message.error('The uploaded image can only be in JPG / PNG / GIF format!');
               this.tempList = [];
               return false;
             }
             if (!isLt5M) {
-              this.$message.error('上传图片大小不能超过 5MB!');
+              this.$message.error('The size of the uploaded image cannot exceed 5MB!');
               this.tempList = [];
               return false;
             }
@@ -114,7 +114,7 @@
   .upload_tip{
     position: absolute;
     top: 0px;
-    left: 96px;
+    left: 105px;
     font-size: 12px;
     color: #9E9E9E;
   }

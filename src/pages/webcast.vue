@@ -4,27 +4,27 @@
 
           <div class="scriptList">
             <div class="titleBox">
-              <span class="titleSpan">剧本列表</span>
+              <span class="titleSpan">Script Table</span>
             </div>
             <div class="tabs">
-              <span class="tab" :class="{'selected': currentSetting==1}" @click='checkSetting(1)'>剧本设置</span>
-              <span class="tab" :class="{'selected': currentSetting==2}" @click='checkSetting(2)'>场景话术</span>
+              <span class="tab" :class="{'selected': currentSetting==1}" @click='checkSetting(1)'>Setting</span>
+              <span class="tab" :class="{'selected': currentSetting==2}" @click='checkSetting(2)'>Scene</span>
             </div>
             <div v-if='currentSetting==1'>
               <div style="text-align: right" class="clearfix">
-                <button class='addScript' type='primary' @click='addScript'>+ 添加剧本</button>
+                <button class='addScript' type='primary' @click='addScript'>+ Add Script</button>
               </div>
-              <span class="playSetting" @click='handlePlaySetting(true)' v-if='isShowPlaySettingFun'>播放设置</span>
+              <span class="playSetting" @click='handlePlaySetting(true)' v-if='isShowPlaySettingFun'>Playback settings</span>
 
-              <el-table size="mini" class='playScripts' row-key="sortId"  :data='playScriptData' style='width:100%' empty-text='暂未添加剧本' height='388' max-height='388' >
-                <el-table-column align="center" label="排序" width='100'>
+              <el-table size="mini" class='playScripts' row-key="sortId"  :data='playScriptData' style='width:100%' empty-text='none' height='388' max-height='388' >
+                <el-table-column align="center" label="Index" width='100'>
                   <template slot-scope="scope">
                     <!--                            <i class="el-icon-video-camera-solid" v-if='isPlayingIdx==scope.$index+1'></i>-->
                     <span>{{scope.$index+1}}</span>
                     <span style='display:none;'>{{scope.row.sortId}}</span>
                   </template>
                 </el-table-column>
-                <el-table-column align="center" label="商品号">
+                <el-table-column align="center" label="Commodity number">
                   <template slot-scope="scope">
                     <div class="goods clearfix">
                       <span>{{scope.row.commodity_id}}</span>
@@ -32,22 +32,22 @@
                     </div>
                   </template>
                 </el-table-column>
-                <el-table-column align="center" label="剧本名称">
+                <el-table-column align="center" label="Title">
                   <template slot-scope="scope">
                     <span>{{scope.row.name}}</span>
                   </template>
                 </el-table-column>
-                <el-table-column align="center" label="关联IP形象">
+                <el-table-column align="center" label="IP">
                   <template slot-scope="scope">
                     <span>{{scope.row.avatar_name}}</span>
                   </template>
                 </el-table-column>
-                <el-table-column align="center" label="剧本段数">
+                <el-table-column align="center" label="Paragraph">
                   <template slot-scope="scope">
                     <span>{{scope.row.paragraph_number}}</span>
                   </template>
                 </el-table-column>
-                <el-table-column width="100" align="center" label="播放权重" :render-header="renderWeightHeader">
+                <el-table-column width="110" align="center" label="Play weight" :render-header="renderWeightHeader">
                   <template slot-scope="scope">
                     <!-- <span>{{handleScriptWeight(scope.row.weight)}}</span> -->
                     <el-select v-model='scope.row.weight' @change='handleChangePlayWeight(scope.row.id, scope.$index)'>
@@ -55,18 +55,18 @@
                     </el-select>
                   </template>
                 </el-table-column>
-                <el-table-column align="center" label="操作" :render-header="renderHeader" width='120' >
+                <el-table-column align="center" label="Handle" :render-header="renderHeader" width='120' >
                   <template slot-scope="scope">
-                    <el-button @click='handleDelete(scope.$index, scope.row.id)' type="text" size="small">移除</el-button>
+                    <el-button @click='handleDelete(scope.$index, scope.row.id)' type="text" size="small">Move</el-button>
                   </template>
                 </el-table-column>
               </el-table>
               <!-- 剧本列表 -->
               <transition name='slide'>
                 <div class="allScriptList" v-if='isShowAllList'>
-                  <h3>剧本列表</h3>
+                  <h3>Script Table</h3>
                   <div class="filter">
-                    <span>关联IP形象：</span>
+                    <span>IP：</span>
                     <el-select class="filterOptions" @change='fetchAllScripts' v-model='anchorRoleValue'>
                       <el-option
                         v-for='(role,idx) in anchorRoles'
@@ -75,22 +75,22 @@
                         :value='role.value'
                       ></el-option>
                     </el-select>
-                    <el-button class='search_btn' @click="fetchAllScripts">查询</el-button>
-                    <el-input  class='search_ipt' v-model="searchScriptName" placeholder="剧本名称" clearable></el-input>
+                    <el-button class='search_btn' @click="fetchAllScripts">search</el-button>
+                    <el-input  class='search_ipt' v-model="searchScriptName" placeholder="title" clearable></el-input>
                   </div>
 
-                  <el-table size="mini" border :data='scriptData' style='width:100%' empty-text='暂无剧本' max-height='250' v-if='scriptData.length!=0'>
-                    <el-table-column label="选择" align="center" width='80'>
+                  <el-table size="mini" border :data='scriptData' style='width:100%' empty-text='none' max-height='250' v-if='scriptData.length!=0'>
+                    <el-table-column label="Check" align="center" width='80'>
                       <template slot-scope="scope">
                         <el-checkbox size="mini" v-model="scope.row.isChecked" :disabled="scope.row.isDisabled" @change='handleCheckScript(scope.$index)'></el-checkbox>
                       </template>
                     </el-table-column>
-                    <el-table-column label="剧本名称" align="center">
+                    <el-table-column label="Title" align="center">
                       <template slot-scope="scope">
                         <span>{{scope.row.name}}</span>
                       </template>
                     </el-table-column>
-                    <el-table-column label="关联IP形象" align="center">
+                    <el-table-column label="IP" align="center">
                       <template slot-scope="scope">
                         <span>{{scope.row.avatar_name}}</span>
                       </template>
@@ -100,27 +100,27 @@
                     <!--                                    <span>{{handleScriptTime(scope.row.time)}}</span>-->
                     <!--                                </template>-->
                     <!--                            </el-table-column>-->
-                    <el-table-column label="剧本段数" align="center">
+                    <el-table-column label="Paragraph" align="center">
                       <template slot-scope="scope">
                         <span>{{scope.row.paragraph_number}}</span>
                       </template>
                     </el-table-column>
-                    <el-table-column label="操作" align="center" width='100'>
+                    <el-table-column label="Handle" align="center" width='100'>
                       <template slot-scope="scope">
-                        <el-button class="previewBtn" @click='handlePreview(scope.row)' type="text" size="mini">预览</el-button>
+                        <el-button class="previewBtn" @click='handlePreview(scope.row)' type="text" size="mini">preview</el-button>
                       </template>
                     </el-table-column>
                   </el-table>
                   <div class="noScript" v-if='scriptData.length==0'>
-                    暂无剧本，去 <span @click='gotopage'>创建剧本</span>
+                     <span @click='gotopage'>New Script</span>
                   </div>
 
                   <div class="chooseBox">
                     <!-- :indeterminate='isChooseAllScript'  -->
-                    <el-checkbox v-model='checkAll' :disabled="checkAllDisabled" @change='handleCheckAll' v-if='scriptData.length!=0'>全选</el-checkbox>
+                    <el-checkbox v-model='checkAll' :disabled="checkAllDisabled" @change='handleCheckAll' v-if='scriptData.length!=0'>all</el-checkbox>
                     <span>
-                              <button class='cancelChoose' @click="cancelChoose">取消</button>
-                              <button class='confirmChoose' :class="{'disabled': !isAddedScript}" v-if='scriptData.length!=0' type="primary" @click="confirmChoose">确定</button>
+                              <button class='cancelChoose' @click="cancelChoose">cancel</button>
+                              <button class='confirmChoose' :class="{'disabled': !isAddedScript}" v-if='scriptData.length!=0' type="primary" @click="confirmChoose">confirm</button>
                           </span>
                   </div>
                 </div>
@@ -130,7 +130,7 @@
               <transition name='slide'>
                 <div class="playSettingWrap" v-if='isShowPlaySetting'>
                   <i class="el-icon-close" @click='handlePlaySetting(false)'></i>
-                  <p class="title">播放设置</p>
+                  <p class="title">Playback settings</p>
                   <PlaySetting :tabsHeight='playTableHeight'></PlaySetting>
                 </div>
               </transition>
@@ -145,15 +145,15 @@
           <div class="handleWebcastBtnBox">
             <button class='handleWebcastBtn' v-if="playScriptData.length" :class="{'disabled': isShowAllList}" @click='handleWebcast'>
               <span></span>
-              开始直播
+              Start
             </button>
 
           </div>
         </div>
       <div class="setGoodsId" v-if='isShowSetGoodsId' :style='setGoodsIdStyle'>
-        <el-input placeholder="请输入对应的商品号" v-model="iptGoodsId" maxlength='3' @input="handleIptGoodsId"></el-input>
-        <button class="cancel" @click='cancelSetGoodsId'>取消</button>
-        <button class="confirm" @click='confirmSetGoodsId'>保存</button>
+        <el-input placeholder="Please input the corresponding commodity number" v-model="iptGoodsId" maxlength='3' @input="handleIptGoodsId"></el-input>
+        <button class="cancel" @click='cancelSetGoodsId'>cancel</button>
+        <button class="confirm" @click='confirmSetGoodsId'>save</button>
       </div>
     </div>
 </template>
@@ -277,7 +277,7 @@ export default {
       },
       confirmSetGoodsId() {
         if(this.iptGoodsId=='') {
-          this.$message.error('商品号不能为空');
+          this.$message.error('Commodity number cannot be empty');
           return;
         }
         let _flag = false
@@ -288,7 +288,7 @@ export default {
           }
         }
         if(_flag) {
-          this.$message.error('已添加过该商品号噢～');
+          this.$message.error('The item number has been added oh～');
           return
         }
         this.isShowSetGoodsId = false;
@@ -300,10 +300,10 @@ export default {
           commodity_id: this.iptGoodsId,
         }).then(res => {
           if(res.return_code==1000) {
-            this.$message.success('添加成功')
+            this.$message.success('Added successfully')
             this.fetchAllPrograms();
           }else {
-            this.$message.error('添加失败')
+            this.$message.error('Add failed')
           }
         })
         this.currentEditGSID = -1;
@@ -331,7 +331,7 @@ export default {
               h('span', column.label),
               h('promptMessages', {
                 props: {
-                  messages: ['权重越高，随机播放时，被重复播放几率越大！'],
+                  messages: ['The higher the weight, the greater the probability of being repeated when playing randomly！'],
                   icon: 'el-icon-question',
                   iconStyle: 'color:#666666;margin-left:5px;cursor:pointer;',
                   iconClick: this.emptyList
@@ -350,10 +350,10 @@ export default {
           weight: this.playScriptData[_idx].weight
         }).then(res => {
           if(res.return_code==1000) {
-            this.$message.success('修改成功')
+            this.$message.success('Modified successfully')
             this.fetchAllPrograms();
           }else {
-            this.$message.error('修改失败')
+            this.$message.error('Modification failed')
           }
         })
       },
@@ -372,7 +372,7 @@ export default {
                 UnityPreviewCancel();
                 UnityChangeAvatar(res.data[0].avatar.unity);
               }else{
-                this.$message.warning('剧本数据获取异常，请重试')
+                this.$message.warning('Script data acquisition exception, please try again')
               }
             })
         },
@@ -380,7 +380,7 @@ export default {
           if(state==='True'){
             UnityPreview(this.previewData.name,this.previewData.script,"True","True")
           }else if(state==='False'){
-            this.$message.error('切换角色失败，请重试')
+            this.$message.error('Failed to change avatar. Please try again')
             // this.previewReady = false;
           }
         },
@@ -388,7 +388,7 @@ export default {
           if(state==='True'){
             UnityPreviewStart(this.previewData.name);
           }else if(state==='False'){
-            this.$message.error('加载资源失败，请重试')
+            this.$message.error('Failed to load resource. Please try again')
           }
           this.previewReady = true;
         },
@@ -522,7 +522,7 @@ export default {
 
         handleWebcast() {
             if(this.playScriptData.length==0) {
-                this.$message.info('请添加播放剧本～');
+                this.$message.info('Please add play script～');
                 return;
             }
           this.startWebcast();
@@ -628,7 +628,7 @@ export default {
                  h('span', column.label),
                  h('promptMessages', {
                      props: {
-                        messages: ['清空列表'],
+                        messages: ['clear list'],
                         icon: 'el-icon-brush',
                         iconStyle: 'color:#666666;margin-left:5px;transform:rotate(180deg);cursor:pointer;',
                         iconClick: this.emptyList

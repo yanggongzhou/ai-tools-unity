@@ -15,40 +15,40 @@
       <el-popconfirm
         cancel-button-type="info"
         confirm-button-type="info"
-        confirmButtonText='确认'
-        cancelButtonText='取消'
+        confirmButtonText='confirm'
+        cancelButtonText='cancel'
         icon="el-icon-info"
         iconColor="#fbfbfb"
         @onConfirm="openTagDialog('clean')"
-        title="确认清空所有标签？">
+        title="Confirm all labels are cleared？">
         <button slot="reference" class="w-textarea_tools__item cleanTag">
           <i class="iconfont alicon-qingkong tagLogo"></i>
-          <span>清空标签</span>
+          <span>CleanTag</span>
         </button>
       </el-popconfirm>
 
       <el-tooltip  :open-delay="1000" placement="bottom" effect="dark">
         <div slot="content">
-          <p class="center tip_title">互动标签</p>
-          <p class="center">注意文本中不要离得太近哦!</p>
+          <p class="center tip_title">InterAction</p>
+          <p class="center">Pay attention not to be too close to the text!</p>
         </div>
         <button class="w-textarea_tools__item "
                 @click="openTagDialog('interaction')">
           <i class="iconfont alicon-hudongguanli tagLogo"></i>
-          <span>插入互动</span>
+          <span>InterAction</span>
         </button>
       </el-tooltip>
       <button class="w-textarea_tools__item " @click="openTagDialog('video')">
         <i class="iconfont alicon-shipin tagLogo"></i>
-        <span>插入视频</span>
+        <span>Video</span>
       </button>
       <button class="w-textarea_tools__item " @click="openTagDialog('img')">
         <i class="iconfont alicon-tupian tagLogo"></i>
-        <span>插入图片</span>
+        <span>Image</span>
       </button>
       <button class="w-textarea_tools__item " @click="openTagDialog('text')">
         <i class="iconfont alicon-wenzi tagLogo"></i>
-        <span>插入文字</span>
+        <span>Text</span>
       </button>
 <!--      <button class="w-textarea_tools__item " @click="openTagDialog('timer')">-->
 <!--        <i class="iconfont alicon-jiange tagLogo"></i>-->
@@ -475,6 +475,7 @@
       font-size: 0px;
       .w-textarea_tools__item {
         font-size: 12px;
+        width: 44px;
         margin: 12px 17px 0 0;
         display: inline-block;
         line-height: 1;

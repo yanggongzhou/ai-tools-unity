@@ -1,10 +1,10 @@
 <template>
  <div class="checkBox">
-   <div class="title">剧本:{{scriptName}}</div>
+   <div class="title">Script:{{scriptName}}</div>
    <div class="content" v-for="(val,ind) in scriptRow" :key="ind">
      <div class="subtitle clearfix">
        <span class="subtitle-text">{{ind | indFilter}}</span>
-       <el-button class="float_right" size="small" type="text" @click="previewBtn(val)">预览</el-button>
+       <el-button class="float_right" size="small" type="text" @click="previewBtn(val)">preview</el-button>
      </div>
      <div class="textArea">
        {{val | contentFilter}}
@@ -27,7 +27,7 @@
         return _content;
       },
       indFilter(value){
-        let _txt = '第'+NumToCh.NumberToChinese(value+1)+'段'
+        let _txt = 'Paragraph'+NumToCh.NumberToChinese(value+1)
         return _txt;
       }
     },
@@ -54,14 +54,14 @@
           UnityChangeAvatar(val.avatar.unity);
           this.previewReady = false;
         }else{
-          this.$message.warning('资源加载中，请稍后...')
+          this.$message.warning('Resource loading, please wait...')
         }
       },
       WebSelectAvatarState(state){
         if(state==='True'){
           UnityPreview(this.previewData.avatar.unity,JSON.stringify([this.previewData]),"True","False")
         }else if(state==='False'){
-          this.$message.error('切换角色失败，请重试')
+          this.$message.error('Failed to change avatar. Please try again')
           this.previewReady = true;
         }
       },
@@ -69,7 +69,7 @@
         if(state==='True'){
           UnityPreviewStart(this.previewData.avatar.unity);
         }else if(state==='False'){
-          this.$message.error('加载资源失败，请重试')
+          this.$message.error('Failed to load resource, please try again')
         }
         this.previewReady = true;
       }

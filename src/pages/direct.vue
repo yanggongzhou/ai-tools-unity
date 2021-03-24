@@ -9,17 +9,17 @@
                            innerStrokeColor="#e8eeff"
                            :completed-steps="completedSteps"
                            :total-steps="totalSteps">
-        <p class="midText">总剧本: {{ totalSteps }}</p>
-        <p class="midText">缓存进度: {{ completedSteps }}</p>
-        <button class='progress-btn' @click='progressCancelBtn' title="取消缓存">X</button>
+        <p class="midText">Scripts: {{ totalSteps }}</p>
+        <p class="midText">Progress: {{ completedSteps }}</p>
+        <button class='progress-btn' @click='progressCancelBtn' title="Uncache">X</button>
       </radial-progress-bar>
     </div>
 
     <div class="titleBox" style="margin-bottom: 10px">
-      <span class="titleSpan">直播剧本</span>
+      <span class="titleSpan">Live Scripts</span>
       <button class="backNormal backNormal2" @click="backBtn">
         <span class="_icon">< </span>
-        <span>返回</span>
+        <span>Back</span>
       </button>
     </div>
 
@@ -34,7 +34,7 @@
           <p>2、依据剧本权重，权重越高，重复播放概率越大。</p>
           <p>3、建议多个剧本（>4）时再开启随机播放</p>
         </div>
-        <span slot="reference" style="cursor: help;position: relative;top: 4px">随机播放</span>
+        <span slot="reference" style="cursor: help;position: relative;top: 4px">Random</span>
       </el-popover>
       <el-switch @change="isRandomChange" v-model="isRandom" active-color='#7694f3' style='margin:6px 18px 0 8px;' :disabled="isAutoPlayBtn"></el-switch>
       <el-popover
@@ -47,7 +47,7 @@
           <p>2、目前虚拟主播互动时间在每个剧本结束后及剧本中有互动标签的位置进入互动模式时间，当互动模式结束后，继续脚本直播。</p>
           <p>3、开启互动模式必须结合用户弹幕问题监测软件共同使用，且提前设定好问题和答案，否则互动模式无效。（ <span class='#835BFF'>弹幕问题监控软件及问答配置需联系商务处理</span> ）</p>
         </div>
-        <span slot="reference" style="cursor: help;position: relative;top: 4px">互动模式</span>
+        <span slot="reference" style="cursor: help;position: relative;top: 4px">Interactive mode</span>
       </el-popover>
       <el-switch @change="SwitchChange" v-model="isOpenInteractiveMode" active-color='#7694f3' style='margin-left:8px;margin-top:6px;' :disabled="isAutoPlayBtn"></el-switch>
     </div>
@@ -79,14 +79,14 @@
                :class="{'borderLeftGreen': recordId==='content'+ind+'script'+allScriptIndex}"
                :key="ind+'content'"   :style="ind | styleFilter3">
             <div class="header clearfix">
-              <div class="title float_left">第{{ind+1}}段</div>
+              <div class="title float_left">paragraph:{{ind+1}}</div>
               <div class="pdtip float_left"
                    style="color: #7694f3"
                    :style="ind | styleFilter2"
-              >正在播放中...</div>
+              >It's playing...</div>
               <div class="pdtip float_left"
                    :style="ind | styleFilter"
-              >排队播放中...</div>
+              >Waiting in line...</div>
 
               <div class="float_right play_icon" @click="previewBtn(val,ind,allScriptIndex,false)">
                 <i class="el-icon-video-play"></i>
@@ -127,16 +127,16 @@
 <!--              :class="{'disabled-icon2': isAutoPlayBtn}"-->
               <div class="icon2" @click="innerVisibleOpen" >
                 <div class="huashu"></div>
-                <span>临时话术</span>
+                <span>Temporary script</span>
               </div>
             </el-col>
           </el-row>
         </div>
         <div class="float_right btnBox">
-          <button class='handleWebcastBtn' :class="{'disabled': queueList.length!==0||queueContentItem.length!==0||isPlaying}"  v-show="!isAutoPlayBtn" @click='autoPlayBtn'>自动播放</button>
-          <button class='handleWebcastBtn' v-show="isAutoPlayBtn" @click='stopPlayBtn'>停止播放</button>
+          <button class='handleWebcastBtn' :class="{'disabled': queueList.length!==0||queueContentItem.length!==0||isPlaying}"  v-show="!isAutoPlayBtn" @click='autoPlayBtn'>Autoplay</button>
+          <button class='handleWebcastBtn' v-show="isAutoPlayBtn" @click='stopPlayBtn'>StopPlaying</button>
           <el-tooltip class="item" effect="dark" content="播放下一段：【Ctrl】+【n】" placement="bottom">
-            <button class='handleWebcastBtn' style="margin-left: 30px" :disabled="isAutoPlayBtn" :class="{'disabled': isAutoPlayBtn}" @click='nextPlayBtn'>播放下一段</button>
+            <button class='handleWebcastBtn' style="margin-left: 30px" :disabled="isAutoPlayBtn" :class="{'disabled': isAutoPlayBtn}" @click='nextPlayBtn'>Play the next</button>
           </el-tooltip>
 
         </div>
@@ -148,7 +148,7 @@
         top="10vh"
         append-to-body>
         <div class="contentBox contentBox2">
-          <button class='close_btn' @click='innerVisible=false'>收起</button>
+          <button class='close_btn' @click='innerVisible=false'>Put it away</button>
           <div style="height: 346px;overflow: scroll;margin-top: 10px">
             <div class="content-item" v-for="(val,ind) in temporaryScriptList" :key="ind+'content'">
               <div class="header clearfix">
@@ -156,10 +156,10 @@
                 <div class="pdtip float_left"
                      style="color: #7694f3"
                      v-show="nowTempId===val.id"
-                >正在播放中...</div>
+                >It's playing...</div>
                 <div class="pdtip float_left"
                      :style="val.id | styleFilter4"
-                >排队播放中...</div>
+                >Waiting in line...</div>
                 <div class="float_right play_icon" @click="previewTxtBtn(val,ind)">
                   <i class="el-icon-video-play"></i>
                 </div>
@@ -171,12 +171,12 @@
             </div>
           </div>
           <el-input style="margin-top: 10px" type="textarea"
-                    placeholder="这里可以输入文字，添加后记录在上方内容"
+                    placeholder="You can input text here, and record the content above after adding"
                     v-model="temporaryScriptTxt"
                     :autosize="{ minRows: 4, maxRows:4 }"
           ></el-input>
           <div class="playBtn">
-            <button class='handleWebcastBtn' @click='temporaryScriptPlay'>播放</button>
+            <button class='handleWebcastBtn' @click='temporaryScriptPlay'>play</button>
           </div>
         </div>
       </el-dialog>
@@ -390,7 +390,7 @@
       if(this.$route.params.playData){
         this.getPlayData(this.$route.params.playData)
       }else{
-        this.$message.error('未获取数据，请返回重试！')
+        this.$message.error('No data obtained, please return and try again！')
       }
       this.getTempData().then(res=>{});
       UnityInteractionStateChange("True");
@@ -415,7 +415,7 @@
               this.scriptChange(this.allScriptIndex)
               this.previewBtn(this.allScriptList[_index].scriptList[0],0,_index,false)
             }else{
-              this.$message.warning('最多支持1个剧本段落排队，请稍后!')
+              this.$message.warning('Support up to 1 script paragraph queue, please wait!')
             }
             // this.previewData = this.allScriptList[_index].scriptList
             // this.isPreviewBtn = true;
@@ -423,7 +423,7 @@
             // this.allScriptIndex = _index;
             // this.$message.info(`语音指令播放剧本${this.allScriptList[_index].name}`)
           }else{
-            this.$message.warning(`语音指令未能匹配到相应剧本`)
+            this.$message.warning(`The voice command failed to match the corresponding script`)
           }
         }
       },
@@ -465,8 +465,8 @@
       WebErrorMessage(err){
         if(err==="True"){
           this.$notify.error({
-            title:  '网络连接已断开!',
-            message:"网络连接出现异常，请确认您的联网状态!",
+            title:  'The network connection has been disconnected!',
+            message:"Network connection is abnormal, please confirm your network status!",
             duration: 0
           });
           this.isDisconnection=true;
@@ -475,8 +475,8 @@
           }
         }else{
           this.$notify.success({
-            title:  '网络已重新连接!',
-            message:"网络连接已恢复，祝您使用愉快!",
+            title:  'The network has been reconnected!',
+            message:"The network connection has been restored. Have a good time!",
             duration: 0
           });
           this.isDisconnection=false;
@@ -484,7 +484,7 @@
       },
       backBtn(){
         if(this.isAutoPlayBtn){
-          this.$message.warning('请先停止直播！')
+          this.$message.warning('Please stop the live broadcast first！')
         }else{
           this.$router.back()
         }
@@ -500,8 +500,8 @@
         val?_state="True":_state="False"
         UnityInteractionStateChange(_state);
         if(!val){
-          this.$confirm('关闭互动模式可能会增加被平台判定为录播的风险，请谨慎操作！', {
-            confirmButtonText: '知道了',
+          this.$confirm('Closing the interactive mode may increase the risk of being judged as recording by the platform. Please operate with caution！', {
+            confirmButtonText: 'Ok',
             showCancelButton:false,
             type: 'warning'
           }).then(() => {
@@ -613,7 +613,7 @@
       autoPlayBtn(){
         //是否有排队
         if(this.queueList.length!==0||this.queueContentItem.length!==0||this.isPlaying){
-          this.$message.info('检测到当前还有排队数据，请等待排队播放完毕')
+          this.$message.info('It has been detected that there is still queue data. Please wait for the queue to finish playing')
           return false;
         }
         // UnityPreviewCancel();
@@ -639,7 +639,7 @@
             this.isFirstScriptOnce = true;
           }
         }else{
-          this.$message.warning('当前任务正在执行中，请稍后...')
+          this.$message.warning('The current task is in progress, please wait...')
         }
       },
       //停止播放
@@ -672,7 +672,7 @@
           this.previewReady = true;
           this.isAutoPlayBtn = false;
           this.isPlaying = false;
-          this.$message.error('切换角色失败，请重试')
+          this.$message.error('Failed to change avatar. Please try again')
         }
       },
       WebPreviewReady(state){
@@ -703,8 +703,8 @@
           this.isPlaying = false;
           this.allScriptPlayIndex = ''
           this.$notify.error({
-            title:  '加载资源失败!',
-            message:"加载资源失败，请重试！",
+            title:  'Failed to load resource!',
+            message:"Failed to load resource. Please try again！",
             duration: 0
           });
           // this.$message.error('加载资源失败，请重试')
@@ -1039,13 +1039,13 @@
             this.nowContentIndex = ind;
             this.nowAllScriptIndex = allScriptIndex;
           }else{
-            this.$message.warning('资源加载中，请稍后...')
+            this.$message.warning('Resource loading, please wait...')
           }
           //判断播放下一个的数据
           this.getNextPlayVal(ind,allScriptIndex,bool);
         }else{
           if(this.queueContentItem.length===0){
-            this.$message.info('剧本段落已排队，稍后播放!')
+            this.$message.info('The script has been queued up and will be played later!')
             this.queueContentItem.push({
               allScriptIndex:allScriptIndex,
               contentIndex:ind,
@@ -1054,7 +1054,7 @@
             })
             this.getNextPlayVal(ind,allScriptIndex,bool);
           }else{
-            this.$message.warning('最多支持1个剧本段落排队，请稍后!')
+            this.$message.warning('Support up to 1 script paragraph queue, please wait!')
           }
         }
       },
@@ -1098,7 +1098,7 @@
                 id:val.id,
               })
             }else{
-              this.$message.info('最多支持3个播放排队,请稍后!')
+              this.$message.info('Up to 3 play queues are supported. Please wait!')
             }
           }
 
@@ -1110,11 +1110,11 @@
       //临时话术播放按钮
       temporaryScriptPlay(){
         if(this.queueList.length>=3){
-          this.$message.warning('最多支持3个播放排队，请稍后')
+          this.$message.warning('Up to 3 play queues are supported. Please wait')
           return false
         }
         if(!this.temporaryScriptTxt.replace(/[\ |\~|\`|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\-|\_|\+|\=|\||\\|\[|\]|\{|\}|\;|\:|\"|\'|\,|\<|\.|\>|\/|\?|\r\n]/g).match(/[\u4e00-\u9fa5\0-9]/g)){
-          this.$message.warning('请输入有效字符')
+          this.$message.warning('Please enter a valid character')
           return false
         }
         this.addTempData(this.temporaryScriptTxt).then(res=>{
@@ -1152,7 +1152,7 @@
                   item:JSON.stringify([_json])
                 })
               }else{
-                this.$message.info('最多支持3个播放排队，请稍后！')
+                this.$message.info('Up to 3 playback queues are supported. Please wait！')
               }
             }
 
@@ -1175,7 +1175,7 @@
               item:JSON.stringify([_json])
             })
           }else{
-            this.$message.info('最多支持3个播放排队，请稍后！')
+            this.$message.info('Up to 3 playback queues are supported. Please wait！')
           }
         }else{
           UnityTemporaryInteractionStart();
@@ -1515,7 +1515,7 @@
     }
   }
   .close_btn{
-    width: 60px;
+    width: 68px;
     height: 24px;
     margin: 0 auto;
     background: #FFF;

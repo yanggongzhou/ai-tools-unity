@@ -4,28 +4,28 @@
             <el-tab-pane v-for='(tab,idx) in tabs' :key='idx' :label="tab.label">
                 <!-- 互动模式 -->
                 <div v-if='idx==0' class='tab inac'>
-                    <p class="title">互动模式轮数设置</p>
-                    <p class="tips">互动模式轮数:每次进入互动模式后与观众互</p>
+                    <p class="title">Interactive mode rounds setting</p>
+                    <p class="tips">Rounds of interactive mode: interact with the audience after entering the interactive mode each time</p>
 
                     <div class="inacType">
-                        <el-radio v-model="inacType" label="0" @change='handleChangeType'>默认全天</el-radio>
+                        <el-radio v-model="inacType" label="0" @change='handleChangeType'>Default all day</el-radio>
 
-                        <span class="loop">{{fullDayLoop}}轮</span>
+                        <span class="loop">{{fullDayLoop}}rounds</span>
                         <span class="center" ></span>
-                        <span class="edit" :class="{'disabled': inacType==1}" @click='handleEditFullDayLoop'>编辑</span>
+                        <span class="edit" :class="{'disabled': inacType==1}" @click='handleEditFullDayLoop'>edit</span>
                         <!-- <span class="delete" v-if='type!="tempwords"'>删除</span> -->
                     </div>
                     <div class="inacType">
-                        <el-radio v-model="inacType" label="1" @change='handleChangeType'>分时段设置(未设置的时段，默认2轮)</el-radio>
+                        <el-radio v-model="inacType" label="1" @change='handleChangeType'>Time period setting (unset time period, default to 2 rounds)</el-radio>
                         <div class="detail">
-                            <p class="addInacTimePart" :class="{'disabled': inacType==0}" @click='addInacTimePart'>添加</p>
+                            <p class="addInacTimePart" :class="{'disabled': inacType==0}" @click='addInacTimePart'>add</p>
                             <div :style='timerPartStyle'>
                                 <p class="part" v-for='(part, idx) in timeParts' :key='idx'>
                                     <span>{{part.start}} — {{part.end}}</span>
-                                    <span class="loop">{{part.rotation}}轮</span>
+                                    <span class="loop">{{part.rotation}}rounds</span>
                                     <span class="center" ></span>
-                                    <span class="edit" :class="{'disabled': inacType==0}" @click='editTimePart(part, idx)'>编辑</span>
-                                    <span class="delete" :class="{'disabled': inacType==0}" @click='delInac(part)'>删除</span>
+                                    <span class="edit" :class="{'disabled': inacType==0}" @click='editTimePart(part, idx)'>edit</span>
+                                    <span class="delete" :class="{'disabled': inacType==0}" @click='delInac(part)'>delete</span>
                                 </p>
                             </div>
                         </div>
@@ -35,11 +35,11 @@
 
                 <!-- 紧急联系人 -->
                 <div v-if='idx==1'>
-                    <p style='font-size:14px;margin-bottom:10px;'>紧急联系人</p>
+                    <p style='font-size:14px;margin-bottom:10px;'>Emergency contact</p>
                     <p>
-                        <span style='font-size:14px;margin-right:10px;'>手机号</span><el-input style='width:300px;' v-model="liaison" @input='handleLiaIptChange("liaison")' :disabled='liaDisabled' maxlength='11' autocomplete="off" clearable></el-input>
+                        <span style='font-size:14px;margin-right:10px;'>Phone</span><el-input style='width:300px;' v-model="liaison" @input='handleLiaIptChange("liaison")' :disabled='liaDisabled' maxlength='11' autocomplete="off" clearable></el-input>
                     </p>
-                    <p class="tips" style='margin-top:10px;margin-left:60px;'>紧急联系人手机号，用于接收直播中断等异常情况的短信通知！默认注册手机号，可修改。</p>
+                    <p class="tips" style='margin-top:10px;margin-left:60px;'>The mobile phone number of the emergency contact is used to receive SMS notification of abnormal situations such as live broadcast interruption! The default registered mobile phone number can be modified.</p>
                     <!-- <p v-if='liaisonBtnTxt=="保存"'>
                         <span style='font-size:14px;margin-right:10px'>验证码</span><el-input style='width:140px;' v-model="captcha" @input='handleLiaIptChange("captcha")' :disabled='liaDisabled' maxlength='6' autocomplete="off" clearable></el-input>
                         <el-button
@@ -120,10 +120,10 @@
             return {
                 tabs: [
                     {
-                        label: '互动模式'
+                        label: 'Interaction'
                     },
                     {
-                        label: '紧急联系人'
+                        label: 'Emergency'
                     },
                     // {
                     //     label: 'haha管理'

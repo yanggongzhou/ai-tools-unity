@@ -2,30 +2,30 @@
   <div class='common_content'>
     <div class="headerBox">
       <div class="titleBox">
-        <span class="titleSpan">剧本编辑</span>
+        <span class="titleSpan">Script Editor</span>
       </div>
 
 
       <div class="content clearfix">
         <div class="json_name float_left">
-          <span class="label">剧本名称:</span>
+          <span class="label">Title:</span>
           <el-input @input="jsonNameFocus" class="inp" v-model="jsonName"></el-input>
-          <div v-show="jsonNameValidate" class="err_tip">*请输入有效剧本名称</div>
+          <div v-show="jsonNameValidate" class="err_tip">*Please enter a valid script title</div>
         </div>
         <div  class="float_right right-control">
 
 <!--          <button class="back" @click="$router.push('/home')">返回首页</button>-->
           <button class="back preview" @click="previewBtn">
             <span class="iconfont alicon-yulan posAdjustment"></span>
-            <span>预览</span>
+            <span>preview</span>
           </button>
           <button class="back save" @click="saveBtn(1)">
             <span class="iconfont alicon-baocun posAdjustment"></span>
-            <span>保存</span>
+            <span>save</span>
           </button>
           <button v-show="editJsonData.id" class="back save" @click="saveBtn(2)">
             <span class="iconfont alicon-lingcunwei posAdjustment"></span>
-            <span>另存</span>
+            <span>save as</span>
           </button>
           <!--        <el-button @click="downloadJSON" type="success">下载脚本</el-button>-->
         </div>
@@ -300,7 +300,7 @@
       previewBtn(){
         UnityPreviewCancel();
         if(!this.previewReady){
-          this.$message.warning('资源加载中，请稍后...')
+          this.$message.warning('Resource loading, please wait...')
           return false;
         }
         let self = this;
@@ -319,7 +319,7 @@
             }
           })
           if(!valitade){
-            this.$message.error('请确认各段落是否含有有效文本！')
+            this.$message.error('Please confirm that each paragraph contains valid text！')
             return
           }
           UnityPreview(this.ResultJson.avatar.unity,JSON.stringify(_JsonEditorRef.ScriptList),"True","False")
@@ -331,7 +331,7 @@
         if(state==='True'){
           UnityPreviewStart(this.ResultJson.avatar.unity);
         }else if(state==='False'){
-          this.$message.error('加载资源失败，请重试')
+          this.$message.error('Failed to load resource. Please try again')
         }
         this.previewReady = true;
       },
@@ -371,7 +371,7 @@
               }
             })
             if(!valitade){
-              this.$message.error('请确认各段落是否含有有效文本！')
+              this.$message.error('Please confirm whether each paragraph contains valid text!')
               return
             }
             Promise.all([this.uploadJSON(_JsonEditorRef),this.getAudio(data.noTagText)]).then(()=>{
@@ -406,7 +406,7 @@
               requestServices[_handleFun](_data).then(res=>{
                 if(res.return_code===1000){
                   self.editJsonData.id=res.result.gs_id
-                  self.$message.success('保存成功');
+                  self.$message.success('success');
                 }
               })
             })
