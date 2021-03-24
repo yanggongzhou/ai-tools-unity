@@ -114,7 +114,7 @@
   .upload_tip{
     position: absolute;
     top: 0px;
-    left: 105px;
+    left: 117px;
     font-size: 12px;
     color: #9E9E9E;
   }

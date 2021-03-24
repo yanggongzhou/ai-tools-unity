@@ -1,8 +1,8 @@
 <template>
-  <el-form :model="textForm" :rules="rules" label-width="120px" @submit.native.prevent>
+  <el-form :model="textForm" :rules="rules" label-width="70px" @submit.native.prevent>
     <el-row :gutter="10">
       <el-col :span="12">
-        <el-form-item label="ExhibitionSpace" prop="region">
+        <el-form-item label-width="120px" label="ExhibitionSpace" prop="region">
           <el-select v-model="textForm.region">
             <el-option v-for="(val,ind) in InfoModelData"
                        :key="ind+'text'"
@@ -41,7 +41,7 @@
         </el-form-item>
       </el-col>
       <el-col :span="8">
-        <el-form-item label="FontFamily" prop="gravity">
+        <el-form-item label="Font" prop="gravity">
           <el-select v-model="textForm.fontFamily">
             <el-option v-for="(val, ind) in fontFamilyList" :key="ind+'font'" :label="val.label" :value="val.value"></el-option>
           </el-select>

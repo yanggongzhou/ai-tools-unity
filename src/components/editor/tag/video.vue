@@ -1,7 +1,7 @@
 <template>
   <div>
-    <el-form :model="videoForm" :rules="rules" ref="videoForm" label-width="120px" @submit.native.prevent>
-      <el-form-item label="ExhibitionSpace" prop="region">
+    <el-form :model="videoForm" :rules="rules" ref="videoForm" label-width="80px" @submit.native.prevent>
+      <el-form-item label="ExhibitionSpace" label-width="120px" prop="region">
         <el-select v-model="videoForm.region">
           <el-option
             v-for="(val,ind) in InfoModelData"

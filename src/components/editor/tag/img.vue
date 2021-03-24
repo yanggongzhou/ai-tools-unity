@@ -1,6 +1,6 @@
 <template>
-  <el-form :model="imgForm" :rules="rules" label-width="120px" @submit.native.prevent>
-    <el-form-item label="ExhibitionSpace" prop="region">
+  <el-form :model="imgForm" :rules="rules" label-width="80px" @submit.native.prevent>
+    <el-form-item label-width="120px" label="ExhibitionSpace" prop="region">
       <el-select v-model="imgForm.region">
         <el-option
           v-for="(val,ind) in InfoModelData"
