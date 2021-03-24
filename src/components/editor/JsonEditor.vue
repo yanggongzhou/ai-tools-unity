@@ -148,6 +148,7 @@
   import vText from './tag/text'
   import vVideo from './tag/video'
   import vImg from './tag/img'
+  import { AMSound } from '../../sound/sound';
 
   export default {
     computed: {
@@ -512,6 +513,7 @@
         }
         this.ScriptList.splice(ind,1);
       },
+
       //预览
       previewBtn(val,ind){
         UnityPreviewCancel()
