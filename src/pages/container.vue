@@ -590,6 +590,7 @@
     .content{
       padding: 0 0 15px;
       .json_name{
+        padding-left: 29px;
         display: inline-block;
         width: 230px;
         font-size: 16px;
