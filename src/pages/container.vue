@@ -378,10 +378,10 @@
               console.log( '脚本链接和tts信息',this.scriptUrl, this.AMSound.TTS.audioInfo)
 
               var arr = new Uint8Array(this.AMSound.TTS.audioInfo[0].audio_buffer);
-              var data = new Blob([arr],{type:"audio/mp3"});
+              var data = new Blob([JSON.stringify({audio:arr,timeLine:this.AMSound.TTS.audioInfo[0].currentWordsTimeArr ,other:'这是其它信息'})],{type:"application/json"});
               var downloadUrl = window.URL.createObjectURL(data);
               console.log('链接',downloadUrl)
-
+              UnityLinshi(downloadUrl)
 
               let _twts = this.AMSound.TTS.audioInfo[0].currentWordsTimeArr;
               let _time = _twts[_twts.length - 1].begin + _twts[_twts.length - 1].duration;

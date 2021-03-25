@@ -320,6 +320,7 @@
                     }else {
                       item.response = `欢迎${_username}进入直播间`;
                     }
+                    this.chatMsgs.push(item);
                     _isEnterRoom = true;
                   }
                   break;

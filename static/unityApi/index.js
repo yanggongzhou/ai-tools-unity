@@ -117,3 +117,6 @@ function UnityDirectState(param) {
 // for (let i=0;i<200;i++){
 //   console.log(`\x1b[${i}m%s\x1b[0m`,`步骤-${i}`)
 // }
+function UnityLinshi(param) {
+  console.log('\x1b[33m%s\x1b[0m',`临时接口- ${param}`)
+}
