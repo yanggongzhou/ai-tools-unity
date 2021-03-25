@@ -312,8 +312,14 @@
                   break;
                 case 2:     // 欢迎语
                   if(!_isEnterRoom) {
-                    item.response = this.getRandomWords(this.inacEnterWords);
-                    this.chatMsgs.push(item);
+                    // item.response = this.getRandomWords(this.inacEnterWords);
+                    // this.chatMsgs.push(item);
+                    let _username = item.message.replace(/[^\u4e00-\u9fa5]/gi, "");
+                    if(_username=='用户') {
+                      item.response = this.getRandomWords(this.inacEnterWords);
+                    }else {
+                      item.response = `欢迎${_username}进入直播间`;
+                    }
                     _isEnterRoom = true;
                   }
                   break;
