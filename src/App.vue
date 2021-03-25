@@ -18,12 +18,14 @@
     <editInfo/>
     <UError></UError>
     <UuserInfo></UuserInfo>
+    <Upreview></Upreview>
   </div>
 </template>
 
 <script>
   import UError from "./components/WebUnity/error";
   import UuserInfo from "./components/WebUnity/userInfo";
+  import Upreview from "./components/WebUnity/preview"
   import editInfo from "./components/WebUnity/editInfo";
   import {mapGetters} from "vuex";
 export default {
@@ -36,7 +38,8 @@ export default {
   components:{
     editInfo,
     UError,
-    UuserInfo
+    UuserInfo,
+    Upreview
   },
   data() {
     return {

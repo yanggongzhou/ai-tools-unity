@@ -113,10 +113,12 @@ function UnityDelTag(param) {
 function UnityDirectState(param) {
   console.log('\x1b[33m%s\x1b[0m',`告知Unity直播状态- ${param}`)
 }
+//返还阿里tts信息
+function UnityTTSInfo(param,param2) {
+  console.log('\x1b[33m%s\x1b[0m',`返还阿里tts信息- ${param} - ${param2}`)
+}
 
 // for (let i=0;i<200;i++){
 //   console.log(`\x1b[${i}m%s\x1b[0m`,`步骤-${i}`)
 // }
-function UnityLinshi(param) {
-  console.log('\x1b[33m%s\x1b[0m',`临时接口- ${param}`)
-}
+

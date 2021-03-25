@@ -44,10 +44,12 @@
       @addDisplay="addDisplay"
       :editJsonData="editJsonData"
     ></JsonEditor>
+    <v-loading v-show="LOADING" :LOADING="LOADING"></v-loading>
   </div>
 </template>
 
 <script>
+  import vLoading from "../components/editor/common/saveloading";
   import JsonEditor from "../components/editor/JsonEditor.vue";
   import Bus from "../api/bus";
   import axios from "axios";
@@ -57,6 +59,7 @@
   export default {
     components:{
       JsonEditor,
+      vLoading
     },
     computed: {
       ...mapGetters([
@@ -93,6 +96,8 @@
     },
     data () {
       return {
+        LOADING: NaN,
+
         jsonName:'',//剧本名称
         jsonNameValidate:false,
 
@@ -354,7 +359,9 @@
         if(this.jsonName.replace(/[\r\n]/g, "").replace(/\s+/g, "")){
           this.jsonNameValidate = false;
           let _JsonEditorRef = self.$refs.JsonEditorRef;
+          this.LOADING = 1;
           _JsonEditorRef.exportJson().then(data=>{
+            this.LOADING = 2;
             _JsonEditorRef.ScriptList[_JsonEditorRef.scriptIndex].param = JSON.parse(JSON.stringify(data.param))
             // console.log('输出数据',_JsonEditorRef.ScriptList)
             //✨✨✨✨总体校验有效文本
@@ -372,16 +379,17 @@
             })
             if(!valitade){
               this.$message.error('Please confirm whether each paragraph contains valid text!')
+              self.LOADING = '';
               return
             }
             Promise.all([this.uploadJSON(_JsonEditorRef),this.getAudio(data.noTagText)]).then(()=>{
               console.log( '脚本链接和tts信息',this.scriptUrl, this.AMSound.TTS.audioInfo)
-
-              var arr = new Uint8Array(this.AMSound.TTS.audioInfo[0].audio_buffer);
-              var data = new Blob([JSON.stringify({audio:arr,timeLine:this.AMSound.TTS.audioInfo[0].currentWordsTimeArr ,other:'这是其它信息'})],{type:"application/json"});
-              var downloadUrl = window.URL.createObjectURL(data);
-              console.log('链接',downloadUrl)
-              UnityLinshi(downloadUrl)
+              this.LOADING = 4;
+              // var arr = new Uint8Array(this.AMSound.TTS.audioInfo[0].audio_buffer);
+              // var data = new Blob([JSON.stringify({audio:arr,timeLine:this.AMSound.TTS.audioInfo[0].currentWordsTimeArr ,other:'这是其它信息'})],{type:"application/json"});
+              // var downloadUrl = window.URL.createObjectURL(data);
+              // console.log('链接',downloadUrl)
+              // UnityLinshi(downloadUrl)
 
               let _twts = this.AMSound.TTS.audioInfo[0].currentWordsTimeArr;
               let _time = _twts[_twts.length - 1].begin + _twts[_twts.length - 1].duration;
@@ -414,6 +422,10 @@
                 if(res.return_code===1000){
                   self.editJsonData.id=res.result.gs_id
                   self.$message.success('success');
+                  self.LOADING = 5;
+                  setTimeout(() => {
+                    self.LOADING = NaN;
+                  }, 1000)
                 }
               })
             })
@@ -438,7 +450,8 @@
 
         await axios.post(requestServices.uploadUrl, fd, {responseType: 'multipart/form-data'})
           .then(uploadRes => {
-          self.scriptUrl = uploadRes.data.result.upload_url
+            self.scriptUrl = uploadRes.data.result.upload_url
+            self.LOADING = 3;
         })
       },
       async getAudio(_txt) {
@@ -447,7 +460,7 @@
           this.initSound();
         }
         let time = new Date().getTime()
-        if ((!this.ali_tts_token || time > this.ali_token_expires) && _avatar.tts.type == 'ali') {
+        if (!this.ali_tts_token || time > this.ali_token_expires) {
           console.log('获取阿里TTS token')
           await this.fetchSoundToken({ type: 'ali' })
           await this.AMSound.refreshToken(this.ali_tts_token);
