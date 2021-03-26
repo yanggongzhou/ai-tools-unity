@@ -4,7 +4,7 @@ const cmu = require('cmu-pronouncing-dictionary')
 export class ComputerWords {
 
   constructor() {
-
+    this.cmuInfo = []
   }
 
   //英文——————————计算词汇，处理混杂的每个数字和汉字前后增加空格----ali
@@ -40,6 +40,9 @@ export class ComputerWords {
       return 0
     }
     let wordsLength  = str.match(/[a-zA-Z]+/ig).length
+    if(this.cmuInfo.length){
+      return 1
+    }
     let wordsCmu =  this.cmuInfo.slice(0,wordsLength)
     let cmuLength = 0;
     wordsCmu.forEach(word=>{

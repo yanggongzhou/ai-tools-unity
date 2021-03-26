@@ -583,6 +583,14 @@
           this.$store.commit('set_avatarName',{name:resArr[0].avatar.unity,chName:this.editJsonData.avatarName})
           this.ScriptList = JSON.parse(JSON.stringify(this.editJsonData.data))
           this.$nextTick(()=>{
+            if(this.language==='en_biaobei'){
+              //先赋值 cumInfo
+              let contentBD = ''
+              this.ScriptList[0].param.forEach((param)=>{
+                contentBD += param.content
+              })
+              this.ComputerWords.getIndex_EN_BB(contentBD,true)
+            }
             this.editImport(this.ScriptList[0]);
           })
           this.$forceUpdate()
@@ -653,6 +661,7 @@
         let contentBD = '';//带标点符号英文等的文本
         let positionTag = [];//相对带所有符号文本的标签位置和数据
         let txtIndCount=0;//计数器
+
         res.param.forEach((param,ind)=>{
           //🌟🌟🌟🌟🌟第一步，统计总文本；推入间隔标签；推入互动标签
           if(param.intervalTime){
