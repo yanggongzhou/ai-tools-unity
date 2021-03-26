@@ -5,9 +5,9 @@ export const handleScriptTime = (_time) => {
     const s = Math.floor((t % 60)) < 10 ? Math.floor((t % 60)) : Math.floor((t % 60));
 
     let _t = '';
-    if(h!=0) _t = `${h}小时`;
-    if(m!=0) _t += `${m}分`;
-    if(s!=0) _t += `${s}秒`;
+    if(h!=0) _t = `${h}h`;
+    if(m!=0) _t += `${m}m`;
+    if(s!=0) _t += `${s}s`;
 
     return _t;
 }

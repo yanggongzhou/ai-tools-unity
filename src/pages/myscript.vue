@@ -107,7 +107,7 @@
 </template>
 <script>
 import { requestServices } from '../api/api';
-import { handleScriptTime } from '../components/myscript/common/handleTime';
+import { handleScriptTime } from '../api/handleTime';
 import myscriptDialog from '../components/myscript/myscript-dialog'
 import axios from "axios";
 export default {

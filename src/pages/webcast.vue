@@ -24,7 +24,7 @@
                     <span style='display:none;'>{{scope.row.sortId}}</span>
                   </template>
                 </el-table-column>
-                <el-table-column align="center" label="Commodity number">
+                <el-table-column align="center" label="GoodsId" width='100'>
                   <template slot-scope="scope">
                     <div class="goods clearfix">
                       <span>{{scope.row.commodity_id}}</span>
@@ -222,19 +222,19 @@ export default {
           playWeight: [
             {
               value: 10,
-              label: '最高'
+              label: 'Level 1'
             },
             {
               value: 7,
-              label: '高'
+              label: 'Level 2'
             },
             {
               value: 5,
-              label: '中'
+              label: 'Level 3'
             },
             {
               value: 2,
-              label: '低'
+              label: 'Level 4'
             },
           ],
           previewReady:true,
@@ -646,10 +646,11 @@ export default {
 </script>
 <style scoped lang='less'>
   .setGoodsId button {
-    width: 82px;
-    height: 30px;
     border-radius: 17px;
     cursor: pointer;
+    width: 64px;
+    height: 26px;
+    font-size: 12px;
     &.cancel {
       opacity: 0.7;
       color: #666;
@@ -658,7 +659,7 @@ export default {
       background: rgba(0,0,0,0);
     }
     &.confirm {
-      background: #7455FF;
+      background: #7694f3;
       color: #fff;
       margin-left: 0;
     }

@@ -18,44 +18,36 @@
       return{
         loadData:[
           {
-            id:1,
             label:'1、Analyze the text content and generate data file',
             state:"loading",
           },
           {
-            id:1,
             label:'2、Upload data',
             state:"",
           },
           {
-            id:1,
             label:'3、Request TTS voice data',
             state:"",
           },
           {
-            id:1,
             label:'4、Saved successfully',
             state:"",
           },
         ],
         loadDataCopy:[
           {
-            id:1,
             label:'1、Analyze the text content and generate data file',
             state:"loading",
           },
           {
-            id:1,
             label:'2、Upload data',
             state:"",
           },
           {
-            id:1,
             label:'3、Request TTS voice data',
             state:"",
           },
           {
-            id:1,
             label:'4、Saved successfully',
             state:"",
           },

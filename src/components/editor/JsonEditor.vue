@@ -175,8 +175,8 @@
           _content += value.content
         })
         let _zh = that.language==='zh'&&!that.ComputerWords.getIndex_ZH(_content)
-        let _enAli = that.language==='en'&& !that.ComputerWords.getIndex_EN(_content)
-        let _enBiaobei = that.language==='en_biaobei'&& !that.ComputerWords.getIndex_EN(_content)
+        let _enAli = that.language==='en_ali'&& !that.ComputerWords.getIndex_EN_AL(_content)
+        let _enBiaobei = that.language==='en_biaobei'&& !that.ComputerWords.getIndex_EN_BB(_content)
         if(val.param.length===0 || _zh || _enAli || _enBiaobei){
           return {
             'display': 'inline-block',
@@ -863,12 +863,12 @@
         return new Promise(resolve => {
           ExportMessage(this.testData).then(res=>{
             let _zh = this.language==='zh'&&!this.ComputerWords.getIndex_ZH(res.noTagText)
-            let _enAli = this.language==='en'&& !this.ComputerWords.getIndex_EN(res.noTagText)
+            let _enAli = this.language==='en_ali'&& !this.ComputerWords.getIndex_EN_AL(res.noTagText)
             if(this.language==='en_biaobei'){
               //先赋值 cumInfo
               this.ComputerWords.getIndex_EN_BB(res.noTagText,true)
             }
-            let _enBiaobei = this.language==='en_biaobei'&& !this.ComputerWords.getIndex_EN(res.noTagText)
+            let _enBiaobei = this.language==='en_biaobei'&& !this.ComputerWords.getIndex_EN_BB(res.noTagText)
             if(_zh || _enAli || _enBiaobei){
               resolve({message:'json数据渲染成功', noTagText:res.noTagText, param:[]})
               return
@@ -1016,8 +1016,8 @@
                 t_content = val.content.slice(0,trig.index)
                 if(this.language==='zh' && this.ComputerWords.getIndex_ZH(t_content)){
                   t_index = this.ComputerWords.getIndex_ZH(t_content).length;
-                }else if(this.language==='en' && this.ComputerWords.getIndex_EN(t_content)) {
-                  t_index = this.ComputerWords.getIndex_EN(t_content).length;
+                }else if(this.language==='en_ali' && this.ComputerWords.getIndex_EN_AL(t_content)) {
+                  t_index = this.ComputerWords.getIndex_EN_AL(t_content).length;
                 }else if(this.language==='en_biaobei' && this.ComputerWords.getIndex_EN_BB(t_content)){
                   t_index = this.ComputerWords.getIndex_EN_BB(all_content + t_content) - this.ComputerWords.getIndex_EN_BB(all_content);
                 }
@@ -1032,7 +1032,7 @@
             let _isSuport = false;
             let invalidContent = '';//无效字符
             _params.forEach((val,ind)=>{
-              if( (this.language==='zh' && !this.ComputerWords.getIndex_ZH(val.content)) || (this.language==='en' && !this.ComputerWords.getIndex_EN(val.content)) || (this.language==='en_baiobei' && !this.ComputerWords.getIndex_EN_BB(val.content)) ){
+              if( (this.language==='zh' && !this.ComputerWords.getIndex_ZH(val.content)) || (this.language==='en_ali' && !this.ComputerWords.getIndex_EN_AL(val.content)) || (this.language==='en_baiobei' && !this.ComputerWords.getIndex_EN_BB(val.content)) ){
                 _intervalTime += val.intervalTime
                 if(!_isSuport){_isSuport = val.interaction.isSupport}
                 invalidContent += val.content

@@ -8,7 +8,7 @@ export class ComputerWords {
   }
 
   //英文——————————计算词汇，处理混杂的每个数字和汉字前后增加空格----ali
-  getIndex_EN(str) {
+  getIndex_EN_AL(str) {
     let strArr = str.split("");
     str.replace(/[\u4e00-\u9fa5_0-9]/ig,function (a,k,v) {
       strArr.splice(k,1,' '+str[k]+' ').join("")

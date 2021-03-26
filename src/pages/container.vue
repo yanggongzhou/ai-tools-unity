@@ -246,7 +246,7 @@
         AMSound:'',
 
         ComputerWords:'',
-        language:"en_biaobei",//'zh' or 'en' or 'en_biaobei'
+        language:"en_biaobei",//'zh' or 'en_ali' or 'en_biaobei'
       }
     },
     created() {
@@ -256,6 +256,9 @@
       this.editJsonData =  JSON.parse(this.$Session.get('Edit_JSON'));
 
       this.ComputerWords = new ComputerWords()
+      if(this.$route.query.language){
+        this.language = 'en_biaobei'
+      }
     },
     mounted() {
       let self = this;
@@ -265,7 +268,6 @@
         let resArr  =  this.editJsonData.data
         this.editImportTriggerDiv(resArr[0])
       }
-
       Bus.$on('delTag',res=>{
         this.TriggerDiv.forEach((trig,trigInd)=>{
           if(trig.info.child[0].id===res){
@@ -366,7 +368,7 @@
           this.jsonNameValidate = false;
           let _JsonEditorRef = self.$refs.JsonEditorRef;
           this.LOADING = 1;
-          _JsonEditorRef.exportJson().then(data=>{
+          _JsonEditorRef.exportJson().then(async data=>{
             this.LOADING = 2;
             _JsonEditorRef.ScriptList[_JsonEditorRef.scriptIndex].param = JSON.parse(JSON.stringify(data.param))
             // console.log('输出数据',_JsonEditorRef.ScriptList)
@@ -381,12 +383,12 @@
               })
 
               let _zh = this.language==='zh'&&!this.ComputerWords.getIndex_ZH(_content)
-              let _enAli = this.language==='en'&& !this.ComputerWords.getIndex_EN(_content)
+              let _enAli = this.language==='en_ali'&& !this.ComputerWords.getIndex_EN_AL(_content)
               if(this.language==='en_biaobei'){
                 //先赋值 cumInfo
                 this.ComputerWords.getIndex_EN_BB(_content,true)
               }
-              let _enBiaobei = this.language==='en_biaobei'&& !this.ComputerWords.getIndex_EN(_content)
+              let _enBiaobei = this.language==='en_biaobei'&& !this.ComputerWords.getIndex_EN_BB(_content)
               if(scriptItem.param.length===0 || _zh || _enAli || _enBiaobei){
                 valitade = false;
               }
@@ -396,52 +398,50 @@
               self.LOADING = '';
               return
             }
-            Promise.all([this.uploadJSON(_JsonEditorRef),this.getAudio(data.noTagText)]).then(()=>{
-              console.log( '脚本链接和tts信息',this.scriptUrl, this.AMSound.TTS.audioInfo)
-              this.LOADING = 4;
-              // var arr = new Uint8Array(this.AMSound.TTS.audioInfo[0].audio_buffer);
-              // var data = new Blob([JSON.stringify({audio:arr,timeLine:this.AMSound.TTS.audioInfo[0].currentWordsTimeArr ,other:'这是其它信息'})],{type:"application/json"});
-              // var downloadUrl = window.URL.createObjectURL(data);
-              // console.log('链接',downloadUrl)
-              // UnityLinshi(downloadUrl)
 
+            await this.uploadJSON(_JsonEditorRef)
+            let _time = 0;
+            if(this.language==='en_ali'){
+              await this.getAudio(data.noTagText)
               let _twts = this.AMSound.TTS.audioInfo[0].currentWordsTimeArr;
-              let _time = _twts[_twts.length - 1].begin + _twts[_twts.length - 1].duration;
+              _time = _twts[_twts.length - 1].begin + _twts[_twts.length - 1].duration;
               self.ResultJson.param.forEach(param => {
                 _time += param.intervalTime / 1000;
               })
 
-              let _data = {
-                role_id:23,
-                user_id:self.$Session.get('ai_user_id'),
-                access_token:self.$Session.get('ai_user_token'),
-                name:self.jsonName,
-                preview_url:'',
-                script_url:this.scriptUrl,
-                paragraph_number:_JsonEditorRef.ScriptList.length,
-                avatar_name:this.AvatarChName,
-                scene_type:'1',//0-默认类型；1-淘宝；2-抖音；3-快手
-                time:_time,
-                template_json:'',//信息版位置信息数据
-                layer:"",
+              console.log( '脚本链接和tts信息',this.scriptUrl, this.AMSound.TTS.audioInfo)
+            }
+            this.LOADING = 4;
+            let _data = {
+              role_id:23,
+              user_id:self.$Session.get('ai_user_id'),
+              access_token:self.$Session.get('ai_user_token'),
+              name:self.jsonName,
+              preview_url:'',
+              script_url:this.scriptUrl,
+              paragraph_number:_JsonEditorRef.ScriptList.length,
+              avatar_name:this.AvatarChName,
+              scene_type:'1',//0-默认类型；1-淘宝；2-抖音；3-快手
+              time:_time,
+              template_json:'',//信息版位置信息数据
+              layer:"",
+            }
+            let _handleFun;
+            if(self.editJsonData.id && this.jsonInfoType!==2){
+              _data.gs_id = self.editJsonData.id
+              _handleFun = 'editScript'
+            } else{
+              _handleFun = 'addScript'
+            }
+            requestServices[_handleFun](_data).then(res=>{
+              if(res.return_code===1000){
+                self.editJsonData.id=res.result.gs_id
+                self.$message.success('success');
+                self.LOADING = 5;
+                setTimeout(() => {
+                  self.LOADING = NaN;
+                }, 1000)
               }
-              let _handleFun;
-              if(self.editJsonData.id && this.jsonInfoType!==2){
-                _data.gs_id = self.editJsonData.id
-                _handleFun = 'editScript'
-              } else{
-                _handleFun = 'addScript'
-              }
-              requestServices[_handleFun](_data).then(res=>{
-                if(res.return_code===1000){
-                  self.editJsonData.id=res.result.gs_id
-                  self.$message.success('success');
-                  self.LOADING = 5;
-                  setTimeout(() => {
-                    self.LOADING = NaN;
-                  }, 1000)
-                }
-              })
             })
           })
         }else{

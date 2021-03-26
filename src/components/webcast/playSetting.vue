@@ -40,14 +40,6 @@
                         <span style='font-size:14px;margin-right:10px;'>Phone</span><el-input style='width:300px;' v-model="liaison" @input='handleLiaIptChange("liaison")' :disabled='liaDisabled' maxlength='11' autocomplete="off" clearable></el-input>
                     </p>
                     <p class="tips" style='margin-top:10px;margin-left:60px;'>The mobile phone number of the emergency contact is used to receive SMS notification of abnormal situations such as live broadcast interruption! The default registered mobile phone number can be modified.</p>
-                    <!-- <p v-if='liaisonBtnTxt=="保存"'>
-                        <span style='font-size:14px;margin-right:10px'>验证码</span><el-input style='width:140px;' v-model="captcha" @input='handleLiaIptChange("captcha")' :disabled='liaDisabled' maxlength='6' autocomplete="off" clearable></el-input>
-                        <el-button
-                            class="fetchCaptcha"
-                            :disabled="(!isFetchCaptcha)?false:true"
-                            @click='fetchCaptcha'
-                        >{{captchaBtnTxt}}</el-button>
-                    </p> -->
                     <p style='margin: 40px 0 0 60px;'>
                         <el-button @click='handleLiaBtn'>{{liaisonBtnTxt}}</el-button>
                     </p>
@@ -57,7 +49,7 @@
         </el-tabs>
 
         <div v-if='isShowAddInacTime' class="addInacTimeDialog">
-            <p>时间选择</p>
+            <p>Time interval</p>
             <el-time-select
                 :disabled='inacType==0'
                 v-model="startTime"
@@ -83,11 +75,11 @@
                 style="width: 100px"
             >
             </el-time-select>
-            <p>轮数</p>
-            <p><el-input style='width: 100px' v-model='addInacLoop' @input='handleIptChange'></el-input> 轮</p>
+            <p>Rounds</p>
+            <p><el-input style='width: 100px' v-model='addInacLoop' @input='handleIptChange'></el-input> rounds</p>
             <p>
-                <button class="cancel" @click='cancel'>取消</button>
-                <button class="confirm" @click='confirm'>确认</button>
+                <button class="cancel" @click='cancel'>cancel</button>
+                <button class="confirm" @click='confirm'>confirm</button>
             </p>
         </div>
     </div>
@@ -156,11 +148,11 @@
                 handleType: '',
                 currentEditID: '',
                 liaison: '',
-                liaisonBtnTxt: '保存',
+                liaisonBtnTxt: 'save',
                 liaDisabled: false,
                 captcha: '',
                 isFetchCaptcha: false,
-                captchaBtnTxt: '获取验证码',
+
                 fetchCaptchaAginTime: 60,
             }
         },
@@ -218,10 +210,10 @@
                 // console.log(Number(this.addInacLoop), Number(this.addInacLoop)==0&&this.addInacLoop!='')
                 if(this.addInacLoop>5) {
                     this.addInacLoop = 5;
-                    this.$message.info('最多设置为5轮');
+                    this.$message.info('Up to 5 rounds');
                 }else if(Number(this.addInacLoop)==0&&this.addInacLoop!='') {
                     this.addInacLoop = 1;
-                    this.$message.info('最少设置为1轮');
+                    this.$message.info('The minimum setting is 1 round');
                 }
             },
             editTimePart(_item, _idx) {
@@ -276,7 +268,7 @@
                     }
 
                     if(!isGoon) {
-                        this.$message.error('时间重叠了噢～')
+                        this.$message.error('Time overlaps～')
                         return;
                     }
                 }
@@ -317,7 +309,7 @@
                     subsection_id: _item.id
                 }).then(res => {
                     if(res.return_code==1000) {
-                        this.$message.success('删除成功')
+                        this.$message.success('Successfully deleted')
                         this.getInacType();
                     }
                 })
@@ -331,7 +323,7 @@
                     if(res.return_code==1000) {
                         this.liaison = res.result.phone.phone;
                         this.liaDisabled = true;
-                        this.liaisonBtnTxt = '编辑';
+                        this.liaisonBtnTxt = 'edit';
                     }
                 })
             },
@@ -340,7 +332,7 @@
             },
             fetchCaptcha() {
                 if(!(/^1(3|4|5|6|7|8|9)\d{9}$/.test(this.liaison))){
-                    this.$message.error('手机号码有误，请重填');
+                    this.$message.error('Wrong mobile phone number, please fill in again');
                     return;
                 }
                 requestServices.getCaptcha({
@@ -350,41 +342,39 @@
                     console.log(res)
                     if(res.return_code==1000) {
                         this.isFetchCaptcha = true;
-                        this.captchaBtnTxt = `重新发送（${this.fetchCaptchaAginTime}s)`;
                         let _this = this;
                         _this.timer = setInterval(()=>{
                         _this.fetchCaptchaAginTime--;
                         if(_this.fetchCaptchaAginTime==0) {
-                            _this.captchaBtnTxt = '重新发送';
+
                             _this.fetchCaptchaAginTime = 60;
                             _this.isFetchCaptcha = false;
                             clearInterval(_this.timer);
                             return;
                         }
-                        _this.captchaBtnTxt = `重新发送（${_this.fetchCaptchaAginTime}s)`;
                         }, 1000);
                     }else {
-                        this.$message.error('短信发送失败，请重新获取~')
+                        this.$message.error('SMS sending failed, please get it again~')
                     }
                 })
             },
             handleLiaBtn() {
                 switch(this.liaisonBtnTxt) {
-                    case '保存':
+                    case 'save':
                         // if(this.captcha=='') {
                         //     this.$message.error('请输入短信验证码')
                         //     return;
                         // }
 
                         if(!(/^1(3|4|5|6|7|8|9)\d{9}$/.test(this.liaison))){
-                            this.$message.error('手机号码有误，请重填');
+                            this.$message.error('The phone number is wrong. Please fill in again');
                             return;
                         }
                         this.addMonitorPhone()
                         break;
-                    case '编辑':
+                    case 'edit':
                         this.liaDisabled = false;
-                        this.liaisonBtnTxt = '保存';
+                        this.liaisonBtnTxt = 'save';
                         break;
                 }
             },
@@ -397,8 +387,8 @@
                     // console.log('addMonitorPhone: ', res)
                     if(res.return_code==1000) {
                         this.liaDisabled = true;
-                        this.liaisonBtnTxt = '编辑';
-                        this.$message.success('保存成功');
+                        this.liaisonBtnTxt = 'edit';
+                        this.$message.success('success');
                     }
                 })
             }
