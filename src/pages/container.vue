@@ -43,6 +43,7 @@
       @editImportTriggerDiv="editImportTriggerDiv"
       @addDisplay="addDisplay"
       :editJsonData="editJsonData"
+      :language="language"
     ></JsonEditor>
     <v-loading v-show="LOADING" :LOADING="LOADING"></v-loading>
   </div>
@@ -56,6 +57,7 @@
   import {requestServices} from "../api/api";
   import {mapGetters,mapActions} from "vuex";
   import {AMSound} from "../sound/sound";
+  import {ComputerWords} from "../components/editor/common/word_index";
   export default {
     components:{
       JsonEditor,
@@ -241,7 +243,10 @@
         editJsonData:{},//编辑来的数据
 
         scriptUrl:'',
-        AMSound:''
+        AMSound:'',
+
+        ComputerWords:'',
+        language:"en_biaobei",//'zh' or 'en' or 'en_biaobei'
       }
     },
     created() {
@@ -249,6 +254,8 @@
       window.WebPreviewReady = this.WebPreviewReady;
       window.WebJsonInfo = this.WebJsonInfo;//保存时获取必要的unityMessage
       this.editJsonData =  JSON.parse(this.$Session.get('Edit_JSON'));
+
+      this.ComputerWords = new ComputerWords()
     },
     mounted() {
       let self = this;
@@ -266,7 +273,6 @@
           }
         })
       })
-
     },
     methods:{
       ...mapActions(["fetchSoundToken"]),
@@ -373,7 +379,15 @@
               scriptItem.param.forEach(value=>{
                 _content += value.content
               })
-              if(scriptItem.param.length===0 || !_content.replace(/[\ |\~|\`|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\-|\_|\+|\=|\||\\|\[|\]|\{|\}|\;|\:|\"|\'|\,|\<|\.|\>|\/|\?|\r\n]/g,"").match(/[\u4e00-\u9fa5\0-9]/g)){
+
+              let _zh = this.language==='zh'&&!this.ComputerWords.getIndex_ZH(_content)
+              let _enAli = this.language==='en'&& !this.ComputerWords.getIndex_EN(_content)
+              if(this.language==='en_biaobei'){
+                //先赋值 cumInfo
+                this.ComputerWords.getIndex_EN_BB(_content,true)
+              }
+              let _enBiaobei = this.language==='en_biaobei'&& !this.ComputerWords.getIndex_EN(_content)
+              if(scriptItem.param.length===0 || _zh || _enAli || _enBiaobei){
                 valitade = false;
               }
             })
@@ -466,7 +480,7 @@
           await this.AMSound.refreshToken(this.ali_tts_token);
         }
 
-        await this.AMSound.txtToAudio({
+          await this.AMSound.txtToAudio({
           text: _txt,
 
           tts: {

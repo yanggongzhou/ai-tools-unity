@@ -115,7 +115,7 @@
     }
     .content{
       font-size: 14px;
-      width: 265px;
+      width: 340px;
       margin: 12px auto 0;
     }
   }

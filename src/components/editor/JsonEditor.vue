@@ -149,7 +149,7 @@
   import vVideo from './tag/video'
   import vImg from './tag/img'
   import { ComputerWords } from './common/word_index'
-
+  let that;
   export default {
     computed: {
       ...mapGetters([
@@ -157,6 +157,9 @@
         'InfoModelData',
 
       ])
+    },
+    beforeCreate() {
+      that = this
     },
     filters:{
       indFilter(val){
@@ -171,7 +174,10 @@
         val.param.forEach(value=>{
           _content += value.content
         })
-        if(val.param.length===0 || !_content.replace(/[\ |\~|\`|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\-|\_|\+|\=|\||\\|\[|\]|\{|\}|\;|\:|\"|\'|\,|\<|\.|\>|\/|\?|\r\n]/g,"").match(/[\u4e00-\u9fa5\0-9]/g)){
+        let _zh = that.language==='zh'&&!that.ComputerWords.getIndex_ZH(_content)
+        let _enAli = that.language==='en'&& !that.ComputerWords.getIndex_EN(_content)
+        let _enBiaobei = that.language==='en_biaobei'&& !that.ComputerWords.getIndex_EN(_content)
+        if(val.param.length===0 || _zh || _enAli || _enBiaobei){
           return {
             'display': 'inline-block',
           }
@@ -189,7 +195,8 @@
     },
     props:{
       TriggerDiv:Array,
-      editJsonData:Object
+      editJsonData:Object,
+      language:String
     },
     data() {
       return {
@@ -265,8 +272,7 @@
           {label:"delete",value:'6',icon:'el-icon-delete'},
         ],
 
-        ComputerWords:'',
-        language:"en",//'zh' or 'en' or 'en_biaobei'
+        ComputerWords:''
       };
     },
     created() {
@@ -856,19 +862,16 @@
         // console.log(this.testData)
         return new Promise(resolve => {
           ExportMessage(this.testData).then(res=>{
-            if(this.language==='zh'){
-              if(!this.ComputerWords.getIndex_ZH(res.noTagText)){
-                self.$message.error('The content of the script should contain valid text content such as numbers or Chinese characters！')
-                self.LOADING = '';
-                return false
-              }
+            let _zh = this.language==='zh'&&!this.ComputerWords.getIndex_ZH(res.noTagText)
+            let _enAli = this.language==='en'&& !this.ComputerWords.getIndex_EN(res.noTagText)
+            if(this.language==='en_biaobei'){
+              //先赋值 cumInfo
+              this.ComputerWords.getIndex_EN_BB(res.noTagText,true)
             }
-            if(this.language==='en'){
-              if(!this.ComputerWords.getIndex_EN(res.noTagText)){
-                self.$message.error('Script content should contain valid text content！')
-                self.LOADING = '';
-                return false
-              }
+            let _enBiaobei = this.language==='en_biaobei'&& !this.ComputerWords.getIndex_EN(res.noTagText)
+            if(_zh || _enAli || _enBiaobei){
+              resolve({message:'json数据渲染成功', noTagText:res.noTagText, param:[]})
+              return
             }
             console.log('标签信息',res.messageArr)
             console.log('页面数据',self.TriggerDiv)
@@ -1015,6 +1018,8 @@
                   t_index = this.ComputerWords.getIndex_ZH(t_content).length;
                 }else if(this.language==='en' && this.ComputerWords.getIndex_EN(t_content)) {
                   t_index = this.ComputerWords.getIndex_EN(t_content).length;
+                }else if(this.language==='en_biaobei' && this.ComputerWords.getIndex_EN_BB(t_content)){
+                  t_index = this.ComputerWords.getIndex_EN_BB(all_content + t_content) - this.ComputerWords.getIndex_EN_BB(all_content);
                 }
                 trig.index = t_index;
               })
@@ -1027,7 +1032,7 @@
             let _isSuport = false;
             let invalidContent = '';//无效字符
             _params.forEach((val,ind)=>{
-              if((this.language==='zh' && !this.ComputerWords.getIndex_ZH(val.content)) || (this.language==='en' && !this.ComputerWords.getIndex_EN(val.content)) ){
+              if( (this.language==='zh' && !this.ComputerWords.getIndex_ZH(val.content)) || (this.language==='en' && !this.ComputerWords.getIndex_EN(val.content)) || (this.language==='en_baiobei' && !this.ComputerWords.getIndex_EN_BB(val.content)) ){
                 _intervalTime += val.intervalTime
                 if(!_isSuport){_isSuport = val.interaction.isSupport}
                 invalidContent += val.content
