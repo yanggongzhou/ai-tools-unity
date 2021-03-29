@@ -1,10 +1,10 @@
 <template>
  <div class="checkBox">
-   <div class="title">剧本:{{scriptName}}</div>
+   <div class="title">{{$lan.myscript.script}}:{{scriptName}}</div>
    <div class="content" v-for="(val,ind) in scriptRow" :key="ind">
      <div class="subtitle clearfix">
        <span class="subtitle-text">{{ind | indFilter}}</span>
-       <el-button class="float_right" size="small" type="text" @click="previewBtn(val)">预览</el-button>
+       <el-button class="float_right" size="small" type="text" @click="previewBtn(val)">{{$lan.common.preview}}</el-button>
      </div>
      <div class="textArea">
        {{val | contentFilter}}
@@ -78,6 +78,7 @@
     beforeDestroy() {
       //跳转页面后强制结束播放状态
       UnityPreviewCancel();
+      this.previewReady = true;
     },
   }
 </script>

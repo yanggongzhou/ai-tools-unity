@@ -1,10 +1,10 @@
 <template>
   <div id="app">
     <div class="dev_tip" v-if="isShowDevTip">
-      测试版本v{{ResultJson.version}}
+      {{$lan.app.devTip}}
       <el-button-group>
-        <el-button @click="gotoPage('webcast')">开始直播</el-button>
-        <el-button @click="gotoPage('myscript')">我的剧本</el-button>
+        <el-button @click="gotoPage('webcast')">{{$lan.app.goLive}}</el-button>
+        <el-button @click="gotoPage('myscript')">{{$lan.app.myscript}}</el-button>
       </el-button-group>
     </div>
     <transition enter-active-class="animated fadeIn"

@@ -1,6 +1,13 @@
 <template></template>
 <script>
+  import {mapGetters} from "vuex";
+
   export default {
+    computed:{
+      ...mapGetters([
+        'PcVisible'
+      ])
+    },
     data(){
       return{
       }
@@ -18,6 +25,9 @@
         this.$store.commit('set_InfoModelData',JSON.parse(param))
       },
       WebRoute(param){
+        if (this.PcVisible){
+          this.$store.commit('set_pcVisible',false)
+        }
         this.$router.push({name:param})
       },
     }

@@ -4,7 +4,7 @@
 
           <div class="scriptList">
             <div class="titleBox">
-              <span class="titleSpan">剧本列表</span>
+              <span class="titleSpan">{{$lan.common.top_title}}</span>
             </div>
             <div class="tabs">
               <span class="tab" :class="{'selected': currentSetting==1}" @click='checkSetting(1)'>剧本设置</span>

@@ -15,7 +15,7 @@
       </div>
       <button class="cancel_btn">
         <span class=" posAdjustment" :class="{'el-icon-loading': ClValue,'el-icon-video-pause':!ClValue}"></span>
-        <span>单击屏幕取消播放</span>
+        <span>{{$lan.app.previewTip}}</span>
       </button>
     </div>
   </div>
