@@ -1,31 +1,31 @@
 <template>
     <div id="playSetting">
         <el-tabs tab-position="left" :style="tabsStyle">
-            <el-tab-pane v-for='(tab,idx) in tabs' :key='idx' :label="tab.label">
+            <el-tab-pane v-for='(tab,idx) in $lan.webcast.tabs1' :key='idx' :label="tab.label">
                 <!-- 互动模式 -->
                 <div v-if='idx==0' class='tab inac'>
-                    <p class="title">互动模式轮数设置</p>
-                    <p class="tips">互动模式轮数:每次进入互动模式后与观众互</p>
+                    <p class="title">{{$lan.webcast.interactionRoundsSetting_t}}</p>
+                    <p class="tips">{{$lan.webcast.interactionRoundsSetting_c}}</p>
 
                     <div class="inacType">
-                        <el-radio v-model="inacType" label="0" @change='handleChangeType'>默认全天</el-radio>
+                        <el-radio v-model="inacType" label="0" @change='handleChangeType'>{{$lan.webcast.defaultAllDay}}</el-radio>
 
-                        <span class="loop">{{fullDayLoop}}轮</span>
+                        <span class="loop">{{fullDayLoop}}{{$lan.common.rounds}}</span>
                         <span class="center" ></span>
-                        <span class="edit" :class="{'disabled': inacType==1}" @click='handleEditFullDayLoop'>编辑</span>
+                        <span class="edit" :class="{'disabled': inacType==1}" @click='handleEditFullDayLoop'>{{$lan.common.edit}}</span>
                         <!-- <span class="delete" v-if='type!="tempwords"'>删除</span> -->
                     </div>
                     <div class="inacType">
-                        <el-radio v-model="inacType" label="1" @change='handleChangeType'>分时段设置(未设置的时段，默认2轮)</el-radio>
+                        <el-radio v-model="inacType" label="1" @change='handleChangeType'>{{$lan.webcast.timeSetting}}</el-radio>
                         <div class="detail">
-                            <p class="addInacTimePart" :class="{'disabled': inacType==0}" @click='addInacTimePart'>添加</p>
+                            <p class="addInacTimePart" :class="{'disabled': inacType==0}" @click='addInacTimePart'>{{$lan.common.add}}</p>
                             <div :style='timerPartStyle'>
                                 <p class="part" v-for='(part, idx) in timeParts' :key='idx'>
                                     <span>{{part.start}} — {{part.end}}</span>
-                                    <span class="loop">{{part.rotation}}轮</span>
+                                    <span class="loop">{{part.rotation}}{{$lan.common.rounds}}</span>
                                     <span class="center" ></span>
-                                    <span class="edit" :class="{'disabled': inacType==0}" @click='editTimePart(part, idx)'>编辑</span>
-                                    <span class="delete" :class="{'disabled': inacType==0}" @click='delInac(part)'>删除</span>
+                                    <span class="edit" :class="{'disabled': inacType==0}" @click='editTimePart(part, idx)'>{{$lan.common.edit}}</span>
+                                    <span class="delete" :class="{'disabled': inacType==0}" @click='delInac(part)'>{{$lan.common.delete}}</span>
                                 </p>
                             </div>
                         </div>
@@ -35,11 +35,11 @@
 
                 <!-- 紧急联系人 -->
                 <div v-if='idx==1'>
-                    <p style='font-size:14px;margin-bottom:10px;'>紧急联系人</p>
+                    <p style='font-size:14px;margin-bottom:10px;'>{{$lan.webcast.emergencyContact}}</p>
                     <p>
-                        <span style='font-size:14px;margin-right:10px;'>手机号</span><el-input style='width:300px;' v-model="liaison" @input='handleLiaIptChange("liaison")' :disabled='liaDisabled' maxlength='11' autocomplete="off" clearable></el-input>
+                        <span style='font-size:14px;margin-right:10px;'>{{$lan.webcast.phone}}</span><el-input style='width:300px;' v-model="liaison" @input='handleLiaIptChange("liaison")' :disabled='liaDisabled' maxlength='11' autocomplete="off" clearable></el-input>
                     </p>
-                    <p class="tips" style='margin-top:10px;margin-left:60px;'>紧急联系人手机号，用于接收直播中断等异常情况的短信通知！默认注册手机号，可修改。</p>
+                    <p class="tips" style='margin-top:10px;margin-left:60px;'>{{$lan.webcast.phone_tip}}</p>
                     <!-- <p v-if='liaisonBtnTxt=="保存"'>
                         <span style='font-size:14px;margin-right:10px'>验证码</span><el-input style='width:140px;' v-model="captcha" @input='handleLiaIptChange("captcha")' :disabled='liaDisabled' maxlength='6' autocomplete="off" clearable></el-input>
                         <el-button
@@ -57,7 +57,7 @@
         </el-tabs>
 
         <div v-if='isShowAddInacTime' class="addInacTimeDialog">
-            <p>时间选择</p>
+            <p>{{$lan.webcast.timeSelect}}</p>
             <el-time-select
                 :disabled='inacType==0'
                 v-model="startTime"
@@ -83,11 +83,11 @@
                 style="width: 100px"
             >
             </el-time-select>
-            <p>轮数</p>
-            <p><el-input style='width: 100px' v-model='addInacLoop' @input='handleIptChange'></el-input> 轮</p>
+            <p>{{$lan.common.rounds}}</p>
+            <p><el-input style='width: 100px' v-model='addInacLoop' @input='handleIptChange'></el-input> {{$lan.common.rounds}}</p>
             <p>
-                <button class="cancel" @click='cancel'>取消</button>
-                <button class="confirm" @click='confirm'>确认</button>
+                <button class="cancel" @click='cancel'>{{$lan.common.cancel}}</button>
+                <button class="confirm" @click='confirm'>{{$lan.common.confirm}}</button>
             </p>
         </div>
     </div>
@@ -118,17 +118,6 @@
         },
         data() {
             return {
-                tabs: [
-                    {
-                        label: '互动模式'
-                    },
-                    {
-                        label: '紧急联系人'
-                    },
-                    // {
-                    //     label: 'haha管理'
-                    // }
-                ],
                 inacType: '0', // 0-全天，1-分时段设置
                 fullDayLoop: 2, // 全天轮数
                 timeParts: [

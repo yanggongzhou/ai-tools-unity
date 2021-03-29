@@ -10,12 +10,12 @@
     :on-change="fileChange"
     :auto-upload="false">
     <el-button type='warning' size="small" round>
-      <span v-if="types==='video'">上传视频</span>
-      <span v-if="types==='img'">上传图片</span>
+      <span v-if="types==='video'">{{$lan.tools.upload_video}}</span>
+      <span v-if="types==='img'">{{$lan.tools.upload_img}}</span>
     </el-button>
   </el-upload>
-  <span v-if="types==='video'" class="upload_tip">*支持MP4格式，最大不超过200M</span>
-  <span v-if="types==='img'" class="upload_tip">*支持jpg、png、gif格式，最大不超过5M</span>
+  <span v-if="types==='video'" class="upload_tip">{{$lan.tools.upload_video_tip}}</span>
+  <span v-if="types==='img'" class="upload_tip">{{$lan.tools.upload_img_tip}}</span>
 </div>
 </template>
 <script>
@@ -55,12 +55,12 @@
             // const isMOV = file.raw.type === 'video/mov';
             const isLt256M = file.raw.size / 1024 / 1024 < 200;
             if (!isMP4) { //&&!isAVI&&!isMOV
-              this.$message.error('上传视频只能是 mp4 格式!'); ///avi/mov
+              this.$message.error(this.$lan.tools.upload_video_msg1); ///avi/mov
               this.tempList = [];
               return false;
             }
             if (!isLt256M) {
-              this.$message.error('上传视频大小不能超过 200MB!');
+              this.$message.error(this.$lan.tools.upload_video_msg2);
               this.tempList = [];
               return false;
             }
@@ -74,12 +74,12 @@
             const isJPG = file.raw.type === 'image/jpeg';
             const isLt5M = file.raw.size / 1024 / 1024 < 5;
             if (!isJPG&&!isPNG&&!isGif) {
-              this.$message.error('上传图片只能是 JPG/PNG/GIF 格式!');
+              this.$message.error(this.$lan.tools.upload_img_msg1);
               this.tempList = [];
               return false;
             }
             if (!isLt5M) {
-              this.$message.error('上传图片大小不能超过 5MB!');
+              this.$message.error(this.$lan.tools.upload_img_msg2);
               this.tempList = [];
               return false;
             }

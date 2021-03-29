@@ -1,22 +1,22 @@
 <template>
     <div class="container">
-        <span class="tips">{{tips[type]}}</span>
+        <span class="tips">{{$lan.webcast.tips2[type]}}</span>
         <div>
-            <button class="addBtn" @click='handleAddBtn'>+新增</button>
-            <span class="addTips">最多创建10条，开启多个话术时，随机播放一个</span>
+            <button class="addBtn" @click='handleAddBtn'>+{{$lan.common.add}}</button>
+            <span class="addTips">{{$lan.webcast.wordList_tip}}</span>
             <div class="listWrap">
                 <div v-for='(item, idx) in list' :key='idx' class="list">
                     <el-switch class="switch" v-model="item.switch==0" active-color="#7694f3" inactive-color="#ccc" @change='handleSwitch(item)'></el-switch>
                     <span class="words">{{item.content}}</span>
-                    <span class="edit" @click='handleEdit(item)'>编辑</span>
+                    <span class="edit" @click='handleEdit(item)'>{{$lan.common.edit}}</span>
                     <span class="center"></span>
-                    <span class="delete" @click='handleDel(item)'>删除</span>
+                    <span class="delete" @click='handleDel(item)'>{{$lan.common.delete}}</span>
                 </div>
             </div>
             <div v-if='isOpenAddDialog' class="addDialog">
                 <el-input
                     type="textarea"
-                    placeholder="输入话术文字"
+                    :placeholder="$lan.webcast.textArea_placeholder2"
                     v-model="iptWordsTxt"
                     maxlength="40"
                     show-word-limit
@@ -24,20 +24,20 @@
                     ref='iptWords'
                     resize="none"
                 ></el-input>
-                <p class="dialogTips">最多可输入40个字</p>
+                <p class="dialogTips">{{$lan.webcast.textArea_placeholder}}</p>
                 <span class="dialog-footer">
-                    <button class="cancel" @click="cancelAdd" >取消</button>
-                    <button class="confirm" @click="confirmAdd" type='primary' >确认添加</button>
+                    <button class="cancel" @click="cancelAdd" >{{$lan.common.cancel}}</button>
+                    <button class="confirm" @click="confirmAdd" type='primary' >{{$lan.common.confirm}}</button>
                 </span>
             </div>
 
             <div v-if='isShowDelDialog' class="delDialog">
                 <i class="el-icon-close" @click='cancelDel'></i>
                 <i class="el-icon-warning-outline" style='font-size:42px;color:#b2c5ff;margin-bottom:18px;font-weight:600;'></i>
-                <div>是否删除话术？</div>
+                <div>{{$lan.webcast.deleteWords_tip}}</div>
                 <span slot="footer" class="dialog-footer">
-                    <el-button class="cancel" @click="cancelDel">取 消</el-button>
-                    <el-button class="confirm" type="primary" @click="confirmDel">确 定</el-button>
+                    <el-button class="cancel" @click="cancelDel">{{$lan.common.cancel}}</el-button>
+                    <el-button class="confirm" type="primary" @click="confirmDel">{{$lan.common.confirm}}</el-button>
                 </span>
             </div>
         </div>
@@ -64,10 +64,6 @@ export default {
     },
     data() {
         return {
-            tips: {
-                welcome: '设置直播开播的开场语话术',
-                endwords: '设置不同剧本间切换时的衔接话术'
-            },
             state: '',
             wordsId: '',
             iptWordsTxt: '',
@@ -107,7 +103,7 @@ export default {
                     await this.$emit('addWords', this.type, this.iptWordsTxt);
                     break;
                 case 'edit':
-                    await this.$emit('editWords', this.type, {content: this.iptWordsTxt, gsw_id: this.wordsId}, '编辑')
+                    await this.$emit('editWords', this.type, {content: this.iptWordsTxt, gsw_id: this.wordsId}, this.$lan.common.edit)
                     break;
             }
             this.iptWordsTxt = '';
@@ -123,12 +119,12 @@ export default {
         },
         async confirmDel() {
             this.isShowDelDialog = false;
-            await this.$emit('editWords', this.type, {gsw_id: this.wordsId, status: 1}, '删除');
+            await this.$emit('editWords', this.type, {gsw_id: this.wordsId, status: 1}, this.$lan.common.delete);
             this.wordsId = '';
         },
         handleSwitch(_item) {
             let _switch = _item.switch==0?1:0;
-            this.$emit('editWords', this.type, {gsw_id: _item.id, switch: _switch}, '状态切换');
+            this.$emit('editWords', this.type, {gsw_id: _item.id, switch: _switch}, this.$lan.webcast.selectState);
         }
     }
 }
