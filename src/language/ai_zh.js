@@ -9,7 +9,10 @@ const common = {
   cancel:'取 消',
   confirm:'确 定',
   tableListFail:'获取列表失败！',
-  dataFail:'剧本数据获取异常，请重试'
+  dataFail:'剧本数据获取异常，请重试',
+
+  changeAvatarFailTip:'切换角色失败，请重试',
+
 }
 const app = {
   previewTip:'单击屏幕取消播放',
@@ -32,7 +35,10 @@ const myscript = {
 }
 const step = {
   title:'创建和编辑剧本',
-  step1:'',
+  step1:'选择脚本使用的直播间背景',
+  step2:'选择脚本使用的角色模型',
+  step3:'选择脚本使用的展示位的数量、大小和位置',
+  step4:'在右侧剧本编辑窗口编辑剧本',
 }
 
 export default {

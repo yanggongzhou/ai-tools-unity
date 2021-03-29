@@ -1,7 +1,7 @@
 <template>
   <div class="stepBox">
     <div class="step_title">
-      <p>创建和编辑剧本</p>
+      <p>{{$lan.step.title}}</p>
       <div class="line"></div>
     </div>
     <div class="step_content">
@@ -18,19 +18,19 @@
       <div class="step_text">
         <div class="step_text-item item1" :class="{'active':stepActive==='1'}">
           <img src="static/icon/01.png" alt="">
-          <div class="text">选择脚本使用的直播间背景</div>
+          <div class="text">{{$lan.step.step1}}</div>
         </div>
         <div class="step_text-item item2" :class="{'active2':stepActive==='2','noactive':stepNoActive2}">
           <img src="static/icon/02.png" alt="">
-          <div class="text">选择脚本使用的角色模型</div>
+          <div class="text">{{$lan.step.step2}}</div>
         </div>
         <div class="step_text-item item3" :class="{'active':stepActive==='3','noactive':stepNoActive3}">
           <img src="static/icon/03.png" alt="">
-          <div class="text">选择脚本使用的展示位的数量、大小和位置</div>
+          <div class="text">{{$lan.step.step3}}</div>
         </div>
         <div class="step_text-item item4" :class="{'active2':stepActive==='4','noactive':stepNoActive4}">
           <img src="static/icon/04.png" alt="">
-          <div class="text">在右侧剧本编辑窗口编辑剧本</div>
+          <div class="text">{{$lan.step.step4}}</div>
         </div>
       </div>
 
@@ -76,9 +76,9 @@ export default {
     },
     WebSelectAvatarState(state){
       if(state==='True'){
-        // this.$message.error('切换角色')
+
       }else if(state==='False'){
-        this.$message.error('切换角色失败，请重试')
+        this.$message.error(this.$lan.common.changeAvatarFailTip)
         this.previewReady = true;
       }
     },
