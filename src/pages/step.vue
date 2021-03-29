@@ -78,7 +78,7 @@ export default {
       if(state==='True'){
 
       }else if(state==='False'){
-        this.$message.error(this.$lan.common.changeAvatarFailTip)
+        this.$message.error(this.$lan.common.changeAvatarFailMsg)
         this.previewReady = true;
       }
     },

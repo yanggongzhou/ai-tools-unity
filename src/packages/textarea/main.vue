@@ -15,45 +15,45 @@
       <el-popconfirm
         cancel-button-type="info"
         confirm-button-type="info"
-        confirmButtonText='确认'
-        cancelButtonText='取消'
+        :confirmButtonText='$lan.common.confirm'
+        :cancelButtonText='$lan.common.cancel'
         icon="el-icon-info"
         iconColor="#fbfbfb"
         @onConfirm="openTagDialog('clean')"
-        title="确认清空所有标签？">
+        :title="$lan.tools.clean_tag_tip">
         <button slot="reference" class="w-textarea_tools__item cleanTag">
           <i class="iconfont alicon-qingkong tagLogo"></i>
-          <span>清空标签</span>
+          <span>{{$lan.tools.clean_tag}}</span>
         </button>
       </el-popconfirm>
 
       <el-tooltip  :open-delay="1000" placement="bottom" effect="dark">
         <div slot="content">
-          <p class="center tip_title">互动标签</p>
-          <p class="center">注意文本中不要离得太近哦!</p>
+          <p class="center tip_title">{{$lan.tools.interaction_tag_tip_t}}</p>
+          <p class="center">{{$lan.tools.interaction_tag_tip_c}}</p>
         </div>
         <button class="w-textarea_tools__item "
                 @click="openTagDialog('interaction')">
           <i class="iconfont alicon-hudongguanli tagLogo"></i>
-          <span>插入互动</span>
+          <span>{{$lan.tools.interaction_tag}}</span>
         </button>
       </el-tooltip>
       <button class="w-textarea_tools__item " @click="openTagDialog('video')">
         <i class="iconfont alicon-shipin tagLogo"></i>
-        <span>插入视频</span>
+        <span>{{$lan.tools.video}}</span>
       </button>
       <button class="w-textarea_tools__item " @click="openTagDialog('img')">
         <i class="iconfont alicon-tupian tagLogo"></i>
-        <span>插入图片</span>
+        <span>{{$lan.tools.img_tag}}</span>
       </button>
       <button class="w-textarea_tools__item " @click="openTagDialog('text')">
         <i class="iconfont alicon-wenzi tagLogo"></i>
-        <span>插入文字</span>
+        <span>{{$lan.tools.text_tag}}</span>
       </button>
-<!--      <button class="w-textarea_tools__item " @click="openTagDialog('timer')">-->
-<!--        <i class="iconfont alicon-jiange tagLogo"></i>-->
-<!--        <span>添加间隔</span>-->
-<!--      </button>-->
+      <button class="w-textarea_tools__item " @click="openTagDialog('intervalTime')">
+        <i class="iconfont alicon-jiange tagLogo"></i>
+        <span>{{$lan.tools.interval_tag}}</span>
+      </button>
 
       <!--      <button class="w-textarea_tools__item float_right"-->
       <!--        v-for="item in tools"-->

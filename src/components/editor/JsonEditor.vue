@@ -8,15 +8,6 @@
              :key="ind+'model'">
           <div class="left_icon">
             <i class="view el-icon-view" @click="previewBtn(val,ind)"></i>
-<!--            <el-popconfirm-->
-<!--              confirmButtonText='是的'-->
-<!--              cancelButtonText='取消'-->
-<!--              icon="el-icon-info"-->
-<!--              iconColor="red"-->
-<!--              title="这一段内容确定删除吗？"-->
-<!--              @onConfirm="delBtn(ind)">-->
-<!--              <i v-show="ScriptList.length!==1" slot="reference" class="delete el-icon-more"></i>-->
-<!--            </el-popconfirm>-->
             <el-dropdown @command="proto=>handleCommand(ind,proto)" trigger="click">
               <i class="moremore el-icon-arrow-down el-icon-more"></i>
               <el-dropdown-menu slot="dropdown">
@@ -42,7 +33,7 @@
         </div>
       </div>
       <div class="left_add" @click="addScript">
-        + 添加
+        + {{$lan.common.add}}
       </div>
     </div>
 
@@ -97,8 +88,8 @@
           :show-close='false'
         >
           <el-input-number style='width: 110px;' v-model="intervalValue" controls-position="right" :step="0.5" :min="0.5" :max="10000"></el-input-number> s<br/>
-          <button class="dialogBtn quxiao" style='width:50px;border-radius:4px;' @click.stop="timerVisible = false">取 消</button>
-          <button class="dialogBtn queren" style='width:50px;margin-top:0;border-radius:4px;' @click.stop="addTag('间隔',intervalValue)">确 认</button>
+          <button class="dialogBtn quxiao" style='width:50px;border-radius:4px;' @click.stop="timerVisible = false">{{$lan.common.cancel}}</button>
+          <button class="dialogBtn queren" style='width:50px;margin-top:0;border-radius:4px;' @click.stop="addTag('间隔',intervalValue)">{{$lan.common.confirm}}</button>
         </div>
 
         <div class="p10"
@@ -106,10 +97,10 @@
              v-loading="actionLoading">
           <el-tooltip  :open-delay="1000" placement="bottom" effect="dark">
             <div slot="content">
-              <p class="center tip_title">动作标签</p>
-              <p class="center">注意文本中紧邻的 <br/> 动作标签只会执行最后一个哦!</p>
+              <p class="center tip_title">{{$lan.tools.action_title}}</p>
+              <p class="center" v-html="$lan.tools.action_title_tip_c"></p>
             </div>
-            <span class="actionTitle">插入动作</span>
+            <span class="actionTitle">{{$lan.tools.action_title_tip_t}}</span>
           </el-tooltip>
 
           <el-tooltip :open-delay="300" v-for="(val,ind) in actionShowList" :key="ind+'animation'" placement="top">
@@ -133,10 +124,10 @@
     </div>
     <el-dialog  top="30vh" :visible.sync="isShowDelDialog" width='30%' style='text-align:center;'>
       <i class="el-icon-warning-outline" style='font-size:42px;color:#7455FF;margin-bottom:18px;font-weight:600;'></i>
-      <div>是否删除第{{confrimDelInd+1}}段内容？</div>
+      <div>{{$lan.tools.delete_paragraph_tip}} {{confrimDelInd+1}}？</div>
       <span slot="footer" class="dialog-footer">
-                    <el-button class="cancel" @click="cancelDel">取 消</el-button>
-                    <el-button class="confirm" type="primary" @click="confirmDel">确 定</el-button>
+                    <el-button class="cancel" @click="cancelDel">{{$lan.common.cancel}}</el-button>
+                    <el-button class="confirm" type="primary" @click="confirmDel">{{$lan.common.confirm}}</el-button>
                 </span>
     </el-dialog>
   </div>
@@ -206,7 +197,7 @@
 
         textForm:{
           dismissTimeType:2,
-          text:"测试字体",
+          text:"",
           textColor:"#333333",
           region:"1",
           fontFamily:"SimHei",
@@ -438,7 +429,7 @@
           }
           this.ScriptList[ind] = JSON.parse(JSON.stringify(this.ScriptList.splice(ind-1,1,this.ScriptList[ind])[0]))
         }else{
-          this.$message.warning('已至最高层')
+          this.$message.warning(this.$lan.tools.alreadyTop)
         }
       },
       //下移
@@ -450,7 +441,7 @@
           }
           this.ScriptList[ind] = JSON.parse(JSON.stringify(this.ScriptList.splice(ind+1,1,this.ScriptList[ind])[0]))
         }else{
-          this.$message.warning('已至最底层')
+          this.$message.warning(this.$lan.tools.alreadyBottom)
         }
       },
       //置顶
@@ -462,7 +453,7 @@
           }
           this.ScriptList.unshift(this.ScriptList.splice(ind , 1)[0]);
         }else{
-          this.$message.warning('已至最高层')
+          this.$message.warning(this.$lan.tools.alreadyTop)
         }
       },
       //置底
@@ -474,7 +465,7 @@
           }
           this.ScriptList.push(this.ScriptList.splice(ind , 1)[0]);
         }else{
-          this.$message.warning('已至最底层')
+          this.$message.warning(this.$lan.tools.alreadyBottom)
         }
       },
       //插入
@@ -518,7 +509,7 @@
       previewBtn(val,ind){
         UnityPreviewCancel()
         if(!this.previewReady){
-          this.$message.warning('资源加载中，请稍后...')
+          this.$message.warning(this.$lan.common.resourceLoadingMsg)
           return false;
         }
         let _content='';
@@ -527,7 +518,7 @@
             _content += value.content;
           })
           if(val.param.length===0 || !_content.replace(/[\ |\~|\`|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\-|\_|\+|\=|\||\\|\[|\]|\{|\}|\;|\:|\"|\'|\,|\<|\.|\>|\/|\?|\r\n]/g,"").match(/[\u4e00-\u9fa5\0-9]/g)){
-            this.$message.error('请确认当前段落含有有效文字！')
+            this.$message.error(this.$lan.tools.isValidTextMsg2)
             return false
           }
           UnityPreview(val.avatar.unity,JSON.stringify([val]),"True","False")
@@ -540,7 +531,7 @@
               _content += value.content;
             })
             if(_jsonArr.param.length===0 || !_content.replace(/[\ |\~|\`|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\-|\_|\+|\=|\||\\|\[|\]|\{|\}|\;|\:|\"|\'|\,|\<|\.|\>|\/|\?|\r\n]/g,"").match(/[\u4e00-\u9fa5\0-9]/g)){
-              this.$message.error('请确认当前段落含有有效文字！')
+              this.$message.error(this.$lan.tools.isValidTextMsg2)
               return false
             }
             UnityPreview(val.avatar.unity,JSON.stringify([_jsonArr]),"True","False")
@@ -585,7 +576,7 @@
         if(state==='True'){
           UnityAvatarMotionInfo(this.ResultJson.avatar.unity);
         }else if(state==='False'){
-          this.$message.error('切换角色失败，请重试')
+          this.$message.error(this.$lan.common.changeAvatarFailMsg)
           // this.previewReady = false;
         }
       },
@@ -594,7 +585,7 @@
           this.$store.commit('set_pcVisible',true)
           UnityPreviewStart(this.ResultJson.avatar.unity);
         }else if(state==='False'){
-          this.$message.error('加载资源失败，请重试')
+          this.$message.error(this.$lan.common.resourceLoadingFailMsg)
         }
         this.previewReady = true;
       },
@@ -744,7 +735,7 @@
             if(val.isAll){
               _time = 'all'
             }
-            let _imageDom = `<wise id="`+val.id+`" data-obj="`+_data+`"><div class="tag_image tagtag" onclick="editTag(\``+val.id+`\`)">图片`+val.name+' ('+_time+`)<i class="el-icon-close" onclick="delTag(\``+val.id+`\`)"></i></div>&nbsp;</wise>`
+            let _imageDom = `<wise id="`+val.id+`" data-obj="`+_data+`"><div class="tag_image tagtag" onclick="editTag(\``+val.id+`\`)">`+self.$lan.tools.img+val.name+' ('+_time+`)<i class="el-icon-close" onclick="delTag(\``+val.id+`\`)"></i></div>&nbsp;</wise>`
             // contentBDArr[val.index]= _imageDom + contentBDArr[val.index]
             if(contentBDArr[val.index]===undefined){
               contentBDArr[val.index] = _imageDom
@@ -760,7 +751,7 @@
             if(val.isAll){
               _time = 'all'
             }
-            let _videoDom = `<wise id="`+val.id+`" data-obj="`+_data+`"><div class="tag_video tagtag" onclick="editTag(\``+val.id+`\`)">视频`+val.name+' ('+_time+`)<i class="el-icon-close" onclick="delTag(\``+val.id+`\`)"></i></div>&nbsp;</wise>`
+            let _videoDom = `<wise id="`+val.id+`" data-obj="`+_data+`"><div class="tag_video tagtag" onclick="editTag(\``+val.id+`\`)">`+self.$lan.tools.video+val.name+' ('+_time+`)<i class="el-icon-close" onclick="delTag(\``+val.id+`\`)"></i></div>&nbsp;</wise>`
             if(contentBDArr[val.index]===undefined){
               contentBDArr[val.index] = _videoDom
             }else{
@@ -775,7 +766,7 @@
               _time = 'all'
             }
             let _data = JSON.stringify({type:'text',text:val.text,textColor:val.textColor,textSize:val.textSize,id:val.id,gravity:val.gravity,region:val.region,ellipsize:val.ellipsize,isAll:val.isAll,dismissTime:val.dismissTime,fontFamily:val.fontFamily,enter:val.enter,leave:val.leave}).replace(/"/g,"&quot;")
-            let _textDom = `<wise id="`+val.id+`" data-obj="`+_data+`"><div class="tag_text tagtag" onclick="editTag(\``+val.id+`\`)">文字`+ ' ('+_time+`)<i class="el-icon-close" onclick="delTag(\``+val.id+`\`)"></i></div>&nbsp;</wise>`
+            let _textDom = `<wise id="`+val.id+`" data-obj="`+_data+`"><div class="tag_text tagtag" onclick="editTag(\``+val.id+`\`)">`+self.$lan.tools.text+ ' ('+_time+`)<i class="el-icon-close" onclick="delTag(\``+val.id+`\`)"></i></div>&nbsp;</wise>`
             if(contentBDArr[val.index]===undefined){
               contentBDArr[val.index] = _textDom
             }else{
@@ -799,7 +790,7 @@
             }
           }else if(val.type==="interval"){
             let _data = JSON.stringify({id:self.getGuid(),type:'interval', time:val.time}).replace(/"/g,"&quot;")
-            let _intervalDom = `<wise id="`+val.id+`" data-obj="`+_data+`"><div class="tag_interval tagtag" onclick="editTag(\``+val.id+`\`)">间隔(`+val.time/1000+`s)<i class="el-icon-close" onclick="delTag(\``+val.id+`\`)"></i></div>&nbsp;</wise>`
+            let _intervalDom = `<wise id="`+val.id+`" data-obj="`+_data+`"><div class="tag_interval tagtag" onclick="editTag(\``+val.id+`\`)">`+self.$lan.tools.interval+`(`+val.time/1000+`s)<i class="el-icon-close" onclick="delTag(\``+val.id+`\`)"></i></div>&nbsp;</wise>`
             if(contentBDArr[val.index]===undefined){
               contentBDArr[val.index] = _intervalDom
             }else{
@@ -810,7 +801,7 @@
             }
           }else if(val.type==="interaction"){
             let _data = JSON.stringify({id:self.getGuid(),type:'interaction', maximum:val.maximum,isSupport:val.isSupport}).replace(/"/g,"&quot;")
-            let _intervalDom = `<wise id="`+val.id+`" data-obj="`+_data+`"><div class="tag_interaction tagtag" onclick="editTag(\``+val.id+`\`)">互动<i class="el-icon-close" onclick="delTag(\``+val.id+`\`)"></i></div>&nbsp;</wise>`
+            let _intervalDom = `<wise id="`+val.id+`" data-obj="`+_data+`"><div class="tag_interaction tagtag" onclick="editTag(\``+val.id+`\`)">`+self.$lan.tools.interaction+`<i class="el-icon-close" onclick="delTag(\``+val.id+`\`)"></i></div>&nbsp;</wise>`
             if(contentBDArr[val.index]===undefined){
               contentBDArr[val.index] = _intervalDom
             }else{
@@ -1089,7 +1080,7 @@
 
       handleAddVideo(){
         if(!this.InfoModelData.length){
-          this.$message.error('请先添加展示位')
+          this.$message.error(this.$lan.tools.infoModel_tip)
           return
         }
         this.videoVisible = true;
@@ -1112,7 +1103,7 @@
       },
       handleAddImage(){
         if(!this.InfoModelData.length){
-          this.$message.error('请先添加展示位')
+          this.$message.error(this.$lan.tools.infoModel_tip)
           return
         }
         this.imgVisible = true;
@@ -1154,7 +1145,7 @@
             break;
           case 'text':
             if(!this.InfoModelData.length){
-              this.$message.error('请先添加展示位')
+              this.$message.error(this.$lan.tools.infoModel_tip)
               return
             }
             this.textVisible = true;
@@ -1188,7 +1179,7 @@
           maximum:10,
           id:_id
         }
-        let _text =  `<div class="tag_interaction tagtag" onclick="editTag(\``+_id+`\`)">互动<i class="el-icon-close" onclick="delTag(\``+_id+`\`)"></i>&nbsp;</div>`
+        let _text =  `<div class="tag_interaction tagtag" onclick="editTag(\``+_id+`\`)">`+self.$lan.tools.interaction+`<i class="el-icon-close" onclick="delTag(\``+_id+`\`)"></i>&nbsp;</div>`
         this.$refs.testText.addTag(_text,_data)
       },
       addTag (type,interval) {
@@ -1200,7 +1191,7 @@
             time:interval*1000,
             id:_id
           }
-          let _text =  `<div class="tag_interval tagtag" onclick="editTag(\``+_id+`\`)">间隔(`+self.intervalValue+`s)<i class="el-icon-close" onclick="delTag(\``+_id+`\`)"></i>&nbsp;</div>`
+          let _text =  `<div class="tag_interval tagtag" onclick="editTag(\``+_id+`\`)">`+self.$lan.tools.interval+`(`+self.intervalValue+`s)<i class="el-icon-close" onclick="delTag(\``+_id+`\`)"></i>&nbsp;</div>`
           this.$refs.testText.addTag(_text,_data)
         }
         // this.$refs.testText.addTag(text,dataId)
@@ -1239,7 +1230,7 @@
         switch (type) {
           case 'text':
             if (!data.text.replace(/ /g, '')) {
-              this.$message.error('请输入文字')
+              this.$message.error(this.$lan.tools.textForm_tip)
               return false;
             }
             _data = {
@@ -1261,7 +1252,7 @@
             if (data.isAll) {
               _time = 'all'
             }
-            _text = `<div class="tagtag tag_text" onclick="editTag(\`` + _id + `\`)">文字` + ' (' + _time + `)<i class="el-icon-close" onclick="delTag(\`` + _id + `\`)"></i>&nbsp;</div>`
+            _text = `<div class="tagtag tag_text" onclick="editTag(\`` + _id + `\`)">`+this.$lan.tools.text + ' (' + _time + `)<i class="el-icon-close" onclick="delTag(\`` + _id + `\`)"></i>&nbsp;</div>`
             if (this.editTagId) {
               UnityEditTag(JSON.stringify(_data),'True')
               let _oldTag = NodeToString(document.getElementById(_id)).replace("<", "<").replace(">", ">");
@@ -1280,11 +1271,11 @@
 
           case 'video':
             if (!data.videoUrl) {
-              this.$message.error('请先上传文件')
+              this.$message.error(this.$lan.tools.upload_tip1)
               return
             }
             if (!data.dismissTime) {
-              this.$message.error('请确认呈现时间')
+              this.$message.error(this.$lan.tools.upload_tip2)
               return
             }
             _data = {
@@ -1303,7 +1294,7 @@
             if (data.isAll) {
               _time = 'all'
             }
-            _text = `<div class="tagtag tag_video" onclick="editTag(\`` + _id + `\`)">视频` + data.videoName + ` (` + _time + `)<i class="el-icon-close" onclick="delTag(\`` + _id + `\`)"></i>&nbsp;</div>`
+            _text = `<div class="tagtag tag_video" onclick="editTag(\`` + _id + `\`)">`+this.$lan.tools.video + data.videoName + ` (` + _time + `)<i class="el-icon-close" onclick="delTag(\`` + _id + `\`)"></i>&nbsp;</div>`
             if (this.editTagId) {
               UnityEditTag(JSON.stringify(_data),'True')
               let _oldTag = NodeToString(document.getElementById(_id)).replace("<", "<").replace(">", ">");
@@ -1322,11 +1313,11 @@
 
           case 'img':
             if (!data.url) {
-              this.$message.error('请先上传文件')
+              this.$message.error(this.$lan.tools.upload_tip1)
               return
             }
             if (!data.dismissTime) {
-              this.$message.error('请确认呈现时间')
+              this.$message.error(this.$lan.tools.upload_tip2)
               return false;
             }
             _data = {
@@ -1344,7 +1335,7 @@
             if (data.isAll) {
               _time = 'all'
             }
-            _text = `<div class="tagtag tag_image" onclick="editTag(\`` + _id + `\`)">图片` + data.name + ` (` + _time + `)<i class="el-icon-close" onclick="delTag(\`` + _id + `\`)"></i>&nbsp;</div>`
+            _text = `<div class="tagtag tag_image" onclick="editTag(\`` + _id + `\`)">`+this.$lan.tools.video + data.name + ` (` + _time + `)<i class="el-icon-close" onclick="delTag(\`` + _id + `\`)"></i>&nbsp;</div>`
             if (this.editTagId) {
               UnityEditTag(JSON.stringify(_data),'True')
               let _oldTag = NodeToString(document.getElementById(_id)).replace("<", "<").replace(">", ">");
