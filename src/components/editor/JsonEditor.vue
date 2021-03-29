@@ -591,6 +591,7 @@
       },
       WebPreviewReady(state){
         if(state==='True'){
+          this.$store.commit('set_pcVisible',true)
           UnityPreviewStart(this.ResultJson.avatar.unity);
         }else if(state==='False'){
           this.$message.error('加载资源失败，请重试')

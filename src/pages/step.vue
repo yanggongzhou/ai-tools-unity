@@ -1,27 +1,4 @@
 <template>
-<!--    <div class='homepage'>-->
-<!--      <img class="pandaImg" src='https://large.magics-ad.com/ai-3D/static/img/panda.png' alt="">-->
-<!--      <div class="stepBox">-->
-<!--        <el-steps direction="vertical" :active="stepActive">-->
-<!--          <el-step icon="el-icon-picture">-->
-<!--            <div slot="title">直播间背景</div>-->
-<!--          </el-step>-->
-<!--          <el-step icon="el-icon-user-solid" title="角色模型">-->
-<!--            <div slot="title">角色模型</div>-->
-<!--          </el-step>-->
-<!--          <el-step icon="el-icon-copy-document" description="剧本使用的展示位的数量、位置和大小">-->
-<!--            <div slot="title">展示位</div>-->
-<!--          </el-step>-->
-<!--          <el-step icon="el-icon-edit-outline" description="编写文字内容、插入标签等组合方式集成剧本">-->
-<!--            <div slot="title">编辑剧本</div>-->
-<!--          </el-step>-->
-<!--        </el-steps>-->
-<!--      </div>-->
-<!--      https://large.magics-ad.com/mygz-file/unityTools/panda.png-->
-
-
-<!--    </div>-->
-
   <div class="stepBox">
     <div class="step_title">
       <p>创建和编辑剧本</p>
@@ -240,41 +217,6 @@ export default {
     }
     .noactive_img{
       filter: grayscale(1);
-    }
-  }
-
-
-
-  .homepage {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    /*background: #f9f2ff;*/
-    .pandaImg{
-      width: 300px;
-      height: auto;
-    }
-    .stepBox{
-      height: 350px;
-      /deep/.el-step__title{
-        cursor: pointer;
-      }
-      /deep/.el-step__title.is-finish{
-        font-weight: 600;
-        color: #673AB7;
-      }
-      /deep/.el-step__head.is-finish{
-        color: #673AB7;
-        border-color: #673AB7;
-      }
-      /deep/.el-step__description.is-finish{
-        color: #aa88e6;
-      }
-      /deep/.el-step__icon{
-        background: #F5F6FA;
-      }
     }
   }
 </style>

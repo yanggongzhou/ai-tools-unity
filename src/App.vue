@@ -18,6 +18,8 @@
     <editInfo/>
     <UError></UError>
     <UuserInfo></UuserInfo>
+<!--    取消预览-->
+    <UcancelPreview></UcancelPreview>
   </div>
 </template>
 
@@ -25,6 +27,7 @@
   import UError from "./components/WebUnity/error";
   import UuserInfo from "./components/WebUnity/userInfo";
   import editInfo from "./components/WebUnity/editInfo";
+  import UcancelPreview from "./components/cancelPreview"
   import {mapGetters} from "vuex";
 export default {
   name: 'App',
@@ -36,7 +39,8 @@ export default {
   components:{
     editInfo,
     UError,
-    UuserInfo
+    UuserInfo,
+    UcancelPreview
   },
   data() {
     return {
