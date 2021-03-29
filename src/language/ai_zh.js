@@ -1,6 +1,8 @@
 const common = {
   top_title:'剧本列表',
   top_title_edit:'剧本编辑',
+  top_title_play:'直播剧本',
+  back:'返回',
   search:'查询',
   check: '查看',
   edit:'编辑',
@@ -25,6 +27,7 @@ const common = {
   changeAvatarFailMsg:'切换角色失败，请重试',
   resourceLoadingMsg:'资源加载中，请稍后...',
   resourceLoadingFailMsg:'加载资源失败，请重试',
+  resourceLoadingFailMsg2:'加载资源失败',
 }
 const app = {
   previewTip:'单击屏幕取消播放',
@@ -150,11 +153,58 @@ const webcast = {
   },
 }
 
+const direct = {
+  progress_tip1:"总剧本",
+  progress_tip2:"缓存进度",
+  progress_tip3:"取消缓存",
+
+  randomPlay:'随机播放',
+  randomPlay_tip1:'1、开启后，自动直播中剧本随机播放',
+  randomPlay_tip2:'2、依据剧本权重，权重越高，重复播放概率越大。',
+  randomPlay_tip3:'3、建议多个剧本（>4）时再开启随机播放',
+
+  interactionModel:'互动模式',
+  interactionModel_tip1:'1、开启后，虚拟主播可以与消费者互动，在互动时间时回答用户提问、欢迎用户进入直播间',
+  interactionModel_tip2:'2、目前虚拟主播互动时间在每个剧本结束后及剧本中有互动标签的位置进入互动模式时间，当互动模式结束后，继续脚本直播。',
+  interactionModel_tip3:'3、开启互动模式必须结合用户弹幕问题监测软件共同使用，且提前设定好问题和答案，否则互动模式无效。',
+  interactionModel_tip4:'弹幕问题监控软件及问答配置需联系商务处理',
+
+  temporaryWords:'临时话术',
+  stopPlay:'停止播放',
+  playNext:'播放下一段',
+  playNext_ctrl:'播放下一段：【Ctrl】+【n】',
+  autoPlay:'自动播放',
+
+  online_t:'网络已重新连接',
+  online_c:'网络连接已恢复，祝您使用愉快!',
+
+  offline_t:'网络连接已断开',
+  offline_c:'网络连接出现异常，请确认您的联网状态!',
+  placeStopPlaying:"请先停止直播！",
+
+  closeInteraction_tip:'关闭互动模式可能会增加被平台判定为录播的风险，请谨慎操作！',
+
+  interactionModel_open:'互动模式已开启',
+  interactionModel_close:'互动模式已关闭',
+
+  queue_tip:'检测到当前还有排队数据，请等待排队播放完毕',
+  queue_tip2:'剧本段落已排队，稍后播放!',
+  queue_tip3:'最多支持1个剧本段落排队，请稍后!',
+  queue_tip4:'最多支持3个播放排队,请稍后!',
+
+
+
+  taskRunning:'当前任务正在执行中，请稍后...',
+  isValidTextMsg: '请输入有效字符',
+
+
+}
 export default {
   common,
   app,
   myscript,
   step,
   tools,
-  webcast
+  webcast,
+  direct
 }

@@ -9,17 +9,17 @@
                            innerStrokeColor="#e8eeff"
                            :completed-steps="completedSteps"
                            :total-steps="totalSteps">
-        <p class="midText">总剧本: {{ totalSteps }}</p>
-        <p class="midText">缓存进度: {{ completedSteps }}</p>
-        <button class='progress-btn' @click='progressCancelBtn' title="取消缓存">X</button>
+        <p class="midText">{{$lan.direct.progress_tip1}}: {{ totalSteps }}</p>
+        <p class="midText">{{$lan.direct.progress_tip2}}: {{ completedSteps }}</p>
+        <button class='progress-btn' @click='progressCancelBtn' :title="$lan.direct.progress_tip3">X</button>
       </radial-progress-bar>
     </div>
 
     <div class="titleBox" style="margin-bottom: 10px">
-      <span class="titleSpan">直播剧本</span>
+      <span class="titleSpan">{{$lan.common.top_title_play}}</span>
       <button class="backNormal backNormal2" @click="backBtn">
         <span class="_icon">< </span>
-        <span>返回</span>
+        <span>{{$lan.common.back}}</span>
       </button>
     </div>
 
@@ -29,12 +29,12 @@
         width="280"
         trigger="hover">
         <div class="interaction_pop">
-          <p><b>随机播放</b></p>
-          <p>1、开启后，自动直播中剧本随机播放</p>
-          <p>2、依据剧本权重，权重越高，重复播放概率越大。</p>
-          <p>3、建议多个剧本（>4）时再开启随机播放</p>
+          <p><b>{{$lan.direct.randomPlay}}</b></p>
+          <p>{{$lan.direct.randomPlay_tip1}}</p>
+          <p>{{$lan.direct.randomPlay_tip2}}</p>
+          <p>{{$lan.direct.randomPlay_tip3}}</p>
         </div>
-        <span slot="reference" style="cursor: help;position: relative;top: 4px">随机播放</span>
+        <span slot="reference" style="cursor: help;position: relative;top: 4px">{{$lan.direct.randomPlay}}</span>
       </el-popover>
       <el-switch @change="isRandomChange" v-model="isRandom" active-color='#7694f3' style='margin:6px 18px 0 8px;' :disabled="isAutoPlayBtn"></el-switch>
       <el-popover
@@ -42,12 +42,12 @@
         width="400"
         trigger="hover">
         <div class="interaction_pop">
-          <p><b>互动模式</b></p>
-          <p>1、开启后，虚拟主播可以与消费者互动，在互动时间时回答用户提问、欢迎用户进入直播间</p>
-          <p>2、目前虚拟主播互动时间在每个剧本结束后及剧本中有互动标签的位置进入互动模式时间，当互动模式结束后，继续脚本直播。</p>
-          <p>3、开启互动模式必须结合用户弹幕问题监测软件共同使用，且提前设定好问题和答案，否则互动模式无效。（ <span class='#835BFF'>弹幕问题监控软件及问答配置需联系商务处理</span> ）</p>
+          <p><b>{{$lan.direct.interactionModel}}</b></p>
+          <p>{{$lan.direct.interactionModel_tip1}}</p>
+          <p>{{$lan.direct.interactionModel_tip2}}</p>
+          <p>{{$lan.direct.interactionModel_tip3}}（ <span class='#835BFF'>{{$lan.direct.interactionModel_tip4}}</span> ）</p>
         </div>
-        <span slot="reference" style="cursor: help;position: relative;top: 4px">互动模式</span>
+        <span slot="reference" style="cursor: help;position: relative;top: 4px">{{$lan.direct.interactionModel}}</span>
       </el-popover>
       <el-switch @change="SwitchChange" v-model="isOpenInteractiveMode" active-color='#7694f3' style='margin-left:8px;margin-top:6px;' :disabled="isAutoPlayBtn"></el-switch>
     </div>
@@ -127,16 +127,18 @@
 <!--              :class="{'disabled-icon2': isAutoPlayBtn}"-->
               <div class="icon2" @click="innerVisibleOpen" >
                 <div class="huashu"></div>
-                <span>临时话术</span>
+                <span>{{$lan.direct.temporaryWords}}</span>
               </div>
             </el-col>
           </el-row>
         </div>
         <div class="float_right btnBox">
-          <button class='handleWebcastBtn' :class="{'disabled': queueList.length!==0||queueContentItem.length!==0||isPlaying}"  v-show="!isAutoPlayBtn" @click='autoPlayBtn'>自动播放</button>
-          <button class='handleWebcastBtn' v-show="isAutoPlayBtn" @click='stopPlayBtn'>停止播放</button>
-          <el-tooltip class="item" effect="dark" content="播放下一段：【Ctrl】+【n】" placement="bottom">
-            <button class='handleWebcastBtn' style="margin-left: 30px" :disabled="isAutoPlayBtn" :class="{'disabled': isAutoPlayBtn}" @click='nextPlayBtn'>播放下一段</button>
+          <button class='handleWebcastBtn' :class="{'disabled': queueList.length!==0||queueContentItem.length!==0||isPlaying}"  v-show="!isAutoPlayBtn" @click='autoPlayBtn'>
+            {{$lan.direct.autoPlay}}</button>
+          <button class='handleWebcastBtn' v-show="isAutoPlayBtn" @click='stopPlayBtn'>{{$lan.direct.stopPlay}}</button>
+          <el-tooltip class="item" effect="dark" :content="$lan.direct.playNext_ctrl" placement="bottom">
+            <button class='handleWebcastBtn' style="margin-left: 30px" :disabled="isAutoPlayBtn" :class="{'disabled': isAutoPlayBtn}" @click='nextPlayBtn'>
+              {{$lan.direct.playNext}}</button>
           </el-tooltip>
 
         </div>
@@ -390,7 +392,7 @@
       if(this.$route.params.playData){
         this.getPlayData(this.$route.params.playData)
       }else{
-        this.$message.error('未获取数据，请返回重试！')
+        this.$message.error(this.$lan.common.dataFail)
       }
       this.getTempData().then(res=>{});
       UnityInteractionStateChange("True");
@@ -465,8 +467,8 @@
       WebErrorMessage(err){
         if(err==="True"){
           this.$notify.error({
-            title:  '网络连接已断开!',
-            message:"网络连接出现异常，请确认您的联网状态!",
+            title:  this.$lan.direct.offline_t,
+            message:this.$lan.direct.offline_c,
             duration: 0
           });
           this.isDisconnection=true;
@@ -476,8 +478,8 @@
           }
         }else{
           this.$notify.success({
-            title:  '网络已重新连接!',
-            message:"网络连接已恢复，祝您使用愉快!",
+            title:  this.$lan.direct.online_t,
+            message: this.$lan.direct.online_c,
             duration: 0
           });
           this.isDisconnection=false;
@@ -485,7 +487,7 @@
       },
       backBtn(){
         if(this.isAutoPlayBtn){
-          this.$message.warning('请先停止直播！')
+          this.$message.warning(this.$lan.direct.placeStopPlaying)
         }else{
           this.$router.back()
         }
@@ -501,8 +503,8 @@
         val?_state="True":_state="False"
         UnityInteractionStateChange(_state);
         if(!val){
-          this.$confirm('关闭互动模式可能会增加被平台判定为录播的风险，请谨慎操作！', {
-            confirmButtonText: '知道了',
+          this.$confirm(this.$lan.direct.closeInteraction_tip, {
+            confirmButtonText: 'OK',
             showCancelButton:false,
             type: 'warning'
           }).then(() => {
@@ -514,9 +516,9 @@
       },
       WebInteractionStateChange(state){
         if(state==="True"){
-          this.$message.info('互动模式已开启')
+          this.$message.info(this.$lan.direct.interactionModel_open)
         }else{
-          this.$message.info('互动模式已关闭')
+          this.$message.info(this.$lan.direct.interactionModel_close)
         }
       },
       //临时话术打开
@@ -616,7 +618,7 @@
       autoPlayBtn(){
         //是否有排队
         if(this.queueList.length!==0||this.queueContentItem.length!==0||this.isPlaying){
-          this.$message.info('检测到当前还有排队数据，请等待排队播放完毕')
+          this.$message.info(this.$lan.direct.queue_tip)
           return false;
         }
         // UnityPreviewCancel();
@@ -643,7 +645,7 @@
             this.isFirstScriptOnce = true;
           }
         }else{
-          this.$message.warning('当前任务正在执行中，请稍后...')
+          this.$message.warning(this.$lan.direct.taskRunning)
         }
       },
       //停止播放
@@ -679,7 +681,7 @@
           this.previewReady = true;
           this.isAutoPlayBtn = false;
           this.isPlaying = false;
-          this.$message.error('切换角色失败，请重试')
+          this.$message.error(this.$lan.common.changeAvatarFailMsg)
         }
       },
       WebPreviewReady(state){
@@ -711,8 +713,8 @@
           this.isPlaying = false;
           this.allScriptPlayIndex = ''
           this.$notify.error({
-            title:  '加载资源失败!',
-            message:"加载资源失败，请重试！",
+            title:  this.$lan.common.resourceLoadingFailMsg2,
+            message:this.$lan.common.resourceLoadingFailMsg,
             duration: 0
           });
           // this.$message.error('加载资源失败，请重试')
@@ -1066,13 +1068,13 @@
             this.nowContentIndex = ind;
             this.nowAllScriptIndex = allScriptIndex;
           }else{
-            this.$message.warning('资源加载中，请稍后...')
+            this.$message.warning(this.$lan.common.resourceLoadingMsg)
           }
           //判断播放下一个的数据
           this.getNextPlayVal(ind,allScriptIndex,bool);
         }else{
           if(this.queueContentItem.length===0){
-            this.$message.info('剧本段落已排队，稍后播放!')
+            this.$message.info(this.$lan.direct.queue_tip2)
             this.queueContentItem.push({
               allScriptIndex:allScriptIndex,
               contentIndex:ind,
@@ -1081,7 +1083,7 @@
             })
             this.getNextPlayVal(ind,allScriptIndex,bool);
           }else{
-            this.$message.warning('最多支持1个剧本段落排队，请稍后!')
+            this.$message.warning(this.$lan.direct.queue_tip3)
           }
         }
       },
@@ -1126,7 +1128,7 @@
                 id:val.id,
               })
             }else{
-              this.$message.info('最多支持3个播放排队,请稍后!')
+              this.$message.info(this.$lan.direct.queue_tip4)
             }
           }
 
@@ -1138,11 +1140,11 @@
       //临时话术播放按钮
       temporaryScriptPlay(){
         if(this.queueList.length>=3){
-          this.$message.warning('最多支持3个播放排队，请稍后')
+          this.$message.warning(this.$lan.direct.queue_tip4)
           return false
         }
         if(!this.temporaryScriptTxt.replace(/[\ |\~|\`|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\-|\_|\+|\=|\||\\|\[|\]|\{|\}|\;|\:|\"|\'|\,|\<|\.|\>|\/|\?|\r\n]/g).match(/[\u4e00-\u9fa5\0-9]/g)){
-          this.$message.warning('请输入有效字符')
+          this.$message.warning(this.$lan.direct.isValidTextMsg)
           return false
         }
         this.addTempData(this.temporaryScriptTxt).then(res=>{
@@ -1181,7 +1183,7 @@
                   item:JSON.stringify([_json])
                 })
               }else{
-                this.$message.info('最多支持3个播放排队，请稍后！')
+                this.$message.info(this.$lan.direct.queue_tip4)
               }
             }
 
@@ -1204,7 +1206,7 @@
               item:JSON.stringify([_json])
             })
           }else{
-            this.$message.info('最多支持3个播放排队，请稍后！')
+            this.$message.info(this.$lan.direct.queue_tip4)
           }
         }else{
           UnityTemporaryInteractionStart();
