@@ -139,8 +139,8 @@
   import vText from './tag/text'
   import vVideo from './tag/video'
   import vImg from './tag/img'
-  import { AMSound } from '../../sound/sound';
-
+  import { ComputerWords } from './common/word_index'
+  let that;
   export default {
     computed: {
       ...mapGetters([
@@ -148,6 +148,9 @@
         'InfoModelData',
 
       ])
+    },
+    beforeCreate() {
+      that = this
     },
     filters:{
       indFilter(val){
@@ -162,7 +165,10 @@
         val.param.forEach(value=>{
           _content += value.content
         })
-        if(val.param.length===0 || !_content.replace(/[\ |\~|\`|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\-|\_|\+|\=|\||\\|\[|\]|\{|\}|\;|\:|\"|\'|\,|\<|\.|\>|\/|\?|\r\n]/g,"").match(/[\u4e00-\u9fa5\0-9]/g)){
+        let _zh = that.language==='zh'&&!that.ComputerWords.getIndex_ZH(_content)
+        let _enAli = that.language==='en_ali'&& !that.ComputerWords.getIndex_EN_AL(_content)
+        let _enBiaobei = that.language==='en_biaobei'&& !that.ComputerWords.getIndex_EN_BB(_content)
+        if(val.param.length===0 || _zh || _enAli || _enBiaobei){
           return {
             'display': 'inline-block',
           }
@@ -180,7 +186,8 @@
     },
     props:{
       TriggerDiv:Array,
-      editJsonData:Object
+      editJsonData:Object,
+      language:String
     },
     data() {
       return {
@@ -255,11 +262,14 @@
           {label:"插入",value:'5',icon:'el-icon-circle-plus-outline'},
           {label:"删除",value:'6',icon:'el-icon-delete'},
         ],
+
+        ComputerWords:''
       };
     },
     created() {
       window.WebActionInfo= this.WebActionInfo
       window.WebSelectAvatarState = this.WebSelectAvatarState
+      this.ComputerWords = new ComputerWords()
     },
     mounted() {
       let self = this;
@@ -662,7 +672,12 @@
           }
           //🌟🌟🌟🌟🌟第二步，推入info和动作标签
           param.trigger.forEach(val=>{
-            let txtInd= txtIndCount + this.getTruePos(param.content,val.index)
+            let txtInd;
+            if(val.placeholder!==undefined){
+              txtInd = val.placeholder
+            }else {
+              txtInd = contentBD.length + this.getTruePos(param.content, val.index)
+            }
             if(txtInd!==0&&!txtInd){//处理最后一个标签显示问题
               txtInd = param.content.length
             }
@@ -822,8 +837,11 @@
           if(txtInd===index+_index){
             _txtInd = txtInd;
           }
-          if(!txt.replace(/[\ |\~|\`|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\-|\_|\+|\=|\||\\|\[|\]|\{|\}|\;|\:|\"|\'|\,|\<|\.|\>|\/|\?|\r\n]/g,"").match(/[\u4e00-\u9fa5\0-9]/g)){
+          if(!this.ComputerWords.getIndex_ZH(txt)){
             _index+=1
+          }
+          if(_txtInd === undefined) {
+            _txtInd = contentBD.length;
           }
         })
         return _txtInd;
@@ -836,9 +854,16 @@
         // console.log(this.testData)
         return new Promise(resolve => {
           ExportMessage(this.testData).then(res=>{
-            if(!res.noTagText.replace(/[\ |\~|\`|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\-|\_|\+|\=|\||\\|\[|\]|\{|\}|\;|\:|\"|\'|\,|\<|\.|\>|\/|\?|\r\n]/g,"").match(/[\u4e00-\u9fa5\0-9]/g)){
-              // self.$message.error('脚本内容需含有数字或汉字等有效文本内容！')
-              // return false
+            let _zh = this.language==='zh'&&!this.ComputerWords.getIndex_ZH(res.noTagText)
+            let _enAli = this.language==='en_ali'&& !this.ComputerWords.getIndex_EN_AL(res.noTagText)
+            if(this.language==='en_biaobei'){
+              //先赋值 cumInfo
+              this.ComputerWords.getIndex_EN_BB(res.noTagText,true)
+            }
+            let _enBiaobei = this.language==='en_biaobei'&& !this.ComputerWords.getIndex_EN_BB(res.noTagText)
+            if(_zh || _enAli || _enBiaobei){
+              resolve({message:'json数据渲染成功', noTagText:res.noTagText, param:[]})
+              return
             }
             console.log('标签信息',res.messageArr)
             console.log('页面数据',self.TriggerDiv)
@@ -854,6 +879,7 @@
                 _actionMessage.push({
                   "id":msg.datasetObj.id,
                   "index": msg.index,
+                  "placeholder":msg.index,
                   "type": "action",
                   "action": {
                     "actionName": msg.datasetObj.actionName,
@@ -921,6 +947,7 @@
               _domMessage.forEach(dom=>{
                 if(dom.datasetObj.id===val.info.child[0].id){
                   val.index = dom.index;
+                  val.placeholder = dom.index;
                 }
               })
             })
@@ -971,15 +998,22 @@
 
             //✨✨✨✨第三步动作及info等的标签index韵母排序----------------------------------待完成，现在以汉字和数字占位排序
             // [\u4e00-\u9fa5\a-zA-Z0-9]
-            exoprtParams.forEach(val=>{
+            let t_index,t_content,all_content='';
+            exoprtParams.forEach((val,ind)=>{
+              if(ind){
+                all_content+=exoprtParams[ind-1].content
+              }
               val.trigger.forEach(trig=>{
-                let _content = val.content.slice(0,trig.index)
-                let _index = 0;
-
-                if(_content.replace(/[\ |\~|\`|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\-|\_|\+|\=|\||\\|\[|\]|\{|\}|\;|\:|\"|\'|\,|\<|\.|\>|\/|\?|\r\n]/g,"").match(/[\u4e00-\u9fa5\0-9]/g)){
-                  _index=_content.replace(/[\ |\~|\`|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\-|\_|\+|\=|\||\\|\[|\]|\{|\}|\;|\:|\"|\'|\,|\<|\.|\>|\/|\?|\r\n]/g,"").match(/[\u4e00-\u9fa5\0-9]/g).join("").length;
+                t_index = 0;
+                t_content = val.content.slice(0,trig.index)
+                if(this.language==='zh' && this.ComputerWords.getIndex_ZH(t_content)){
+                  t_index = this.ComputerWords.getIndex_ZH(t_content).length;
+                }else if(this.language==='en_ali' && this.ComputerWords.getIndex_EN_AL(t_content)) {
+                  t_index = this.ComputerWords.getIndex_EN_AL(t_content).length;
+                }else if(this.language==='en_biaobei' && this.ComputerWords.getIndex_EN_BB(t_content)){
+                  t_index = this.ComputerWords.getIndex_EN_BB(all_content + t_content) - this.ComputerWords.getIndex_EN_BB(all_content);
                 }
-                trig.index = _index;
+                trig.index = t_index;
               })
             })
 
@@ -990,7 +1024,7 @@
             let _isSuport = false;
             let invalidContent = '';//无效字符
             _params.forEach((val,ind)=>{
-              if(!val.content.replace(/[\ |\~|\`|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\-|\_|\+|\=|\||\\|\[|\]|\{|\}|\;|\:|\"|\'|\,|\<|\.|\>|\/|\?|\r\n]/g,"").match(/[\u4e00-\u9fa5\0-9]/g)){
+              if( (this.language==='zh' && !this.ComputerWords.getIndex_ZH(val.content)) || (this.language==='en_ali' && !this.ComputerWords.getIndex_EN_AL(val.content)) || (this.language==='en_baiobei' && !this.ComputerWords.getIndex_EN_BB(val.content)) ){
                 _intervalTime += val.intervalTime
                 if(!_isSuport){_isSuport = val.interaction.isSupport}
                 invalidContent += val.content

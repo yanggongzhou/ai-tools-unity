@@ -29,7 +29,7 @@
             v-model="videoForm.dismissTime" controls-position="right" :precision="1" :min="0.1" :step="0.5" :max="3600"></el-input-number>
         </el-col>
         <el-col :span="4">
-          <el-tag v-if="!videoForm.isAll">秒</el-tag>
+          <el-tag v-if="!videoForm.isAll">s</el-tag>
         </el-col>
       </el-form-item>
 <!--      <el-form-item label="动画效果" >-->

@@ -20,12 +20,14 @@
     <UuserInfo></UuserInfo>
 <!--    取消预览-->
     <UcancelPreview></UcancelPreview>
+    <Upreview></Upreview>
   </div>
 </template>
 
 <script>
   import UError from "./components/WebUnity/error";
   import UuserInfo from "./components/WebUnity/userInfo";
+  import Upreview from "./components/WebUnity/preview"
   import editInfo from "./components/WebUnity/editInfo";
   import UcancelPreview from "./components/cancelPreview"
   import {mapGetters} from "vuex";
@@ -39,6 +41,8 @@ export default {
   components:{
     editInfo,
     UError,
+    UuserInfo,
+    Upreview
     UuserInfo,
     UcancelPreview
   },

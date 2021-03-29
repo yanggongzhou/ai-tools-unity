@@ -103,7 +103,8 @@
 </template>
 <script>
 import { requestServices } from '../api/api';
-import myscriptDialog from '../components/myscript-dialog'
+import { handleScriptTime } from '../api/handleTime';
+import myscriptDialog from '../components/myscript/myscript-dialog'
 import axios from "axios";
 export default {
   components:{
@@ -111,8 +112,8 @@ export default {
   },
   filters:{
     created_atFilter(val){
-      return new Date(val*1000).toLocaleString()
-    },
+      return new Date(val*1000).toDateString()
+    }
   },
     data() {
         return {
@@ -166,6 +167,7 @@ export default {
         this.fetchAllScripts();
     },
     methods: {
+      handleScriptTime: handleScriptTime,
         fetchAllScripts() {
             requestServices.getAllScripts({
                 role_id:23,

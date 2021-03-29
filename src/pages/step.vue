@@ -99,6 +99,9 @@ export default {
       padding-top: 55px;
       margin: 0 auto;
       position: relative;
+      p{
+        text-align: center;
+      }
       .line{
         width: 173px;
         height: 13px;

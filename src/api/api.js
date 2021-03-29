@@ -3,7 +3,7 @@ import { Message } from "element-ui";
 
 const prevHandler = ({data}) => {
   if (data.return_code===1009) {
-    Message.error(data.result.message)
+    Message.error('Token expired')
     console.log('令牌过期',data)
     UnityUserInfo()
   }
@@ -26,7 +26,7 @@ const prevErrHandler = ({response}) => {
       break;
     default:
   }
-  throw new Error('系统异常');
+  throw new Error('System exception');
 };
 
 export const createAxios = (_url) => {

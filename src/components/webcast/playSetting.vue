@@ -149,7 +149,7 @@
                 liaDisabled: false,
                 captcha: '',
                 isFetchCaptcha: false,
-                captchaBtnTxt: '获取验证码',
+
                 fetchCaptchaAginTime: 60,
             }
         },
@@ -339,18 +339,16 @@
                     console.log(res)
                     if(res.return_code==1000) {
                         this.isFetchCaptcha = true;
-                        this.captchaBtnTxt = `重新发送（${this.fetchCaptchaAginTime}s)`;
                         let _this = this;
                         _this.timer = setInterval(()=>{
                         _this.fetchCaptchaAginTime--;
                         if(_this.fetchCaptchaAginTime==0) {
-                            _this.captchaBtnTxt = '重新发送';
+
                             _this.fetchCaptchaAginTime = 60;
                             _this.isFetchCaptcha = false;
                             clearInterval(_this.timer);
                             return;
                         }
-                        _this.captchaBtnTxt = `重新发送（${_this.fetchCaptchaAginTime}s)`;
                         }, 1000);
                     }else {
                         this.$message.error('短信发送失败，请重新获取~')

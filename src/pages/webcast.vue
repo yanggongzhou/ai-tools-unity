@@ -652,6 +652,9 @@ export default {
     height: 30px;
     border-radius: 17px;
     cursor: pointer;
+    /*width: 64px;*/
+    /*height: 26px;*/
+    /*font-size: 12px;*/
     &.cancel {
       opacity: 0.7;
       color: #666;
@@ -660,7 +663,7 @@ export default {
       background: rgba(0,0,0,0);
     }
     &.confirm {
-      background: #7455FF;
+      background: #7694f3;
       color: #fff;
       margin-left: 0;
     }

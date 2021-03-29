@@ -15,7 +15,7 @@
 </template>
 
 <script>
-  import { NumToCh } from '../api/NumberToChinese'
+  import { NumToCh } from '../../api/NumberToChinese'
   export default {
     props:['scriptRow','scriptName'],
     filters:{

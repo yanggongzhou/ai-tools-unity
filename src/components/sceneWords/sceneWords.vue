@@ -16,11 +16,11 @@ export default {
             activeName: 'welcome',
             tabs: [
                 {
-                    label: '开场语',
+                    label: 'Opening remarks',
                     name: 'welcome'
                 },
                 {
-                    label: '衔接语',
+                    label: 'Cohesion',
                     name: 'endwords'
                 }
             ],
@@ -72,10 +72,10 @@ export default {
                 content: _txt
             }).then(res => {
                 if(res.return_code==1000) {
-                    this.$message.success('添加成功')
+                    this.$message.success('success')
                     this.getAllWords();
                 }else {
-                    this.$message.error('添加失败')
+                    this.$message.error('fail')
                 }
             })
         },
@@ -90,10 +90,10 @@ export default {
             }, _params)).then(res => {
                 // console.log(res)
                 if(res.return_code==1000) {
-                    this.$message.success(`${_state}成功`)
+                    this.$message.success(`${_state}success`)
                     this.getAllWords();
                 }else {
-                    this.$message.error(`${_state}失败`)
+                    this.$message.error(`${_state}fail`)
                 }
             })
         },
