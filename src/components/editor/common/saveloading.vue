@@ -18,37 +18,37 @@
       return{
         loadData:[
           {
-            label:'1、Analyze the text content and generate data file',
+            label:'1、解析文本内容，生成数据文件',
             state:"loading",
           },
           {
-            label:'2、Upload data',
+            label:'2、上传数据',
             state:"",
           },
           {
-            label:'3、Request TTS voice data',
+            label:'3、请求TTS语音数据',
             state:"",
           },
           {
-            label:'4、Saved successfully',
+            label:'4、保存成功',
             state:"",
           },
         ],
         loadDataCopy:[
           {
-            label:'1、Analyze the text content and generate data file',
+            label:'1、解析文本内容，生成数据文件',
             state:"loading",
           },
           {
-            label:'2、Upload data',
+            label:'2、上传数据',
             state:"",
           },
           {
-            label:'3、Request TTS voice data',
+            label:'3、请求TTS语音数据',
             state:"",
           },
           {
-            label:'4、Saved successfully',
+            label:'4、保存成功',
             state:"",
           },
         ]
@@ -107,7 +107,7 @@
     }
     .content{
       font-size: 14px;
-      width: 340px;
+      width: 265px;
       margin: 12px auto 0;
     }
   }

@@ -112,7 +112,7 @@ export default {
   },
   filters:{
     created_atFilter(val){
-      return new Date(val*1000).toDateString()
+      return new Date(val*1000).toLocaleString()
     }
   },
     data() {

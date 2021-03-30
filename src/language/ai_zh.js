@@ -151,6 +151,25 @@ const webcast = {
     welcome: '设置直播开播的开场语话术',
     endwords: '设置不同剧本间切换时的衔接话术'
   },
+
+  tabs3: [
+    // {
+    //   label: 'Opening remarks',
+    //   name: 'welcome'
+    // },
+    // {
+    //   label: 'Cohesion',
+    //   name: 'endwords'
+    // }
+    {
+      label: '开场语',
+      name: 'welcome'
+    },
+    {
+      label: '衔接语',
+      name: 'endwords'
+    }
+  ],
 }
 
 const direct = {

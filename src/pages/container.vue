@@ -246,7 +246,7 @@
         AMSound:'',
 
         ComputerWords:'',
-        language:"en_biaobei",//'zh' or 'en_ali' or 'en_biaobei'
+        language:"zh",//'zh' or 'en_ali' or 'en_biaobei'
       }
     },
     created() {

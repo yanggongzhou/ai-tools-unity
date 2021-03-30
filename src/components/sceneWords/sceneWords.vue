@@ -1,7 +1,7 @@
 <template>
     <div class="sceneWordsContent">
         <el-tabs v-model="activeName" class="tabs">
-            <el-tab-pane v-for="(item, i) in tabs" :key='i' :label='item.label' :name='item.name'>
+            <el-tab-pane v-for="(item, i) in $lan.webcast.tabs3" :key='i' :label='item.label' :name='item.name'>
                 <wordsList :type='item.name' :list='handleList(item.name)' @addWords='addWords' @editWords='editWords'></wordsList>
             </el-tab-pane>
         </el-tabs>
@@ -14,23 +14,12 @@ export default {
     data() {
         return {
             activeName: 'welcome',
-            tabs: [
-                {
-                    label: 'Opening remarks',
-                    name: 'welcome'
-                },
-                {
-                    label: 'Cohesion',
-                    name: 'endwords'
-                }
-            ],
             welcomeWords: [],
             endWords: []
         }
     },
     mounted() {
         this.getAllWords();
-        console.log(111111,this.$Session.get('ai_user_id'))
     },
     methods: {
         getAllWords() {

@@ -42,8 +42,7 @@ export default {
     editInfo,
     UError,
     UuserInfo,
-    Upreview
-    UuserInfo,
+    Upreview,
     UcancelPreview
   },
   data() {
