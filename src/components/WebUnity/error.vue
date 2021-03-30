@@ -13,14 +13,14 @@
       WebErrorMessage(err){
         if(err==="True"){
           this.$notify.error({
-            title:  'The network connection has been disconnected!',
-            message:"Network connection is abnormal, please confirm your network status!",
+            title:  this.$lan.direct.offline_t,
+            message:this.$lan.direct.offline_c,
             duration: 0
           });
         }else{
           this.$notify.success({
-            title:  'The network has been reconnected!',
-            message:"The network connection has been restored. Have a good time!",
+            title:  this.$lan.direct.online_t,
+            message:this.$lan.direct.online_c,
             duration: 0
           });
         }

@@ -257,7 +257,7 @@
 
       this.ComputerWords = new ComputerWords()
       if(this.$route.query.language){
-        this.language = 'en_biaobei'
+        this.language = this.$route.query.language
       }
     },
     mounted() {
