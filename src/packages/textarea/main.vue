@@ -40,7 +40,7 @@
       </el-tooltip>
       <button class="w-textarea_tools__item " @click="openTagDialog('video')">
         <i class="iconfont alicon-shipin tagLogo"></i>
-        <span>{{$lan.tools.video}}</span>
+        <span>{{$lan.tools.video_tag}}</span>
       </button>
       <button class="w-textarea_tools__item " @click="openTagDialog('img')">
         <i class="iconfont alicon-tupian tagLogo"></i>
@@ -50,10 +50,10 @@
         <i class="iconfont alicon-wenzi tagLogo"></i>
         <span>{{$lan.tools.text_tag}}</span>
       </button>
-      <button class="w-textarea_tools__item " @click="openTagDialog('intervalTime')">
-        <i class="iconfont alicon-jiange tagLogo"></i>
-        <span>{{$lan.tools.interval_tag}}</span>
-      </button>
+<!--      <button class="w-textarea_tools__item " @click="openTagDialog('intervalTime')">-->
+<!--        <i class="iconfont alicon-jiange tagLogo"></i>-->
+<!--        <span>{{$lan.tools.interval_tag}}</span>-->
+<!--      </button>-->
 
       <!--      <button class="w-textarea_tools__item float_right"-->
       <!--        v-for="item in tools"-->

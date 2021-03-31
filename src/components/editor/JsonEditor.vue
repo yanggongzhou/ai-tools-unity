@@ -89,7 +89,7 @@
         >
           <el-input-number style='width: 110px;' v-model="intervalValue" controls-position="right" :step="0.5" :min="0.5" :max="10000"></el-input-number> s<br/>
           <button class="dialogBtn quxiao" style='width:50px;border-radius:4px;' @click.stop="timerVisible = false">{{$lan.common.cancel}}</button>
-          <button class="dialogBtn queren" style='width:50px;margin-top:0;border-radius:4px;' @click.stop="addTag('间隔',intervalValue)">{{$lan.common.confirm}}</button>
+          <button class="dialogBtn queren" style='width:50px;margin-top:0;border-radius:4px;' @click.stop="addIntervalTag(intervalValue)">{{$lan.common.confirm}}</button>
         </div>
 
         <div class="p10"
@@ -1216,19 +1216,17 @@
         let _text =  `<div class="tag_interaction tagtag" onclick="editTag(\``+_id+`\`)">`+self.$lan.tools.interaction+`<i class="el-icon-close" onclick="delTag(\``+_id+`\`)"></i>&nbsp;</div>`
         this.$refs.testText.addTag(_text,_data)
       },
-      addTag (type,interval) {
+      addIntervalTag (interval) {
         let self = this;
         let _id=this.getGuid()
-        if(type==='间隔'){
-          let _data = {
-            type:'interval',
-            time:interval*1000,
-            id:_id
-          }
-          let _text =  `<div class="tag_interval tagtag" onclick="editTag(\``+_id+`\`)">`+self.$lan.tools.interval+`(`+self.intervalValue+`s)<i class="el-icon-close" onclick="delTag(\``+_id+`\`)"></i>&nbsp;</div>`
-          this.$refs.testText.addTag(_text,_data)
+        this.timerVisible = false;
+        let _data = {
+          type:'interval',
+          time:interval*1000,
+          id:_id
         }
-        // this.$refs.testText.addTag(text,dataId)
+        let _text =  `<div class="tag_interval tagtag" onclick="editTag(\``+_id+`\`)">`+self.$lan.tools.interval+`(`+self.intervalValue+`s)<i class="el-icon-close" onclick="delTag(\``+_id+`\`)"></i>&nbsp;</div>`
+        this.$refs.testText.addTag(_text,_data)
       },
       //插入动作tag
       addAction(val){
@@ -1418,7 +1416,7 @@
   }
   .timerDialog {
     position: absolute;
-    top: -200px;
+    top: -190px;
     left: 196px;
     padding: 20px;
     background: #fff;

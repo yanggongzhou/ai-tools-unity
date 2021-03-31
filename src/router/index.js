@@ -37,11 +37,6 @@ export default new Router({
       path: '/direct',
       name: 'direct',
       component: ()=>import ('@/pages/direct'),
-    },
-    {
-      path: '/alitts',
-      name: 'alitts',
-      component: ()=>import ('@/pages/alitts'),
     }
   ]
 })
