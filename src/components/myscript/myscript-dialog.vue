@@ -54,14 +54,14 @@
           UnityChangeAvatar(val.avatar.unity);
           this.previewReady = false;
         }else{
-          this.$message.warning('资源加载中，请稍后...')
+          this.$message.warning(this.$lan.common.resourceLoadingMsg)
         }
       },
       WebSelectAvatarState(state){
         if(state==='True'){
           UnityPreview(this.previewData.avatar.unity,JSON.stringify([this.previewData]),"True","False")
         }else if(state==='False'){
-          this.$message.error('切换角色失败，请重试')
+          this.$message.error(this.$lan.common.changeAvatarFailMsg)
           this.previewReady = true;
         }
       },
@@ -70,7 +70,7 @@
           this.$store.commit('set_pcVisible',true)
           UnityPreviewStart(this.previewData.avatar.unity);
         }else if(state==='False'){
-          this.$message.error('加载资源失败，请重试')
+          this.$message.error(this.$lan.common.resourceLoadingFailMsg)
         }
         this.previewReady = true;
       }

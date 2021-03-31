@@ -3,18 +3,11 @@ import { Message } from "element-ui";
 
 const prevHandler = ({data}) => {
   if (data.return_code===1009) {
-    Message.error('Token expired')
-    console.log('令牌过期',data)
+    Message.error(data.result.message)
     UnityUserInfo()
   }
   return data
 };
-// window.WebUserMessage = function WebUserMessage(id,token,phone){
-//   console.log(id,token,phone)
-//   Session.set('ai_user_id', id);
-//   Session.set('ai_user_token', token)
-//   Session.set('ai_user_phone', phone)
-// }
 const prevErrHandler = ({response}) => {
   switch (response.status) {
     case 404:

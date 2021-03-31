@@ -21,13 +21,19 @@ const common = {
   addFail:'添加失败',
   editSuccess:'修改成功',
   editFail:'修改失败',
-
-
+  open:'开启',
+  close:'关闭',
 
   changeAvatarFailMsg:'切换角色失败，请重试',
   resourceLoadingMsg:'资源加载中，请稍后...',
   resourceLoadingFailMsg:'加载资源失败，请重试',
   resourceLoadingFailMsg2:'加载资源失败',
+  tip:"提示",
+  userInsertMsg:'用户信息注入中...',
+  userReqFailMsg:"请求用户信息失败,请重启窗口！",
+  userInsertSuccessMsg:"用户信息已注入!",
+
+
 }
 const app = {
   previewTip:'单击屏幕取消播放',
@@ -98,6 +104,26 @@ const tools = {
   interaction_tag_tip_c:'注意文本中不要离得太近哦!',
   clean_tag:'清空标签',
   clean_tag_tip:'确认清空所有标签？',
+
+  booths:'展位',
+  uploadFile:'上传文件',
+  timeSetting:'设置时长',
+  animation:"动画效果",
+  animation_enter:'入场效果',
+  animation_leave:'离场效果',
+  voiceSetting:'声音设置',
+  dismissTimeTypeData:[
+    // {label:'至视频播放结束',value:0},
+    {label:'至剧本播放结束',value:1},
+    {label:'自定义时长',value:2},
+  ],
+  uploadVideoErrMsg:'视频时长获取失败，请等待视频上传完成后再试！',
+  textColor:'颜色',
+  textAlign:'对齐',
+  textSize:'大小',
+  fontFamily:"字体",
+  textContent:'字体内容',
+
 
 }
 

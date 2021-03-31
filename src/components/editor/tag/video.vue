@@ -1,22 +1,22 @@
 <template>
   <div>
     <el-form :model="videoForm" :rules="rules" ref="videoForm" label-width="100px" @submit.native.prevent>
-      <el-form-item label="展示区" prop="region">
-        <el-select v-model="videoForm.region" placeholder="请选择展示区域">
+      <el-form-item :label="$lan.tools.booths" prop="region">
+        <el-select v-model="videoForm.region">
           <el-option
             v-for="(val,ind) in InfoModelData"
             :key="ind+'infoModel'"
-            :label="'展位'+val"
+            :label="$lan.tools.booths+val"
             :value="val"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="上传文件">
+      <el-form-item :label="$lan.tools.uploadFile">
         <v-upload :types="'video'" ref="uploadRefVideo" @getDisplayVideo="getDisplayVideo"></v-upload>
       </el-form-item>
-      <el-form-item label="设置时长" prop="dismissTimeType">
+      <el-form-item :label="$lan.tools.timeSetting" prop="dismissTimeType">
         <el-col :span="10">
-          <el-select v-model="videoForm.dismissTimeType" @change="dismissTimeTypeChange" placeholder="请选择展示时长类型">
-            <el-option v-for="(val,ind) in dismissTimeTypeData"
+          <el-select v-model="videoForm.dismissTimeType" @change="dismissTimeTypeChange">
+            <el-option v-for="(val,ind) in $lan.tools.dismissTimeTypeData"
                        :key="ind+'dismissTimeType'"
                        :label="val.label" :value="val.value"></el-option>
           </el-select>
@@ -32,9 +32,9 @@
           <el-tag v-if="!videoForm.isAll">s</el-tag>
         </el-col>
       </el-form-item>
-<!--      <el-form-item label="动画效果" >-->
+<!--      <el-form-item :label="$lan.tools.animation" >-->
 <!--        <el-col :span="10">-->
-<!--          <el-select v-model="videoForm.enter" placeholder="入场效果" clearable>-->
+<!--          <el-select v-model="videoForm.enter" :placeholder="$lan.tools.animation_enter" clearable>-->
 <!--            <el-option v-for="(val,ind) in animateList"-->
 <!--                       :key="ind+'enter'"-->
 <!--                       :label="val.label" :value="val.value"></el-option>-->
@@ -42,23 +42,23 @@
 <!--        </el-col>-->
 <!--        <el-col :span="1" class="center">-</el-col>-->
 <!--        <el-col :span="10">-->
-<!--          <el-select v-model="videoForm.leave" placeholder="离场效果" clearable>-->
+<!--          <el-select v-model="videoForm.leave" :placeholder="$lan.tools.animation_leave" clearable>-->
 <!--            <el-option v-for="(val,ind) in animateList"-->
 <!--                       :key="ind+'leave'"-->
 <!--                       :label="val.label" :value="val.value"></el-option>-->
 <!--          </el-select>-->
 <!--        </el-col>-->
 <!--      </el-form-item>-->
-      <el-form-item label="声音设置" prop="isSupportAudio">
+      <el-form-item :label="$lan.tools.voiceSetting" prop="isSupportAudio">
         <el-switch
           v-model="videoForm.isSupportAudio"
-          active-text="开启"
-          inactive-text="关闭">
+          :active-text="$lan.common.open"
+          :inactive-text="$lan.common.close">
         </el-switch>
       </el-form-item>
       <el-form-item align="right">
-        <button class="dialogBtn quxiao" @click.stop="cancel">取 消</button>
-        <button class="dialogBtn queren" @click.stop="confrim">确 认</button>
+        <button class="dialogBtn quxiao" @click.stop="cancel">{{$lan.common.cancel}}</button>
+        <button class="dialogBtn queren" @click.stop="confrim">{{$lan.common.confirm}}</button>
       </el-form-item>
     </el-form>
     <div style="display: none">
@@ -128,7 +128,7 @@
           case 0:
             this.videoForm.dismissTime = document.getElementById('videoDuration').duration
             if(!this.videoForm.dismissTime){
-              this.$message.warning('视频时长获取失败，请等待视频上传完成后再试！')
+              this.$message.warning(this.$lan.tools.uploadVideoErrMsg)
             }
             this.videoForm.isAll = false;
             break;
