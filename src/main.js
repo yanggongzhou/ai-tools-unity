@@ -21,11 +21,10 @@ import animated from "animate.css"
 Vue.use(animated)
 import promptMessage from '@/components/tooltips/index.js'
 Vue.use(promptMessage)
-import drr from '@minogin/vue-drag-resize-rotate'
-Vue.component('drr', drr)
+
 import ai_zh from "./language/ai_zh";
 Vue.prototype.$lan = ai_zh
-console.log(ai_zh)
+// console.log(ai_zh)
 
 import store from './store';
 Vue.config.productionTip = false

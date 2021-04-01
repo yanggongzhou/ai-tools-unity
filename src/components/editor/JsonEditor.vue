@@ -269,6 +269,7 @@
     created() {
       window.WebActionInfo= this.WebActionInfo
       window.WebSelectAvatarState = this.WebSelectAvatarState
+      window.WebPreviewEnd = this.WebPreviewEnd
       this.ComputerWords = new ComputerWords()
     },
     mounted() {
@@ -599,7 +600,9 @@
         }
         this.previewReady = true;
       },
-
+      WebPreviewEnd(){
+        this.$store.commit('set_pcVisible',false)
+      },
       //切换段落
       scriptChange(val){
         let self = this;

@@ -10,7 +10,6 @@
     "build": "node build/build.js"
   },
   "dependencies": {
-    "@minogin/vue-drag-resize-rotate": "^1.0.5",
     "ajv": "^6.12.6",
     "animate.css": "^3.7.2",
     "axios": "^0.20.0",

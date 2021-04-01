@@ -40,6 +40,7 @@
     created() {
       window.WebPreviewReady = this.WebPreviewReady;
       window.WebSelectAvatarState=this.WebSelectAvatarState;
+      window.WebPreviewEnd=this.WebPreviewEnd;
     },
     mounted() {
       this.previewReady = true;
@@ -73,7 +74,10 @@
           this.$message.error(this.$lan.common.resourceLoadingFailMsg)
         }
         this.previewReady = true;
-      }
+      },
+      WebPreviewEnd(){
+        this.$store.commit('set_pcVisible',false)
+      },
     },
     beforeDestroy() {
       //跳转页面后强制结束播放状态

@@ -262,6 +262,7 @@ export default {
     created() {
       window.WebPreviewReady = this.WebPreviewReady;
       window.WebSelectAvatarState=this.WebSelectAvatarState;
+      window.WebPreviewEnd = this.WebPreviewEnd;
     },
     mounted() {
         // this.sortPlayScript();
@@ -394,7 +395,9 @@ export default {
           }
           this.previewReady = true;
         },
-
+        WebPreviewEnd(){
+          this.$store.commit('set_pcVisible',false)
+        },
         // 获取播放剧本列表
         fetchAllPrograms() {
             requestServices.getAllPrograms({
