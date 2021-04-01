@@ -2,30 +2,30 @@
   <div class='common_content'>
     <div class="headerBox">
       <div class="titleBox">
-        <span class="titleSpan">Script Editor</span>
+        <span class="titleSpan">{{$lan.common.top_title_edit}}</span>
       </div>
 
 
       <div class="content clearfix">
         <div class="json_name float_left">
-          <span class="label">Title:</span>
+          <span class="label">{{$lan.myscript.title}}:</span>
           <el-input @input="jsonNameFocus" class="inp" v-model="jsonName"></el-input>
-          <div v-show="jsonNameValidate" class="err_tip">*Please enter a valid script title</div>
+          <div v-show="jsonNameValidate" class="err_tip">*{{$lan.tools.titleErrTip}}</div>
         </div>
         <div  class="float_right right-control">
 
 <!--          <button class="back" @click="$router.push('/home')">返回首页</button>-->
           <button class="back preview" @click="previewBtn">
             <span class="iconfont alicon-yulan posAdjustment"></span>
-            <span>preview</span>
+            <span>{{$lan.common.preview}}</span>
           </button>
           <button class="back save" @click="saveBtn(1)">
             <span class="iconfont alicon-baocun posAdjustment"></span>
-            <span>save</span>
+            <span>{{$lan.common.save}}</span>
           </button>
           <button v-show="editJsonData.id" class="back save" @click="saveBtn(2)">
             <span class="iconfont alicon-lingcunwei posAdjustment"></span>
-            <span>save as</span>
+            <span>{{$lan.common.saveAs}}</span>
           </button>
           <!--        <el-button @click="downloadJSON" type="success">下载脚本</el-button>-->
         </div>
@@ -246,7 +246,7 @@
         AMSound:'',
 
         ComputerWords:'',
-        language:"en_biaobei",//'zh' or 'en_ali' or 'en_biaobei'
+        language:"zh",//'zh' or 'en_ali' or 'en_biaobei'
       }
     },
     created() {
@@ -257,7 +257,7 @@
 
       this.ComputerWords = new ComputerWords()
       if(this.$route.query.language){
-        this.language = 'en_biaobei'
+        this.language = this.$route.query.language
       }
     },
     mounted() {
@@ -296,14 +296,6 @@
         data.param.forEach(val=>{
           val.trigger.forEach(val=>{
             if(val.type==="info"){
-              // //兼容之前无动画效果/
-              // if(!val.info.child[0].animate){
-              //   val.info.child[0].animate= {
-              //     "enter":"",
-              //     "leave":"",
-              //     "duration":{'enter': 1000, 'leave': 1000}
-              //   }
-              // }
               self.TriggerDiv.push(val)
             }
           })
@@ -313,7 +305,7 @@
       previewBtn(){
         UnityPreviewCancel();
         if(!this.previewReady){
-          this.$message.warning('Resource loading, please wait...')
+          this.$message.warning(this.$lan.common.resourceLoadingMsg)
           return false;
         }
         let self = this;
@@ -332,7 +324,7 @@
             }
           })
           if(!valitade){
-            this.$message.error('Please confirm that each paragraph contains valid text！')
+            this.$message.error(this.$lan.tools.isValidTextMsg)
             return
           }
           UnityPreview(this.ResultJson.avatar.unity,JSON.stringify(_JsonEditorRef.ScriptList),"True","False")
@@ -342,9 +334,10 @@
 
       WebPreviewReady(state){
         if(state==='True'){
+          this.$store.commit('set_pcVisible',true)
           UnityPreviewStart(this.ResultJson.avatar.unity);
         }else if(state==='False'){
-          this.$message.error('Failed to load resource. Please try again')
+          this.$message.error(this.$lan.common.resourceLoadingFailMsg)
         }
         this.previewReady = true;
       },
@@ -394,8 +387,7 @@
               }
             })
             if(!valitade){
-              this.$message.error('Please confirm whether each paragraph contains valid text!')
-              self.LOADING = '';
+              this.$message.error(this.$lan.tools.isValidTextMsg)
               return
             }
 

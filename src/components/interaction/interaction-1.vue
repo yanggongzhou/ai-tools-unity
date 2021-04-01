@@ -297,7 +297,7 @@
         _data.append('MD5', _md5);
         _data.append('channel_id', this.$Session.get('ai_user_phone')); // '13520933637'
         requestServices.getChat(_data).then(res => {
-          console.log('获取弹幕：', res)
+          // console.log('获取弹幕：', res)
           if(res.return_code==1000) { // 返回 欢迎语&问答
             let _isEnterRoom = false;
             if(this.chatMsgs.length>0 && this.chatMsgs[this.chatMsgs.length-1].type==2) {
@@ -313,7 +313,6 @@
                 case 2:     // 欢迎语
                   if(!_isEnterRoom) {
                     // item.response = this.getRandomWords(this.inacEnterWords);
-                    // this.chatMsgs.push(item);
                     let _username = item.message.replace(/[^\u4e00-\u9fa5]/gi, "");
                     if(_username=='用户') {
                       item.response = this.getRandomWords(this.inacEnterWords);

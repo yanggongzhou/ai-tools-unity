@@ -1,10 +1,10 @@
 <template>
   <div id="app">
     <div class="dev_tip" v-if="isShowDevTip">
-      测试版本v{{ResultJson.version}}
+      {{$lan.app.devTip}}
       <el-button-group>
-        <el-button @click="gotoPage('webcast')">开始直播</el-button>
-        <el-button @click="gotoPage('myscript')">我的剧本</el-button>
+        <el-button @click="gotoPage('webcast')">{{$lan.app.goLive}}</el-button>
+        <el-button @click="gotoPage('myscript')">{{$lan.app.myscript}}</el-button>
       </el-button-group>
     </div>
     <transition enter-active-class="animated fadeIn"
@@ -18,6 +18,8 @@
     <editInfo/>
     <UError></UError>
     <UuserInfo></UuserInfo>
+<!--    取消预览-->
+    <UcancelPreview></UcancelPreview>
     <Upreview></Upreview>
   </div>
 </template>
@@ -27,6 +29,7 @@
   import UuserInfo from "./components/WebUnity/userInfo";
   import Upreview from "./components/WebUnity/preview"
   import editInfo from "./components/WebUnity/editInfo";
+  import UcancelPreview from "./components/cancelPreview"
   import {mapGetters} from "vuex";
 export default {
   name: 'App',
@@ -39,7 +42,8 @@ export default {
     editInfo,
     UError,
     UuserInfo,
-    Upreview
+    Upreview,
+    UcancelPreview
   },
   data() {
     return {
@@ -48,12 +52,6 @@ export default {
   },
   created() {
     window.location.hostname==='demo.magics-ad.com'||window.location.hostname==='0.0.0.0'?this.isShowDevTip=true:this.isShowDevTip=false
-
-  },
-  mounted() {
-    // setTimeout(()=>{
-    //   UnityNativeReady();
-    // },3000)
   },
   methods:{
     gotoPage(val){

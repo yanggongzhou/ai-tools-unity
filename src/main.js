@@ -5,9 +5,9 @@ import App from './App'
 import router from './router'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
-import lang from 'element-ui/lib/locale/lang/en'
-import locale from 'element-ui/lib/locale'
-locale.use(lang)
+// import lang from 'element-ui/lib/locale/lang/en'
+// import locale from 'element-ui/lib/locale'
+// locale.use(lang)
 import './assets/custom-font/iconfont.css'
 import '@/assets/css/main.css'
 Vue.use(ElementUI,{size:'small'})
@@ -21,8 +21,10 @@ import animated from "animate.css"
 Vue.use(animated)
 import promptMessage from '@/components/tooltips/index.js'
 Vue.use(promptMessage)
-import drr from '@minogin/vue-drag-resize-rotate'
-Vue.component('drr', drr)
+
+import ai_zh from "./language/ai_zh";
+Vue.prototype.$lan = ai_zh
+// console.log(ai_zh)
 
 import store from './store';
 Vue.config.productionTip = false

@@ -1,21 +1,21 @@
 <template>
-  <el-form :model="imgForm" :rules="rules" label-width="80px" @submit.native.prevent>
-    <el-form-item label-width="120px" label="ExhibitionSpace" prop="region">
-      <el-select v-model="imgForm.region">
+  <el-form :model="imgForm" :rules="rules" label-width="100px" @submit.native.prevent>
+    <el-form-item :label="$lan.tools.booths" prop="region">
+      <el-select v-model="imgForm.region" placeholder="请选择展示区域">
         <el-option
           v-for="(val,ind) in InfoModelData"
           :key="ind+'infoModel'"
-          :label="'exhibition space'+val"
+          :label="$lan.tools.booths+val"
           :value="val"></el-option>
       </el-select>
     </el-form-item>
-    <el-form-item label="File">
+    <el-form-item :label="$lan.tools.uploadFile">
       <v-upload :types="'img'" ref="uploadRefVideo" @getDisplayImg="getDisplayImg"></v-upload>
     </el-form-item>
-    <el-form-item label="Duration" prop="dismissTimeType" >
+    <el-form-item :label="$lan.tools.timeSetting" prop="dismissTimeType" >
       <el-col :span="10">
-        <el-select v-model="imgForm.dismissTimeType" @change="imgTypeChange" >
-          <el-option v-for="(val,ind) in dismissTimeTypeData"
+        <el-select v-model="imgForm.dismissTimeType" @change="imgTypeChange">
+          <el-option v-for="(val,ind) in $lan.tools.dismissTimeTypeData"
                      :key="ind+'dismissTimeType'"
                      :label="val.label" :value="val.value"></el-option>
         </el-select>
@@ -34,26 +34,26 @@
       </el-col>
 
     </el-form-item>
-    <el-form-item label="Animate" >
-      <el-col :span="10">
-        <el-select v-model="imgForm.enter" placeholder="enter" clearable>
-          <el-option v-for="(val,ind) in animateList"
-                     :key="ind+'enter'"
-                     :label="val.label" :value="val.value"></el-option>
-        </el-select>
-      </el-col>
-      <el-col :span="1" class="center">-</el-col>
-      <el-col :span="10">
-        <el-select v-model="imgForm.leave" placeholder="leave" clearable>
-          <el-option v-for="(val,ind) in animateList"
-                     :key="ind+'leave'"
-                     :label="val.label" :value="val.value"></el-option>
-        </el-select>
-      </el-col>
-    </el-form-item>
+<!--    <el-form-item :label="$lan.tools.animation">-->
+<!--      <el-col :span="10">-->
+<!--        <el-select v-model="imgForm.enter" :placeholder="$lan.tools.animation_enter" clearable>-->
+<!--          <el-option v-for="(val,ind) in animateList"-->
+<!--                     :key="ind+'enter'"-->
+<!--                     :label="val.label" :value="val.value"></el-option>-->
+<!--        </el-select>-->
+<!--      </el-col>-->
+<!--      <el-col :span="1" class="center">-</el-col>-->
+<!--      <el-col :span="10">-->
+<!--        <el-select v-model="imgForm.leave" :placeholder="$lan.tools.animation_leave" clearable>-->
+<!--          <el-option v-for="(val,ind) in animateList"-->
+<!--                     :key="ind+'leave'"-->
+<!--                     :label="val.label" :value="val.value"></el-option>-->
+<!--        </el-select>-->
+<!--      </el-col>-->
+<!--    </el-form-item>-->
     <el-form-item align="right">
-      <button class="dialogBtn quxiao" @click.stop="cancel">cancel</button>
-      <button class="dialogBtn queren" @click.stop="confrim">confirm</button>
+      <button class="dialogBtn quxiao" @click.stop="cancel">{{$lan.common.cancel}}</button>
+      <button class="dialogBtn queren" @click.stop="confrim">{{$lan.common.confirm}}</button>
     </el-form-item>
   </el-form>
 </template>
@@ -79,8 +79,8 @@
       return{
         rules: {},
         dismissTimeTypeData:[
-          {label:'To the end of the play',value:1},
-          {label:'Custom duration',value:2},
+          {label:'至剧本播放结束',value:1},
+          {label:'自定义时长',value:2},
         ],
         animateList:[]
       }

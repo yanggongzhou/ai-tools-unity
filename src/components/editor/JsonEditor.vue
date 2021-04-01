@@ -8,15 +8,6 @@
              :key="ind+'model'">
           <div class="left_icon">
             <i class="view el-icon-view" @click="previewBtn(val,ind)"></i>
-<!--            <el-popconfirm-->
-<!--              confirmButtonText='是的'-->
-<!--              cancelButtonText='取消'-->
-<!--              icon="el-icon-info"-->
-<!--              iconColor="red"-->
-<!--              title="这一段内容确定删除吗？"-->
-<!--              @onConfirm="delBtn(ind)">-->
-<!--              <i v-show="ScriptList.length!==1" slot="reference" class="delete el-icon-more"></i>-->
-<!--            </el-popconfirm>-->
             <el-dropdown @command="proto=>handleCommand(ind,proto)" trigger="click">
               <i class="moremore el-icon-arrow-down el-icon-more"></i>
               <el-dropdown-menu slot="dropdown">
@@ -42,7 +33,7 @@
         </div>
       </div>
       <div class="left_add" @click="addScript">
-        + Add
+        + {{$lan.common.add}}
       </div>
     </div>
 
@@ -97,8 +88,8 @@
           :show-close='false'
         >
           <el-input-number style='width: 110px;' v-model="intervalValue" controls-position="right" :step="0.5" :min="0.5" :max="10000"></el-input-number> s<br/>
-          <button class="dialogBtn quxiao" style='width:50px;border-radius:4px;' @click.stop="timerVisible = false">cancel</button>
-          <button class="dialogBtn queren" style='width:50px;margin-top:0;border-radius:4px;' @click.stop="addTag('间隔',intervalValue)">confirm</button>
+          <button class="dialogBtn quxiao" style='width:50px;border-radius:4px;' @click.stop="timerVisible = false">{{$lan.common.cancel}}</button>
+          <button class="dialogBtn queren" style='width:50px;margin-top:0;border-radius:4px;' @click.stop="addIntervalTag(intervalValue)">{{$lan.common.confirm}}</button>
         </div>
 
         <div class="p10"
@@ -106,10 +97,10 @@
              v-loading="actionLoading">
           <el-tooltip  :open-delay="1000" placement="bottom" effect="dark">
             <div slot="content">
-              <p class="center tip_title">Actions</p>
-              <p class="center">The next action tag will only execute the last one!</p>
+              <p class="center tip_title">{{$lan.tools.action_title}}</p>
+              <p class="center" v-html="$lan.tools.action_title_tip_c"></p>
             </div>
-            <span class="actionTitle">Actions</span>
+            <span class="actionTitle">{{$lan.tools.action_title_tip_t}}</span>
           </el-tooltip>
 
           <el-tooltip :open-delay="300" v-for="(val,ind) in actionShowList" :key="ind+'animation'" placement="top">
@@ -132,11 +123,11 @@
       <video id="videoDuration" :src="ruleForm.videoUrl"></video>
     </div>
     <el-dialog  top="30vh" :visible.sync="isShowDelDialog" width='30%' style='text-align:center;'>
-      <i class="el-icon-warning-outline" style='font-size:42px;color:#7455FF;margin-bottom:18px;font-weight:600;'></i>
-      <div>Are you sure you want to delete? paragraph:{{confrimDelInd+1}}？</div>
+      <i class="el-icon-warning-outline" style='font-size:42px;color:#5C83FF;margin-bottom:18px;font-weight:600;'></i>
+      <div>{{$lan.tools.delete_paragraph_tip}} {{confrimDelInd+1}}？</div>
       <span slot="footer" class="dialog-footer">
-                    <el-button class="cancel" @click="cancelDel">cancel</el-button>
-                    <el-button class="confirm" type="primary" @click="confirmDel">confirm</el-button>
+                    <el-button class="cancel" @click="cancelDel">{{$lan.common.cancel}}</el-button>
+                    <el-button class="confirm" type="primary" @click="confirmDel">{{$lan.common.confirm}}</el-button>
                 </span>
     </el-dialog>
   </div>
@@ -264,12 +255,12 @@
         scriptChangeTimeout:'',
 
         dropdownData:[
-          {label:"up",value:'1',icon:"el-icon-caret-top"},
-          {label:"down",value:'2',icon:'el-icon-caret-bottom'},
-          {label:"top",value:'3',icon:'el-icon-top'},
-          {label:"bottom",value:'4',icon:'el-icon-bottom'},
-          {label:"insert",value:'5',icon:'el-icon-circle-plus-outline'},
-          {label:"delete",value:'6',icon:'el-icon-delete'},
+          {label:"上移",value:'1',icon:"el-icon-caret-top"},
+          {label:"下移",value:'2',icon:'el-icon-caret-bottom'},
+          {label:"置顶",value:'3',icon:'el-icon-top'},
+          {label:"置底",value:'4',icon:'el-icon-bottom'},
+          {label:"插入",value:'5',icon:'el-icon-circle-plus-outline'},
+          {label:"删除",value:'6',icon:'el-icon-delete'},
         ],
 
         ComputerWords:''
@@ -278,6 +269,7 @@
     created() {
       window.WebActionInfo= this.WebActionInfo
       window.WebSelectAvatarState = this.WebSelectAvatarState
+      window.WebPreviewEnd = this.WebPreviewEnd
       this.ComputerWords = new ComputerWords()
     },
     mounted() {
@@ -448,7 +440,7 @@
           }
           this.ScriptList[ind] = JSON.parse(JSON.stringify(this.ScriptList.splice(ind-1,1,this.ScriptList[ind])[0]))
         }else{
-          this.$message.warning('already top')
+          this.$message.warning(this.$lan.tools.alreadyTop)
         }
       },
       //下移
@@ -460,7 +452,7 @@
           }
           this.ScriptList[ind] = JSON.parse(JSON.stringify(this.ScriptList.splice(ind+1,1,this.ScriptList[ind])[0]))
         }else{
-          this.$message.warning('already bottom')
+          this.$message.warning(this.$lan.tools.alreadyBottom)
         }
       },
       //置顶
@@ -472,7 +464,7 @@
           }
           this.ScriptList.unshift(this.ScriptList.splice(ind , 1)[0]);
         }else{
-          this.$message.warning('already top')
+          this.$message.warning(this.$lan.tools.alreadyTop)
         }
       },
       //置底
@@ -484,7 +476,7 @@
           }
           this.ScriptList.push(this.ScriptList.splice(ind , 1)[0]);
         }else{
-          this.$message.warning('already bottom')
+          this.$message.warning(this.$lan.tools.alreadyBottom)
         }
       },
       //插入
@@ -528,7 +520,7 @@
       previewBtn(val,ind){
         UnityPreviewCancel()
         if(!this.previewReady){
-          this.$message.warning('Resource loading, please wait...')
+          this.$message.warning(this.$lan.common.resourceLoadingMsg)
           return false;
         }
         let _content='';
@@ -537,7 +529,7 @@
             _content += value.content;
           })
           if(val.param.length===0 || !_content.replace(/[\ |\~|\`|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\-|\_|\+|\=|\||\\|\[|\]|\{|\}|\;|\:|\"|\'|\,|\<|\.|\>|\/|\?|\r\n]/g,"").match(/[\u4e00-\u9fa5\0-9]/g)){
-            this.$message.error('Please confirm that the current paragraph contains valid text！')
+            this.$message.error(this.$lan.tools.isValidTextMsg2)
             return false
           }
           UnityPreview(val.avatar.unity,JSON.stringify([val]),"True","False")
@@ -550,7 +542,7 @@
               _content += value.content;
             })
             if(_jsonArr.param.length===0 || !_content.replace(/[\ |\~|\`|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\-|\_|\+|\=|\||\\|\[|\]|\{|\}|\;|\:|\"|\'|\,|\<|\.|\>|\/|\?|\r\n]/g,"").match(/[\u4e00-\u9fa5\0-9]/g)){
-              this.$message.error('Please confirm that the current paragraph contains valid text！')
+              this.$message.error(this.$lan.tools.isValidTextMsg2)
               return false
             }
             UnityPreview(val.avatar.unity,JSON.stringify([_jsonArr]),"True","False")
@@ -603,19 +595,22 @@
         if(state==='True'){
           UnityAvatarMotionInfo(this.ResultJson.avatar.unity);
         }else if(state==='False'){
-          this.$message.error('Failed to change avatar. Please try again')
+          this.$message.error(this.$lan.common.changeAvatarFailMsg)
           // this.previewReady = false;
         }
       },
       WebPreviewReady(state){
         if(state==='True'){
+          this.$store.commit('set_pcVisible',true)
           UnityPreviewStart(this.ResultJson.avatar.unity);
         }else if(state==='False'){
-          this.$message.error('Failed to load resource. Please try again')
+          this.$message.error(this.$lan.common.resourceLoadingFailMsg)
         }
         this.previewReady = true;
       },
-
+      WebPreviewEnd(){
+        this.$store.commit('set_pcVisible',false)
+      },
       //切换段落
       scriptChange(val){
         let self = this;
@@ -767,7 +762,7 @@
             if(val.isAll){
               _time = 'all'
             }
-            let _imageDom = `<wise id="`+val.id+`" data-obj="`+_data+`"><div class="tag_image tagtag" onclick="editTag(\``+val.id+`\`)">IMG`+val.name+' ('+_time+`)<i class="el-icon-close" onclick="delTag(\``+val.id+`\`)"></i></div>&nbsp;</wise>`
+            let _imageDom = `<wise id="`+val.id+`" data-obj="`+_data+`"><div class="tag_image tagtag" onclick="editTag(\``+val.id+`\`)">`+self.$lan.tools.img+val.name+' ('+_time+`)<i class="el-icon-close" onclick="delTag(\``+val.id+`\`)"></i></div>&nbsp;</wise>`
             // contentBDArr[val.index]= _imageDom + contentBDArr[val.index]
             if(contentBDArr[val.index]===undefined){
               contentBDArr[val.index] = _imageDom
@@ -783,7 +778,7 @@
             if(val.isAll){
               _time = 'all'
             }
-            let _videoDom = `<wise id="`+val.id+`" data-obj="`+_data+`"><div class="tag_video tagtag" onclick="editTag(\``+val.id+`\`)">VIDEO`+val.name+' ('+_time+`)<i class="el-icon-close" onclick="delTag(\``+val.id+`\`)"></i></div>&nbsp;</wise>`
+            let _videoDom = `<wise id="`+val.id+`" data-obj="`+_data+`"><div class="tag_video tagtag" onclick="editTag(\``+val.id+`\`)">`+self.$lan.tools.video+val.name+' ('+_time+`)<i class="el-icon-close" onclick="delTag(\``+val.id+`\`)"></i></div>&nbsp;</wise>`
             if(contentBDArr[val.index]===undefined){
               contentBDArr[val.index] = _videoDom
             }else{
@@ -798,7 +793,7 @@
               _time = 'all'
             }
             let _data = JSON.stringify({type:'text',text:val.text,textColor:val.textColor,textSize:val.textSize,id:val.id,gravity:val.gravity,region:val.region,ellipsize:val.ellipsize,isAll:val.isAll,dismissTime:val.dismissTime,fontFamily:val.fontFamily,enter:val.enter,leave:val.leave}).replace(/"/g,"&quot;")
-            let _textDom = `<wise id="`+val.id+`" data-obj="`+_data+`"><div class="tag_text tagtag" onclick="editTag(\``+val.id+`\`)">TEXT`+ ' ('+_time+`)<i class="el-icon-close" onclick="delTag(\``+val.id+`\`)"></i></div>&nbsp;</wise>`
+            let _textDom = `<wise id="`+val.id+`" data-obj="`+_data+`"><div class="tag_text tagtag" onclick="editTag(\``+val.id+`\`)">`+self.$lan.tools.text+ ' ('+_time+`)<i class="el-icon-close" onclick="delTag(\``+val.id+`\`)"></i></div>&nbsp;</wise>`
             if(contentBDArr[val.index]===undefined){
               contentBDArr[val.index] = _textDom
             }else{
@@ -822,7 +817,7 @@
             }
           }else if(val.type==="interval"){
             let _data = JSON.stringify({id:self.getGuid(),type:'interval', time:val.time}).replace(/"/g,"&quot;")
-            let _intervalDom = `<wise id="`+val.id+`" data-obj="`+_data+`"><div class="tag_interval tagtag" onclick="editTag(\``+val.id+`\`)">INTERVAL(`+val.time/1000+`s)<i class="el-icon-close" onclick="delTag(\``+val.id+`\`)"></i></div>&nbsp;</wise>`
+            let _intervalDom = `<wise id="`+val.id+`" data-obj="`+_data+`"><div class="tag_interval tagtag" onclick="editTag(\``+val.id+`\`)">`+self.$lan.tools.interval+`(`+val.time/1000+`s)<i class="el-icon-close" onclick="delTag(\``+val.id+`\`)"></i></div>&nbsp;</wise>`
             if(contentBDArr[val.index]===undefined){
               contentBDArr[val.index] = _intervalDom
             }else{
@@ -833,7 +828,7 @@
             }
           }else if(val.type==="interaction"){
             let _data = JSON.stringify({id:self.getGuid(),type:'interaction', maximum:val.maximum,isSupport:val.isSupport}).replace(/"/g,"&quot;")
-            let _intervalDom = `<wise id="`+val.id+`" data-obj="`+_data+`"><div class="tag_interaction tagtag" onclick="editTag(\``+val.id+`\`)">INTERACTION<i class="el-icon-close" onclick="delTag(\``+val.id+`\`)"></i></div>&nbsp;</wise>`
+            let _intervalDom = `<wise id="`+val.id+`" data-obj="`+_data+`"><div class="tag_interaction tagtag" onclick="editTag(\``+val.id+`\`)">`+self.$lan.tools.interaction+`<i class="el-icon-close" onclick="delTag(\``+val.id+`\`)"></i></div>&nbsp;</wise>`
             if(contentBDArr[val.index]===undefined){
               contentBDArr[val.index] = _intervalDom
             }else{
@@ -1131,7 +1126,7 @@
 
       handleAddVideo(){
         if(!this.InfoModelData.length){
-          this.$message.error('Please add exhibition space first')
+          this.$message.error(this.$lan.tools.infoModel_tip)
           return
         }
         this.videoVisible = true;
@@ -1154,7 +1149,7 @@
       },
       handleAddImage(){
         if(!this.InfoModelData.length){
-          this.$message.error('Please add exhibition space first')
+          this.$message.error(this.$lan.tools.infoModel_tip)
           return
         }
         this.imgVisible = true;
@@ -1196,7 +1191,7 @@
             break;
           case 'text':
             if(!this.InfoModelData.length){
-              this.$message.error('Please add exhibition space first')
+              this.$message.error(this.$lan.tools.infoModel_tip)
               return
             }
             this.textVisible = true;
@@ -1230,22 +1225,20 @@
           maximum:10,
           id:_id
         }
-        let _text =  `<div class="tag_interaction tagtag" onclick="editTag(\``+_id+`\`)">INTERACTION<i class="el-icon-close" onclick="delTag(\``+_id+`\`)"></i>&nbsp;</div>`
+        let _text =  `<div class="tag_interaction tagtag" onclick="editTag(\``+_id+`\`)">`+self.$lan.tools.interaction+`<i class="el-icon-close" onclick="delTag(\``+_id+`\`)"></i>&nbsp;</div>`
         this.$refs.testText.addTag(_text,_data)
       },
-      addTag (type,interval) {
+      addIntervalTag (interval) {
         let self = this;
         let _id=this.getGuid()
-        if(type==='间隔'){
-          let _data = {
-            type:'interval',
-            time:interval*1000,
-            id:_id
-          }
-          let _text =  `<div class="tag_interval tagtag" onclick="editTag(\``+_id+`\`)">INTERVAL(`+self.intervalValue+`s)<i class="el-icon-close" onclick="delTag(\``+_id+`\`)"></i>&nbsp;</div>`
-          this.$refs.testText.addTag(_text,_data)
+        this.timerVisible = false;
+        let _data = {
+          type:'interval',
+          time:interval*1000,
+          id:_id
         }
-        // this.$refs.testText.addTag(text,dataId)
+        let _text =  `<div class="tag_interval tagtag" onclick="editTag(\``+_id+`\`)">`+self.$lan.tools.interval+`(`+self.intervalValue+`s)<i class="el-icon-close" onclick="delTag(\``+_id+`\`)"></i>&nbsp;</div>`
+        this.$refs.testText.addTag(_text,_data)
       },
       //插入动作tag
       addAction(val){
@@ -1281,7 +1274,7 @@
         switch (type) {
           case 'text':
             if (!data.text.replace(/ /g, '')) {
-              this.$message.error('Please enter the text')
+              this.$message.error(this.$lan.tools.textForm_tip)
               return false;
             }
             _data = {
@@ -1303,7 +1296,7 @@
             if (data.isAll) {
               _time = 'all'
             }
-            _text = `<div class="tagtag tag_text" onclick="editTag(\`` + _id + `\`)">TEXT` + ' (' + _time + `)<i class="el-icon-close" onclick="delTag(\`` + _id + `\`)"></i>&nbsp;</div>`
+            _text = `<div class="tagtag tag_text" onclick="editTag(\`` + _id + `\`)">`+this.$lan.tools.text + ' (' + _time + `)<i class="el-icon-close" onclick="delTag(\`` + _id + `\`)"></i>&nbsp;</div>`
             if (this.editTagId) {
               UnityEditTag(JSON.stringify(_data),'True')
               let _oldTag = NodeToString(document.getElementById(_id)).replace("<", "<").replace(">", ">");
@@ -1322,11 +1315,11 @@
 
           case 'video':
             if (!data.videoUrl) {
-              this.$message.error('Please upload the file first')
+              this.$message.error(this.$lan.tools.upload_tip1)
               return
             }
             if (!data.dismissTime) {
-              this.$message.error('Please confirm the presentation time')
+              this.$message.error(this.$lan.tools.upload_tip2)
               return
             }
             _data = {
@@ -1345,7 +1338,7 @@
             if (data.isAll) {
               _time = 'all'
             }
-            _text = `<div class="tagtag tag_video" onclick="editTag(\`` + _id + `\`)">VIDEO` + data.videoName + ` (` + _time + `)<i class="el-icon-close" onclick="delTag(\`` + _id + `\`)"></i>&nbsp;</div>`
+            _text = `<div class="tagtag tag_video" onclick="editTag(\`` + _id + `\`)">`+this.$lan.tools.video + data.videoName + ` (` + _time + `)<i class="el-icon-close" onclick="delTag(\`` + _id + `\`)"></i>&nbsp;</div>`
             if (this.editTagId) {
               UnityEditTag(JSON.stringify(_data),'True')
               let _oldTag = NodeToString(document.getElementById(_id)).replace("<", "<").replace(">", ">");
@@ -1364,11 +1357,11 @@
 
           case 'img':
             if (!data.url) {
-              this.$message.error('Please upload the file first')
+              this.$message.error(this.$lan.tools.upload_tip1)
               return
             }
             if (!data.dismissTime) {
-              this.$message.error('Please confirm the presentation time')
+              this.$message.error(this.$lan.tools.upload_tip2)
               return false;
             }
             _data = {
@@ -1386,7 +1379,7 @@
             if (data.isAll) {
               _time = 'all'
             }
-            _text = `<div class="tagtag tag_image" onclick="editTag(\`` + _id + `\`)">IMG` + data.name + ` (` + _time + `)<i class="el-icon-close" onclick="delTag(\`` + _id + `\`)"></i>&nbsp;</div>`
+            _text = `<div class="tagtag tag_image" onclick="editTag(\`` + _id + `\`)">`+this.$lan.tools.video + data.name + ` (` + _time + `)<i class="el-icon-close" onclick="delTag(\`` + _id + `\`)"></i>&nbsp;</div>`
             if (this.editTagId) {
               UnityEditTag(JSON.stringify(_data),'True')
               let _oldTag = NodeToString(document.getElementById(_id)).replace("<", "<").replace(">", ">");
@@ -1417,7 +1410,7 @@
 
 <style lang="less" scoped>
   /deep/.el-dialog__body {
-    padding: 25px 20px 5px!important;
+    padding: 40px 20px 5px!important;
   }
   /deep/.el-icon-loading{
     font-size: 30px !important;
@@ -1435,7 +1428,7 @@
   }
   .timerDialog {
     position: absolute;
-    top: -200px;
+    top: -190px;
     left: 196px;
     padding: 20px;
     background: #fff;

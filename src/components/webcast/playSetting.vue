@@ -1,31 +1,31 @@
 <template>
     <div id="playSetting">
         <el-tabs tab-position="left" :style="tabsStyle">
-            <el-tab-pane v-for='(tab,idx) in tabs' :key='idx' :label="tab.label">
+            <el-tab-pane v-for='(tab,idx) in $lan.webcast.tabs1' :key='idx' :label="tab.label">
                 <!-- 互动模式 -->
                 <div v-if='idx==0' class='tab inac'>
-                    <p class="title">Interactive mode rounds setting</p>
-                    <p class="tips">Rounds of interactive mode: interact with the audience after entering the interactive mode each time</p>
+                    <p class="title">{{$lan.webcast.interactionRoundsSetting_t}}</p>
+                    <p class="tips">{{$lan.webcast.interactionRoundsSetting_c}}</p>
 
                     <div class="inacType">
-                        <el-radio v-model="inacType" label="0" @change='handleChangeType'>Default all day</el-radio>
+                        <el-radio v-model="inacType" label="0" @change='handleChangeType'>{{$lan.webcast.defaultAllDay}}</el-radio>
 
-                        <span class="loop">{{fullDayLoop}}rounds</span>
+                        <span class="loop">{{fullDayLoop}}{{$lan.common.rounds}}</span>
                         <span class="center" ></span>
-                        <span class="edit" :class="{'disabled': inacType==1}" @click='handleEditFullDayLoop'>edit</span>
+                        <span class="edit" :class="{'disabled': inacType==1}" @click='handleEditFullDayLoop'>{{$lan.common.edit}}</span>
                         <!-- <span class="delete" v-if='type!="tempwords"'>删除</span> -->
                     </div>
                     <div class="inacType">
-                        <el-radio v-model="inacType" label="1" @change='handleChangeType'>Time period setting (unset time period, default to 2 rounds)</el-radio>
+                        <el-radio v-model="inacType" label="1" @change='handleChangeType'>{{$lan.webcast.timeSetting}}</el-radio>
                         <div class="detail">
-                            <p class="addInacTimePart" :class="{'disabled': inacType==0}" @click='addInacTimePart'>add</p>
+                            <p class="addInacTimePart" :class="{'disabled': inacType==0}" @click='addInacTimePart'>{{$lan.common.add}}</p>
                             <div :style='timerPartStyle'>
                                 <p class="part" v-for='(part, idx) in timeParts' :key='idx'>
                                     <span>{{part.start}} — {{part.end}}</span>
-                                    <span class="loop">{{part.rotation}}rounds</span>
+                                    <span class="loop">{{part.rotation}}{{$lan.common.rounds}}</span>
                                     <span class="center" ></span>
-                                    <span class="edit" :class="{'disabled': inacType==0}" @click='editTimePart(part, idx)'>edit</span>
-                                    <span class="delete" :class="{'disabled': inacType==0}" @click='delInac(part)'>delete</span>
+                                    <span class="edit" :class="{'disabled': inacType==0}" @click='editTimePart(part, idx)'>{{$lan.common.edit}}</span>
+                                    <span class="delete" :class="{'disabled': inacType==0}" @click='delInac(part)'>{{$lan.common.delete}}</span>
                                 </p>
                             </div>
                         </div>
@@ -35,11 +35,19 @@
 
                 <!-- 紧急联系人 -->
                 <div v-if='idx==1'>
-                    <p style='font-size:14px;margin-bottom:10px;'>Emergency contact</p>
+                    <p style='font-size:14px;margin-bottom:10px;'>{{$lan.webcast.emergencyContact}}</p>
                     <p>
-                        <span style='font-size:14px;margin-right:10px;'>Phone</span><el-input style='width:300px;' v-model="liaison" @input='handleLiaIptChange("liaison")' :disabled='liaDisabled' maxlength='11' autocomplete="off" clearable></el-input>
+                        <span style='font-size:14px;margin-right:10px;'>{{$lan.webcast.phone}}</span><el-input style='width:300px;' v-model="liaison" @input='handleLiaIptChange("liaison")' :disabled='liaDisabled' maxlength='11' autocomplete="off" clearable></el-input>
                     </p>
-                    <p class="tips" style='margin-top:10px;margin-left:60px;'>The mobile phone number of the emergency contact is used to receive SMS notification of abnormal situations such as live broadcast interruption! The default registered mobile phone number can be modified.</p>
+                    <p class="tips" style='margin-top:10px;margin-left:60px;'>{{$lan.webcast.phone_tip}}</p>
+                    <!-- <p v-if='liaisonBtnTxt=="保存"'>
+                        <span style='font-size:14px;margin-right:10px'>验证码</span><el-input style='width:140px;' v-model="captcha" @input='handleLiaIptChange("captcha")' :disabled='liaDisabled' maxlength='6' autocomplete="off" clearable></el-input>
+                        <el-button
+                            class="fetchCaptcha"
+                            :disabled="(!isFetchCaptcha)?false:true"
+                            @click='fetchCaptcha'
+                        >{{captchaBtnTxt}}</el-button>
+                    </p> -->
                     <p style='margin: 40px 0 0 60px;'>
                         <el-button @click='handleLiaBtn'>{{liaisonBtnTxt}}</el-button>
                     </p>
@@ -49,7 +57,7 @@
         </el-tabs>
 
         <div v-if='isShowAddInacTime' class="addInacTimeDialog">
-            <p>Time interval</p>
+            <p>{{$lan.webcast.timeSelect}}</p>
             <el-time-select
                 :disabled='inacType==0'
                 v-model="startTime"
@@ -75,11 +83,11 @@
                 style="width: 100px"
             >
             </el-time-select>
-            <p>Rounds</p>
-            <p><el-input style='width: 100px' v-model='addInacLoop' @input='handleIptChange'></el-input> rounds</p>
+            <p>{{$lan.common.rounds}}</p>
+            <p><el-input style='width: 100px' v-model='addInacLoop' @input='handleIptChange'></el-input> {{$lan.common.rounds}}</p>
             <p>
-                <button class="cancel" @click='cancel'>cancel</button>
-                <button class="confirm" @click='confirm'>confirm</button>
+                <button class="cancel" @click='cancel'>{{$lan.common.cancel}}</button>
+                <button class="confirm" @click='confirm'>{{$lan.common.confirm}}</button>
             </p>
         </div>
     </div>
@@ -110,17 +118,6 @@
         },
         data() {
             return {
-                tabs: [
-                    {
-                        label: 'Interaction'
-                    },
-                    {
-                        label: 'Emergency'
-                    },
-                    // {
-                    //     label: 'haha管理'
-                    // }
-                ],
                 inacType: '0', // 0-全天，1-分时段设置
                 fullDayLoop: 2, // 全天轮数
                 timeParts: [
@@ -148,7 +145,7 @@
                 handleType: '',
                 currentEditID: '',
                 liaison: '',
-                liaisonBtnTxt: 'save',
+                liaisonBtnTxt: '保存',
                 liaDisabled: false,
                 captcha: '',
                 isFetchCaptcha: false,
@@ -210,10 +207,10 @@
                 // console.log(Number(this.addInacLoop), Number(this.addInacLoop)==0&&this.addInacLoop!='')
                 if(this.addInacLoop>5) {
                     this.addInacLoop = 5;
-                    this.$message.info('Up to 5 rounds');
+                    this.$message.info('最多设置为5轮');
                 }else if(Number(this.addInacLoop)==0&&this.addInacLoop!='') {
                     this.addInacLoop = 1;
-                    this.$message.info('The minimum setting is 1 round');
+                    this.$message.info('最少设置为1轮');
                 }
             },
             editTimePart(_item, _idx) {
@@ -268,7 +265,7 @@
                     }
 
                     if(!isGoon) {
-                        this.$message.error('Time overlaps～')
+                        this.$message.error('时间重叠了噢～')
                         return;
                     }
                 }
@@ -309,7 +306,7 @@
                     subsection_id: _item.id
                 }).then(res => {
                     if(res.return_code==1000) {
-                        this.$message.success('Successfully deleted')
+                        this.$message.success('删除成功')
                         this.getInacType();
                     }
                 })
@@ -323,7 +320,7 @@
                     if(res.return_code==1000) {
                         this.liaison = res.result.phone.phone;
                         this.liaDisabled = true;
-                        this.liaisonBtnTxt = 'edit';
+                        this.liaisonBtnTxt = '编辑';
                     }
                 })
             },
@@ -332,7 +329,7 @@
             },
             fetchCaptcha() {
                 if(!(/^1(3|4|5|6|7|8|9)\d{9}$/.test(this.liaison))){
-                    this.$message.error('Wrong mobile phone number, please fill in again');
+                    this.$message.error('手机号码有误，请重填');
                     return;
                 }
                 requestServices.getCaptcha({
@@ -354,27 +351,27 @@
                         }
                         }, 1000);
                     }else {
-                        this.$message.error('SMS sending failed, please get it again~')
+                        this.$message.error('短信发送失败，请重新获取~')
                     }
                 })
             },
             handleLiaBtn() {
                 switch(this.liaisonBtnTxt) {
-                    case 'save':
+                    case '保存':
                         // if(this.captcha=='') {
                         //     this.$message.error('请输入短信验证码')
                         //     return;
                         // }
 
                         if(!(/^1(3|4|5|6|7|8|9)\d{9}$/.test(this.liaison))){
-                            this.$message.error('The phone number is wrong. Please fill in again');
+                            this.$message.error('手机号码有误，请重填');
                             return;
                         }
                         this.addMonitorPhone()
                         break;
-                    case 'edit':
+                    case '编辑':
                         this.liaDisabled = false;
-                        this.liaisonBtnTxt = 'save';
+                        this.liaisonBtnTxt = '保存';
                         break;
                 }
             },
@@ -387,8 +384,8 @@
                     // console.log('addMonitorPhone: ', res)
                     if(res.return_code==1000) {
                         this.liaDisabled = true;
-                        this.liaisonBtnTxt = 'edit';
-                        this.$message.success('success');
+                        this.liaisonBtnTxt = '编辑';
+                        this.$message.success('保存成功');
                     }
                 })
             }

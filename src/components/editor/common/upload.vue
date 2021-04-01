@@ -10,12 +10,12 @@
     :on-change="fileChange"
     :auto-upload="false">
     <el-button type='warning' size="small" round>
-      <span v-if="types==='video'">Upload video</span>
-      <span v-if="types==='img'">Upload image</span>
+      <span v-if="types==='video'">{{$lan.tools.upload_video}}</span>
+      <span v-if="types==='img'">{{$lan.tools.upload_img}}</span>
     </el-button>
   </el-upload>
-  <span v-if="types==='video'" class="upload_tip">*Support MP4 format, up to 200M</span>
-  <span v-if="types==='img'" class="upload_tip">*Support JPG, PNG, GIF format, up to 5M</span>
+  <span v-if="types==='video'" class="upload_tip">{{$lan.tools.upload_video_tip}}</span>
+  <span v-if="types==='img'" class="upload_tip">{{$lan.tools.upload_img_tip}}</span>
 </div>
 </template>
 <script>
@@ -55,12 +55,12 @@
             // const isMOV = file.raw.type === 'video/mov';
             const isLt256M = file.raw.size / 1024 / 1024 < 200;
             if (!isMP4) { //&&!isAVI&&!isMOV
-              this.$message.error('Upload video can only be in MP4 format!'); ///avi/mov
+              this.$message.error(this.$lan.tools.upload_video_msg1); ///avi/mov
               this.tempList = [];
               return false;
             }
             if (!isLt256M) {
-              this.$message.error('Upload video size cannot exceed 200MB!');
+              this.$message.error(this.$lan.tools.upload_video_msg2);
               this.tempList = [];
               return false;
             }
@@ -74,12 +74,12 @@
             const isJPG = file.raw.type === 'image/jpeg';
             const isLt5M = file.raw.size / 1024 / 1024 < 5;
             if (!isJPG&&!isPNG&&!isGif) {
-              this.$message.error('The uploaded image can only be in JPG / PNG / GIF format!');
+              this.$message.error(this.$lan.tools.upload_img_msg1);
               this.tempList = [];
               return false;
             }
             if (!isLt5M) {
-              this.$message.error('The size of the uploaded image cannot exceed 5MB!');
+              this.$message.error(this.$lan.tools.upload_img_msg2);
               this.tempList = [];
               return false;
             }
@@ -114,7 +114,7 @@
   .upload_tip{
     position: absolute;
     top: 0px;
-    left: 117px;
+    left: 96px;
     font-size: 12px;
     color: #9E9E9E;
   }

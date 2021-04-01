@@ -1,10 +1,10 @@
 <template>
  <div class="checkBox">
-   <div class="title">Script:{{scriptName}}</div>
+   <div class="title">{{$lan.myscript.script}}:{{scriptName}}</div>
    <div class="content" v-for="(val,ind) in scriptRow" :key="ind">
      <div class="subtitle clearfix">
        <span class="subtitle-text">{{ind | indFilter}}</span>
-       <el-button class="float_right" size="small" type="text" @click="previewBtn(val)">preview</el-button>
+       <el-button class="float_right" size="small" type="text" @click="previewBtn(val)">{{$lan.common.preview}}</el-button>
      </div>
      <div class="textArea">
        {{val | contentFilter}}
@@ -27,7 +27,7 @@
         return _content;
       },
       indFilter(value){
-        let _txt = 'Paragraph'+NumToCh.NumberToChinese(value+1)
+        let _txt = '第'+NumToCh.NumberToChinese(value+1)+'段'
         return _txt;
       }
     },
@@ -40,6 +40,7 @@
     created() {
       window.WebPreviewReady = this.WebPreviewReady;
       window.WebSelectAvatarState=this.WebSelectAvatarState;
+      window.WebPreviewEnd=this.WebPreviewEnd;
     },
     mounted() {
       this.previewReady = true;
@@ -54,29 +55,34 @@
           UnityChangeAvatar(val.avatar.unity);
           this.previewReady = false;
         }else{
-          this.$message.warning('Resource loading, please wait...')
+          this.$message.warning(this.$lan.common.resourceLoadingMsg)
         }
       },
       WebSelectAvatarState(state){
         if(state==='True'){
           UnityPreview(this.previewData.avatar.unity,JSON.stringify([this.previewData]),"True","False")
         }else if(state==='False'){
-          this.$message.error('Failed to change avatar. Please try again')
+          this.$message.error(this.$lan.common.changeAvatarFailMsg)
           this.previewReady = true;
         }
       },
       WebPreviewReady(state){
         if(state==='True'){
+          this.$store.commit('set_pcVisible',true)
           UnityPreviewStart(this.previewData.avatar.unity);
         }else if(state==='False'){
-          this.$message.error('Failed to load resource, please try again')
+          this.$message.error(this.$lan.common.resourceLoadingFailMsg)
         }
         this.previewReady = true;
-      }
+      },
+      WebPreviewEnd(){
+        this.$store.commit('set_pcVisible',false)
+      },
     },
     beforeDestroy() {
       //跳转页面后强制结束播放状态
       UnityPreviewCancel();
+      this.previewReady = true;
     },
   }
 </script>

@@ -4,27 +4,27 @@
 
           <div class="scriptList">
             <div class="titleBox">
-              <span class="titleSpan">Script Table</span>
+              <span class="titleSpan">{{$lan.common.top_title}}</span>
             </div>
             <div class="tabs">
-              <span class="tab" :class="{'selected': currentSetting==1}" @click='checkSetting(1)'>Setting</span>
-              <span class="tab" :class="{'selected': currentSetting==2}" @click='checkSetting(2)'>Scene</span>
+              <span class="tab" :class="{'selected': currentSetting==1}" @click='checkSetting(1)'>{{$lan.webcast.scriptSetting}}</span>
+              <span class="tab" :class="{'selected': currentSetting==2}" @click='checkSetting(2)'>{{$lan.webcast.sceneWords}}</span>
             </div>
             <div v-if='currentSetting==1'>
               <div style="text-align: right" class="clearfix">
-                <button class='addScript' type='primary' @click='addScript'>+ Add Script</button>
+                <button class='addScript' type='primary' @click='addScript'>+ {{$lan.webcast.add}}</button>
               </div>
-              <span class="playSetting" @click='handlePlaySetting(true)' v-if='isShowPlaySettingFun'>Playback settings</span>
+              <span class="playSetting" @click='handlePlaySetting(true)' v-if='isShowPlaySettingFun'>{{$lan.webcast.playSetting}}</span>
 
-              <el-table size="mini" class='playScripts' row-key="sortId"  :data='playScriptData' style='width:100%' empty-text='none' height='388' max-height='388' >
-                <el-table-column align="center" label="Index" width='100'>
+              <el-table size="mini" class='playScripts' row-key="sortId"  :data='playScriptData' style='width:100%' :empty-text='$lan.myscript.tableNull' height='388' max-height='388' >
+                <el-table-column align="center" label="#" width='100'>
                   <template slot-scope="scope">
                     <!--                            <i class="el-icon-video-camera-solid" v-if='isPlayingIdx==scope.$index+1'></i>-->
                     <span>{{scope.$index+1}}</span>
                     <span style='display:none;'>{{scope.row.sortId}}</span>
                   </template>
                 </el-table-column>
-                <el-table-column align="center" label="GoodsId" width='100'>
+                <el-table-column align="center" :label="$lan.webcast.goodsId">
                   <template slot-scope="scope">
                     <div class="goods clearfix">
                       <span>{{scope.row.commodity_id}}</span>
@@ -32,22 +32,22 @@
                     </div>
                   </template>
                 </el-table-column>
-                <el-table-column align="center" label="Title">
+                <el-table-column align="center" :label="$lan.myscript.title">
                   <template slot-scope="scope">
                     <span>{{scope.row.name}}</span>
                   </template>
                 </el-table-column>
-                <el-table-column align="center" label="IP">
+                <el-table-column align="center" :label="$lan.myscript.ip">
                   <template slot-scope="scope">
                     <span>{{scope.row.avatar_name}}</span>
                   </template>
                 </el-table-column>
-                <el-table-column align="center" label="Paragraph">
+                <el-table-column align="center" :label="$lan.myscript.paragraph">
                   <template slot-scope="scope">
                     <span>{{scope.row.paragraph_number}}</span>
                   </template>
                 </el-table-column>
-                <el-table-column width="110" align="center" label="Play weight" :render-header="renderWeightHeader">
+                <el-table-column width="100" align="center" :label="$lan.webcast.widget" :render-header="renderWeightHeader">
                   <template slot-scope="scope">
                     <!-- <span>{{handleScriptWeight(scope.row.weight)}}</span> -->
                     <el-select v-model='scope.row.weight' @change='handleChangePlayWeight(scope.row.id, scope.$index)'>
@@ -55,42 +55,42 @@
                     </el-select>
                   </template>
                 </el-table-column>
-                <el-table-column align="center" label="Handle" :render-header="renderHeader" width='120' >
+                <el-table-column align="center" :label="$lan.common.handle" :render-header="renderHeader" width='120' >
                   <template slot-scope="scope">
-                    <el-button @click='handleDelete(scope.$index, scope.row.id)' type="text" size="small">Move</el-button>
+                    <el-button @click='handleDelete(scope.$index, scope.row.id)' type="text" size="small">{{$lan.webcast.remove}}</el-button>
                   </template>
                 </el-table-column>
               </el-table>
               <!-- 剧本列表 -->
               <transition name='slide'>
                 <div class="allScriptList" v-if='isShowAllList'>
-                  <h3>Script Table</h3>
+                  <h3>{{$lan.common.top_title}}</h3>
                   <div class="filter">
-                    <span>IP：</span>
-                    <el-select class="filterOptions" @change='fetchAllScripts' v-model='anchorRoleValue'>
-                      <el-option
-                        v-for='(role,idx) in anchorRoles'
-                        :key='idx'
-                        :label='role.label'
-                        :value='role.value'
-                      ></el-option>
-                    </el-select>
-                    <el-button class='search_btn' @click="fetchAllScripts">search</el-button>
-                    <el-input  class='search_ipt' v-model="searchScriptName" placeholder="title" clearable></el-input>
+<!--                    <span>关联IP形象：</span>-->
+<!--                    <el-select class="filterOptions" @change='fetchAllScripts' v-model='anchorRoleValue'>-->
+<!--                      <el-option-->
+<!--                        v-for='(role,idx) in anchorRoles'-->
+<!--                        :key='idx'-->
+<!--                        :label='role.label'-->
+<!--                        :value='role.value'-->
+<!--                      ></el-option>-->
+<!--                    </el-select>-->
+                    <el-button class='search_btn' @click="fetchAllScripts">{{$lan.common.search}}</el-button>
+                    <el-input  class='search_ipt' v-model="searchScriptName" :placeholder="$lan.myscript.title" clearable></el-input>
                   </div>
 
-                  <el-table size="mini" border :data='scriptData' style='width:100%' empty-text='none' max-height='250' v-if='scriptData.length!=0'>
-                    <el-table-column label="Check" align="center" width='80'>
+                  <el-table size="mini" border :data='scriptData' style='width:100%' :empty-text='$lan.myscript.tableNull' max-height='250' v-if='scriptData.length!=0'>
+                    <el-table-column label="#" align="center" width='80'>
                       <template slot-scope="scope">
                         <el-checkbox size="mini" v-model="scope.row.isChecked" :disabled="scope.row.isDisabled" @change='handleCheckScript(scope.$index)'></el-checkbox>
                       </template>
                     </el-table-column>
-                    <el-table-column label="Title" align="center">
+                    <el-table-column :label="$lan.myscript.title" align="center">
                       <template slot-scope="scope">
                         <span>{{scope.row.name}}</span>
                       </template>
                     </el-table-column>
-                    <el-table-column label="IP" align="center">
+                    <el-table-column :label="$lan.myscript.ip" align="center">
                       <template slot-scope="scope">
                         <span>{{scope.row.avatar_name}}</span>
                       </template>
@@ -100,27 +100,28 @@
                     <!--                                    <span>{{handleScriptTime(scope.row.time)}}</span>-->
                     <!--                                </template>-->
                     <!--                            </el-table-column>-->
-                    <el-table-column label="Paragraph" align="center">
+                    <el-table-column :label="$lan.myscript.paragraph" align="center">
                       <template slot-scope="scope">
                         <span>{{scope.row.paragraph_number}}</span>
                       </template>
                     </el-table-column>
-                    <el-table-column label="Handle" align="center" width='100'>
+                    <el-table-column :label="$lan.common.handle" align="center" width='100'>
                       <template slot-scope="scope">
-                        <el-button class="previewBtn" @click='handlePreview(scope.row)' type="text" size="mini">preview</el-button>
+                        <el-button class="previewBtn" @click='handlePreview(scope.row)' type="text" size="mini">{{$lan.common.preview}}</el-button>
                       </template>
                     </el-table-column>
                   </el-table>
                   <div class="noScript" v-if='scriptData.length==0'>
-                     <span @click='gotopage'>New Script</span>
+                    {{$lan.myscript.tableNull}} <span @click='gotopage'>{{$lan.myscript.createScript}}</span>
                   </div>
 
                   <div class="chooseBox">
                     <!-- :indeterminate='isChooseAllScript'  -->
-                    <el-checkbox v-model='checkAll' :disabled="checkAllDisabled" @change='handleCheckAll' v-if='scriptData.length!=0'>all</el-checkbox>
+                    <el-checkbox v-model='checkAll' :disabled="checkAllDisabled" @change='handleCheckAll' v-if='scriptData.length!=0'>
+                      {{$lan.webcast.selectAll}}</el-checkbox>
                     <span>
-                              <button class='cancelChoose' @click="cancelChoose">cancel</button>
-                              <button class='confirmChoose' :class="{'disabled': !isAddedScript}" v-if='scriptData.length!=0' type="primary" @click="confirmChoose">confirm</button>
+                              <button class='cancelChoose' @click="cancelChoose">{{$lan.common.cancel}}</button>
+                              <button class='confirmChoose' :class="{'disabled': !isAddedScript}" v-if='scriptData.length!=0' type="primary" @click="confirmChoose">{{$lan.common.confirm}}</button>
                           </span>
                   </div>
                 </div>
@@ -130,7 +131,7 @@
               <transition name='slide'>
                 <div class="playSettingWrap" v-if='isShowPlaySetting'>
                   <i class="el-icon-close" @click='handlePlaySetting(false)'></i>
-                  <p class="title">Playback settings</p>
+                  <p class="title">{{$lan.webcast.playSetting}}</p>
                   <PlaySetting :tabsHeight='playTableHeight'></PlaySetting>
                 </div>
               </transition>
@@ -145,15 +146,15 @@
           <div class="handleWebcastBtnBox">
             <button class='handleWebcastBtn' v-if="playScriptData.length" :class="{'disabled': isShowAllList}" @click='handleWebcast'>
               <span></span>
-              Start
+              {{$lan.app.goLive}}
             </button>
 
           </div>
         </div>
       <div class="setGoodsId" v-if='isShowSetGoodsId' :style='setGoodsIdStyle'>
-        <el-input placeholder="Please input the corresponding commodity number" v-model="iptGoodsId" maxlength='3' @input="handleIptGoodsId"></el-input>
-        <button class="cancel" @click='cancelSetGoodsId'>cancel</button>
-        <button class="confirm" @click='confirmSetGoodsId'>save</button>
+        <el-input :placeholder="$lan.webcast.goodsId" v-model="iptGoodsId" maxlength='3' @input="handleIptGoodsId"></el-input>
+        <button class="cancel" @click='cancelSetGoodsId'>{{$lan.common.cancel}}</button>
+        <button class="confirm" @click='confirmSetGoodsId'>{{$lan.common.save}}</button>
       </div>
     </div>
 </template>
@@ -222,19 +223,19 @@ export default {
           playWeight: [
             {
               value: 10,
-              label: 'Level 1'
+              label: '最高'
             },
             {
               value: 7,
-              label: 'Level 2'
+              label: '高'
             },
             {
               value: 5,
-              label: 'Level 3'
+              label: '中'
             },
             {
               value: 2,
-              label: 'Level 4'
+              label: '低'
             },
           ],
           previewReady:true,
@@ -261,6 +262,7 @@ export default {
     created() {
       window.WebPreviewReady = this.WebPreviewReady;
       window.WebSelectAvatarState=this.WebSelectAvatarState;
+      window.WebPreviewEnd = this.WebPreviewEnd;
     },
     mounted() {
         // this.sortPlayScript();
@@ -277,7 +279,7 @@ export default {
       },
       confirmSetGoodsId() {
         if(this.iptGoodsId=='') {
-          this.$message.error('Commodity number cannot be empty');
+          this.$message.error(this.$lan.webcast.goodsIdMsg1);
           return;
         }
         let _flag = false
@@ -288,7 +290,7 @@ export default {
           }
         }
         if(_flag) {
-          this.$message.error('The item number has been added oh～');
+          this.$message.error(this.$lan.webcast.goodsIdMsg2);
           return
         }
         this.isShowSetGoodsId = false;
@@ -300,10 +302,10 @@ export default {
           commodity_id: this.iptGoodsId,
         }).then(res => {
           if(res.return_code==1000) {
-            this.$message.success('Added successfully')
+            this.$message.success(this.$lan.common.addSuccess)
             this.fetchAllPrograms();
           }else {
-            this.$message.error('Add failed')
+            this.$message.error(this.$lan.common.addFail)
           }
         })
         this.currentEditGSID = -1;
@@ -331,7 +333,7 @@ export default {
               h('span', column.label),
               h('promptMessages', {
                 props: {
-                  messages: ['The higher the weight, the greater the probability of being repeated when playing randomly！'],
+                  messages: [this.$lan.webcast.widgetMsg],
                   icon: 'el-icon-question',
                   iconStyle: 'color:#666666;margin-left:5px;cursor:pointer;',
                   iconClick: this.emptyList
@@ -350,10 +352,10 @@ export default {
           weight: this.playScriptData[_idx].weight
         }).then(res => {
           if(res.return_code==1000) {
-            this.$message.success('Modified successfully')
+            this.$message.success(this.$lan.common.editSuccess)
             this.fetchAllPrograms();
           }else {
-            this.$message.error('Modification failed')
+            this.$message.error(this.$lan.common.editFail)
           }
         })
       },
@@ -372,7 +374,7 @@ export default {
                 UnityPreviewCancel();
                 UnityChangeAvatar(res.data[0].avatar.unity);
               }else{
-                this.$message.warning('Script data acquisition exception, please try again')
+                this.$message.warning(this.$lan.common.dataFail)
               }
             })
         },
@@ -380,19 +382,22 @@ export default {
           if(state==='True'){
             UnityPreview(this.previewData.name,this.previewData.script,"True","True")
           }else if(state==='False'){
-            this.$message.error('Failed to change avatar. Please try again')
+            this.$message.error(this.$lan.common.changeAvatarFailMsg)
             // this.previewReady = false;
           }
         },
         WebPreviewReady(state){
           if(state==='True'){
+            this.$store.commit('set_pcVisible',true)
             UnityPreviewStart(this.previewData.name);
           }else if(state==='False'){
-            this.$message.error('Failed to load resource. Please try again')
+            this.$message.error(this.$lan.common.resourceLoadingFailMsg)
           }
           this.previewReady = true;
         },
-
+        WebPreviewEnd(){
+          this.$store.commit('set_pcVisible',false)
+        },
         // 获取播放剧本列表
         fetchAllPrograms() {
             requestServices.getAllPrograms({
@@ -522,7 +527,7 @@ export default {
 
         handleWebcast() {
             if(this.playScriptData.length==0) {
-                this.$message.info('Please add play script～');
+                this.$message.info(this.$lan.webcast.addPlayScriptTip);
                 return;
             }
           this.startWebcast();
@@ -628,7 +633,7 @@ export default {
                  h('span', column.label),
                  h('promptMessages', {
                      props: {
-                        messages: ['clear list'],
+                        messages: [this.$lan.webcast.cleanList],
                         icon: 'el-icon-brush',
                         iconStyle: 'color:#666666;margin-left:5px;transform:rotate(180deg);cursor:pointer;',
                         iconClick: this.emptyList
@@ -646,11 +651,13 @@ export default {
 </script>
 <style scoped lang='less'>
   .setGoodsId button {
+    width: 82px;
+    height: 30px;
     border-radius: 17px;
     cursor: pointer;
-    width: 64px;
-    height: 26px;
-    font-size: 12px;
+    /*width: 64px;*/
+    /*height: 26px;*/
+    /*font-size: 12px;*/
     &.cancel {
       opacity: 0.7;
       color: #666;
@@ -684,7 +691,7 @@ export default {
     }
   }
   .tabs {
-    width: 179px;
+    width: 204px;
     margin-bottom: 10px;
     padding: 4px;
     box-sizing: border-box;

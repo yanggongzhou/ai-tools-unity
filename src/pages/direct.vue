@@ -9,17 +9,17 @@
                            innerStrokeColor="#e8eeff"
                            :completed-steps="completedSteps"
                            :total-steps="totalSteps">
-        <p class="midText">Scripts: {{ totalSteps }}</p>
-        <p class="midText">Progress: {{ completedSteps }}</p>
-        <button class='progress-btn' @click='progressCancelBtn' title="Uncache">X</button>
+        <p class="midText">{{$lan.direct.progress_tip1}}: {{ totalSteps }}</p>
+        <p class="midText">{{$lan.direct.progress_tip2}}: {{ completedSteps }}</p>
+        <button class='progress-btn' @click='progressCancelBtn' :title="$lan.direct.progress_tip3">X</button>
       </radial-progress-bar>
     </div>
 
     <div class="titleBox" style="margin-bottom: 10px">
-      <span class="titleSpan">Live Scripts</span>
+      <span class="titleSpan">{{$lan.common.top_title_play}}</span>
       <button class="backNormal backNormal2" @click="backBtn">
         <span class="_icon">< </span>
-        <span>Back</span>
+        <span>{{$lan.common.back}}</span>
       </button>
     </div>
 
@@ -29,12 +29,12 @@
         width="280"
         trigger="hover">
         <div class="interaction_pop">
-          <p><b>Random</b></p>
-          <p>1、After it is turned on, the script will be played randomly in the automatic live broadcast</p>
-          <p>2、According to the script weight, the higher the weight, the greater the probability of repeat play</p>
-          <p>3、It is recommended that random play be turned on when multiple plays (>4) are on</p>
+          <p><b>{{$lan.direct.randomPlay}}</b></p>
+          <p>{{$lan.direct.randomPlay_tip1}}</p>
+          <p>{{$lan.direct.randomPlay_tip2}}</p>
+          <p>{{$lan.direct.randomPlay_tip3}}</p>
         </div>
-        <span slot="reference" style="cursor: help;position: relative;top: 4px">Random</span>
+        <span slot="reference" style="cursor: help;position: relative;top: 4px">{{$lan.direct.randomPlay}}</span>
       </el-popover>
       <el-switch @change="isRandomChange" v-model="isRandom" active-color='#7694f3' style='margin:6px 18px 0 8px;' :disabled="isAutoPlayBtn"></el-switch>
       <el-popover
@@ -42,12 +42,12 @@
         width="400"
         trigger="hover">
         <div class="interaction_pop">
-          <p><b>Interactive mode</b></p>
-          <p>1、After opening, the virtual anchor can interact with consumers, answer users' questions during the interaction time, and welcome users to the live room</p>
-          <p>2、At present, the virtual anchor interaction time enters the interaction mode after the end of each script and the position with interaction label in the script. When the interaction mode is over, the script will continue to be broadcast live.</p>
-          <p>3、Opening the interactive mode must be combined with the user screen question monitoring software, and set the questions and answers in advance, otherwise the interactive mode is invalid.（ <span class='#835BFF'>The monitoring software and Q & a configuration of barrage problems need to contact the business department for handling</span> ）</p>
+          <p><b>{{$lan.direct.interactionModel}}</b></p>
+          <p>{{$lan.direct.interactionModel_tip1}}</p>
+          <p>{{$lan.direct.interactionModel_tip2}}</p>
+          <p>{{$lan.direct.interactionModel_tip3}}（ <span class='#835BFF'>{{$lan.direct.interactionModel_tip4}}</span> ）</p>
         </div>
-        <span slot="reference" style="cursor: help;position: relative;top: 4px">Interactive mode</span>
+        <span slot="reference" style="cursor: help;position: relative;top: 4px">{{$lan.direct.interactionModel}}</span>
       </el-popover>
       <el-switch @change="SwitchChange" v-model="isOpenInteractiveMode" active-color='#7694f3' style='margin-left:8px;margin-top:6px;' :disabled="isAutoPlayBtn"></el-switch>
     </div>
@@ -79,14 +79,14 @@
                :class="{'borderLeftGreen': recordId==='content'+ind+'script'+allScriptIndex}"
                :key="ind+'content'"   :style="ind | styleFilter3">
             <div class="header clearfix">
-              <div class="title float_left">paragraph:{{ind+1}}</div>
+              <div class="title float_left">第{{ind+1}}段</div>
               <div class="pdtip float_left"
                    style="color: #7694f3"
                    :style="ind | styleFilter2"
-              >It's playing...</div>
+              >正在播放中...</div>
               <div class="pdtip float_left"
                    :style="ind | styleFilter"
-              >Waiting in line...</div>
+              >排队播放中...</div>
 
               <div class="float_right play_icon" @click="previewBtn(val,ind,allScriptIndex,false)">
                 <i class="el-icon-video-play"></i>
@@ -127,16 +127,18 @@
 <!--              :class="{'disabled-icon2': isAutoPlayBtn}"-->
               <div class="icon2" @click="innerVisibleOpen" >
                 <div class="huashu"></div>
-                <span>Temporary script</span>
+                <span>{{$lan.direct.temporaryWords}}</span>
               </div>
             </el-col>
           </el-row>
         </div>
         <div class="float_right btnBox">
-          <button class='handleWebcastBtn' :class="{'disabled': queueList.length!==0||queueContentItem.length!==0||isPlaying}"  v-show="!isAutoPlayBtn" @click='autoPlayBtn'>Autoplay</button>
-          <button class='handleWebcastBtn' v-show="isAutoPlayBtn" @click='stopPlayBtn'>StopPlaying</button>
-          <el-tooltip class="item" effect="dark" content="播放下一段：【Ctrl】+【n】" placement="bottom">
-            <button class='handleWebcastBtn' style="margin-left: 30px" :disabled="isAutoPlayBtn" :class="{'disabled': isAutoPlayBtn}" @click='nextPlayBtn'>Play the next</button>
+          <button class='handleWebcastBtn' :class="{'disabled': queueList.length!==0||queueContentItem.length!==0||isPlaying}"  v-show="!isAutoPlayBtn" @click='autoPlayBtn'>
+            {{$lan.direct.autoPlay}}</button>
+          <button class='handleWebcastBtn' v-show="isAutoPlayBtn" @click='stopPlayBtn'>{{$lan.direct.stopPlay}}</button>
+          <el-tooltip class="item" effect="dark" :content="$lan.direct.playNext_ctrl" placement="bottom">
+            <button class='handleWebcastBtn' style="margin-left: 30px" :disabled="isAutoPlayBtn" :class="{'disabled': isAutoPlayBtn}" @click='nextPlayBtn'>
+              {{$lan.direct.playNext}}</button>
           </el-tooltip>
 
         </div>
@@ -148,7 +150,7 @@
         top="10vh"
         append-to-body>
         <div class="contentBox contentBox2">
-          <button class='close_btn' @click='innerVisible=false'>Put it away</button>
+          <button class='close_btn' @click='innerVisible=false'>收起</button>
           <div style="height: 346px;overflow: scroll;margin-top: 10px">
             <div class="content-item" v-for="(val,ind) in temporaryScriptList" :key="ind+'content'">
               <div class="header clearfix">
@@ -156,10 +158,10 @@
                 <div class="pdtip float_left"
                      style="color: #7694f3"
                      v-show="nowTempId===val.id"
-                >It's playing...</div>
+                >正在播放中...</div>
                 <div class="pdtip float_left"
                      :style="val.id | styleFilter4"
-                >Waiting in line...</div>
+                >排队播放中...</div>
                 <div class="float_right play_icon" @click="previewTxtBtn(val,ind)">
                   <i class="el-icon-video-play"></i>
                 </div>
@@ -171,12 +173,12 @@
             </div>
           </div>
           <el-input style="margin-top: 10px" type="textarea"
-                    placeholder="You can input text here, and record the content above after adding"
+                    placeholder="这里可以输入文字，添加后记录在上方内容"
                     v-model="temporaryScriptTxt"
                     :autosize="{ minRows: 4, maxRows:4 }"
           ></el-input>
           <div class="playBtn">
-            <button class='handleWebcastBtn' @click='temporaryScriptPlay'>play</button>
+            <button class='handleWebcastBtn' @click='temporaryScriptPlay'>播放</button>
           </div>
         </div>
       </el-dialog>
@@ -390,7 +392,7 @@
       if(this.$route.params.playData){
         this.getPlayData(this.$route.params.playData)
       }else{
-        this.$message.error('No data obtained, please return and try again！')
+        this.$message.error(this.$lan.common.dataFail)
       }
       this.getTempData().then(res=>{});
       UnityInteractionStateChange("True");
@@ -415,7 +417,7 @@
               this.scriptChange(this.allScriptIndex)
               this.previewBtn(this.allScriptList[_index].scriptList[0],0,_index,false)
             }else{
-              this.$message.warning('Support up to 1 script paragraph queue, please wait!')
+              this.$message.warning('最多支持1个剧本段落排队，请稍后!')
             }
             // this.previewData = this.allScriptList[_index].scriptList
             // this.isPreviewBtn = true;
@@ -423,7 +425,7 @@
             // this.allScriptIndex = _index;
             // this.$message.info(`语音指令播放剧本${this.allScriptList[_index].name}`)
           }else{
-            this.$message.warning(`The voice command failed to match the corresponding script`)
+            this.$message.warning(`语音指令未能匹配到相应剧本`)
           }
         }
       },
@@ -465,18 +467,19 @@
       WebErrorMessage(err){
         if(err==="True"){
           this.$notify.error({
-            title:  'The network connection has been disconnected!',
-            message:"Network connection is abnormal, please confirm your network status!",
+            title:  this.$lan.direct.offline_t,
+            message:this.$lan.direct.offline_c,
             duration: 0
           });
           this.isDisconnection=true;
           if(this.interactionModel){
             UnityInteractionEnd(this.previewData[0].avatar.unity);
+            console.log('UnityInteractionEnd互动停止')
           }
         }else{
           this.$notify.success({
-            title:  'The network has been reconnected!',
-            message:"The network connection has been restored. Have a good time!",
+            title:  this.$lan.direct.online_t,
+            message: this.$lan.direct.online_c,
             duration: 0
           });
           this.isDisconnection=false;
@@ -484,7 +487,7 @@
       },
       backBtn(){
         if(this.isAutoPlayBtn){
-          this.$message.warning('Please stop the live broadcast first！')
+          this.$message.warning(this.$lan.direct.placeStopPlaying)
         }else{
           this.$router.back()
         }
@@ -500,8 +503,8 @@
         val?_state="True":_state="False"
         UnityInteractionStateChange(_state);
         if(!val){
-          this.$confirm('Closing the interactive mode may increase the risk of being judged as recording by the platform. Please operate with caution！', {
-            confirmButtonText: 'Ok',
+          this.$confirm(this.$lan.direct.closeInteraction_tip, {
+            confirmButtonText: 'OK',
             showCancelButton:false,
             type: 'warning'
           }).then(() => {
@@ -513,9 +516,9 @@
       },
       WebInteractionStateChange(state){
         if(state==="True"){
-          this.$message.info('互动模式已开启')
+          this.$message.info(this.$lan.direct.interactionModel_open)
         }else{
-          this.$message.info('互动模式已关闭')
+          this.$message.info(this.$lan.direct.interactionModel_close)
         }
       },
       //临时话术打开
@@ -555,7 +558,7 @@
             break;
           case 'interaction': // 互动
             // 进行文字转语音及播放处理
-            console.log('场景话术',_txt)
+            // console.log('场景话术',_txt)
             this.playInteraction(_txt);
             break;
         }
@@ -583,13 +586,15 @@
           })
         })
         UnityPreview(_unity,JSON.stringify([_json]),"False","False")
+        console.log('UnityPreview 场景话术')
       },
 
       //互动结束回调
       handleInacEnd(){
-        console.log('互动结束回调')
+        // console.log('互动结束回调')
         // this.webInteractionModel = false;
         UnityInteractionEnd(this.previewData[0].avatar.unity);
+        console.log('UnityInteractionEnd互动结束')
         // this.AutoPlayEvent();
         this.isInnerJsonInteraction = false;
       },
@@ -613,7 +618,7 @@
       autoPlayBtn(){
         //是否有排队
         if(this.queueList.length!==0||this.queueContentItem.length!==0||this.isPlaying){
-          this.$message.info('It has been detected that there is still queue data. Please wait for the queue to finish playing')
+          this.$message.info(this.$lan.direct.queue_tip)
           return false;
         }
         // UnityPreviewCancel();
@@ -632,6 +637,7 @@
             // this.$message.warning('this.allScriptPlayIndex播放下标',this.allScriptPlayIndex)
           this.previewData = this.allScriptList[this.allScriptPlayIndex].scriptList;
           UnityChangeAvatar(this.previewData[0].avatar.unity)
+          console.log('UnityChangeAvatar切换角色')
           this.previewReady = false;
           this.isPlaying = true;
           if(this.allScriptIndex===0){  //判断是否是第一个脚本，是—播放开场欢迎语
@@ -639,7 +645,7 @@
             this.isFirstScriptOnce = true;
           }
         }else{
-          this.$message.warning('The current task is in progress, please wait...')
+          this.$message.warning(this.$lan.direct.taskRunning)
         }
       },
       //停止播放
@@ -657,25 +663,29 @@
         this.interactionModel = false;
       },
       WebSelectAvatarState(state){
+        console.log('WebSelectAvatarState切换角色')
         if(state==='True'){
           //_______________判断当前是不是第一句
           //判断是否是第一个脚本，是—播放开场欢迎语
           if(this.isFirstScript&&this.isOpenInteractiveMode && this.isAutoPlayBtn){
             // this.playWelcomeWords();
             UnityInteractionStart(this.previewData[0].avatar.unity);
+            console.log('UnityInteractionStart 互动模式开始 播放开场欢迎语')
           }else{
             let _state = "True";
             this.isAutoPlayBtn?_state="False":_state="True"
             UnityPreview(this.previewData[0].avatar.unity,JSON.stringify(this.previewData),_state,"True")
+            console.log('UnityPreview 开始预览')
           }
         }else if(state==='False'){
           this.previewReady = true;
           this.isAutoPlayBtn = false;
           this.isPlaying = false;
-          this.$message.error('Failed to change avatar. Please try again')
+          this.$message.error(this.$lan.common.changeAvatarFailMsg)
         }
       },
       WebPreviewReady(state){
+        console.log('WebPreviewReady 预览准备')
         let self = this;
         if(state==='True'){
           if(this.progressVisible){
@@ -685,11 +695,11 @@
                 self.progressVisible = false;
               },500)
             }
-
             return
           }
           if(this.isAutoPlayBtn||this.isPreviewBtn){
             UnityPreviewStart(this.previewData[0].avatar.unity);
+            console.log('UnityPreviewStart 开始播放')
             if(this.isPreviewBtn){
               this.isPreviewBtn = false;
             }
@@ -703,8 +713,8 @@
           this.isPlaying = false;
           this.allScriptPlayIndex = ''
           this.$notify.error({
-            title:  'Failed to load resource!',
-            message:"Failed to load resource. Please try again！",
+            title:  this.$lan.common.resourceLoadingFailMsg2,
+            message:this.$lan.common.resourceLoadingFailMsg,
             duration: 0
           });
           // this.$message.error('加载资源失败，请重试')
@@ -767,19 +777,23 @@
         this.previewData = this.allScriptList[this.allScriptPlayIndex].scriptList;
         if(oldPreviewData[0].avatar.unity!==this.previewData[0].avatar.unity){
           UnityChangeAvatar(this.previewData[0].avatar.unity)
+          console.log('UnityChangeAvatar 角色切换')
           this.previewReady = false;
         }else{
           let _state = "True"
           this.isOpenInteractiveMode?_state = "False":_state="True"
           UnityPreview(this.previewData[0].avatar.unity,JSON.stringify(this.previewData),_state,"True")
+          console.log('UnityPreview 开始预览')
           this.previewReady = true;
         }
         this.isPlaying = true;
       },
       //播放互动标签
       WebInteractionStart(){
+        console.log('WebInteractionStart 互动开始')
         if(this.isUnityTemporaryInteractionStart){
           UnityPreview(this.previewData[0].avatar.unity,JSON.stringify(this.previewData),"False","False")
+          console.log('UnityPreview 开始预览')
           return false;
         }
         this.interactionModel = true;
@@ -799,38 +813,44 @@
       },
       //对应于UnityInteractionEnd，结束状态返回继续播放
       WebInteractionEnd(){
+        console.log('WebInteractionEnd互动结束')
         this.interactionModel = false;
         if(this.isUnityTemporaryInteractionStart){
           this.isUnityTemporaryInteractionStart = false;
           UnityPreviewContinue(this.previewData[0].avatar.unity);
+          console.log('UnityPreviewContinue继续播放')
           return false;
         }
         if(this.isDisconnection){//断网循环
           this.AutoPlayEvent();
           return false;
         }
+        this.interactionModeIsEnd = false;
         if(this.isFirstScript){
           let _state = "False"
           this.isOpenInteractiveMode?_state = "False":_state="True"
           UnityPreview(this.previewData[0].avatar.unity,JSON.stringify(this.previewData),_state,"True")
+          console.log('UnityPreview 开始预览')
           this.isFirstScript=false;
         }else{
           if(this.isOutInteraction){
            this.AutoPlayEvent();
            this.isOutInteraction = false;
-           this.interactionModeIsEnd = false;
           }else{
             UnityPreviewContinue(this.previewData[0].avatar.unity);
+            console.log('UnityPreviewContinue 继续播放')
           }
         }
       },
 
       //播放结束回调  播放一句互动结束回调Unity
       WebPreviewEnd(){
+        console.log('WebPreviewEnd 预览结束')
         if(this.isUnityTemporaryInteractionStart&&this.interactionModel){//是否有互动插入且当前是互动模式的处理
           if(this.queueList.length){
             let _Obj  = this.queueList.shift();
             UnityPreview(_Obj.name,_Obj.item,"False","False")
+            console.log('UnityPreview 开始预览')
             this.nowTempId = _Obj.id;
             this.previewData = JSON.parse(_Obj.item)
           }else{
@@ -845,11 +865,13 @@
           if(this.queueList.length){
             let _Obj  = this.queueList.shift();
             UnityPreview(_Obj.name,_Obj.item,"False","False")
+            console.log('UnityPreview 开始预览')
             this.nowTempId = _Obj.id;
             this.previewData = JSON.parse(_Obj.item)
           }else{
             this.nowTempId =""
             UnityInteractionEnd(this.previewData[0].avatar.unity);
+            console.log('UnityInteractionEnd 互动结束')
           }
           return false;
         }
@@ -857,6 +879,7 @@
           if(this.queueList.length){
             let _Obj  = this.queueList.shift();
             UnityPreview(_Obj.name,_Obj.item,"False","False")
+            console.log('UnityPreview 开始预览')
             this.nowTempId = _Obj.id;
             this.previewData = JSON.parse(_Obj.item)
           }else{
@@ -869,6 +892,7 @@
           if(this.queueList.length){
             let _Obj  = this.queueList.shift();
             UnityPreviewTxt(_Obj.name,_Obj.item)
+            console.log('UnityPreviewTxt 开始预览')
             this.isPreviewBtn = true;
             this.nowTempId = _Obj.id;
             this.previewData = JSON.parse(_Obj.item)
@@ -877,6 +901,7 @@
             if(this.queueContentItem.length){
               let _Obj  = this.queueContentItem.shift();
               UnityPreview(_Obj.name,_Obj.item,'True','True')
+              console.log('UnityPreview 开始预览')
               this.recordId = 'content'+_Obj.contentIndex+'script'+_Obj.allScriptIndex;
 
               this.isPreviewBtn = true;
@@ -913,8 +938,10 @@
               // 打开互动模式，互动模式处理
               this.handleInacLogic(); // 如果未开启脚本外互动则开启，如果已开启则进行互动流程
             }else{
-              if(this.isFirstScript){  UnityInteractionEnd(this.previewData[0].avatar.unity);  return false}
+              if(this.isFirstScript){  UnityInteractionEnd(this.previewData[0].avatar.unity);  console.log('UnityInteractionEnd互动结束'); return false}
               UnityInteractionStart(this.previewData[0].avatar.unity);
+              console.log('UnityInteractionStart互动开始')
+
               this.isOutInteraction = true;//脚本外互动
             }
           }else if(!this.isOpenInteractiveMode && this.isOpenSceneEnd && !this.isPlayingEndWords) {
@@ -983,6 +1010,7 @@
               // })
               //进入页面发送所有剧本，加载完成后再直播
               UnityPreview(val.scriptList[0].avatar.unity,JSON.stringify(val.scriptList),"False","True")
+              console.log('UnityPreview开始预览')
             });
             self.totalSteps = this.allScriptList.length;
             self.allScriptIndex = 0;
@@ -1030,6 +1058,7 @@
         if(!this.isPlaying){
           if(this.previewReady){
             UnityChangeAvatar(val.avatar.unity)
+            console.log('UnityChangeAvatar切换角色')
             this.recordId = 'content'+ind+'script'+allScriptIndex;//记录播放痕迹
             this.previewData = [val];
             // UnityPreview(val.avatar.unity,JSON.stringify([val]))
@@ -1039,13 +1068,13 @@
             this.nowContentIndex = ind;
             this.nowAllScriptIndex = allScriptIndex;
           }else{
-            this.$message.warning('Resource loading, please wait...')
+            this.$message.warning(this.$lan.common.resourceLoadingMsg)
           }
           //判断播放下一个的数据
           this.getNextPlayVal(ind,allScriptIndex,bool);
         }else{
           if(this.queueContentItem.length===0){
-            this.$message.info('The script has been queued up and will be played later!')
+            this.$message.info(this.$lan.direct.queue_tip2)
             this.queueContentItem.push({
               allScriptIndex:allScriptIndex,
               contentIndex:ind,
@@ -1054,7 +1083,7 @@
             })
             this.getNextPlayVal(ind,allScriptIndex,bool);
           }else{
-            this.$message.warning('Support up to 1 script paragraph queue, please wait!')
+            this.$message.warning(this.$lan.direct.queue_tip3)
           }
         }
       },
@@ -1081,6 +1110,7 @@
               // UnityChangeAvatar(val.avatar.unity)
               this.previewData = [_json];
               UnityPreviewTxt('none',JSON.stringify([_json]))
+              console.log('UnityPreviewTxt开始预览')
               this.isPreviewBtn = true;
               this.nowTempId = val.id;
               this.isPlaying = true;
@@ -1098,7 +1128,7 @@
                 id:val.id,
               })
             }else{
-              this.$message.info('Up to 3 play queues are supported. Please wait!')
+              this.$message.info(this.$lan.direct.queue_tip4)
             }
           }
 
@@ -1110,11 +1140,11 @@
       //临时话术播放按钮
       temporaryScriptPlay(){
         if(this.queueList.length>=3){
-          this.$message.warning('Up to 3 play queues are supported. Please wait')
+          this.$message.warning(this.$lan.direct.queue_tip4)
           return false
         }
         if(!this.temporaryScriptTxt.replace(/[\ |\~|\`|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\-|\_|\+|\=|\||\\|\[|\]|\{|\}|\;|\:|\"|\'|\,|\<|\.|\>|\/|\?|\r\n]/g).match(/[\u4e00-\u9fa5\0-9]/g)){
-          this.$message.warning('Please enter a valid character')
+          this.$message.warning(this.$lan.direct.isValidTextMsg)
           return false
         }
         this.addTempData(this.temporaryScriptTxt).then(res=>{
@@ -1139,6 +1169,7 @@
           if(!this.isAutoPlayBtn){
             if(!this.isPlaying){
               UnityPreviewTxt('none',JSON.stringify([_json]))
+              console.log('UnityPreviewTxt开始预览')
               this.isPreviewBtn = true;
               this.nowTempId = this.temporaryScriptList[this.temporaryScriptList.length-1].id
               this.previewData = JSON.parse(JSON.stringify([_json]))
@@ -1152,7 +1183,7 @@
                   item:JSON.stringify([_json])
                 })
               }else{
-                this.$message.info('Up to 3 playback queues are supported. Please wait！')
+                this.$message.info(this.$lan.direct.queue_tip4)
               }
             }
 
@@ -1175,7 +1206,7 @@
               item:JSON.stringify([_json])
             })
           }else{
-            this.$message.info('Up to 3 playback queues are supported. Please wait！')
+            this.$message.info(this.$lan.direct.queue_tip4)
           }
         }else{
           UnityTemporaryInteractionStart();
@@ -1515,7 +1546,7 @@
     }
   }
   .close_btn{
-    width: 68px;
+    width: 60px;
     height: 24px;
     margin: 0 auto;
     background: #FFF;

@@ -9,7 +9,6 @@ export class AMSound {
         switch(_type) {
             case 'ali':
                 this.TTS = new ALITTS(_option);
-                this.TTSType = Magics.TTS_ALI;
                 this.TTSIsPCM = false;
                 if(_isInitInacTTS) {
                     this.TTS_INAC = new ALITTS(_option);

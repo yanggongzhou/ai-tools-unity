@@ -3,72 +3,78 @@
         <div class="common_content">
             <div class="list_title clearfix">
               <div class="titleBox">
-                <span class="titleSpan">Script Table</span>
+                <span class="titleSpan">{{$lan.common.top_title}}</span>
               </div>
             </div>
 
 <!--            <el-divider></el-divider>-->
             <div class="filter">
 <!--                <span class="filter_label">关联主播角色：</span>-->
-                <el-select class="filterOptions" @change='fetchAllScripts' v-model='anchorRoleValue'>
-                    <el-option
-                        v-for='(role,idx) in anchorRoles'
-                        :key='idx'
-                        :label='role.label'
-                        :value='role.value'
-                    ></el-option>
-                </el-select>
+<!--                <el-select class="filterOptions" @change='fetchAllScripts' v-model='anchorRoleValue'>-->
+<!--                    <el-option-->
+<!--                        v-for='(role,idx) in anchorRoles'-->
+<!--                        :key='idx'-->
+<!--                        :label='role.label'-->
+<!--                        :value='role.value'-->
+<!--                    ></el-option>-->
+<!--                </el-select>-->
                 <div class='search'>
-                    <el-input  class='search_ipt' v-model="searchScriptName" placeholder="script's name" clearable></el-input>
-                    <button class='light-btn search_btn' type="primary" @click="fetchAllScripts">search</button>
+                    <el-input  class='search_ipt' v-model="searchScriptName" :placeholder="$lan.myscript.title" clearable></el-input>
+                    <button class='light-btn search_btn' type="primary" @click="fetchAllScripts">{{$lan.common.search}}</button>
                 </div>
               <div class="float_right">
-                <button class="light-btn create-btn ml10" @click="gotoPage">New Script</button>
-                <button class="light-btn play-btn" @click="gotoPage2">Go live</button>
+                <button class="light-btn create-btn ml10" @click="gotoPage">{{$lan.myscript.createScript}}</button>
+                <button class="light-btn play-btn" @click="gotoPage2">{{$lan.myscript.goLive}}</button>
               </div>
             </div>
 
             <el-table
               size="mini"
-              row-key="updated_at" :data='scriptData' style='width:100%' empty-text='none' height='446' max-height="446">
-
-                <el-table-column align="center" label="title">
+              row-key="updated_at" :data='scriptData' style='width:100%' :empty-text='$lan.myscript.tableNull' height='446' max-height="446">
+              <el-table-column align="center" label="#" type="index">
+              </el-table-column>
+                <el-table-column align="center" :label="$lan.myscript.title">
                     <template slot-scope="scope">
                         <span>{{scope.row.name}}</span>
                     </template>
                 </el-table-column>
-                <el-table-column align="center" label="paragraph">
+                <el-table-column align="center" :label="$lan.myscript.paragraph">
                     <template slot-scope="scope">
                         <span>{{scope.row.paragraph_number}}</span>
                     </template>
                 </el-table-column>
-                <el-table-column align="center" label="IP">
+                <el-table-column align="center" :label="$lan.myscript.ip">
                     <template slot-scope="scope">
                         <span>{{scope.row.avatar_name}}</span>
                     </template>
                 </el-table-column>
-              <el-table-column align="center" label="duration" min-width="100">
-                <template slot-scope="scope">
-                  <span>{{handleScriptTime(scope.row.time)}}</span>
-                </template>
-              </el-table-column>
-              <el-table-column align="center" label="update" min-width="120">
-                <template slot-scope="scope">
-                  <span>{{scope.row.updated_at | created_atFilter}}</span>
-                </template>
-              </el-table-column>
-                <el-table-column align="center" label="handle" min-width="130">
+                <el-table-column align="center" :label="$lan.myscript.updateTime" min-width="150">
+                  <template slot-scope="scope">
+                    <span>{{scope.row.updated_at | created_atFilter}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column align="center" :label="$lan.common.handle" min-width="125">
                     <template slot-scope="scope">
-                        <el-button @click='handleCheck(scope.row)' type="text" size="mini">check</el-button>
-                        <el-button @click='handleEdit(scope.row)' type="text" size="mini">edit</el-button>
-                        <!-- <el-button @click='handleCopy(scope.row)' type="text" size="small">复用</el-button> -->
-                        <el-button @click='handleDelete(scope.row)' type="text" size="mini" style='color:#FF7272;'>delete</el-button>
+                        <el-button @click='handleCheck(scope.row)' type="text" size="mini">{{$lan.common.check}}</el-button>
+                        <el-button @click='handleEdit(scope.row)' type="text" size="mini">{{$lan.common.edit}}</el-button>
+                        <el-popconfirm
+                          style="margin-left: 7px"
+                          cancel-button-type="info"
+                          confirm-button-type="info"
+                          :confirmButtonText='$lan.common.confirm'
+                          :cancelButtonText='$lan.common.cancel'
+                          icon="el-icon-info"
+                          iconColor="#fbfbfb"
+                          @onConfirm="confirmDel(scope.row)"
+                          :title="$lan.myscript.popconfirm_title">
+                          <el-button slot="reference" type="text" size="mini" style='color:#FF7272;'>{{$lan.common.delete}}</el-button>
+                        </el-popconfirm>
                     </template>
                 </el-table-column>
 
                 <div slot="empty" style="height:200px;line-height: 300px;">
-                  <i class="el-icon-warning-outline"></i>No script
-                  <el-button type="text"  @click="gotoPage" style="color:#7455FF;">New Script</el-button>
+                  <i class="el-icon-warning-outline"></i>{{$lan.myscript.tableNull}}
+                  <el-button type="text"  @click="gotoPage" style="color:#7455FF;">{{$lan.myscript.createScript}}</el-button>
                 </div>
 
             </el-table>
@@ -83,20 +89,10 @@
                 layout="total, sizes, prev, pager, next"
                 :total="total_count"
             ></el-pagination>
-
-            <el-dialog  top="30vh" :visible.sync="isShowDelDialog" width='300px' style='text-align:center;'>
-                <i class="el-icon-warning-outline" style='font-size:42px;color:#5C83FF;margin-bottom:18px;font-weight:600;'></i>
-                <div>Delete the script?</div>
-                <span slot="footer" class="dialog-footer">
-                    <el-button class="cancel" @click="cancelDel">Cancel</el-button>
-                    <el-button class="confirm" type="primary" @click="confirmDel">Confirm</el-button>
-                </span>
-            </el-dialog>
             <el-dialog
               custom-class="myscriptDialog"
               top="10%"
               width="600px"
-              :before-close="previewDialogClose"
               :visible.sync="isShowPreviewDialog">
                 <div class="previewbox">
                   <myscriptDialog :scriptRow="scriptRow" :scriptName="scriptName"></myscriptDialog>
@@ -116,7 +112,7 @@ export default {
   },
   filters:{
     created_atFilter(val){
-      return new Date(val*1000).toDateString()
+      return new Date(val*1000).toLocaleString()
     }
   },
     data() {
@@ -155,8 +151,6 @@ export default {
 
             searchScriptName: '',
             scriptData: [],
-            isShowDelDialog: false,
-            delScriptId: '',
             isShowPreviewDialog: false,
 
             start_page: 1,//当前开始页
@@ -193,7 +187,7 @@ export default {
                     // this.$Session.set('ai_user_id', '');
                     // this.$Session.set('ai_user_token', '');
                 }else {
-                    this.$message.error('获取剧本列表失败')
+                    this.$message.error(this.$lan.common.tableListFail)
                 }
             })
 
@@ -206,12 +200,9 @@ export default {
                 if(res.status===200){
                   this.scriptRow = res.data
                 }else{
-                 this.$message.warning('剧本数据获取异常，请重试')
+                 this.$message.warning(this.$lan.common.dataFail)
                 }
               })
-        },
-        previewDialogClose(done){
-          done();
         },
       //编辑
         handleEdit(_idx) {
@@ -222,28 +213,17 @@ export default {
                 this.$Session.set('Edit_JSON',JSON.stringify({data:result.data,id:_idx.id,name:_idx.name,avatarName:_idx.avatar_name}))
                 // this.$router.push({name:'tools',params:{data:result.data,id:_idx.id,name:_idx.name,avatarName:_idx.avatar_name}})
               }else{
-                this.$message.warning('剧本数据获取异常，请重试')
+                this.$message.warning(this.$lan.common.dataFail)
               }
             })
         },
-        handleCopy(_idx) {
-            this.$router.push('/tools')
-        },
-        handleDelete(_idx) {
-            this.isShowDelDialog = true;
-            this.delScriptId = _idx;
-        },
-        cancelDel() {
-            this.isShowDelDialog = false;
-        },
-        confirmDel() {
-            this.isShowDelDialog = false;
-            // this.scriptData.splice(this.delScriptId, 1)
+
+        confirmDel(_idx) {
             requestServices.delScript({
                 role_id:23,
                 user_id:this.$Session.get('ai_user_id'),
                 access_token:this.$Session.get('ai_user_token'),
-                gs_id:this.delScriptId.id
+                gs_id:_idx.id
             }).then(res=>{
                 if(res.return_code===1000){
                     this.fetchAllScripts();

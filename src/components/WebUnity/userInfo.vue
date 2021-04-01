@@ -1,7 +1,5 @@
 <template></template>
 <script>
-  import {requestServices} from "../../api/api";
-
   export default {
     data(){
       return{
@@ -23,19 +21,18 @@
       }else{
         if(this.userInfoTimeOut){  clearTimeout(this.userInfoTimeOut) }
         this.notifyOption = this.$notify.info({
-          title:  'Tip',
-          message:"User information injection...",
+          title:  this.$lan.common.tip,
+          message: this.$lan.common.userInsertMsg,
           duration: 0
         });
         this.isUserInfo = true;
         this.getUserInfo();
         this.userInfoTimeOut = setTimeout(()=>{
           if(self.$Session.get('ai_user_id')&&self.$Session.get('ai_user_token')&&self.$Session.get('ai_user_phone')){
-            self.$message.error('Failed to request user information, please restart the window！')
-
+            self.$message.error(this.$lan.common.userReqFailMsg)
           }else {
             self.isUserInfo = false;
-            self.$message.success('User information injected！')
+            self.$message.success(this.$lan.common.userInsertSuccessMsg)
           }
         },100000)
       }
@@ -76,7 +73,7 @@
         // alert('id'+id+';   token:'+token+';    phone:'+phone)
         this.isUserInfo = false;
         clearTimeout(this.userInfoTimeOut)
-        this.$message.success('User information injected！')
+        this.$message.success(this.$lan.common.userInsertSuccessMsg)
         this.notifyOption.close();
       },
     }

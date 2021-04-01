@@ -15,44 +15,44 @@
       <el-popconfirm
         cancel-button-type="info"
         confirm-button-type="info"
-        confirmButtonText='confirm'
-        cancelButtonText='cancel'
+        :confirmButtonText='$lan.common.confirm'
+        :cancelButtonText='$lan.common.cancel'
         icon="el-icon-info"
         iconColor="#fbfbfb"
         @onConfirm="openTagDialog('clean')"
-        title="Confirm all labels are cleared？">
+        :title="$lan.tools.clean_tag_tip">
         <button slot="reference" class="w-textarea_tools__item cleanTag">
           <i class="iconfont alicon-qingkong tagLogo"></i>
-          <span>CleanTag</span>
+          <span>{{$lan.tools.clean_tag}}</span>
         </button>
       </el-popconfirm>
 
       <el-tooltip  :open-delay="1000" placement="bottom" effect="dark">
         <div slot="content">
-          <p class="center tip_title">InterAction</p>
-          <p class="center">Pay attention not to be too close to the text!</p>
+          <p class="center tip_title">{{$lan.tools.interaction_tag_tip_t}}</p>
+          <p class="center">{{$lan.tools.interaction_tag_tip_c}}</p>
         </div>
         <button class="w-textarea_tools__item "
                 @click="openTagDialog('interaction')">
           <i class="iconfont alicon-hudongguanli tagLogo"></i>
-          <span>InterAction</span>
+          <span>{{$lan.tools.interaction_tag}}</span>
         </button>
       </el-tooltip>
       <button class="w-textarea_tools__item " @click="openTagDialog('video')">
         <i class="iconfont alicon-shipin tagLogo"></i>
-        <span>Video</span>
+        <span>{{$lan.tools.video_tag}}</span>
       </button>
       <button class="w-textarea_tools__item " @click="openTagDialog('img')">
         <i class="iconfont alicon-tupian tagLogo"></i>
-        <span>Image</span>
+        <span>{{$lan.tools.img_tag}}</span>
       </button>
       <button class="w-textarea_tools__item " @click="openTagDialog('text')">
         <i class="iconfont alicon-wenzi tagLogo"></i>
-        <span>Text</span>
+        <span>{{$lan.tools.text_tag}}</span>
       </button>
-<!--      <button class="w-textarea_tools__item " @click="openTagDialog('timer')">-->
+<!--      <button class="w-textarea_tools__item " @click="openTagDialog('intervalTime')">-->
 <!--        <i class="iconfont alicon-jiange tagLogo"></i>-->
-<!--        <span>添加间隔</span>-->
+<!--        <span>{{$lan.tools.interval_tag}}</span>-->
 <!--      </button>-->
 
       <!--      <button class="w-textarea_tools__item float_right"-->
@@ -475,7 +475,7 @@
       font-size: 0px;
       .w-textarea_tools__item {
         font-size: 12px;
-        width: 44px;
+        /*width: 44px;*/
         margin: 12px 17px 0 0;
         display: inline-block;
         line-height: 1;

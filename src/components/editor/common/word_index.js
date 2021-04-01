@@ -1,5 +1,6 @@
 
-const cmu = require('cmu-pronouncing-dictionary')
+const cmu ='';
+// const cmu = require('cmu-pronouncing-dictionary')
 
 export class ComputerWords {
 
