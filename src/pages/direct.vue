@@ -10,7 +10,7 @@
                            :completed-steps="completedSteps"
                            :total-steps="totalSteps">
         <p class="midText">{{$lan.direct.progress_tip1}}: {{ totalSteps }}</p>
-        <p class="midText">{{$lan.direct.progress_tip2}}: {{ completedSteps }}</p>
+        <p class="midText">{{$lan.direct.progress_tip2}}: {{ completedSteps | completedStepsFilter}}</p>
         <button class='progress-btn' @click='progressCancelBtn' :title="$lan.direct.progress_tip3">X</button>
       </radial-progress-bar>
     </div>
@@ -192,6 +192,7 @@
   import { getWeightList } from '../api/Random'
   import {mapGetters} from "vuex";
   import RadialProgressBar from "../components/direct/RadialProgressBar";
+  import timer from "../api/timer";
   let that;
   export default {
     computed: {
@@ -207,6 +208,9 @@
       that = this;
     },
     filters:{
+      completedStepsFilter(val){
+        return Math.round(val/that.totalSteps*10000)/100+'%'
+      },
       indFilter(val){
         // if((val+1).toString().length===1){
         //   return '0'+(val+1)+'. '+that.allScriptList[val].name
@@ -430,6 +434,7 @@
         }
       },
       progressCancelBtn(){
+        timer.clearInterval('completedSteps_interval')
         this.progressVisible = false;
         UnityPreviewCancel()
         this.progressVisible = 0;
@@ -466,6 +471,7 @@
       //断网
       WebErrorMessage(err){
         if(err==="True"){
+          timer.clearInterval('completedSteps_interval')
           this.$notify.error({
             title:  this.$lan.direct.offline_t,
             message:this.$lan.direct.offline_c,
@@ -689,8 +695,9 @@
         let self = this;
         if(state==='True'){
           if(this.progressVisible){
-            this.completedSteps += 1;
+            this.completedSteps = Math.floor(this.completedSteps)+1;
             if(this.completedSteps===this.totalSteps){
+              timer.clearInterval('completedSteps_interval')
               setTimeout(()=>{
                 self.progressVisible = false;
               },500)
@@ -1013,6 +1020,11 @@
               console.log('UnityPreview开始预览')
             });
             self.totalSteps = this.allScriptList.length;
+            timer.setInterval(()=>{
+              if((self.completedSteps-Math.floor(self.completedSteps))<0.99){
+                self.completedSteps += (1-(self.completedSteps-Math.floor(self.completedSteps)))/50
+              }
+            },300,'completedSteps_interval')
             self.allScriptIndex = 0;
             self.contentList = self.allScriptList[0].scriptList
             // console.log('self.allScriptList',self.allScriptList)

@@ -518,11 +518,11 @@
 
       //预览
       previewBtn(val,ind){
-        UnityPreviewCancel()
         if(!this.previewReady){
           this.$message.warning(this.$lan.common.resourceLoadingMsg)
           return false;
         }
+        UnityPreviewCancel()
         let _content='';
         if(this.scriptIndex!==ind){
           val.param.forEach(value=>{

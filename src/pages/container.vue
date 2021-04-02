@@ -303,11 +303,11 @@
       },
       //预览
       previewBtn(){
-        UnityPreviewCancel();
         if(!this.previewReady){
           this.$message.warning(this.$lan.common.resourceLoadingMsg)
           return false;
         }
+        UnityPreviewCancel();
         let self = this;
         let _JsonEditorRef = this.$refs.JsonEditorRef;
         _JsonEditorRef.exportJson().then((data)=>{
