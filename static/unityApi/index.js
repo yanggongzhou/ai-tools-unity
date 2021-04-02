@@ -122,3 +122,7 @@ function UnityTTSInfo(param,param2) {
 //   console.log(`\x1b[${i}m%s\x1b[0m`,`步骤-${i}`)
 // }
 
+
+function UnityIsSaveTip(param) {
+  console.log('\x1b[33m%s\x1b[0m',`Unity端是否显示保存剧本提示- ${param}`)
+}

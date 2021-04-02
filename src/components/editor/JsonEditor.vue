@@ -147,6 +147,7 @@
         'ResultJson',
         'InfoModelData',
         'ResourceReady',
+        'IsSaveTip'
       ])
     },
     beforeCreate() {
@@ -381,6 +382,10 @@
     watch:{
       //监听输入框文本，主要实现删除功能
       testData(newValue,oldValue){
+        if(!this.IsSaveTip){
+          this.$store.commit('set_IsSaveTip',true)
+          UnityIsSaveTip('True')
+        }
         // console.log(this.testData)
         if(newValue.length < oldValue.length&&(oldValue.length-newValue.length)>200){
           let newDom = document.getElementById('newDom');
@@ -408,6 +413,7 @@
     methods: {
       //更多操作
       handleCommand(ind,proto){
+        UnityIsSaveTip('True')
         switch (proto) {
           case "1":
             this.moveUp(ind);

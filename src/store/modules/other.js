@@ -3,15 +3,21 @@ const state = {
   clValue:false,
 
   resourceReady:true,//资源准备
+  isSaveTip:false,//是否显示保存提示
 }
 
 const getters = {
   PcVisible           :state => state.pcVisible,
   ClValue             :state => state.clValue,
   ResourceReady       :state => state.resourceReady,
+  IsSaveTip           :state => state.isSaveTip,
 }
 
 const mutations = {
+  //保存提示
+  set_IsSaveTip(state,data) {
+    state.isSaveTip = data
+  },
   //资源准备
   set_resourceReady(state,data) {
     state.resourceReady = data

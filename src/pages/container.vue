@@ -70,7 +70,8 @@
         'InfoModelData',
         "ali_tts_token",
         "ali_token_expires",
-        "ResourceReady"
+        "ResourceReady",
+        "IsSaveTip"
       ])
     },
     watch:{
@@ -255,6 +256,7 @@
       window.WebJsonInfo = this.WebJsonInfo;//保存时获取必要的unityMessage
       this.editJsonData =  JSON.parse(this.$Session.get('Edit_JSON'));
       this.$store.commit('set_resourceReady',true);
+      this.$store.commit('set_IsSaveTip',false)
 
       this.ComputerWords = new ComputerWords()
       if(this.$route.query.language){
@@ -431,7 +433,11 @@
             }
             requestServices[_handleFun](_data).then(res=>{
               if(res.return_code===1000){
-                self.editJsonData.id=res.result.gs_id
+                self.editJsonData.id=res.result.gs_id;
+                if(self.IsSaveTip){
+                  this.$store.commit('set_IsSaveTip',false)
+                  UnityIsSaveTip('False')
+                }
                 self.$message.success('success');
                 self.LOADING = 5;
                 setTimeout(() => {
