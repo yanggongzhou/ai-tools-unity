@@ -1022,9 +1022,9 @@
             self.totalSteps = this.allScriptList.length;
             timer.setInterval(()=>{
               if((self.completedSteps-Math.floor(self.completedSteps))<0.99){
-                self.completedSteps += (1-(self.completedSteps-Math.floor(self.completedSteps)))/50
+                self.completedSteps += (1-(self.completedSteps-Math.floor(self.completedSteps)))/120
               }
-            },300,'completedSteps_interval')
+            },1000,'completedSteps_interval')
             self.allScriptIndex = 0;
             self.contentList = self.allScriptList[0].scriptList
             // console.log('self.allScriptList',self.allScriptList)
