@@ -16,7 +16,13 @@
 
 <script>
   import { NumToCh } from '../../api/NumberToChinese'
+  import {mapGetters} from "vuex";
   export default {
+    computed: {
+      ...mapGetters([
+        "ResourceReady"
+      ])
+    },
     props:['scriptRow','scriptName'],
     filters:{
       contentFilter(value){
@@ -34,26 +40,24 @@
     data(){
       return{
         previewData:'',
-        previewReady:true,
       }
     },
     created() {
       window.WebPreviewReady = this.WebPreviewReady;
       window.WebSelectAvatarState=this.WebSelectAvatarState;
       window.WebPreviewEnd=this.WebPreviewEnd;
-    },
-    mounted() {
-      this.previewReady = true;
+      this.$store.commit('set_resourceReady',true);
     },
     methods:{
       //预览
       previewBtn(val){
-        if(this.previewReady){
+        if(this.ResourceReady){
           this.previewData = val;
           UnityPreviewCancel();
           console.log('预览脚本',this.previewData)
           UnityChangeAvatar(val.avatar.unity);
-          this.previewReady = false;
+          this.$store.commit('set_pcVisible',true)
+          this.$store.commit('set_resourceReady',false);
         }else{
           this.$message.warning(this.$lan.common.resourceLoadingMsg)
         }
@@ -63,17 +67,16 @@
           UnityPreview(this.previewData.avatar.unity,JSON.stringify([this.previewData]),"True","False")
         }else if(state==='False'){
           this.$message.error(this.$lan.common.changeAvatarFailMsg)
-          this.previewReady = true;
+          this.$store.commit('set_resourceReady',true);
         }
       },
       WebPreviewReady(state){
         if(state==='True'){
-          this.$store.commit('set_pcVisible',true)
           UnityPreviewStart(this.previewData.avatar.unity);
         }else if(state==='False'){
           this.$message.error(this.$lan.common.resourceLoadingFailMsg)
         }
-        this.previewReady = true;
+        this.$store.commit('set_resourceReady',true);
       },
       WebPreviewEnd(){
         this.$store.commit('set_pcVisible',false)
@@ -82,7 +85,6 @@
     beforeDestroy() {
       //跳转页面后强制结束播放状态
       UnityPreviewCancel();
-      this.previewReady = true;
     },
   }
 </script>

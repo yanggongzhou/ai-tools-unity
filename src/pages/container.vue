@@ -70,6 +70,7 @@
         'InfoModelData',
         "ali_tts_token",
         "ali_token_expires",
+        "ResourceReady"
       ])
     },
     watch:{
@@ -108,7 +109,6 @@
         jsonContent:'',
 
         TriggerDiv:[],
-        previewReady:true,
         textItem: {
           "index": 0,
           "type": "info",
@@ -254,11 +254,13 @@
       window.WebPreviewReady = this.WebPreviewReady;
       window.WebJsonInfo = this.WebJsonInfo;//保存时获取必要的unityMessage
       this.editJsonData =  JSON.parse(this.$Session.get('Edit_JSON'));
+      this.$store.commit('set_resourceReady',true);
 
       this.ComputerWords = new ComputerWords()
       if(this.$route.query.language){
         this.language = this.$route.query.language
       }
+
     },
     mounted() {
       let self = this;
@@ -303,10 +305,11 @@
       },
       //预览
       previewBtn(){
-        if(!this.previewReady){
+        if(!this.ResourceReady){
           this.$message.warning(this.$lan.common.resourceLoadingMsg)
           return false;
         }
+        this.$store.commit('set_pcVisible',true)
         UnityPreviewCancel();
         let self = this;
         let _JsonEditorRef = this.$refs.JsonEditorRef;
@@ -328,18 +331,19 @@
             return
           }
           UnityPreview(this.ResultJson.avatar.unity,JSON.stringify(_JsonEditorRef.ScriptList),"True","False")
-          self.previewReady = false;
+          this.$store.commit('set_resourceReady',false);
         })
       },
 
       WebPreviewReady(state){
         if(state==='True'){
-          this.$store.commit('set_pcVisible',true)
+          // this.$store.commit('set_pcVisible',true)
           UnityPreviewStart(this.ResultJson.avatar.unity);
         }else if(state==='False'){
+          this.$store.commit('set_pcVisible',false)
           this.$message.error(this.$lan.common.resourceLoadingFailMsg)
         }
-        this.previewReady = true;
+        this.$store.commit('set_resourceReady',true);
       },
 
       //剧本名称校验

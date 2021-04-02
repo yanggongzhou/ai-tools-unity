@@ -79,7 +79,6 @@ export default {
 
       }else if(state==='False'){
         this.$message.error(this.$lan.common.changeAvatarFailMsg)
-        this.previewReady = true;
       }
     },
   }

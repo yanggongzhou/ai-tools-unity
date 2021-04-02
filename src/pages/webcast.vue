@@ -164,6 +164,7 @@ import { requestServices } from '../api/api';
 import axios from "axios";
 import sceneWords from '../components/sceneWords/sceneWords';
 import PlaySetting from "../components/webcast/playSetting"
+import {mapGetters} from "vuex";
 export default {
     components:{
       sceneWords,
@@ -238,7 +239,6 @@ export default {
               label: '低'
             },
           ],
-          previewReady:true,
           previewData:{
               name:'',
             script:''
@@ -258,11 +258,15 @@ export default {
       style.left = this.editGoodsIdBtnLeft + 'px';
       return style
     },
+    ...mapGetters([
+      "ResourceReady"
+    ])
   },
     created() {
       window.WebPreviewReady = this.WebPreviewReady;
       window.WebSelectAvatarState=this.WebSelectAvatarState;
       window.WebPreviewEnd = this.WebPreviewEnd;
+      this.$store.commit('set_resourceReady',true);
     },
     mounted() {
         // this.sortPlayScript();
@@ -371,6 +375,10 @@ export default {
                 // UnityPreview(res.data[0].avatar.unity,JSON.stringify(res.data))
                 this.previewData.name = res.data[0].avatar.unity;
                 this.previewData.script = JSON.stringify(res.data)
+                if(!this.ResourceReady){
+                  this.$message.warning(this.$lan.common.resourceLoadingMsg)
+                  return false;
+                }
                 UnityPreviewCancel();
                 UnityChangeAvatar(res.data[0].avatar.unity);
               }else{
@@ -381,19 +389,20 @@ export default {
         WebSelectAvatarState(state){
           if(state==='True'){
             UnityPreview(this.previewData.name,this.previewData.script,"True","True")
+            this.$store.commit('set_pcVisible',true)
+            this.$store.commit('set_resourceReady',false);
           }else if(state==='False'){
             this.$message.error(this.$lan.common.changeAvatarFailMsg)
-            // this.previewReady = false;
+            this.$store.commit('set_resourceReady',true);
           }
         },
         WebPreviewReady(state){
           if(state==='True'){
-            this.$store.commit('set_pcVisible',true)
             UnityPreviewStart(this.previewData.name);
           }else if(state==='False'){
             this.$message.error(this.$lan.common.resourceLoadingFailMsg)
           }
-          this.previewReady = true;
+          this.$store.commit('set_resourceReady',true);
         },
         WebPreviewEnd(){
           this.$store.commit('set_pcVisible',false)

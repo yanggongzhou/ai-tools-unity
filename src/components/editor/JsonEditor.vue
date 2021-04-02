@@ -146,7 +146,7 @@
       ...mapGetters([
         'ResultJson',
         'InfoModelData',
-
+        'ResourceReady',
       ])
     },
     beforeCreate() {
@@ -248,8 +248,6 @@
         cutTxtArr:[],//每次裁剪后被替换的缓存数据
         cutArr:[],//裁剪数据的缓存区
         cutCount:50,//裁剪的基准长度,即文字暂定50字后第一个标点（，。！？.....等）的分层
-
-        previewReady:true,
 
         scriptChangeState:false,
         scriptChangeTimeout:'',
@@ -518,7 +516,7 @@
 
       //预览
       previewBtn(val,ind){
-        if(!this.previewReady){
+        if(!this.ResourceReady){
           this.$message.warning(this.$lan.common.resourceLoadingMsg)
           return false;
         }
@@ -532,7 +530,9 @@
             this.$message.error(this.$lan.tools.isValidTextMsg2)
             return false
           }
+          this.$store.commit('set_pcVisible',true)
           UnityPreview(val.avatar.unity,JSON.stringify([val]),"True","False")
+          this.$store.commit('set_resourceReady',false);
         }else{
           this.exportJson().then((data)=>{
             let _jsonArr = JSON.parse(JSON.stringify(this.ResultJson))
@@ -545,12 +545,12 @@
               this.$message.error(this.$lan.tools.isValidTextMsg2)
               return false
             }
+            this.$store.commit('set_pcVisible',true)
             UnityPreview(val.avatar.unity,JSON.stringify([_jsonArr]),"True","False")
-
+            this.$store.commit('set_resourceReady',false);
             console.log( this.cutTxtArr,this.cutArr)
           })
         }
-        this.previewReady = false;
       },
       //动作回调返回列表
       WebActionInfo(val){
@@ -596,17 +596,17 @@
           UnityAvatarMotionInfo(this.ResultJson.avatar.unity);
         }else if(state==='False'){
           this.$message.error(this.$lan.common.changeAvatarFailMsg)
-          // this.previewReady = false;
+          this.$store.commit('set_resourceReady',true);
         }
       },
       WebPreviewReady(state){
         if(state==='True'){
-          this.$store.commit('set_pcVisible',true)
+          // this.$store.commit('set_pcVisible',true)
           UnityPreviewStart(this.ResultJson.avatar.unity);
         }else if(state==='False'){
           this.$message.error(this.$lan.common.resourceLoadingFailMsg)
         }
-        this.previewReady = true;
+        this.$store.commit('set_resourceReady',true);
       },
       WebPreviewEnd(){
         this.$store.commit('set_pcVisible',false)
