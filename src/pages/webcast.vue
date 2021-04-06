@@ -51,7 +51,7 @@
                   <template slot-scope="scope">
                     <!-- <span>{{handleScriptWeight(scope.row.weight)}}</span> -->
                     <el-select v-model='scope.row.weight' @change='handleChangePlayWeight(scope.row.id, scope.$index)'>
-                      <el-option v-for='item in playWeight' :key='item.value' :label='item.label' :value='item.value' ></el-option>
+                      <el-option v-for='item in $lan.webcast.playWeight' :key='item.value' :label='item.label' :value='item.value' ></el-option>
                     </el-select>
                   </template>
                 </el-table-column>
@@ -152,9 +152,10 @@
           </div>
         </div>
       <div class="setGoodsId" v-if='isShowSetGoodsId' :style='setGoodsIdStyle'>
-        <el-input :placeholder="$lan.webcast.goodsId" v-model="iptGoodsId" maxlength='3' @input="handleIptGoodsId"></el-input>
-        <button class="cancel" @click='cancelSetGoodsId'>{{$lan.common.cancel}}</button>
-        <button class="confirm" @click='confirmSetGoodsId'>{{$lan.common.save}}</button>
+        <el-input class="mb10" :placeholder="$lan.webcast.goodsId" v-model="iptGoodsId" maxlength='3' @input="handleIptGoodsId"></el-input>
+        <br>
+        <el-button size="mini" class="cancel" round @click='cancelSetGoodsId'>{{$lan.common.cancel}}</el-button>
+        <el-button size="mini" type="primary" class="confirm" round @click='confirmSetGoodsId'>{{$lan.common.save}}</el-button>
       </div>
     </div>
 </template>
@@ -221,24 +222,6 @@ export default {
             isAddedScript: false,
 
             checkAllDisabled: false,
-          playWeight: [
-            {
-              value: 10,
-              label: '最高'
-            },
-            {
-              value: 7,
-              label: '高'
-            },
-            {
-              value: 5,
-              label: '中'
-            },
-            {
-              value: 2,
-              label: '低'
-            },
-          ],
           previewData:{
               name:'',
             script:''
@@ -660,24 +643,10 @@ export default {
 </script>
 <style scoped lang='less'>
   .setGoodsId button {
-    width: 82px;
-    height: 30px;
-    border-radius: 17px;
-    cursor: pointer;
-    /*width: 64px;*/
-    /*height: 26px;*/
-    /*font-size: 12px;*/
-    &.cancel {
-      opacity: 0.7;
-      color: #666;
-      border: 1px solid #666;
-      margin-right: 16px;
-      background: rgba(0,0,0,0);
-    }
     &.confirm {
       background: #7694f3;
-      color: #fff;
       margin-left: 0;
+      border: 1px solid transparent;
     }
   }
   .setGoodsId {
@@ -700,7 +669,8 @@ export default {
     }
   }
   .tabs {
-    width: 204px;
+    display: inline-block;
+    /*width: 204px;*/
     margin-bottom: 10px;
     padding: 4px;
     box-sizing: border-box;

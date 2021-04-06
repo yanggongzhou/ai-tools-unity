@@ -11,7 +11,7 @@
             <el-dropdown @command="proto=>handleCommand(ind,proto)" trigger="click">
               <i class="moremore el-icon-arrow-down el-icon-more"></i>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item v-for="(value,index) in dropdownData"
+                <el-dropdown-item v-for="(value,index) in $lan.tools.dropdownData"
                                   :key="index+'dropdown'"
                                   :disabled="ScriptList.length===1&&value.value==='6'"
                                   :command="value.value"
@@ -82,14 +82,14 @@
 
         <div
           class='timerDialog'
-          width="200px"
           v-if="timerVisible"
           :modal="false"
-          :show-close='false'
-        >
-          <el-input-number style='width: 110px;' v-model="intervalValue" controls-position="right" :step="0.5" :min="0.5" :max="10000"></el-input-number> s<br/>
-          <button class="dialogBtn quxiao" style='width:50px;border-radius:4px;' @click.stop="timerVisible = false">{{$lan.common.cancel}}</button>
-          <button class="dialogBtn queren" style='width:50px;margin-top:0;border-radius:4px;' @click.stop="addIntervalTag(intervalValue)">{{$lan.common.confirm}}</button>
+          :show-close='false'>
+          <el-input-number style='width: 110px;' class="mb10 mr10" v-model="intervalValue" controls-position="right" :step="0.5" :min="0.5" :max="10000"></el-input-number>
+          <el-tag  effect="dark" type="info">s</el-tag>
+          <br>
+          <el-button type="info" size="mini" @click.stop="timerVisible = false">{{$lan.common.cancel}}</el-button>
+          <el-button type="info" size="mini" @click.stop="addIntervalTag(intervalValue)">{{$lan.common.confirm}}</el-button>
         </div>
 
         <div class="p10"
@@ -252,15 +252,6 @@
 
         scriptChangeState:false,
         scriptChangeTimeout:'',
-
-        dropdownData:[
-          {label:"上移",value:'1',icon:"el-icon-caret-top"},
-          {label:"下移",value:'2',icon:'el-icon-caret-bottom'},
-          {label:"置顶",value:'3',icon:'el-icon-top'},
-          {label:"置底",value:'4',icon:'el-icon-bottom'},
-          {label:"插入",value:'5',icon:'el-icon-circle-plus-outline'},
-          {label:"删除",value:'6',icon:'el-icon-delete'},
-        ],
 
         ComputerWords:''
       };
@@ -1434,10 +1425,10 @@
   }
   .timerDialog {
     position: absolute;
-    top: -190px;
-    left: 196px;
-    padding: 20px;
-    background: #fff;
+    top: -160px;
+    left: 200px;
+    padding: 12px;
+    background: #28223385;
     border-radius: 4px;
     box-shadow: 0 1px 3px rgba(0,0,0,.3);
   }
@@ -1477,34 +1468,6 @@
       color: #FFFFFF;
       border: 1px solid #8D89DE;
     }
-  }
-  .dialogBtn{
-    font-size: 12px;
-    margin-top: 18px;
-    display: inline-block;
-    line-height: 1;
-    padding: 5px 8px;
-    margin-right: 8px;
-    height: 33px;
-    width: 78px;
-    border-radius: 32px;
-    cursor: pointer;
-    border: 1px solid #dcdfe6;
-    background: #fff;
-    transition: all 0.3s;
-    color: #FFFFFF;
-    &:hover {
-      opacity: .7;
-    }
-    &:focus {
-      outline: none;
-    }
-  }
-  .quxiao{
-    color: #a7a7a7;
-  }
-  .queren{
-    background: #7694f3;
   }
 </style>
 <style lang="less" scoped>

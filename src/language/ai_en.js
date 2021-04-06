@@ -1,4 +1,6 @@
 const common = {
+  language:'en',
+
   top_title:'ScriptList',
   top_title_edit:'ScriptEdit',
   top_title_play:'ScriptPlay',
@@ -23,6 +25,7 @@ const common = {
   editFail:'Edit failed',
   open:'Open',
   close:'Close',
+  play:'Play',
 
   changeAvatarFailMsg:'Failed to change avatars. Please try again',
   resourceLoadingMsg:'Resource loading, please wait...',
@@ -124,7 +127,14 @@ const tools = {
   fontFamily:"Font",
   textContent:'Content',
 
-
+  dropdownData:[
+    {label:"Up",value:'1',icon:"el-icon-caret-top"},
+    {label:"Down",value:'2',icon:'el-icon-caret-bottom'},
+    {label:"Top",value:'3',icon:'el-icon-top'},
+    {label:"Bottom",value:'4',icon:'el-icon-bottom'},
+    {label:"Insert",value:'5',icon:'el-icon-circle-plus-outline'},
+    {label:"Delete",value:'6',icon:'el-icon-delete'},
+  ],
 }
 
 const webcast = {
@@ -196,6 +206,25 @@ const webcast = {
       name: 'endwords'
     }
   ],
+  playWeight: [
+    {
+      value: 10,
+      label: 'Level 4'
+    },
+    {
+      value: 7,
+      label: 'Level 3'
+    },
+    {
+      value: 5,
+      label: 'Level 2'
+    },
+    {
+      value: 2,
+      label: 'Level 1'
+    },
+  ],
+
 }
 
 const direct = {
@@ -242,7 +271,10 @@ const direct = {
   taskRunning:'The current task is in progress, please wait...',
   isValidTextMsg: 'Please enter a valid character',
 
-
+  playingTip:"It's playing",
+  WaitingInLine:'Waiting in line',
+  temporaryScriptTxtTip:"You can input text here, and record the content above after adding",
+  putItAway:'Close'
 }
 export default {
   common,

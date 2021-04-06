@@ -10,7 +10,18 @@
                     <span class="words">{{item.content}}</span>
                     <span class="edit" @click='handleEdit(item)'>{{$lan.common.edit}}</span>
                     <span class="center"></span>
-                    <span class="delete" @click='handleDel(item)'>{{$lan.common.delete}}</span>
+                    <el-popconfirm
+                      cancel-button-type="info"
+                      confirm-button-type="info"
+                      :confirmButtonText='$lan.common.confirm'
+                      :cancelButtonText='$lan.common.cancel'
+                      icon="el-icon-info"
+                      iconColor="#fbfbfb"
+                      @onCancel="cancelDel"
+                      @onConfirm="confirmDel"
+                      :title="$lan.webcast.deleteWords_tip">
+                      <span  slot="reference" class="delete" @click='handleDel(item)'>{{$lan.common.delete}}</span>
+                    </el-popconfirm>
                 </div>
             </div>
             <div v-if='isOpenAddDialog' class="addDialog">
@@ -28,16 +39,6 @@
                 <span class="dialog-footer">
                     <button class="cancel" @click="cancelAdd" >{{$lan.common.cancel}}</button>
                     <button class="confirm" @click="confirmAdd" type='primary' >{{$lan.common.confirm}}</button>
-                </span>
-            </div>
-
-            <div v-if='isShowDelDialog' class="delDialog">
-                <i class="el-icon-close" @click='cancelDel'></i>
-                <i class="el-icon-warning-outline" style='font-size:42px;color:#b2c5ff;margin-bottom:18px;font-weight:600;'></i>
-                <div>{{$lan.webcast.deleteWords_tip}}</div>
-                <span slot="footer" class="dialog-footer">
-                    <el-button class="cancel" @click="cancelDel">{{$lan.common.cancel}}</el-button>
-                    <el-button class="confirm" type="primary" @click="confirmDel">{{$lan.common.confirm}}</el-button>
                 </span>
             </div>
         </div>
@@ -68,7 +69,6 @@ export default {
             wordsId: '',
             iptWordsTxt: '',
             isOpenAddDialog: false,
-            isShowDelDialog: false
         }
     },
     methods: {
@@ -110,15 +110,12 @@ export default {
             this.wordsId = '';
         },
         handleDel(_item) {
-            this.isShowDelDialog = true;
             this.wordsId = _item.id;
         },
         cancelDel() {
-            this.isShowDelDialog = false;
             this.wordsId = '';
         },
         async confirmDel() {
-            this.isShowDelDialog = false;
             await this.$emit('editWords', this.type, {gsw_id: this.wordsId, status: 1}, this.$lan.common.delete);
             this.wordsId = '';
         },
@@ -222,8 +219,9 @@ export default {
         top: 50%;
         transform: translate(0, -50%);
         background: #c4cef8;
-        width: 1px;
+        width: 2px;
         height: 10px;
+        margin:0 5px;
     }
     .delete {
         position: absolute;
@@ -278,33 +276,5 @@ export default {
         cursor: pointer;
         outline: none;
       border-color:#7694f3;
-    }
-    .delDialog {
-        width: 392px;
-        height: 220px;
-        position: absolute;
-        top: 20%;
-        left: 50%;
-        transform: translate(-50%, 0);
-        background: #fff;
-        box-shadow: 0px 8px 36px 21px rgba(124, 124, 124, 0.06), 0px 0px 2px 0px rgba(0, 0, 0, 0.28), 0px 2px 28px 0px rgba(0, 0, 0, 0.19);
-        border-radius: 4px;
-        text-align: center;
-        i {
-            margin: 36px auto 16px;
-            &.el-icon-close {
-                position: absolute;
-                top: 10px;
-                right: 10px;
-                margin: 0;
-                cursor: pointer;
-            }
-        }
-        div {
-            margin-bottom: 42px;
-        }
-        .confirm {
-            margin-left: 128px;
-        }
     }
 </style>

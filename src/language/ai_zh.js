@@ -1,4 +1,6 @@
 const common = {
+  language:'zh',
+
   top_title:'剧本列表',
   top_title_edit:'剧本编辑',
   top_title_play:'直播剧本',
@@ -23,6 +25,7 @@ const common = {
   editFail:'修改失败',
   open:'开启',
   close:'关闭',
+  play:'播放',
 
   changeAvatarFailMsg:'切换角色失败，请重试',
   resourceLoadingMsg:'资源加载中，请稍后...',
@@ -124,7 +127,14 @@ const tools = {
   fontFamily:"字体",
   textContent:'字体内容',
 
-
+  dropdownData:[
+    {label:"上移",value:'1',icon:"el-icon-caret-top"},
+    {label:"下移",value:'2',icon:'el-icon-caret-bottom'},
+    {label:"置顶",value:'3',icon:'el-icon-top'},
+    {label:"置底",value:'4',icon:'el-icon-bottom'},
+    {label:"插入",value:'5',icon:'el-icon-circle-plus-outline'},
+    {label:"删除",value:'6',icon:'el-icon-delete'},
+  ],
 }
 
 const webcast = {
@@ -196,6 +206,25 @@ const webcast = {
       name: 'endwords'
     }
   ],
+  playWeight: [
+    {
+      value: 10,
+      label: '最高'
+    },
+    {
+      value: 7,
+      label: '高'
+    },
+    {
+      value: 5,
+      label: '中'
+    },
+    {
+      value: 2,
+      label: '低'
+    },
+  ],
+
 }
 
 const direct = {
@@ -242,7 +271,10 @@ const direct = {
   taskRunning:'当前任务正在执行中，请稍后...',
   isValidTextMsg: '请输入有效字符',
 
-
+  playingTip:'正在播放中',
+  WaitingInLine:'排队播放中',
+  temporaryScriptTxtTip:"这里可以输入文字，添加后记录在上方内容",
+  putItAway:'收起'
 }
 export default {
   common,

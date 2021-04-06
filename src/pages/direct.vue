@@ -79,14 +79,15 @@
                :class="{'borderLeftGreen': recordId==='content'+ind+'script'+allScriptIndex}"
                :key="ind+'content'"   :style="ind | styleFilter3">
             <div class="header clearfix">
-              <div class="title float_left">第{{ind+1}}段</div>
+              <div class="title float_left" v-if="$lan.common.language==='zh'">第{{ind+1}}段</div>
+              <div class="title float_left" v-if="$lan.common.language==='en'">Paragraph - {{ind+1}}</div>
               <div class="pdtip float_left"
                    style="color: #7694f3"
                    :style="ind | styleFilter2"
-              >正在播放中...</div>
+              >{{$lan.direct.playingTip}}...</div>
               <div class="pdtip float_left"
                    :style="ind | styleFilter"
-              >排队播放中...</div>
+              >{{$lan.direct.WaitingInLine}}...</div>
 
               <div class="float_right play_icon" @click="previewBtn(val,ind,allScriptIndex,false)">
                 <i class="el-icon-video-play"></i>
@@ -150,7 +151,7 @@
         top="10vh"
         append-to-body>
         <div class="contentBox contentBox2">
-          <button class='close_btn' @click='innerVisible=false'>收起</button>
+          <button class='close_btn' @click='innerVisible=false'>{{$lan.direct.putItAway}}</button>
           <div style="height: 346px;overflow: scroll;margin-top: 10px">
             <div class="content-item" v-for="(val,ind) in temporaryScriptList" :key="ind+'content'">
               <div class="header clearfix">
@@ -158,10 +159,10 @@
                 <div class="pdtip float_left"
                      style="color: #7694f3"
                      v-show="nowTempId===val.id"
-                >正在播放中...</div>
+                >{{$lan.direct.playingTip}}...</div>
                 <div class="pdtip float_left"
                      :style="val.id | styleFilter4"
-                >排队播放中...</div>
+                >{{$lan.direct.WaitingInLine}}...</div>
                 <div class="float_right play_icon" @click="previewTxtBtn(val,ind)">
                   <i class="el-icon-video-play"></i>
                 </div>
@@ -173,12 +174,12 @@
             </div>
           </div>
           <el-input style="margin-top: 10px" type="textarea"
-                    placeholder="这里可以输入文字，添加后记录在上方内容"
+                    :placeholder="$lan.direct.temporaryScriptTxtTip"
                     v-model="temporaryScriptTxt"
                     :autosize="{ minRows: 4, maxRows:4 }"
           ></el-input>
           <div class="playBtn">
-            <button class='handleWebcastBtn' @click='temporaryScriptPlay'>播放</button>
+            <button class='handleWebcastBtn' @click='temporaryScriptPlay'>{{$lan.common.play}}</button>
           </div>
         </div>
       </el-dialog>

@@ -475,7 +475,7 @@
       font-size: 0px;
       .w-textarea_tools__item {
         font-size: 12px;
-        /*width: 44px;*/
+        width: 48px;
         margin: 12px 17px 0 0;
         display: inline-block;
         line-height: 1;
