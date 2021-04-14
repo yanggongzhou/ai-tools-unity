@@ -591,10 +591,34 @@
       WebSelectAvatarState(state){
         if(state==='True'){
           UnityAvatarMotionInfo(this.ResultJson.avatar.unity);
+          if(this.ScriptList.length>1){
+            this.ScriptList.forEach((val,ind)=>{
+              if(ind!==this.scriptIndex){
+                val.param.forEach(paramItem=>{
+                  paramItem.trigger = paramItem.trigger.filter(trig=>{
+                    return trig.type!=="action"
+                  })
+                })
+              }
+            })
+            this.delActionTag()
+          }
+
         }else if(state==='False'){
           this.$message.error(this.$lan.common.changeAvatarFailMsg)
           this.$store.commit('set_resourceReady',true);
         }
+      },
+      //清空动作标签
+      delActionTag() {
+        ExportMessage(this.testData).then(res => {
+          let actionArr = JSON.parse(JSON.stringify(res.messageArr))
+          actionArr.forEach(val => {
+            if (val.datasetObj.type === 'action') {
+              delTag(val.datasetObj.id)
+            }
+          })
+        })
       },
       WebPreviewReady(state){
         if(state==='True'){

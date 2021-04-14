@@ -1,7 +1,5 @@
 <template>
   <div class="common_content">
-
-
     <div class="progressBox" v-if="progressVisible">
       <radial-progress-bar :diameter="200"
                            startColor="#7094fb"
@@ -920,6 +918,9 @@
               this.previewData = JSON.parse(_Obj.item)
               this.previewReady = false;
             }else{
+
+              UnityPreviewCancel();//结束自动播放接口  --为了结束自动动作
+
               this.previewReady = true;
               this.isPlaying = false;
               this.isPreviewBtn = false;
