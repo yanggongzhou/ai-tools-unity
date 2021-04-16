@@ -256,6 +256,7 @@
 
         ComputerWords:'',
 
+        isFirstActions:true,
       };
     },
     created() {
@@ -264,6 +265,7 @@
       window.WebPreviewEnd = this.WebPreviewEnd
       this.ComputerWords = new ComputerWords()
       this.$store.commit('set_IsFirstAvatarState', true)
+      this.isFirstActions = true;
     },
     mounted() {
       let self = this;
@@ -566,12 +568,13 @@
           })
         })
         this.actionLoading = false;
-        console.log('动作列表接收',this.actionShowList)
+        // console.log('动作列表接收',this.actionShowList)
 
         let self = this;
         //编辑时数据导入
-        if(this.editJsonData.data){
-          let resArr  = this.editJsonData.data
+        if(this.editJsonData.data && this.isFirstActions){
+          this.isFirstActions = false;
+          let resArr = this.editJsonData.data
           this.$store.commit('set_avatarName',{name:resArr[0].avatar.unity,chName:this.editJsonData.avatarName})
           this.ScriptList = JSON.parse(JSON.stringify(this.editJsonData.data))
           this.$nextTick(()=>{
@@ -596,8 +599,8 @@
           if(this.IsFirstAvatarState){
             this.$store.commit('set_IsFirstAvatarState', false)
             UnityAvatarMotionInfo(this.ResultJson.avatar.unity);
+            console.log(`请求要${this.ResultJson.avatar.unity}动作`)
           }
-          console.log(`请求要${this.ResultJson.avatar.unity}动作`)
           if(this.ScriptList.length){
             this.ScriptList.forEach((val,ind)=>{
               if(ind!==this.scriptIndex){
@@ -1431,6 +1434,9 @@
       },
 
     },
+    beforeDestroy() {
+      this.$store.commit('set_IsFirstAvatarState', true)
+    }
   };
 </script>
 

@@ -21,9 +21,11 @@
     methods:{
       WebEditAvatar(name,chName){
         this.$store.commit('set_avatarName', {name:name,chName:chName})
-        console.log(name,chName)
+        // console.log(`WebEditAvatar======>${name} ${chName}`)
+        // console.log(`请求要${this.ResultJson.avatar.unity}动作`)
         if(this.$route.name==='tools' && !this.IsFirstAvatarState){
-          UnityAvatarMotionInfo(this.ResultJson.avatar.unity);
+          UnityAvatarMotionInfo(name);
+          console.log(`请求要${this.ResultJson.avatar.unity}动作`)
         }
       },
       WebInfoModelMsg(param){
