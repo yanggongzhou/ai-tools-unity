@@ -5,7 +5,8 @@
   export default {
     computed:{
       ...mapGetters([
-        'PcVisible'
+        'PcVisible',
+        'IsFirstAvatarState'
       ])
     },
     data(){
@@ -20,6 +21,10 @@
     methods:{
       WebEditAvatar(name,chName){
         this.$store.commit('set_avatarName', {name:name,chName:chName})
+        console.log(name,chName)
+        if(this.$route.name==='tools' && !this.IsFirstAvatarState){
+          UnityAvatarMotionInfo(this.ResultJson.avatar.unity);
+        }
       },
       WebInfoModelMsg(param){
         this.$store.commit('set_InfoModelData',JSON.parse(param))

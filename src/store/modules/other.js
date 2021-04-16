@@ -4,6 +4,7 @@ const state = {
 
   resourceReady:true,//资源准备
   isSaveTip:false,//是否显示保存提示
+  isFirstAvatarState:true,//在tools中是否是第一次切换角色
 }
 
 const getters = {
@@ -11,9 +12,14 @@ const getters = {
   ClValue             :state => state.clValue,
   ResourceReady       :state => state.resourceReady,
   IsSaveTip           :state => state.isSaveTip,
+  IsFirstAvatarState  :state => state.isFirstAvatarState,
 }
 
 const mutations = {
+  //
+  set_IsFirstAvatarState(state,data) {
+    state.isFirstAvatarState = data
+  },
   //保存提示
   set_IsSaveTip(state,data) {
     state.isSaveTip = data

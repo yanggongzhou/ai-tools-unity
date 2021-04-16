@@ -147,7 +147,8 @@
         'ResultJson',
         'InfoModelData',
         'ResourceReady',
-        'IsSaveTip'
+        'IsSaveTip',
+        'IsFirstAvatarState'
       ])
     },
     beforeCreate() {
@@ -253,7 +254,8 @@
         scriptChangeState:false,
         scriptChangeTimeout:'',
 
-        ComputerWords:''
+        ComputerWords:'',
+
       };
     },
     created() {
@@ -261,6 +263,7 @@
       window.WebSelectAvatarState = this.WebSelectAvatarState
       window.WebPreviewEnd = this.WebPreviewEnd
       this.ComputerWords = new ComputerWords()
+      this.$store.commit('set_IsFirstAvatarState', true)
     },
     mounted() {
       let self = this;
@@ -590,8 +593,12 @@
       },
       WebSelectAvatarState(state){
         if(state==='True'){
-          UnityAvatarMotionInfo(this.ResultJson.avatar.unity);
-          if(this.ScriptList.length>1){
+          if(this.IsFirstAvatarState){
+            this.$store.commit('set_IsFirstAvatarState', false)
+            UnityAvatarMotionInfo(this.ResultJson.avatar.unity);
+          }
+          console.log(`请求要${this.ResultJson.avatar.unity}动作`)
+          if(this.ScriptList.length){
             this.ScriptList.forEach((val,ind)=>{
               if(ind!==this.scriptIndex){
                 val.param.forEach(paramItem=>{
