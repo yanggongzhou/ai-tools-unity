@@ -247,7 +247,7 @@
         AMSound:'',
 
         ComputerWords:'',
-        language:"zh",//'zh' or 'en_ali' or 'en_biaobei'
+        language:"en_ali",//'zh' or 'en_ali' or 'en_biaobei'
       }
     },
     created() {
@@ -324,7 +324,11 @@
             scriptItem.param.forEach(value=>{
               _content += value.content
             })
-            if(scriptItem.param.length===0 || !_content.replace(/[\ |\~|\`|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\-|\_|\+|\=|\||\\|\[|\]|\{|\}|\;|\:|\"|\'|\,|\<|\.|\>|\/|\?|\r\n]/g,"").match(/[\u4e00-\u9fa5\0-9]/g)){
+            let _zh = this.language==='zh'&&!this.ComputerWords.getIndex_ZH(_content)
+            let _enAli = this.language==='en_ali'&& !this.ComputerWords.getIndex_EN_AL(_content)
+            let _enBiaobei = this.language==='en_biaobei'&& !this.ComputerWords.getIndex_EN_BB(_content)
+
+            if(scriptItem.param.length===0 || _zh || _enAli || _enBiaobei){
               valitade = false;
             }
           })

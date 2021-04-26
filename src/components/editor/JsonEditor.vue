@@ -528,7 +528,10 @@
           val.param.forEach(value=>{
             _content += value.content;
           })
-          if(val.param.length===0 || !_content.replace(/[\ |\~|\`|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\-|\_|\+|\=|\||\\|\[|\]|\{|\}|\;|\:|\"|\'|\,|\<|\.|\>|\/|\?|\r\n]/g,"").match(/[\u4e00-\u9fa5\0-9]/g)){
+          let _zh = this.language==='zh'&&!this.ComputerWords.getIndex_ZH(_content)
+          let _enAli = this.language==='en_ali'&& !this.ComputerWords.getIndex_EN_AL(_content)
+          let _enBiaobei = this.language==='en_biaobei'&& !this.ComputerWords.getIndex_EN_BB(_content)
+          if(val.param.length===0 || _zh || _enAli || _enBiaobei){
             this.$message.error(this.$lan.tools.isValidTextMsg2)
             return false
           }
@@ -543,7 +546,10 @@
             _jsonArr.param.forEach(value=>{
               _content += value.content;
             })
-            if(_jsonArr.param.length===0 || !_content.replace(/[\ |\~|\`|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\-|\_|\+|\=|\||\\|\[|\]|\{|\}|\;|\:|\"|\'|\,|\<|\.|\>|\/|\?|\r\n]/g,"").match(/[\u4e00-\u9fa5\0-9]/g)){
+            let _zh = this.language==='zh'&&!this.ComputerWords.getIndex_ZH(_content)
+            let _enAli = this.language==='en_ali'&& !this.ComputerWords.getIndex_EN_AL(_content)
+            let _enBiaobei = this.language==='en_biaobei'&& !this.ComputerWords.getIndex_EN_BB(_content)
+            if(_jsonArr.param.length===0 || _zh || _enAli || _enBiaobei){
               this.$message.error(this.$lan.tools.isValidTextMsg2)
               return false
             }
