@@ -124,13 +124,13 @@ function UnityTTSInfo(param,param2) {
 
 
 function UnityIsSaveTip(param) {
-  console.log('\x1b[33m%s\x1b[0m',`Unity端是否显示保存剧本提示- ${param}`)
+  console.log(`Unity端是否显示保存剧本提示- ${param}`)
 }
 //获取spine列表信息
-function UnitySpineInfo() {
+function UnityEffectInfo() {
   console.log('获取spine列表信息')
 }
 //触发英文名对应得spine特效
-function UnitySpinePlay(param) {
-  console.log('\x1b[33m%s\x1b[0m',`spine特效- ${param}`)
+function UnityEffectPlay(param) {
+  console.log(`spine特效- ${param}`)
 }

@@ -120,12 +120,12 @@
           </el-tab-pane>
           <el-tab-pane  label="2D动画" name="2">
             <div style="min-height: 66px"
-                 v-loading="spineLoading"
+                 v-loading="effectLoading"
                  element-loading-spinner="el-icon-loading"
                  element-loading-text="2D动画加载中"
                  element-loading-background="rgba(162, 172, 211, 0.4)">
-              <el-tooltip :open-delay="300" v-for="(val,ind) in spineShowList" :key="ind+'animation'" placement="top">
-                <div slot="content" style="cursor: pointer" @click="UnitySpinePlay(val)">
+              <el-tooltip :open-delay="300" v-for="(val,ind) in effectShowList" :key="ind+'animation'" placement="top">
+                <div slot="content" style="cursor: pointer" @click="previewEffect(val)">
                   <i style="font-size: 24px" class="el-icon-video-play"></i>
                 </div>
                 <el-button class="actionBtn" size="small" @click="addSpine(val)">
@@ -226,10 +226,10 @@
         isShowDelDialog:false,
 
         actionShowList:[],
-        spineShowList:[],
+        effectShowList:[],
 
         actionLoading:true,
-        spineLoading:true,
+        effectLoading:true,
         testData:'',
         intervalValue:0.5,//间隔时间
 
@@ -292,7 +292,7 @@
       window.WebActionInfo= this.WebActionInfo
       window.WebSelectAvatarState = this.WebSelectAvatarState
       window.WebPreviewEnd = this.WebPreviewEnd
-      window.WebSpineInfo= this.WebSpineInfo
+      window.WebEffectInfo= this.WebEffectInfo
       this.ComputerWords = new ComputerWords()
       this.$store.commit('set_IsFirstAvatarState', true)
       this.isFirstActions = true;
@@ -404,8 +404,7 @@
       }else{
         UnityAvatarMotionInfo(this.ResultJson.avatar.unity);
       }
-
-      UnitySpineInfo();
+      UnityEffectInfo();
     },
     watch:{
       //监听输入框文本，主要实现删除功能
@@ -633,19 +632,19 @@
         }
       },
       //spine列表接收
-      WebSpineInfo(val){
-        this.spineShowList = [];
+      WebEffectInfo(val){
+        this.effectShowList = [];
         let labelData = val.split('-')[0].split(',')
         labelData.pop()
         let valueData = val.split('-')[1].split(',')
         valueData.pop()
         labelData.forEach((item,ind)=>{
-          this.spineShowList.push({
+          this.effectShowList.push({
             label:item,
             value:valueData[ind]
           })
         })
-        this.spineLoading = false;
+        this.effectLoading = false;
       },
       WebSelectAvatarState(state){
         if(state==='True'){
@@ -729,6 +728,7 @@
       },
       //预览动作
       previewAction(val){ UnityAvatarAction(this.ResultJson.avatar.unity,val.value) },
+      previewEffect(val){ UnityEffectPlay(val.value) },
       //删除标签更新testData
       delTagMain(txt){
         this.testData=this.testData.replace(txt,'')
@@ -833,6 +833,13 @@
                 actionName:val.action.actionName,
                 id:val.id
               })
+            }else if(val.type==="effect"){
+              positionTag.push({
+                index:txtInd,
+                type:"effect",
+                effectName:val.effect.effectName,
+                id:val.id
+              })
             }
           })
         })
@@ -920,17 +927,17 @@
               _txt.splice(_txt.length-1,1,_intervalDom+_txt[_txt.length-1]);
               contentBDArr[val.index] = _txt.join('');
             }
-          }else if(val.type==="spine"){
-            let _data = JSON.stringify({id:val.id, type:'spine', spineName:val.spineName}).replace(/"/g,"&quot;")
-            let _spineName = '';
-            self.spineShowList.forEach(act=>{if(act.value===val.spineName){ _spineName = act.label}})
-            let _spineDom = `<wise id="`+val.id+`" data-obj="`+_data+`"><div class="tag_spine tagtag" onclick="editTag(\``+val.id+`\`)">`+_spineName+`<i class="el-icon-close" onclick="delTag(\``+val.id+`\`)"></i></div>&nbsp;</wise>`
+          }else if(val.type==="effect"){
+            let _data = JSON.stringify({id:val.id, type:'effect', effectName:val.effectName}).replace(/"/g,"&quot;")
+            let _effectName = '';
+            self.effectShowList.forEach(act=>{if(act.value===val.effectName){ _effectName = act.label}})
+            let _effectDom = `<wise id="`+val.id+`" data-obj="`+_data+`"><div class="tag_effect tagtag" onclick="editTag(\``+val.id+`\`)">`+_effectName+`<i class="el-icon-close" onclick="delTag(\``+val.id+`\`)"></i></div>&nbsp;</wise>`
             if(contentBDArr[val.index]===undefined){
-              contentBDArr[val.index] = _spineDom
+              contentBDArr[val.index] = _effectDom
             }else{
               // contentBDArr[val.index]=_spineDom+contentBDArr[val.index]
               let _txt = contentBDArr[val.index].split('')
-              _txt.splice(_txt.length-1,1,_spineDom+_txt[_txt.length-1]);
+              _txt.splice(_txt.length-1,1,_effectDom+_txt[_txt.length-1]);
               contentBDArr[val.index] = _txt.join('');
             }
           }
@@ -999,14 +1006,14 @@
                 })
               }else if(msg.datasetObj.type==='interval'||msg.datasetObj.type==='interaction'){
                 _intervalMessage.push(msg)
-              }else if(msg.datasetObj.type==='spine'){
+              }else if(msg.datasetObj.type==='effect'){
                 _spineMessage.push({
                   "id":msg.datasetObj.id,
                   "index": msg.index,
                   "placeholder":msg.index,
-                  "type": "spine",
-                  "spine": {
-                    "spineName": msg.datasetObj.spineName,
+                  "type": "effect",
+                  "effect": {
+                    "effectName": msg.datasetObj.effectName,
                     "isLoop": false,
                     "dismissTime": 0
                   }
@@ -1380,11 +1387,11 @@
       addSpine(val){
         let _id=this.getGuid()
         let _data = {
-          type:'spine',
-          spineName:val.value,
+          type:'effect',
+          effectName:val.value,
           id:_id
         }
-        let _text =  `<div class="tag_spine tagtag" onclick="editTag(\``+_id+`\`)">`+val.label+`<i class="el-icon-close" onclick="delTag(\``+_id+`\`)"></i>&nbsp;</div>`
+        let _text =  `<div class="tag_effect tagtag" onclick="editTag(\``+_id+`\`)">`+val.label+`<i class="el-icon-close" onclick="delTag(\``+_id+`\`)"></i>&nbsp;</div>`
         this.$refs.testText.addTag(_text,_data)
       },
       cancelBtn(type){
