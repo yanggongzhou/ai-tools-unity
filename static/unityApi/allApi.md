@@ -77,3 +77,11 @@ UnityDelTag(param)           param -- 标签对应的展示位 '1'  //用于标�
 
 **告知Unity直播状态**
 UnityDirectState(param)      param -- 'True':开始直播 'False'：结束直播
+
+**获取spine列表信息**
+UnitySpineInfo();
+**spine列表信息接受**
+WebSpineInfo('')
+
+**触发英文名对应得spine特效**
+UnitySpinePlay('en_name');

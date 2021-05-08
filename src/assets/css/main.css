@@ -313,6 +313,10 @@ button {
   color: #fd666b;
   border: 1px solid #fd666b;
 }
+.tag_spine{
+  color: #fa00c3;
+  border: 1px solid #fa00c3;
+}
 /*按钮提示*/
 .tip_title{
   margin-bottom: 5px;

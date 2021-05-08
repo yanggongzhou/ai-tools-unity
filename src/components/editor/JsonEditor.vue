@@ -92,28 +92,53 @@
           <el-button type="info" size="mini" @click.stop="addIntervalTag(intervalValue)">{{$lan.common.confirm}}</el-button>
         </div>
 
-        <div class="p10"
-             style="min-height: 66px"
-             v-loading="actionLoading">
-          <el-tooltip  :open-delay="1000" placement="bottom" effect="dark">
-            <div slot="content">
-              <p class="center tip_title">{{$lan.tools.action_title}}</p>
-              <p class="center" v-html="$lan.tools.action_title_tip_c"></p>
+        <el-tabs v-model="actionType" type="card" @tab-click="handleCommand" class="action_type">
+
+            <el-tab-pane  label="动作列表" name="1">
+              <div style="min-height: 66px"
+                   v-loading="actionLoading"
+                   element-loading-spinner="el-icon-loading"
+                   element-loading-text="动作加载中"
+                   element-loading-background="rgba(162, 172, 211, 0.4)">
+<!--                <el-tooltip  :open-delay="1000" placement="bottom" effect="dark">-->
+<!--                  <div slot="content">-->
+<!--                    <p class="center tip_title">{{$lan.tools.action_title}}</p>-->
+<!--                    <p class="center" v-html="$lan.tools.action_title_tip_c"></p>-->
+<!--                  </div>-->
+<!--                  <span class="actionTitle">{{$lan.tools.action_title_tip_t}}</span>-->
+<!--                </el-tooltip>-->
+
+                <el-tooltip :open-delay="300" v-for="(val,ind) in actionShowList" :key="ind+'animation'" placement="top">
+                  <div slot="content" style="cursor: pointer" @click="previewAction(val)">
+                    <i style="font-size: 24px" class="el-icon-video-play"></i>
+                  </div>
+                  <el-button class="actionBtn" size="small" @click="addAction(val)">
+                    {{val.label}}
+                  </el-button>
+                </el-tooltip>
+              </div>
+          </el-tab-pane>
+          <el-tab-pane  label="2D动画" name="2">
+            <div style="min-height: 66px"
+                 v-loading="spineLoading"
+                 element-loading-spinner="el-icon-loading"
+                 element-loading-text="2D动画加载中"
+                 element-loading-background="rgba(162, 172, 211, 0.4)">
+              <el-tooltip :open-delay="300" v-for="(val,ind) in spineShowList" :key="ind+'animation'" placement="top">
+                <div slot="content" style="cursor: pointer" @click="UnitySpinePlay(val)">
+                  <i style="font-size: 24px" class="el-icon-video-play"></i>
+                </div>
+                <el-button class="actionBtn" size="small" @click="addSpine(val)">
+                  {{val.label}}
+                </el-button>
+              </el-tooltip>
             </div>
-            <span class="actionTitle">{{$lan.tools.action_title_tip_t}}</span>
-          </el-tooltip>
-
-          <el-tooltip :open-delay="300" v-for="(val,ind) in actionShowList" :key="ind+'animation'" placement="top">
-            <div slot="content" style="cursor: pointer" @click="previewAction(val)">
-              <i style="font-size: 24px" class="el-icon-video-play"></i>
-            </div>
-            <el-button class="actionBtn" size="small" @click="addAction(val)">
-              {{val.label}}
-            </el-button>
-          </el-tooltip>
 
 
-        </div>
+          </el-tab-pane>
+        </el-tabs>
+
+
       </div>
     </w-textarea>
 <!--    <div style="color: white" v-html="testData"></div>-->
@@ -193,6 +218,7 @@
     },
     data() {
       return {
+        actionType:'1',
         ScriptList:[],
         scriptIndex:0,
         scriptIndexOld:0,
@@ -200,7 +226,10 @@
         isShowDelDialog:false,
 
         actionShowList:[],
+        spineShowList:[],
+
         actionLoading:true,
+        spineLoading:true,
         testData:'',
         intervalValue:0.5,//间隔时间
 
@@ -263,6 +292,7 @@
       window.WebActionInfo= this.WebActionInfo
       window.WebSelectAvatarState = this.WebSelectAvatarState
       window.WebPreviewEnd = this.WebPreviewEnd
+      window.WebSpineInfo= this.WebSpineInfo
       this.ComputerWords = new ComputerWords()
       this.$store.commit('set_IsFirstAvatarState', true)
       this.isFirstActions = true;
@@ -374,6 +404,8 @@
       }else{
         UnityAvatarMotionInfo(this.ResultJson.avatar.unity);
       }
+
+      UnitySpineInfo();
     },
     watch:{
       //监听输入框文本，主要实现删除功能
@@ -599,6 +631,21 @@
           this.ScriptList[0] = JSON.parse(JSON.stringify(this.ResultJson))
           this.$forceUpdate()
         }
+      },
+      //spine列表接收
+      WebSpineInfo(val){
+        this.spineShowList = [];
+        let labelData = val.split('-')[0].split(',')
+        labelData.pop()
+        let valueData = val.split('-')[1].split(',')
+        valueData.pop()
+        labelData.forEach((item,ind)=>{
+          this.spineShowList.push({
+            label:item,
+            value:valueData[ind]
+          })
+        })
+        this.spineLoading = false;
       },
       WebSelectAvatarState(state){
         if(state==='True'){
@@ -873,6 +920,19 @@
               _txt.splice(_txt.length-1,1,_intervalDom+_txt[_txt.length-1]);
               contentBDArr[val.index] = _txt.join('');
             }
+          }else if(val.type==="spine"){
+            let _data = JSON.stringify({id:val.id, type:'spine', spineName:val.spineName}).replace(/"/g,"&quot;")
+            let _spineName = '';
+            self.spineShowList.forEach(act=>{if(act.value===val.spineName){ _spineName = act.label}})
+            let _spineDom = `<wise id="`+val.id+`" data-obj="`+_data+`"><div class="tag_spine tagtag" onclick="editTag(\``+val.id+`\`)">`+_spineName+`<i class="el-icon-close" onclick="delTag(\``+val.id+`\`)"></i></div>&nbsp;</wise>`
+            if(contentBDArr[val.index]===undefined){
+              contentBDArr[val.index] = _spineDom
+            }else{
+              // contentBDArr[val.index]=_spineDom+contentBDArr[val.index]
+              let _txt = contentBDArr[val.index].split('')
+              _txt.splice(_txt.length-1,1,_spineDom+_txt[_txt.length-1]);
+              contentBDArr[val.index] = _txt.join('');
+            }
           }
         })
         // console.log('contentBDArrcontentBDArr',contentBDArr)
@@ -920,6 +980,7 @@
             let _trigInfo = JSON.parse(JSON.stringify(this.TriggerDiv))
             let _domMessage = [];//文字/视频/图片数组的信息,即脚本type=info的必要参数
             let _actionMessage = [];//动作
+            let _spineMessage = [];//spine特效
             let _intervalMessage = [];//间隔标签数据
             res.messageArr.forEach((msg,msgInd)=>{
               if(msg.datasetObj.type==="image"||msg.datasetObj.type==="video"||msg.datasetObj.type==="text"){
@@ -938,6 +999,18 @@
                 })
               }else if(msg.datasetObj.type==='interval'||msg.datasetObj.type==='interaction'){
                 _intervalMessage.push(msg)
+              }else if(msg.datasetObj.type==='spine'){
+                _spineMessage.push({
+                  "id":msg.datasetObj.id,
+                  "index": msg.index,
+                  "placeholder":msg.index,
+                  "type": "spine",
+                  "spine": {
+                    "spineName": msg.datasetObj.spineName,
+                    "isLoop": false,
+                    "dismissTime": 0
+                  }
+                })
               }
             })
             //✨✨✨✨第一步文本数据分组
@@ -1041,6 +1114,22 @@
                 }
 
               });
+
+              _spineMessage.forEach(act=>{
+                let _act = JSON.parse(JSON.stringify(act))
+                _act.index-=contentCount;
+                if(ind!==exoprtParams.length-1){
+                  if(val.content.length>_act.index&&_act.index>=0){
+                    val.trigger.push(_act)
+                  }
+                }else{
+                  if(val.content.length>=_act.index&&_act.index>=0){
+                    val.trigger.push(_act)
+                  }
+                }
+
+              });
+
               contentCount += val.content.length;
             });
             // console.log('✨✨✨✨第2.1步动作信息插入', exoprtParams)
@@ -1288,7 +1377,16 @@
         let _text =  `<div class="tag_action tagtag" onclick="editTag(\``+_id+`\`)">`+val.label+`<i class="el-icon-close" onclick="delTag(\``+_id+`\`)"></i>&nbsp;</div>`
         this.$refs.testText.addTag(_text,_data)
       },
-
+      addSpine(val){
+        let _id=this.getGuid()
+        let _data = {
+          type:'spine',
+          spineName:val.value,
+          id:_id
+        }
+        let _text =  `<div class="tag_spine tagtag" onclick="editTag(\``+_id+`\`)">`+val.label+`<i class="el-icon-close" onclick="delTag(\``+_id+`\`)"></i>&nbsp;</div>`
+        this.$refs.testText.addTag(_text,_data)
+      },
       cancelBtn(type){
         switch (type) {
           case 'text':
@@ -1449,6 +1547,33 @@
 
 
 <style lang="less" scoped>
+  .action_type {
+    padding: 10px;
+    /deep/ .el-tabs__nav {
+      border-radius: 6px !important;
+      border: 1px solid #A2ACD3 !important;
+      overflow: hidden !important;
+    }
+
+    /deep/ .el-tabs__item.is-active {
+      border: none !important;
+      background: #A2ACD3 !important;
+      color: #FFF !important;
+    }
+
+    /deep/ .el-tabs__item {
+      border-left: 1px solid #A2ACD3 !important;
+      height: 33px !important;
+      line-height: 35px !important;
+      font-size: 12px !important;
+      color: #A2ACD3 !important;
+    }
+
+    /deep/ .el-tabs__item:first-child {
+      border-left: none !important;
+    }
+  }
+
   /deep/.el-dialog__body {
     padding: 40px 20px 5px!important;
   }
